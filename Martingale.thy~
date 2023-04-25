@@ -1,0 +1,66 @@
+theory Martingale
+  imports Filtration Cond_Exp
+begin
+
+locale stochastic_process = M: prob_space M for M N +
+  fixes Y :: "'t :: {second_countable_topology,linorder_topology} \<Rightarrow> 'a \<Rightarrow> 'b"
+  assumes space: "\<And>i. Y i \<in> space M \<rightarrow> space N"
+      and measurability[measurable]: "\<And>i. Y i \<in> M \<rightarrow>\<^sub>M N"
+
+sublocale stochastic_process \<subseteq> natural_filtration: filtered_prob_space M "natural_filtration M N Y"
+proof (unfold_locales, goal_cases)
+  case (1 i)
+  have "{Y ia |ia. ia \<le> i} \<subseteq> space M \<rightarrow> space N" using local.space by blast
+  moreover have "{Y ia |ia. ia \<le> i} \<subseteq> M \<rightarrow>\<^sub>M N" using local.measurability by blast
+  ultimately show ?case unfolding natural_filtration_def using measurable_iff_contains_sigma_gen'[of "{Y ia |ia. ia \<le> i}"] by meson
+qed
+
+locale adapted_process = stochastic_process M N Y + filtered_prob_space M F for M F N Y +
+  assumes adapted[measurable]: "\<And>i. (Y i) \<in> (F i) \<rightarrow>\<^sub>M N"
+
+sublocale stochastic_process \<subseteq> natural_filtration: adapted_process M "natural_filtration M N Y"
+  by (unfold_locales, subst natural_filtration_def, intro measurable_sigma_gen[OF _ local.space], blast)
+
+locale martingale = conditional_expectation M + adapted_process M F "N :: 'd :: {second_countable_topology, real_normed_vector} measure" Y for M F N Y +
+  assumes integrability: "\<And>i. integrable (F i) (Y i)"
+      and martingale_property: "\<And>i j. i \<le> j \<Longrightarrow> AE \<xi> in M. Y i \<xi> = cond_exp (F i) (Y j) \<xi>"
+
+locale submartingale = conditional_expectation M + adapted_process M F "N :: 'd :: {second_countable_topology, real_normed_vector, order} measure" Y for M F N Y +
+  assumes integrability: "\<And>i. integrable (F i) (Y i)"
+      and submartingale_property: "\<And>i j. i \<le> j \<Longrightarrow> AE \<xi> in M. Y i \<xi> \<le> cond_exp (F i) (Y j) \<xi>"
+
+locale supermartingale = conditional_expectation M + adapted_process M F "N :: 'd :: {second_countable_topology, real_normed_vector, order} measure" Y for M N F Y +
+  assumes integrability: "\<And>i. integrable (F i) (Y i)"
+      and supermartingale_property: "\<And>i j. i \<le> j \<Longrightarrow> AE \<xi> in M. Y i \<xi> \<ge> cond_exp (F i) (Y j) \<xi>"
+
+
+lemma (in conditional_expectation)
+  assumes "filtered_prob_space M F" "x \<in> space N"
+  shows "martingale cond_exp M F N (\<lambda>_ _. x)"
+proof (unfold_locales, goal_cases)
+  case (1 i)
+  then show ?case using assms(2) by blast
+next
+  case (2 i)
+  then show ?case using assms(2) by (simp add: measurable_const)
+next
+  case (3 i)
+  then show ?case using filtered_prob_space.space assms(1) by blast
+next
+  case (4 i j)
+  then show ?case sorry
+next
+  case (5 i)
+  then show ?case sorry
+next
+  case (6 i)
+  then show ?case sorry
+next
+  case (7 i)
+  then show ?case sorry
+next
+  case (8 i j)
+  then show ?case sorry
+qed
+
+end
