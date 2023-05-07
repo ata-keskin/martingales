@@ -15,17 +15,25 @@ proof -
   finally show ?thesis by auto
 qed
 
-lemma bochner_integrable_induct[consumes 1, case_names cong set add seq]:
+lemma banach_simple_function_indicator_representation_AE:
+  fixes f ::"'a \<Rightarrow> 'b :: {second_countable_topology, banach}"
+  assumes f: "simple_function M f"
+  shows "AE x in M. f x = (\<Sum>y \<in> f ` space M. indicator (f -` {y} \<inter> space M) x *\<^sub>R y)"  
+  by (metis (mono_tags, lifting) AE_I2 banach_simple_function_indicator_representation f)
+
+
+lemma integrable_induct'[consumes 1, case_names cong set add seq]:
   fixes P :: "('a \<Rightarrow> 'b :: {second_countable_topology, banach}) \<Rightarrow> bool"
   assumes u: "integrable M u"
   assumes cong: "\<And>f g. integrable M f \<Longrightarrow> integrable M g \<Longrightarrow> (\<And>x. x \<in> space M \<Longrightarrow> f x = g x) \<Longrightarrow> P g \<Longrightarrow> P f"
   assumes set: "\<And>A y. A \<in> sets M \<Longrightarrow> emeasure M A < \<infinity> \<Longrightarrow> P (\<lambda>x. indicator A x *\<^sub>R y)"
   assumes add: "\<And>u v. P u \<Longrightarrow> P v \<Longrightarrow> P (\<lambda>x. u x + v x)"
-  assumes seq: "\<And>s. (\<And>i. Bochner_Integration.simple_bochner_integrable M (s i)) \<Longrightarrow> (\<And>i. P (s i)) \<Longrightarrow> ((\<lambda>i. \<integral>\<^sup>+x. norm (u x - s i x) \<partial>M) \<longlonglongrightarrow> 0) \<Longrightarrow> P u"
+  assumes seq: "\<And>s. (\<And>i. Bochner_Integration.simple_bochner_integrable M (s i)) \<Longrightarrow> ((\<lambda>i. \<integral>\<^sup>+x. norm (u x - s i x) \<partial>M) \<longlonglongrightarrow> 0) \<Longrightarrow> (\<And>i. P (s i)) \<Longrightarrow> P u"
   shows "P u"
 proof-
   obtain I where "has_bochner_integral M u I" using u integrable.cases by auto
-  then obtain s where s_is: "Bochner_Integration.simple_bochner_integrable M (s i)" "((\<lambda>i. \<integral>\<^sup>+x. norm (u x - s i x) \<partial>M) \<longlonglongrightarrow> 0)" for i using has_bochner_integral.cases by force
+  then obtain s where s_is: "Bochner_Integration.simple_bochner_integrable M (s i)" 
+                            "((\<lambda>i. \<integral>\<^sup>+x. norm (u x - s i x) \<partial>M) \<longlonglongrightarrow> 0)" for i using has_bochner_integral.cases by force
         
   have s_simple: "simple_function M (s i)" for i using s_is simple_bochner_integrable.simps by blast
 
@@ -62,13 +70,13 @@ proof-
   thus ?thesis using seq s_is by blast
 qed
 
-lemma set_integral_scaleR_left[simp]: 
+lemma set_integral_scaleR_left: 
   assumes "A \<in> sets M" "c \<noteq> 0 \<Longrightarrow> integrable M f"
   shows "LINT t:A|M. f t *\<^sub>R c = (LINT t:A|M. f t) *\<^sub>R c"
   unfolding set_lebesgue_integral_def 
   using integrable_mult_indicator[OF assms]
   by (subst integral_scaleR_left[symmetric], auto)
 
-lemmas simple_function_scaleR[intro, simp] = simple_function_compose2[where h="(*\<^sub>R)"]
+lemmas simple_function_scaleR = simple_function_compose2[where h="(*\<^sub>R)"]
 
 end

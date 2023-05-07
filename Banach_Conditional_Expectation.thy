@@ -155,48 +155,38 @@ proof -
 qed
 
 lemma cond_exp_lim:
-  fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
+  fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes "integrable M f"
-      and "\<And>i. integrable M (s i)"
+      and "\<And>i. sb_integrable M (s i)"
       and "\<And>x. x \<in> space M \<Longrightarrow> (\<lambda>i. s i x) \<longlonglongrightarrow> f x"
-          "\<And>x. x \<in> space M \<Longrightarrow> norm (s i x) \<le> 2 * norm (f x)"
-          "\<And>i. has_cond_exp M F (s i) (u i)"
-    shows "has_cond_exp M F f (\<lambda>x. lim (\<lambda>i. u i x))" 
+      and "\<And>x i. x \<in> space M \<Longrightarrow> norm (s i x) \<le> 2 * norm (f x)"
+    shows "has_cond_exp M F f (\<lambda>x. lim (\<lambda>i. simple_cond_exp M F (s i) x))"
+          "\<And>i. has_cond_exp M F (s i) (simple_cond_exp M F (s i))" 
 proof (intro has_cond_expI)
-  show "set_lebesgue_integral M A f = \<integral>x\<in>A. lim (\<lambda>i. u i x)\<partial>M" if "A \<in> sets F" for A
+  show simple_cond_exp: "has_cond_exp M F (s i) (simple_cond_exp M F (s i))" for i using cond_exp_simple[OF assms(2)] by blast
+  show "(\<lambda>x. lim (\<lambda>i. simple_cond_exp M F (s i) x)) \<in> borel_measurable F" using has_cond_expD(4)[OF simple_cond_exp, THEN borel_measurable_lim_metric] .
+  hence [measurable]:"(\<lambda>x. lim (\<lambda>i. simple_cond_exp M F (s i) x)) \<in> borel_measurable M" using measurable_from_subalg subalg by blast
+  have "set_lebesgue_integral M A (s i) = set_lebesgue_integral M A (simple_cond_exp M F (s i))" if "A \<in> sets F" for A i using has_cond_expD[OF simple_cond_exp] that by blast
+  have intA: "has_bochner_integral M (\<lambda>x. indicator A x *\<^sub>R lim (\<lambda>i. simple_cond_exp M F (s i) x)) (set_lebesgue_integral M A f)" if "A \<in> sets F" for A
   proof -
-    have A_in_sets_M: "A \<in> sets M" using that subalg subalgebra_def by fast
-    have "indicator A x * ennreal (norm (f x - s i x)) \<le> ennreal (norm (f x - s i x))" for i x by (metis indicator_eq_0_iff indicator_simps(1) mult.commute mult.right_neutral mult_zero_left order_refl zero_le)
-    hence "(\<lambda>i. \<integral>\<^sup>+ x. indicator A x * ennreal (norm (f x - s i x)) \<partial>M) \<longlonglongrightarrow> 0" using assms(3) by (subst tendsto_sandwich[of "\<lambda>_. 0"], auto simp add: nn_integral_mono_AE)
-    moreover have "indicator A x * ennreal (norm (f x - s i x)) = ennreal (norm (indicator A x *\<^sub>R f x - indicator A x *\<^sub>R s i x))" for i x by (simp add: indicator_scaleR_eq_if)
-    ultimately have "(\<lambda>i. \<integral>\<^sup>+ x. ennreal (norm (indicator A x *\<^sub>R f x - indicator A x *\<^sub>R s i x)) \<partial>M) \<longlonglongrightarrow> 0" by fastforce
-    moreover have "(\<lambda>x. indicator A x *\<^sub>R f x) \<in> borel_measurable M" using borel_measurable_integrable[OF assms(1)] by (intro borel_measurable_scaleR borel_measurable_indicator A_in_sets_M)
-    moreover have "sb_integrable M (\<lambda>x. indicator A x *\<^sub>R s i x)" for i
-    proof (intro simple_bochner_integrableI_bounded, goal_cases)
-      case _: 1
-      then show ?case using A_in_sets_M simple_bochner_integrable.cases[OF assms(2)] by (intro simple_function_scaleR[OF simple_function_indicator], auto)
-    next
-      case _: 2
-      have "(\<integral>\<^sup>+ x. ennreal (norm (indicat_real A x *\<^sub>R s i x)) \<partial>M) \<le> (\<integral>\<^sup>+ x. ennreal (norm (s i x)) \<partial>M)" by (auto simp add: indicator_def nn_integral_mono_AE)
-      then show ?case using has_bochner_integral_simple_bochner_integrable[THEN has_bochner_integral_implies_finite_norm, OF assms(2), of i] by simp
-    qed
-    moreover have "(\<lambda>i. sb_integral M (\<lambda>x. indicator A x *\<^sub>R s i x)) \<longlonglongrightarrow> \<integral>x\<in>A. lim (\<lambda>i. u i x)\<partial>M"
-    proof (standard, goal_cases)
-      case (1 e)
-      then show ?case sorry
-    qed
-    ultimately have "has_bochner_integral M (\<lambda>x. indicat_real A x *\<^sub>R f x) (\<integral>x\<in>A. lim (\<lambda>i. u i x)\<partial>M)" by (intro has_bochner_integral.intros)
-    thus ?thesis unfolding set_lebesgue_integral_def using has_bochner_integral_integral_eq by blast 
-  qed
+    let ?s = "\<lambda>i x. indicator A x *\<^sub>R s i x"
+    have "(\<lambda>x. indicator A x *\<^sub>R lim (\<lambda>i. simple_cond_exp M F (s i) x)) \<in> borel_measurable M" by (intro borel_measurable_scaleR) (meson borel_measurable_indicator measurable_from_subalg subalg that, simp)
+    have "\<And>i. sb_integrable M (?s i)" sorry
 
-  show "(\<lambda>x. lim (\<lambda>i. u i x)) \<in> borel_measurable F" using borel_measurable_lim_metric assms(4) by (blast dest: has_cond_expD)
-  hence "(\<lambda>x. lim (\<lambda>i. u i x)) \<in> borel_measurable M" using measurable_from_subalg subalg by blast
-  moreover have "(\<lambda>i. \<integral>\<^sup>+ x. ennreal (norm (lim (\<lambda>i. u i x) - s i x)) \<partial>M) \<longlonglongrightarrow> 0"
-  proof (intro tendsto_0_if_Limsup_eq_0_ennreal)
-    have "norm (lim (\<lambda>i. u i x) - s j x) = lim (\<lambda>i. norm (u i x - s j x))" for j x sorry
-    show "limsup (\<lambda>i. \<integral>\<^sup>+ x. ennreal (norm (lim (\<lambda>i. u i x) - s i x)) \<partial>M) = 0" sorry
+    have "(\<lambda>i. s i x) \<longlonglongrightarrow> f x" if "x \<in> space M" for x using banach_simple_function_indicator_representation that assms(2)[THEN simple_bochner_integrable.cases, THEN simple_functionD(1)] 
+
+    have "(\<lambda>i. simple_cond_exp M F (s i) x) \<longlonglongrightarrow> lim (\<lambda>i. simple_cond_exp M F (s i) x)" for x sorry
+    have "(\<lambda>i. \<integral>\<^sup>+ x. ennreal (norm (lim (\<lambda>i. simple_cond_exp M F (s i) x) - s i x)) \<partial>M) \<longlonglongrightarrow> 0" sorry
+
+    have "(\<lambda>i. \<integral>\<^sup>+ x. ennreal (norm (indicat_real A x *\<^sub>R lim (\<lambda>i. simple_cond_exp M F (s i) x) - ?s i x)) \<partial>M) \<longlonglongrightarrow> 0" sorry
+    have "(\<lambda>i. sb_integral M (?s i)) \<longlonglongrightarrow> set_lebesgue_integral M A f" sorry
+    thus ?thesis sorry
   qed
-  ultimately show "integrable M (\<lambda>x. lim (\<lambda>i. u i x))" using assms(2) by (intro integrableI_sequence, auto)
+    
+  show "set_lebesgue_integral M A f = \<integral>x\<in>A. lim (\<lambda>i. simple_cond_exp M F (s i) x) \<partial>M" if "A \<in> sets F" for A using intA[OF that] by (simp add: has_bochner_integral_integral_eq set_lebesgue_integral_def)
+  have "space M \<in> sets F" using sets.top subalg subalgebra_def by metis
+  moreover have "AE x in M. indicat_real (space M) x *\<^sub>R lim (\<lambda>i. simple_cond_exp M F (s i) x) = lim (\<lambda>i. simple_cond_exp M F (s i) x)" by auto
+  ultimately show "integrable M (\<lambda>x. lim (\<lambda>i. simple_cond_exp M F (s i) x))" using integrable_cong_AE[THEN iffD1, OF borel_measurable_has_bochner_integral[OF intA] _ _ intA[THEN integrable.intros]] by fastforce 
 qed (simp add: assms)
 
 lemma cond_exp_exists:
@@ -204,18 +194,18 @@ lemma cond_exp_exists:
   assumes "integrable M f"
   shows "has_cond_exp M F f (cond_exp M F f)"
   using assms
-proof (induction rule: integrable_induct)
+proof (induction rule: integrable_induct')
   case (base A c)
-  then show ?case using cond_exp_indicator[OF base(1,2)] cond_exp_charact(1) by blast
+  show ?case using cond_exp_indicator[OF base(1,2)] cond_exp_charact(1) by blast
 next
   case (add u v)
-  then show ?case using cond_exp_add[OF add(3,4)] cond_exp_charact(1) by blast
+  show ?case using cond_exp_add[OF add(3,4)] cond_exp_charact(1) by blast
 next
   case (lim f s)
-  then show ?case using cond_exp_lim[OF lim] cond_exp_charact(1) by blast
+  show ?case using cond_exp_lim[OF lim(4,1,2,3)] cond_exp_charact(1) by blast
 qed
 
-lemma cond_exp_cong:
+lemma cond_exp_cong':
   fixes f g :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
   assumes "AE x in M. f x = g x"
       and [measurable]: "f \<in> borel_measurable M" "g \<in> borel_measurable M"
