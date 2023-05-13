@@ -1,5 +1,5 @@
 theory Misc
-  imports "HOL-Analysis.Measure_Space" "HOL-Analysis.Bochner_Integration" "HOL-Analysis.Set_Integral"
+  imports "HOL-Analysis.Measure_Space" "HOL-Analysis.Bochner_Integration" "HOL-Analysis.Set_Integral" "HOL-Probability.Conditional_Expectation"
 begin
 
 lemma banach_simple_function_indicator_representation:
@@ -21,53 +21,106 @@ lemma banach_simple_function_indicator_representation_AE:
   shows "AE x in M. f x = (\<Sum>y \<in> f ` space M. indicator (f -` {y} \<inter> space M) x *\<^sub>R y)"  
   by (metis (mono_tags, lifting) AE_I2 banach_simple_function_indicator_representation f)
 
+lemmas simple_function_scaleR[intro] = simple_function_compose2[where h="(*\<^sub>R)"]
 
-lemma integrable_induct''[consumes 1, case_names cong set add seq]:
-  fixes P :: "('a \<Rightarrow> 'b :: {second_countable_topology, banach}) \<Rightarrow> bool"
-  assumes u: "integrable M u"
-  assumes cong: "\<And>f g. integrable M f \<Longrightarrow> integrable M g \<Longrightarrow> (\<And>x. x \<in> space M \<Longrightarrow> f x = g x) \<Longrightarrow> P g \<Longrightarrow> P f"
-  assumes set: "\<And>A y. A \<in> sets M \<Longrightarrow> emeasure M A < \<infinity> \<Longrightarrow> P (\<lambda>x. indicator A x *\<^sub>R y)"
-  assumes add: "\<And>u v. P u \<Longrightarrow> P v \<Longrightarrow> P (\<lambda>x. u x + v x)"
-  assumes seq: "\<And>s. (\<And>i. Bochner_Integration.simple_bochner_integrable M (s i)) \<Longrightarrow> ((\<lambda>i. \<integral>\<^sup>+x. norm (u x - s i x) \<partial>M) \<longlonglongrightarrow> 0) \<Longrightarrow> (\<And>i. P (s i)) \<Longrightarrow> P u"
-  shows "P u"
+lemma integrable_simple_function:
+  assumes "simple_function M f" "emeasure M {y \<in> space M. f y \<noteq> 0} \<noteq> \<infinity>"
+  shows "integrable M f"
+  using assms has_bochner_integral_simple_bochner_integrable integrable.simps simple_bochner_integrable.simps by blast
+
+lemma\<^marker>\<open>tag important\<close> simple_integrable_function_induct[consumes 2, case_names cong indicator add, induct set: simple_function]:
+  fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach}"
+  assumes f: "simple_function M f" "emeasure M {y \<in> space M. f y \<noteq> 0} \<noteq> \<infinity>"
+  assumes cong: "\<And>f g. simple_function M f \<Longrightarrow> emeasure M {y \<in> space M. f y \<noteq> 0} \<noteq> \<infinity> \<Longrightarrow> simple_function M g \<Longrightarrow> emeasure M {y \<in> space M. g y \<noteq> 0} \<noteq> \<infinity> \<Longrightarrow> (\<And>x. x \<in> space M \<Longrightarrow> f x = g x) \<Longrightarrow> P f \<Longrightarrow> P g"
+  assumes indicator: "\<And>A y. A \<in> sets M \<Longrightarrow> emeasure M A < \<infinity> \<Longrightarrow> P (\<lambda>x. indicator A x *\<^sub>R y)"
+  assumes add: "\<And>f g. simple_function M f \<Longrightarrow> emeasure M {y \<in> space M. f y \<noteq> 0} \<noteq> \<infinity> \<Longrightarrow> 
+                      simple_function M g \<Longrightarrow> emeasure M {y \<in> space M. g y \<noteq> 0} \<noteq> \<infinity> \<Longrightarrow> 
+                      \<lbrakk>\<And>z. z \<in> space M \<Longrightarrow> norm (f z + g z) = norm (f z) + norm (g z)\<rbrakk> \<Longrightarrow>
+                      P f \<Longrightarrow> P g \<Longrightarrow> P (\<lambda>x. f x + g x)"
+  shows "P f"
 proof-
-  obtain I where "has_bochner_integral M u I" using u integrable.cases by auto
-  then obtain s where s_is: "Bochner_Integration.simple_bochner_integrable M (s i)" 
-                            "((\<lambda>i. \<integral>\<^sup>+x. norm (u x - s i x) \<partial>M) \<longlonglongrightarrow> 0)" for i using has_bochner_integral.cases by force
-        
-  have s_simple: "simple_function M (s i)" for i using s_is simple_bochner_integrable.simps by blast
-
-  have "s i -` {0} \<inter> space M \<in> sets M" for i using simple_functionD[OF s_simple] by blast
-  hence "space M - (s i -` {0} \<inter> space M) \<in> sets M" for i by blast
-  moreover have "{x \<in> space M. s i x \<noteq> 0} = space M - (s i -` {0} \<inter> space M)" for i by blast
-  moreover have "emeasure M {x \<in> space M. s i x \<noteq> 0} \<noteq> \<infinity>" for i using s_is simple_bochner_integrable.simps by blast
-  moreover have "s i -` {y} \<inter> space M \<subseteq> {x \<in> space M. s i x \<noteq> 0}" if "y \<noteq> 0" for i y using that by fast
-  ultimately have "emeasure M (s i -` {y} \<inter> space M) < \<infinity>" if "y \<noteq> 0" for i y by (metis (no_types, lifting) emeasure_mono that infinity_ennreal_def linorder_not_less top.not_eq_extremum)
-  hence P_set: "P (\<lambda>x. indicator (s i -` {y} \<inter> space M) x *\<^sub>R y)" if "y \<noteq> 0" for i y using set s_simple simple_functionD(2) that by meson
-  
-  have P_add: "P (\<lambda>x. \<Sum>y \<in> F. indicator (s i -` {y} \<inter> space M) x *\<^sub>R y)" if "finite F" "F \<subseteq> s i ` space M" for i F using that
+  let ?f = "\<lambda>x. (\<Sum>y\<in>f ` space M. indicat_real (f -` {y} \<inter> space M) x *\<^sub>R y)"
+  have f_ae_eq: "f x = ?f x" if "x \<in> space M" for x using banach_simple_function_indicator_representation[OF f(1) that] .
+  moreover have "emeasure M {y \<in> space M. ?f y \<noteq> 0} \<noteq> \<infinity>" by (metis (no_types, lifting) Collect_cong calculation f(2))
+  moreover have "P (\<lambda>x. \<Sum>y\<in>S. indicat_real (f -` {y} \<inter> space M) x *\<^sub>R y)"
+                "simple_function M (\<lambda>x. \<Sum>y\<in>S. indicat_real (f -` {y} \<inter> space M) x *\<^sub>R y)"
+                "emeasure M {y \<in> space M. (\<Sum>x\<in>S. indicat_real (f -` {x} \<inter> space M) y *\<^sub>R x) \<noteq> 0} \<noteq> \<infinity>"
+                if "S \<subseteq> f ` space M" for S using simple_functionD(1)[OF assms(1), THEN rev_finite_subset, OF that] that 
   proof (induction rule: finite_induct)
     case empty
-    then show ?case using set[of "{}"] by simp
+    {
+      case 1
+      then show ?case using indicator[of "{}" 0] by force 
+    next
+      case 2
+      then show ?case by force 
+    next
+      case 3
+      then show ?case by force 
+    }
   next
     case (insert x F)
-    hence asm: "F \<subseteq> s i ` space M" by fast
-    have *: "(\<Sum>y\<in>insert x F. indicat_real (s i -` {y} \<inter> space M) z *\<^sub>R y) = indicat_real (s i -` {x} \<inter> space M) z *\<^sub>R x + (\<Sum>y\<in>F. indicat_real (s i -` {y} \<inter> space M) z *\<^sub>R y)" for z using insert(2) by (subst sum.insert_remove[OF insert(1)], auto)
-    show ?case
-    proof (cases "x = 0")
-      case True
-      show ?thesis using * by (fastforce simp add: insert(3)[OF asm] True)
-    next
-      case False
-      show ?thesis using * insert(3)[OF asm] P_set[OF False, of i] add by presburger
-    qed
-  qed
+    have "(f -` {x} \<inter> space M) \<subseteq> {y \<in> space M. f y \<noteq> 0}" if "x \<noteq> 0" using that by blast
+    moreover have "{y \<in> space M. f y \<noteq> 0} = space M - (f -` {0} \<inter> space M)" by blast
+    moreover have "space M - (f -` {0} \<inter> space M) \<in> sets M" using simple_functionD(2)[OF f(1)] by blast
+    ultimately have fin_0: "emeasure M (f -` {x} \<inter> space M) < \<infinity>" if "x \<noteq> 0" using that by (metis emeasure_mono f(2) infinity_ennreal_def top.not_eq_extremum top_unique)
+    hence fin_1: "emeasure M {y \<in> space M. indicat_real (f -` {x} \<inter> space M) y *\<^sub>R x \<noteq> 0} \<noteq> \<infinity>" if "x \<noteq> 0" by (metis (mono_tags, lifting) emeasure_mono f(1) indicator_simps(2) linorder_not_less mem_Collect_eq scaleR_eq_0_iff simple_functionD(2) subsetI that)
 
-  have s_i_integrable: "integrable M (s i)" for i by (simp add: integrableI_simple_bochner_integrable s_is(1))
-  moreover have s_i_rep: "s i x = (\<Sum>y \<in> s i ` space M. indicator (s i -` {y} \<inter> space M) x *\<^sub>R y)" if "x \<in> space M" for x i using banach_simple_function_indicator_representation[OF s_simple that] by blast
-  moreover have "integrable M (\<lambda>x. \<Sum>y \<in> s i ` space M. indicator (s i -` {y} \<inter> space M) x *\<^sub>R y)" for i using s_i_rep s_i_integrable by (rule integrable_cong[OF refl, of M "s i", THEN iffD1], blast)
-  ultimately have "P (s i)" for i using cong P_add[OF simple_functionD(1)[OF s_simple] order.refl] by meson
-  thus ?thesis using seq s_is by blast
+    have *: "(\<Sum>y\<in>insert x F. indicat_real (f -` {y} \<inter> space M) xa *\<^sub>R y) = (\<Sum>y\<in>F. indicat_real (f -` {y} \<inter> space M) xa *\<^sub>R y) + indicat_real (f -` {x} \<inter> space M) xa *\<^sub>R x" for xa by (metis (no_types, lifting) Diff_empty Diff_insert0 add.commute insert.hyps(1) insert.hyps(2) sum.insert_remove)
+    have **: "{y \<in> space M. (\<Sum>x\<in>insert x F. indicat_real (f -` {x} \<inter> space M) y *\<^sub>R x) \<noteq> 0} \<subseteq> {y \<in> space M. (\<Sum>x\<in>F. indicat_real (f -` {x} \<inter> space M) y *\<^sub>R x) \<noteq> 0} \<union> {y \<in> space M. indicat_real (f -` {x} \<inter> space M) y *\<^sub>R x \<noteq> 0}" unfolding * by fastforce    
+    {
+      case 1
+      hence x: "x \<in> f ` space M" and F: "F \<subseteq> f ` space M" by auto
+      show ?case 
+      proof (cases "x = 0")
+        case True
+        then show ?thesis unfolding * using insert(3)[OF F] by simp
+      next
+        case False
+        have norm_argument: "norm ((\<Sum>y\<in>F. indicat_real (f -` {y} \<inter> space M) z *\<^sub>R y) + indicat_real (f -` {x} \<inter> space M) z *\<^sub>R x) = norm (\<Sum>y\<in>F. indicat_real (f -` {y} \<inter> space M) z *\<^sub>R y) + norm (indicat_real (f -` {x} \<inter> space M) z *\<^sub>R x)" if z: "z \<in> space M" for z
+        proof (cases "f z = x")
+          case True
+          have "indicat_real (f -` {y} \<inter> space M) z *\<^sub>R y = 0" if "y \<in> F" for y using True insert(2) z that 1 unfolding indicator_def by force
+          hence "(\<Sum>y\<in>F. indicat_real (f -` {y} \<inter> space M) z *\<^sub>R y) = 0" by (meson sum.neutral)
+          then show ?thesis by force
+        next
+          case False
+          then show ?thesis by force
+        qed
+        show ?thesis using False simple_functionD(2)[OF f(1)] insert(3,5)[OF F] simple_function_scaleR fin_0 fin_1 by (subst *, subst add, subst simple_function_sum) (blast intro: norm_argument indicator)+
+      qed 
+    next
+      case 2
+      hence x: "x \<in> f ` space M" and F: "F \<subseteq> f ` space M" by auto
+      show ?case 
+      proof (cases "x = 0")
+        case True
+        then show ?thesis unfolding * using insert(4)[OF F] by simp
+      next
+        case False
+        then show ?thesis unfolding * using insert(4)[OF F] simple_functionD(2)[OF f(1)] by fast
+      qed
+    next
+      case 3
+      hence x: "x \<in> f ` space M" and F: "F \<subseteq> f ` space M" by auto
+      show ?case 
+      proof (cases "x = 0")
+        case True
+        then show ?thesis unfolding * using insert(5)[OF F] by simp
+      next
+        case False
+        have "emeasure M {y \<in> space M. (\<Sum>x\<in>insert x F. indicat_real (f -` {x} \<inter> space M) y *\<^sub>R x) \<noteq> 0} \<le> emeasure M ({y \<in> space M. (\<Sum>x\<in>F. indicat_real (f -` {x} \<inter> space M) y *\<^sub>R x) \<noteq> 0} \<union> {y \<in> space M. indicat_real (f -` {x} \<inter> space M) y *\<^sub>R x \<noteq> 0})"
+          using ** simple_functionD(2)[OF insert(4)[OF F]] simple_functionD(2)[OF f(1)] by (intro emeasure_mono, force+)
+        also have "... \<le> emeasure M {y \<in> space M. (\<Sum>x\<in>F. indicat_real (f -` {x} \<inter> space M) y *\<^sub>R x) \<noteq> 0} + emeasure M {y \<in> space M. indicat_real (f -` {x} \<inter> space M) y *\<^sub>R x \<noteq> 0}"
+          using simple_functionD(2)[OF insert(4)[OF F]] simple_functionD(2)[OF f(1)] by (intro emeasure_subadditive, force+)
+        also have "... < \<infinity>" using insert(5)[OF F] fin_1[OF False] by (simp add: less_top)
+        finally show ?thesis by simp
+      qed
+    }
+  qed
+  moreover have "simple_function M (\<lambda>x. \<Sum>y\<in>f ` space M. indicat_real (f -` {y} \<inter> space M) x *\<^sub>R y)" using calculation by blast
+  moreover have "P (\<lambda>x. \<Sum>y\<in>f ` space M. indicat_real (f -` {y} \<inter> space M) x *\<^sub>R y)" using calculation by blast
+  ultimately show ?thesis by (intro cong[OF _ _ f(1,2)], blast, presburger+) 
 qed
 
 proposition integrable_induct'[consumes 1, case_names base add lim, induct pred: integrable]:
@@ -150,6 +203,14 @@ lemma set_integral_scaleR_left:
   using integrable_mult_indicator[OF assms]
   by (subst integral_scaleR_left[symmetric], auto)
 
-lemmas simple_function_scaleR = simple_function_compose2[where h="(*\<^sub>R)"]
+lemma AE_impI':
+  assumes "\<And>x. x \<in> space M \<Longrightarrow> P x \<Longrightarrow> Q x" 
+  shows "AE x in M. P x \<longrightarrow> Q x"
+  using assms by fast
+
+lemma AE_trans:
+  assumes "AE x in M. P x = Q x" and "AE x in M. Q x = R x"
+  shows "AE x in M. P x = R x"
+  using assms by fastforce
 
 end
