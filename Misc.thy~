@@ -203,14 +203,161 @@ lemma set_integral_scaleR_left:
   using integrable_mult_indicator[OF assms]
   by (subst integral_scaleR_left[symmetric], auto)
 
-lemma AE_impl:
-  assumes "\<And>x. x \<in> space M \<Longrightarrow> P x \<Longrightarrow> Q x" "AE x in M. P x"
-  shows "AE x in M. Q x"
+lemma nn_set_integral_eq_set_integral:
+  assumes [measurable]:"integrable M f" 
+      and "AE x \<in> A in M. 0 \<le> f x" "A \<in> sets M"
+    shows "(\<integral>\<^sup>+x\<in>A. f x \<partial>M) = (\<integral> x \<in> A. f x \<partial>M)"
+proof-
+  have "(\<integral>\<^sup>+x. indicator A x *\<^sub>R f x \<partial>M) = (\<integral> x \<in> A. f x \<partial>M)"
+  unfolding set_lebesgue_integral_def using assms(2) by (intro nn_integral_eq_integral[of _ "\<lambda>x. indicat_real A x *\<^sub>R f x"], blast intro: assms integrable_mult_indicator, fastforce)
+  moreover have "(\<integral>\<^sup>+x. indicator A x *\<^sub>R f x \<partial>M) = (\<integral>\<^sup>+x\<in>A. f x \<partial>M)"  by (metis ennreal_0 indicator_simps(1) indicator_simps(2) mult.commute mult_1 mult_zero_left real_scaleR_def)
+  ultimately show ?thesis by argo
+qed
+
+lemma AE_impI':
+  assumes "\<And>x. x \<in> space M \<Longrightarrow> P x \<Longrightarrow> Q x" 
+  shows "AE x in M. P x \<longrightarrow> Q x"
   using assms by fast
 
 lemma AE_trans:
   assumes "AE x in M. P x = Q x" and "AE x in M. Q x = R x"
   shows "AE x in M. P x = R x"
   using assms by fastforce
+
+lemma diameter_comp_strict_mono:
+  fixes s :: "nat \<Rightarrow> 'a :: real_normed_vector"
+  assumes "strict_mono r" "bounded {s i |i. r n \<le> i}"
+  shows "diameter {s (r i) | i. n \<le> i} \<le> diameter {s i | i. r n \<le> i}"
+proof (rule diameter_subset)
+  show "{s (r i) | i. n \<le> i} \<subseteq> {s i | i. r n \<le> i}" using assms(1) monotoneD strict_mono_mono by fastforce
+qed (intro assms(2))
+
+lemma diameter_bounded_bound':
+  fixes S :: "'a :: metric_space set"
+  assumes S: "bdd_above (case_prod dist ` (S\<times>S))" "x \<in> S" "y \<in> S"
+  shows "dist x y \<le> diameter S"
+proof -
+  have "(x,y) \<in> S\<times>S" using S by auto
+  then have "dist x y \<le> (SUP (x,y)\<in>S\<times>S. dist x y)" by (rule cSUP_upper2[OF assms(1)]) simp
+  with \<open>x \<in> S\<close> show ?thesis by (auto simp: diameter_def)
+qed
+
+lemma supremum_limit:
+  fixes S :: "real set"
+  assumes "S \<noteq> {}" "bdd_above S"
+  obtains h where "\<And>i. h i \<in> S" "(\<lambda>i. h i) \<longlonglongrightarrow> Sup S"
+proof
+  let ?s = "\<lambda>n. Sup S - (1 :: real) / ((n  :: nat) + 1)"
+  let ?P = "\<lambda>n y. Sup S \<ge> y \<and> y > ?s n \<and> y \<in> S"
+  define h where "h = (\<lambda>n. SOME x. ?P n x)"
+  have *: "?P i (h i)" for i
+  proof -
+    obtain x where "x \<le> Sup S" "Sup S - (1 :: real) / (i + 1) < x" "x \<in> S" using cSup_least[OF assms(1), of "Sup S - 1 / (i + 1)", THEN not_less[THEN iffD2]] cSup_upper[OF _ assms(2)] by force
+    then show ?thesis using someI[of "?P i" x] unfolding h_def by (simp add: add.commute)
+  qed
+  thus "\<And>i. h i \<in> S" by blast
+
+  show "h \<longlonglongrightarrow> Sup S"
+  proof (standard, goal_cases)
+    case (1 e)
+    then obtain n where n_less: "1 / ((n :: nat) + 1) < e" by (metis Suc_eq_plus1 nat_approx_posE)
+    moreover have "dist (h i) (Sup S) < 1 / (1 + i)" for i using *[of i] unfolding dist_norm by auto
+    ultimately have "dist (h i) (Sup S) < e" if "i \<ge> n" for i using that by (subst order.strict_trans[OF _ order.strict_trans1, of _ "1 / (1 + i)"], auto simp add: frac_le)
+    then show ?case by (meson eventually_at_top_linorderI)
+  qed
+qed
+
+lemma cauchy_iff_diameter_tends_to_zero:
+  fixes s :: "nat \<Rightarrow> 'a :: real_normed_vector"
+  shows "Cauchy s \<longleftrightarrow> (\<lambda>n. diameter {s i | i. i \<ge> n}) \<longlonglongrightarrow> 0"
+proof (standard, goal_cases)
+  case 1
+  have "\<forall>e>0. \<exists>N. \<forall>n\<ge>N. norm (diameter {s i |i. n \<le> i}) < e"
+  proof (clarify, goal_cases)
+    case _: (1 e)
+    then obtain N where "norm (s n - s m) < e" if "n \<ge> N" "m \<ge> N" for n m using 1 CauchyD by fast
+    hence "diameter {s i |i. N \<le> i} \<le> e" by (intro diameter_le) fastforce+
+    then show ?case sorry
+  qed                 
+  thus ?case sorry
+next
+  case 2
+  then show ?case sorry
+qed                             
+
+context
+  fixes s r :: "nat \<Rightarrow> 'a \<Rightarrow> 'b :: {second_countable_topology, real_normed_vector, banach}" and M
+  assumes bdd_seq: "\<And>x. x \<in> space M \<Longrightarrow> bounded (range (\<lambda>i. s i x))"
+begin
+
+lemma sequence_bounded_implies_dist_bounded:
+  assumes "x \<in> space M"
+  shows "bounded ((\<lambda>p. dist (fst p x) (snd p x)) ` (s ` UNIV \<times> s ` UNIV))"
+proof-
+  have "bounded ((\<lambda>i. s i x) ` UNIV \<times> (\<lambda>i. s i x) ` UNIV)" using bdd_seq bounded_Times assms by blast
+  hence "bounded ((\<lambda>p. dist (fst p) (snd p)) ` ((\<lambda>i. s i x) ` UNIV \<times> (\<lambda>i. s i x) ` UNIV))" by (intro bounded_dist_comp[OF bounded_fst bounded_snd])
+  moreover have "(\<lambda>p. dist (fst p) (snd p)) ` ((\<lambda>i. s i x) ` UNIV \<times> (\<lambda>i. s i x) ` UNIV) = (\<lambda>p. dist (fst p x) (snd p x)) ` (s ` UNIV \<times> s ` UNIV)" by force
+  ultimately show "bounded ((\<lambda>p. dist (fst p x) (snd p x)) ` (s ` UNIV \<times> s ` UNIV))" by argo
+qed
+
+lemma borel_measurable_diameter: 
+  assumes [measurable]: "\<And>i. (s i) \<in> borel_measurable M"
+  shows "(\<lambda>x. diameter {s i x |i. n \<le> i}) \<in> borel_measurable M"
+proof (cases "\<forall>i. \<not> n \<le> i")
+  case True
+  then show ?thesis unfolding diameter_def by simp
+next
+  case False
+  {
+    fix x
+    have "case_prod dist ` ({s i x |i. n \<le> i} \<times> {s i x |i. n \<le> i}) = case_prod (\<lambda>f g. dist (f x) (g x)) ` ({s i |i. n \<le> i} \<times> {s i |i. n \<le> i})" by fast
+    hence "case_prod dist ` ({s i x |i. n \<le> i} \<times> {s i x |i. n \<le> i}) = case_prod (\<lambda>f g. dist (f x) (g x)) ` (s ` {n..} \<times> s ` {n..})" by blast
+  }
+  hence "(\<lambda>x. diameter {s i x |i. n \<le> i}) = (\<lambda>x. Sup (case_prod (\<lambda>f g. dist (f x) (g x)) ` (s ` {n..} \<times> s ` {n..})))" unfolding diameter_def using False by force
+  hence *: "(\<lambda>x. diameter {s i x |i. n \<le> i}) =  (\<lambda>x. Sup ((\<lambda>p. dist (fst p x) (snd p x)) ` (s ` {n..} \<times> s ` {n..})))" by (simp add: case_prod_beta')
+
+  have "bounded ((\<lambda>p. dist (fst p x) (snd p x)) ` (s ` {n..} \<times> s ` {n..}))" if "x \<in> space M" for x using sequence_bounded_implies_dist_bounded[OF that] by (rule bounded_subset, auto)
+  hence bdd: "bdd_above ((\<lambda>p. dist (fst p x) (snd p x)) ` (s ` {n..} \<times> s ` {n..}))" if "x \<in> space M" for x using that bounded_imp_bdd_above by presburger
+  have "fst p \<in> borel_measurable M" "snd p \<in> borel_measurable M" if "p \<in> s ` {n..} \<times> s ` {n..}" for p using that by fastforce+
+  hence "(\<lambda>x. fst p x - snd p x) \<in> borel_measurable M" if "p \<in> s ` {n..} \<times> s ` {n..}" for p using that borel_measurable_diff by simp
+  hence "(\<lambda>x. case p of (f, g) \<Rightarrow> dist (f x) (g x)) \<in> borel_measurable M" if "p \<in> s ` {n..} \<times> s ` {n..}" for p unfolding dist_norm using that by measurable
+  moreover have "countable (s ` {n..} \<times> s ` {n..})" by (intro countable_SIGMA countable_image, auto)
+  ultimately show ?thesis unfolding * by (auto intro!: borel_measurable_cSUP bdd)
+qed
+
+lemma integrable_bound_diameter:
+  fixes f :: "'a \<Rightarrow> real"
+  assumes "integrable M f" 
+      and [measurable]: "\<And>i. (s i) \<in> borel_measurable M"
+      and "\<And>x i. x \<in> space M \<Longrightarrow> norm (s i x) \<le> f x"
+    shows "integrable M (\<lambda>x. diameter {s i x |i. n \<le> i})"
+proof (cases "\<forall>i. \<not> n \<le> i")
+  case True
+  then show ?thesis unfolding diameter_def by simp
+next
+  case False
+  {
+    fix x assume x: "x \<in> space M"
+    let ?S = "(\<lambda>p. dist (fst p x) (snd p x)) ` (s ` {n..} \<times> s ` {n..})"
+    have "case_prod dist ` ({s i x |i. n \<le> i} \<times> {s i x |i. n \<le> i}) = case_prod (\<lambda>f g. dist (f x) (g x)) ` ({s i |i. n \<le> i} \<times> {s i |i. n \<le> i})" by fast
+    hence "case_prod dist ` ({s i x |i. n \<le> i} \<times> {s i x |i. n \<le> i}) = case_prod (\<lambda>f g. dist (f x) (g x)) ` (s ` {n..} \<times> s ` {n..})" by blast
+    hence "diameter {s i x |i. n \<le> i} = Sup (case_prod (\<lambda>f g. dist (f x) (g x)) ` (s ` {n..} \<times> s ` {n..}))" unfolding diameter_def using False by auto
+    hence *: "diameter {s i x |i. n \<le> i} =  Sup ?S" by (simp add: case_prod_beta')
+    
+    have "bounded ?S" using sequence_bounded_implies_dist_bounded[OF x] by (rule bounded_subset, auto)
+    hence Sup_S_nonneg:"0 \<le> Sup ?S" by (auto intro!: cSup_upper2 x bounded_imp_bdd_above)
+
+    have "dist (s i x) (s j x) \<le>  2 * f x" for i j by (intro dist_triangle2[THEN order_trans, of _ 0]) (metis norm_conv_dist assms(3) x add_mono mult_2)
+    hence "\<forall>c \<in> ?S. c \<le> 2 * f x" by force
+    hence "Sup ?S \<le> 2 * f x" by (intro cSup_least, auto)
+    hence "norm (Sup ?S) \<le> 2 * norm (f x)" using Sup_S_nonneg by auto
+    also have "... = norm (2 *\<^sub>R f x)" by simp
+    finally have "norm (diameter {s i x |i. n \<le> i}) \<le> norm (2 *\<^sub>R f x)" unfolding * .
+  }
+  hence "AE x in M. norm (diameter {s i x |i. n \<le> i}) \<le> norm (2 *\<^sub>R f x)" by blast
+  thus  "integrable M (\<lambda>x. diameter {s i x |i. n \<le> i})" using borel_measurable_diameter by (intro Bochner_Integration.integrable_bound[OF assms(1)[THEN integrable_scaleR_right[of 2]]], measurable)
+qed
+end
+
 
 end
