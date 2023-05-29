@@ -211,6 +211,12 @@ lemma cond_exp_le_c:
   shows "AE x in M. cond_exp M F f x \<le> c"
   using real_cond_exp_le_c[OF assms(1,2)] assms(1)[THEN cond_exp_real] by fastforce
 
+lemma cond_exp_cmult:
+  fixes f :: "'a \<Rightarrow> real"
+  assumes "integrable M f"
+  shows "AE x in M. cond_exp M F (\<lambda>x. c * f x) x = c * cond_exp M F f x"
+  using real_cond_exp_cmult[OF assms(1), of c] assms(1)[THEN cond_exp_real] assms(1)[THEN integrable_mult_right, THEN cond_exp_real, of c] by fastforce
+
 text \<open>Indicator functions\<close>
 
 lemma has_cond_exp_indicator:
@@ -384,7 +390,7 @@ qed
 
 lemma has_cond_exp_lim:
     fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
-  assumes "integrable M f"
+  assumes [measurable]:"integrable M f"
       and "\<And>i. simple_function M (s i)"
       and "\<And>i. emeasure M {y \<in> space M. s i y \<noteq> 0} \<noteq> \<infinity>"
       and "\<And>x. x \<in> space M \<Longrightarrow> (\<lambda>i. s i x) \<longlonglongrightarrow> f x"
@@ -394,55 +400,105 @@ lemma has_cond_exp_lim:
 proof -
   have [measurable]: "(s i) \<in> borel_measurable M" for i using assms(2) by (simp add: borel_measurable_simple_function)
   have integrable_s: "integrable M (\<lambda>x. s i x)" for i using assms(2) assms(3) integrable_simple_function by blast
-  have integrable_cond_exp_norm_f: "integrable M (\<lambda>x. 2 * cond_exp M F (\<lambda>x. norm (f x)) x)" by fast
+  have integrable_4f: "integrable M (\<lambda>x. 4 * norm (f x))" using assms(1) by simp
+  have integrable_2f: "integrable M (\<lambda>x. 2 * norm (f x))" using assms(1) by simp
+  have integrable_2_cond_exp_norm_f: "integrable M (\<lambda>x. 2 * cond_exp M F (\<lambda>x. norm (f x)) x)" by fast
 
   have "{y \<in> space M. s i y \<noteq> 0} = space M - (s i -` {0} \<inter> space M)" for i by blast
   hence "emeasure M {y \<in> space M. s i y - s j y \<noteq> 0} \<le>  emeasure M {y \<in> space M. s i y \<noteq> 0} + emeasure M {y \<in> space M. s j y \<noteq> 0}" for i j using simple_functionD(2)[OF assms(2)] by (intro order_trans[OF emeasure_mono emeasure_subadditive], auto)
   hence fin_sup: "emeasure M {y \<in> space M. s i y - s j y \<noteq> 0} \<noteq> \<infinity>" for i j using assms(3) by (metis (mono_tags) ennreal_add_eq_top linorder_not_less top.not_eq_extremum infinity_ennreal_def)
 
   have Cauchy: "Cauchy (\<lambda>n. s n x)" if "x \<in> space M" for x using assms(4) LIMSEQ_imp_Cauchy that by blast
-  hence bdd_range_s: "bounded (range (\<lambda>n. s n x))" if "x \<in> space M" for x using that cauchy_imp_bounded by fast
-
+  hence bounded_range_s: "bounded (range (\<lambda>n. s n x))" if "x \<in> space M" for x using that cauchy_imp_bounded by fast
 
   have "AE x in M. (\<lambda>n. diameter {s i x | i. n \<le> i}) \<longlonglongrightarrow> 0" using Cauchy cauchy_iff_diameter_tends_to_zero by fast
-  moreover have "(\<lambda>x. diameter {s i x |i. n \<le> i}) \<in> borel_measurable M" for n using bdd_range_s borel_measurable_diameter by measurable
+  moreover have "(\<lambda>x. diameter {s i x |i. n \<le> i}) \<in> borel_measurable M" for n using bounded_range_s borel_measurable_diameter by measurable
   moreover have "AE x in M. norm (diameter {s i x |i. n \<le> i}) \<le> 4 * norm (f x)" for n
   proof - 
     {
       fix x assume x: "x \<in> space M"
       have "diameter {s i x |i. n \<le> i} \<le> 2 * norm (f x) + 2 * norm (f x)" by (intro diameter_le, blast, subst dist_norm[symmetric], intro dist_triangle3[THEN order_trans, of 0], intro add_mono) (auto intro: assms(5)[OF x])
-      hence "norm (diameter {s i x |i. n \<le> i}) \<le> 4 * norm (f x)" using diameter_ge_0[OF bounded_subset[OF bdd_range_s], OF x, of "{s i x |i. n \<le> i}"] by force
+      hence "norm (diameter {s i x |i. n \<le> i}) \<le> 4 * norm (f x)" using diameter_ge_0[OF bounded_subset[OF bounded_range_s], OF x, of "{s i x |i. n \<le> i}"] by force
     }
     thus ?thesis by fast
   qed
-  ultimately have diameter_tendsto_zero: "(\<lambda>n. LINT x|M. diameter {s i x | i. n \<le> i}) \<longlonglongrightarrow> 0" by (intro integral_dominated_convergence[OF borel_measurable_const[of 0] _ integrable_mult_right[OF integrable_norm[OF assms(1)]], simplified]) fast+
+  ultimately have diameter_tendsto_zero: "(\<lambda>n. LINT x|M. diameter {s i x | i. n \<le> i}) \<longlonglongrightarrow> 0" by (intro integral_dominated_convergence[OF borel_measurable_const[of 0] _ integrable_4f, simplified]) (fast+)
   
+  have diameter_integrable: "integrable M (\<lambda>x. diameter {s i x | i. n \<le> i})" for n using assms(1,5) by (intro integrable_bound_diameter[OF bounded_range_s integrable_2f], auto)
 
+  (*Add beauty*)
+  have dist_integrable: "integrable M (\<lambda>x. dist (s i x) (s j x))" for i j 
+    apply (intro Bochner_Integration.integrable_bound[OF integrable_4f], simp)
+    apply simp
+    using assms(5) by (smt (verit) AE_I2 dist_0_norm dist_triangle3)
+  hence dist_norm_integrable: "integrable M (\<lambda>x. norm (s i x - s j x))" for i j unfolding dist_norm by presburger
 
   have "\<exists>N. \<forall>i\<ge>N. \<forall>j\<ge>N. LINT x|M. dist (cond_exp M F (s i) x) (cond_exp M F (s j) x) < e" if "e > 0" for e
-  proof
-    obtain N where "LINT x|M. diameter {s i x | i. n \<le> i} < e" if "n \<ge> N" for n using diameter_tendsto_zero by (smt (verit, del_insts) \<open>0 < e\<close> eventually_sequentially order_tendsto_iff)
+  proof -
+    obtain N where *: "LINT x|M. diameter {s i x | i. n \<le> i} < e" if "n \<ge> N" for n using diameter_tendsto_zero by (smt (verit, del_insts) \<open>0 < e\<close> eventually_sequentially order_tendsto_iff)
     {
       fix i j x assume asm: "i \<ge> N" "j \<ge> N" "x \<in> space M"
       have "case_prod dist ` ({s i x |i. N \<le> i} \<times> {s i x |i. N \<le> i}) = case_prod (\<lambda>i j. dist (s i x) (s j x)) ` ({N..} \<times> {N..})" by fast
       hence "diameter {s i x | i. N \<le> i} = (SUP (i, j) \<in> {N..} \<times> {N..}. dist (s i x) (s j x))" unfolding diameter_def by auto
-      have "bdd_above ((\<lambda>(i, j). dist (s i x) (s j x)) ` ({N..} \<times> {N..}))" sorry
-      hence "(SUP (i, j) \<in> {N..} \<times> {N..}. dist (s i x) (s j x)) \<ge> dist (s i x) (s j x)" using asm(1,2)  bdd_range_s[OF asm(3)] by (intro cSup_upper, auto)
-      
+      moreover have "(SUP (i, j) \<in> {N..} \<times> {N..}. dist (s i x) (s j x)) \<ge> dist (s i x) (s j x)" using asm bounded_imp_bdd_above[OF cauchy_dist_bounded, OF bounded_range_s] by (intro cSup_upper, auto)
+      ultimately have "diameter {s i x | i. N \<le> i} \<ge> dist (s i x) (s j x)" by presburger
     }
-    hence "LINT x|M. dist (s i x) (s j x) < e" if "i \<ge> N" "j \<ge> N" for i j sorry
+    hence "LINT x|M. dist (s i x) (s j x) < e" if "i \<ge> N" "j \<ge> N" for i j using that * by (intro integral_mono[OF dist_integrable diameter_integrable, THEN order.strict_trans1], blast+)
+    moreover have "LINT x|M. dist (cond_exp M F (s i) x) (cond_exp M F (s j) x) \<le> LINT x|M. dist (s i x) (s j x)" for i j
+    proof-
+      have "LINT x|M. dist (cond_exp M F (s i) x) (cond_exp M F (s j) x) = LINT x|M. norm (cond_exp M F (s i) x - cond_exp M F (s j) x)" using dist_norm by meson
+      also have "... = LINT x|M. norm (cond_exp M F (\<lambda>x. s i x - s j x) x)" using cond_exp_diff'[OF has_cond_exp_simple(1,1)[OF assms(2,3)], THEN AE_symmetric, of i j] by (intro integral_cong_AE, auto)
+      also have "... \<le> LINT x|M. cond_exp M F (\<lambda>x. norm (s i x - s j x)) x" using cond_exp_contraction_simple[OF _ fin_sup, of i j] integrable_cond_exp assms(2) by (intro integral_mono_AE, fast+)
+      also have "... = LINT x|M. norm (s i x - s j x)" using assms(2) fin_sup
+        apply (subst set_integral_space[OF integrable_cond_exp, symmetric])
+        apply (subst set_integral_space[OF dist_norm_integrable, symmetric])
+        apply (intro has_cond_expD(1)[OF has_cond_exp_simple, of _ "space M", symmetric])
+        apply (metis simple_function_compose1 simple_function_compose2, simp)
+        by (metis sets.top subalg subalgebra_def)
+      finally show ?thesis unfolding dist_norm .  
+    qed
+    ultimately show ?thesis using order.strict_trans1 by meson
+  qed
+  then obtain r where strict_mono_r: "strict_mono r" and "AE x in M. Cauchy (\<lambda>i. cond_exp M F (s (r i)) x)" by (rule tendsto_L1_AE_cauchy[OF integrable_cond_exp], auto)
+  hence ae_lim_cond_exp: "AE x in M. (\<lambda>n. cond_exp M F (s (r n)) x) \<longlonglongrightarrow> lim (\<lambda>n. cond_exp M F (s (r n)) x)" using Cauchy_convergent_iff convergent_LIMSEQ_iff by fastforce
 
-
-
-  then obtain r where strict_mono_r: "strict_mono r" and ae_cauchy_bdd_cond_exp: "AE x in M. Cauchy (\<lambda>i. cond_exp M F (s (r i)) x)" by (rule tendsto_L1_AE_cauchy[OF integrable_cond_exp], auto)
-  hence "AE x in M. (\<lambda>n. cond_exp M F (s (r n)) x) \<longlonglongrightarrow> lim (\<lambda>n. cond_exp M F (s (r n)) x)" using Cauchy_convergent_iff convergent_LIMSEQ_iff by fastforce
+  have cond_exp_bounded: "AE x in M. norm (cond_exp M F (s (r n)) x) \<le> cond_exp M F (\<lambda>x. 2 * norm (f x)) x" for n
+  proof -
+    have "AE x in M. norm (cond_exp M F (s (r n)) x) \<le> cond_exp M F (\<lambda>x. norm (s (r n) x)) x" by (rule cond_exp_contraction_simple[OF assms(2,3)])
+    moreover have "AE x in M. cond_exp M F (\<lambda>x. norm (s (r n) x)) x \<le> cond_exp M F (\<lambda>x. 2 * norm (f x)) x" using integrable_s integrable_2f assms(5) by (intro cond_exp_mono, auto) 
+    ultimately show ?thesis by force
+  qed
+  have lim_integrable: "integrable M (\<lambda>x. lim (\<lambda>i. cond_exp M F (s (r i)) x))" by (intro integrable_dominated_convergence[OF _ borel_measurable_cond_exp' integrable_cond_exp ae_lim_cond_exp cond_exp_bounded], simp)
 
   {
-    fix A assume "A \<in> sets F"
-    have "LINT x:A|M. lim (\<lambda>n. cond_exp M F (s (r n)) x) = LINT x:A|M. lim (\<lambda>n. s (r n) x)" sorry
-  }
+    fix A assume A_in_sets_F: "A \<in> sets F"
+    have "AE x in M. norm (indicator A x *\<^sub>R cond_exp M F (s (r n)) x) \<le> cond_exp M F (\<lambda>x. 2 * norm (f x)) x" for n
+    proof -
+      have "AE x in M. norm (indicator A x *\<^sub>R cond_exp M F (s (r n)) x) \<le> norm (cond_exp M F (s (r n)) x)" unfolding indicator_def by simp
+      thus ?thesis using cond_exp_bounded[of n] by force
+    qed
+    hence lim_cond_exp_int: "(\<lambda>n. LINT x:A|M. cond_exp M F (s (r n)) x) \<longlonglongrightarrow> LINT x:A|M. lim (\<lambda>n. cond_exp M F (s (r n)) x)" 
+      using ae_lim_cond_exp measurable_from_subalg[OF subalg borel_measurable_indicator, OF A_in_sets_F] cond_exp_bounded
+      unfolding set_lebesgue_integral_def
+      by (intro integral_dominated_convergence[OF borel_measurable_scaleR borel_measurable_scaleR integrable_cond_exp]) (fastforce simp add: tendsto_scaleR)+
 
-  show ?thesis sorry
+    have "AE x in M. norm (indicator A x *\<^sub>R s (r n) x) \<le> 2 * norm (f x)" for n
+    proof -
+      have "AE x in M. norm (indicator A x *\<^sub>R s (r n) x) \<le> norm (s (r n) x)" unfolding indicator_def by simp
+      thus ?thesis using assms(5)[of _ "r n"] by fastforce
+    qed
+    hence lim_s_int: "(\<lambda>n. LINT x:A|M. s (r n) x) \<longlonglongrightarrow> LINT x:A|M. f x"
+      using measurable_from_subalg[OF subalg borel_measurable_indicator, OF A_in_sets_F] LIMSEQ_subseq_LIMSEQ[OF assms(4) strict_mono_r] assms(5)
+      unfolding set_lebesgue_integral_def comp_def
+      by (intro integral_dominated_convergence[OF borel_measurable_scaleR borel_measurable_scaleR integrable_2f]) (fastforce simp add: tendsto_scaleR)+
+
+    have "LINT x:A|M. lim (\<lambda>n. cond_exp M F (s (r n)) x) = lim (\<lambda>n. LINT x:A|M. cond_exp M F (s (r n)) x)" using limI[OF lim_cond_exp_int] by argo
+    also have "... = lim (\<lambda>n. LINT x:A|M. s (r n) x)" using has_cond_expD(1)[OF has_cond_exp_simple[OF assms(2,3)] A_in_sets_F, symmetric] by presburger
+    also have "... = LINT x:A|M. f x" using limI[OF lim_s_int] by argo
+    finally have "LINT x:A|M. lim (\<lambda>n. cond_exp M F (s (r n)) x) = LINT x:A|M. f x" .
+  }
+  hence "has_cond_exp M F f (\<lambda>x. lim (\<lambda>i. cond_exp M F (s (r i)) x))" using assms(1) lim_integrable by (intro has_cond_expI, auto) 
+  thus thesis using that by fast
 qed
 
 lemma has_cond_exp_cond_exp:
@@ -458,14 +514,19 @@ next
   show ?case using has_cond_exp_add[OF add(3,4)] has_cond_exp_charact(1) by blast
 next
   case (lim f s)
-  show ?case using has_cond_exp_lim[OF lim(1,3,4,5,6,7)] has_cond_exp_charact(1) by meson
+  show ?case using has_cond_exp_lim[OF lim(1,3,4,5,6)] has_cond_exp_charact(1) by meson
 qed
+
+lemma cond_exp_integral:
+  fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
+  assumes "integrable M f" "A \<in> sets F"
+  shows "(\<integral> x \<in> A. f x \<partial>M) = (\<integral> x \<in> A. cond_exp M F f x \<partial>M)"
+  using has_cond_expD(1)[OF has_cond_exp_cond_exp, OF assms] by argo
 
 lemma cond_exp_mult:
   assumes [measurable]:"f \<in> borel_measurable F" "g \<in> borel_measurable M" "integrable M (\<lambda>x. f x * g x)"
   shows "AE x in M. cond_exp M F (\<lambda>x. f x * g x) x = f x * cond_exp M F g x"
   sorry
-
 
 lemma cond_exp_sum [intro, simp]:
   fixes f::"'b \<Rightarrow> 'a \<Rightarrow> real"

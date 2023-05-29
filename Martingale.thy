@@ -32,17 +32,20 @@ locale supermartingale = adapted_process M F "X :: _ \<Rightarrow> _ \<Rightarro
   assumes integrable: "\<And>i. integrable M (X i)"
       and supermartingale_property: "\<And>i j. i \<le> j \<Longrightarrow> AE \<xi> in M. X i \<xi> \<ge> cond_exp M (F i) (X j) \<xi>"
 
-lemma (in filtered_prob_space) martingale_const:
+lemma (in sigma_finite_filtered_prob_space) martingale_const:
   shows "martingale M F (\<lambda>_ _. c)"
+  using sgf.cond_exp_indicator
+AE_symmetric[OF ]
   apply (unfold_locales)
      apply (auto simp add: measurable_const space_F subalgebra subalgebra_def intro!: )
-  using sigma_finite_subalgebra.cond_exp_indicator
+
 
 lemma (in filtered_prob_space) martingale_const_fun:
   assumes "\<And>i. f \<in> borel_measurable (F i)" "integrable M f"
   shows "martingale M F (\<lambda>_. f)"
   using assms borel_measurable_integrable
-  by (unfold_locales) (auto simp add: measurable_const space_F subalgebra subalgebra_def intro!: AE_symmetric[OF cond_exp.characterization])
+  apply (unfold_locales) 
+  apply (auto simp add: measurable_const space_F subalgebra subalgebra_def)
   
 lemma (in martingale) martingale_set_integral:
   assumes "A \<in> F i" "i \<le> j"

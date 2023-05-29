@@ -1,12 +1,9 @@
 theory Filtration
-imports "HOL-Probability.Stopping_Time" "HOL-Probability.Probability_Measure" Sigma_Utils "HOL-Probability.Conditional_Expectation"
+imports "HOL-Probability.Probability" Sigma_Utils
 begin
 
 locale filtered_prob_space = prob_space M + filtration "space M" F for M F +
   assumes subalgebra: "\<And>i. F i \<subseteq> M"
-
-locale sigma_finite_filtration = filtration +
-  assumes sigma_finite: "\<And>i. sigma_finite_measure (restr_to_subalg M (F i))"
 
 definition natural_filtration :: "'a measure \<Rightarrow> 's measure \<Rightarrow> ('t \<Rightarrow> 'a \<Rightarrow> 's) \<Rightarrow> 't :: {second_countable_topology, linorder_topology} \<Rightarrow> 'a measure" where
   "natural_filtration M N Y = (\<lambda>t. sigma_gen (space M) N {Y i | i. i \<le> t})"
@@ -21,5 +18,10 @@ next
   hence "(\<Union>f\<in>{Y ia |ia. ia \<le> i}. {f -` A \<inter> space M |A. A \<in> sets N}) \<subseteq> (\<Union>f\<in>{Y ia |ia. ia \<le> j}. {f -` A \<inter> space M |A. A \<in> sets N})" by blast
   thus ?case unfolding natural_filtration_def sets_sigma_gen by (rule sigma_sets_subseteq)
 qed
+
+locale sigma_finite_filtered_prob_space = filtered_prob_space + 
+  assumes sigma_finite: "\<And>i. sigma_finite_measure (restr_to_subalg M (F i))"
+
+sublocale sigma_finite_filtered_prob_space \<subseteq> sgf: sigma_finite_subalgebra M "F i" sorry
 
 end

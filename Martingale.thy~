@@ -1,5 +1,5 @@
 theory Martingale          
-  imports Filtration Cond_Exp
+  imports Filtration Banach_Conditional_Expectation
 begin
 
 locale stochastic_process = prob_space M for M +
@@ -34,7 +34,9 @@ locale supermartingale = adapted_process M F "X :: _ \<Rightarrow> _ \<Rightarro
 
 lemma (in filtered_prob_space) martingale_const:
   shows "martingale M F (\<lambda>_ _. c)"
-  by (unfold_locales) (auto simp add: measurable_const space_F subalgebra subalgebra_def intro: AE_symmetric[OF cond_exp.characterization])
+  apply (unfold_locales)
+     apply (auto simp add: measurable_const space_F subalgebra subalgebra_def intro!: )
+  using sigma_finite_subalgebra.cond_exp_indicator
 
 lemma (in filtered_prob_space) martingale_const_fun:
   assumes "\<And>i. f \<in> borel_measurable (F i)" "integrable M f"
