@@ -137,64 +137,56 @@ proposition integrable_induct'[consumes 1, case_names base add lim, induct pred:
                   \<Longrightarrow> (\<And>i. P (s i)) \<Longrightarrow> P f"
   shows "P f"
 proof -
-  from \<open>integrable M f\<close> have f: "f \<in> borel_measurable M" "(\<integral>\<^sup>+x. norm (f x) \<partial>M) < \<infinity>"
-    unfolding integrable_iff_bounded by auto
-  from borel_measurable_implies_sequence_metric[OF f(1)]
-  obtain s where s: "\<And>i. simple_function M (s i)" "\<And>x. x \<in> space M \<Longrightarrow> (\<lambda>i. s i x) \<longlonglongrightarrow> f x"
-    "\<And>i x. x \<in> space M \<Longrightarrow> norm (s i x) \<le> 2 * norm (f x)"
-    unfolding norm_conv_dist by metis
+  have f: "f \<in> borel_measurable M" "(\<integral>\<^sup>+x. norm (f x) \<partial>M) < \<infinity>" using assms(1) unfolding integrable_iff_bounded by auto
+  obtain s where s: "\<And>i. simple_function M (s i)" "\<And>x. x \<in> space M \<Longrightarrow> (\<lambda>i. s i x) \<longlonglongrightarrow> f x" "\<And>i x. x \<in> space M \<Longrightarrow> norm (s i x) \<le> 2 * norm (f x)" using borel_measurable_implies_sequence_metric[OF f(1)] unfolding norm_conv_dist by metis
 
-  { fix f A
-    have [simp]: "P (\<lambda>x. 0)"
-      using base[of "{}" undefined] by simp
-    have "(\<And>i::'b. i \<in> A \<Longrightarrow> integrable M (f i::'a \<Rightarrow> 'b)) \<Longrightarrow>
-    (\<And>i. i \<in> A \<Longrightarrow> P (f i)) \<Longrightarrow> P (\<lambda>x. \<Sum>i\<in>A. f i x)"
-    by (induct A rule: infinite_finite_induct) (auto intro!: add) }
+  { 
+    fix f A
+    have [simp]: "P (\<lambda>x. 0)" using base[of "{}" undefined] by simp
+    have "(\<And>i::'b. i \<in> A \<Longrightarrow> integrable M (f i::'a \<Rightarrow> 'b)) \<Longrightarrow> (\<And>i. i \<in> A \<Longrightarrow> P (f i)) \<Longrightarrow> P (\<lambda>x. \<Sum>i\<in>A. f i x)" by (induct A rule: infinite_finite_induct) (auto intro!: add) 
+  }
   note sum = this
 
   define s' where [abs_def]: "s' i z = indicator (space M) z *\<^sub>R s i z" for i z
-  then have s'_eq_s: "\<And>i x. x \<in> space M \<Longrightarrow> s' i x = s i x"
-    by simp
+  hence s'_eq_s: "\<And>i x. x \<in> space M \<Longrightarrow> s' i x = s i x" by simp
 
-  have sf[measurable]: "\<And>i. simple_function M (s' i)"
-    unfolding s'_def using s(1)
-    by (intro simple_function_compose2[where h="(*\<^sub>R)"] simple_function_indicator) auto
+  have sf[measurable]: "\<And>i. simple_function M (s' i)" unfolding s'_def using s(1) by (intro simple_function_compose2[where h="(*\<^sub>R)"] simple_function_indicator) auto
 
-  { fix i
-    have "\<And>z. {y. s' i z = y \<and> y \<in> s' i ` space M \<and> y \<noteq> 0 \<and> z \<in> space M} =
-        (if z \<in> space M \<and> s' i z \<noteq> 0 then {s' i z} else {})"
-      by (auto simp add: s'_def split: split_indicator)
-    then have "\<And>z. s' i = (\<lambda>z. \<Sum>y\<in>s' i`space M - {0}. indicator {x\<in>space M. s' i x = y} z *\<^sub>R y)"
-      using sf by (auto simp: fun_eq_iff simple_function_def s'_def) }
+  { 
+    fix i
+    have "\<And>z. {y. s' i z = y \<and> y \<in> s' i ` space M \<and> y \<noteq> 0 \<and> z \<in> space M} = (if z \<in> space M \<and> s' i z \<noteq> 0 then {s' i z} else {})" by (auto simp add: s'_def split: split_indicator)
+    then have "\<And>z. s' i = (\<lambda>z. \<Sum>y\<in>s' i`space M - {0}. indicator {x\<in>space M. s' i x = y} z *\<^sub>R y)" using sf by (auto simp: fun_eq_iff simple_function_def s'_def) 
+  }
   note s'_eq = this
 
   show "P f"
   proof (rule lim)
     fix i
-
-    have "(\<integral>\<^sup>+x. norm (s' i x) \<partial>M) \<le> (\<integral>\<^sup>+x. ennreal (2 * norm (f x)) \<partial>M)"
-      using s by (intro nn_integral_mono) (auto simp: s'_eq_s)
-    also have "\<dots> < \<infinity>"
-      using f by (simp add: nn_integral_cmult ennreal_mult_less_top ennreal_mult)
-    finally have sbi: "Bochner_Integration.simple_bochner_integrable M (s' i)"
-      using sf by (intro simple_bochner_integrableI_bounded) auto
+    have "(\<integral>\<^sup>+x. norm (s' i x) \<partial>M) \<le> (\<integral>\<^sup>+x. ennreal (2 * norm (f x)) \<partial>M)" using s by (intro nn_integral_mono) (auto simp: s'_eq_s)
+    also have "\<dots> < \<infinity>" using f by (simp add: nn_integral_cmult ennreal_mult_less_top ennreal_mult)
+    finally have sbi: "Bochner_Integration.simple_bochner_integrable M (s' i)" using sf by (intro simple_bochner_integrableI_bounded) auto
     thus "integrable M (s' i)" "simple_function M (s' i)" "emeasure M {y\<in>space M. s' i y \<noteq> 0} \<noteq> \<infinity>" by (auto intro: integrableI_simple_bochner_integrable simple_bochner_integrable.cases)
 
-    { fix x assume"x \<in> space M" "s' i x \<noteq> 0"
-      then have "emeasure M {y \<in> space M. s' i y = s' i x} \<le> emeasure M {y \<in> space M. s' i y \<noteq> 0}"
-        by (intro emeasure_mono) auto
-      also have "\<dots> < \<infinity>"
-        using sbi by (auto elim: simple_bochner_integrable.cases simp: less_top)
-      finally have "emeasure M {y \<in> space M. s' i y = s' i x} \<noteq> \<infinity>" by simp }
-    then show "P (s' i)"
-      by (subst s'_eq) (auto intro!: sum base simp: less_top)
+    { 
+      fix x assume"x \<in> space M" "s' i x \<noteq> 0"
+      then have "emeasure M {y \<in> space M. s' i y = s' i x} \<le> emeasure M {y \<in> space M. s' i y \<noteq> 0}" by (intro emeasure_mono) auto
+      also have "\<dots> < \<infinity>" using sbi by (auto elim: simple_bochner_integrable.cases simp: less_top)
+      finally have "emeasure M {y \<in> space M. s' i y = s' i x} \<noteq> \<infinity>" by simp 
+    }
+    then show "P (s' i)" by (subst s'_eq) (auto intro!: sum base simp: less_top)
 
-    fix x assume "x \<in> space M" with s show "(\<lambda>i. s' i x) \<longlonglongrightarrow> f x"
-      by (simp add: s'_eq_s)
-    show "norm (s' i x) \<le> 2 * norm (f x)"
-      using \<open>x \<in> space M\<close> s by (simp add: s'_eq_s)
+    fix x assume "x \<in> space M" 
+    thus "(\<lambda>i. s' i x) \<longlonglongrightarrow> f x" using s by (simp add: s'_eq_s)
+    show "norm (s' i x) \<le> 2 * norm (f x)" using \<open>x \<in> space M\<close> s by (simp add: s'_eq_s)
   qed fact
 qed
+
+lemma banach_density_unique:
+  fixes f f'::"_ \<Rightarrow> 'b::{second_countable_topology, banach}"
+  assumes M[measurable]: "integrable M f" "integrable M f'"
+  assumes density_eq: "\<And>A. A \<in> sets M \<Longrightarrow> (\<integral>x \<in> A. f x \<partial>M) = (\<integral>x \<in> A. f' x \<partial>M)"
+  shows "AE x in M. f x = f' x"
+  sorry
 
 lemma set_integral_scaleR_left: 
   assumes "A \<in> sets M" "c \<noteq> 0 \<Longrightarrow> integrable M f"
