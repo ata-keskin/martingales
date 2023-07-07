@@ -487,6 +487,12 @@ next
   show ?case using has_cond_exp_lim[OF lim(1,3,4,5,6)] has_cond_exp_charact(1) by meson
 qed
 
+lemma cond_exp_nested_subalg:
+  fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
+  assumes "integrable M f" "subalgebra M G" "subalgebra G F"
+  shows "AE \<xi> in M. cond_exp M F f \<xi> = cond_exp M F (cond_exp M G f) \<xi>"
+  using has_cond_expI assms sigma_finite_subalgebra_def by (auto intro!: has_cond_exp_nested_subalg[THEN has_cond_exp_charact(2), THEN AE_symmetric] sigma_finite_subalgebra.has_cond_expI[OF sigma_finite_subalgebra.intro[OF assms(2)]] nested_subalg_is_sigma_finite )
+
 lemma cond_exp_set_integral:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
   assumes "integrable M f" "A \<in> sets F"
@@ -502,13 +508,9 @@ lemma cond_exp_add:
 lemma cond_exp_diff:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach}"
   assumes "integrable M f" "integrable M g"
-  shows "AE x in M. cond_exp M F (\<lambda>x. f x - g x) x = cond_exp M F f x - cond_exp M F g x"
+  shows "AE x in M. cond_exp M F (f - g) x = cond_exp M F f x - cond_exp M F g x"
+  unfolding fun_diff_def
   using has_cond_exp_add[OF _ has_cond_exp_scaleR_right, OF has_cond_expI(1,1), OF assms, THEN has_cond_exp_charact(2), of "-1"] by simp
-
-lemma cond_exp_mult:
-  assumes [measurable]:"f \<in> borel_measurable F" "g \<in> borel_measurable M" "integrable M (\<lambda>x. f x * g x)"
-  shows "AE x in M. cond_exp M F (\<lambda>x. f x * g x) x = f x * cond_exp M F g x"
-  sorry
 
 lemma cond_exp_sum [intro, simp]:
   fixes f :: "'t \<Rightarrow> 'a \<Rightarrow> 'b :: {second_countable_topology,banach}"
@@ -525,16 +527,8 @@ theorem cond_exp_jensens_inequality:
         "AE x in M. q (cond_exp M F X x) \<le> cond_exp M F (\<lambda>x. q (X x)) x"
   sorry
 
-
-lemma integrable_convex_cond_exp:
-  fixes q :: "real \<Rightarrow> real"
-  assumes X: "integrable M X" "AE x in M. X x \<in> I"
-  assumes I: "I = {a <..< b} \<or> I = {a <..} \<or> I = {..< b} \<or> I = UNIV"
-  assumes q: "integrable M (\<lambda>x. q (X x))" "convex_on I q" "q \<in> borel_measurable borel"
-  assumes H: "emeasure M (space M) = \<infinity> \<Longrightarrow> 0 \<in> I"
-  shows "integrable M (\<lambda>x. q (real_cond_exp M F X x))"
-  sorry
-
 end
+
+(* (COND_EXP x \<in> M. x | F i)*)
 
 end
