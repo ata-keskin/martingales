@@ -1,0 +1,40 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{isabelle,isabellesym}
+\usepackage{amsmath}
+
+% this should be the last package used
+\usepackage{pdfsetup}
+
+% urls in roman style, theory text in math-similar italics
+\urlstyle{rm}
+\isabellestyle{it}
+
+
+\begin{document}
+
+\title{Low Degree Hypergraphs}
+\author{Ata Keskin}
+\maketitle
+
+\begin{abstract}
+The goal of this entry is to prove Theorem 4.6 in \cite{micciancio_complexity_2002}, which serves as a fundamental component in establishing the NP-hardness of approximating the shortest vector problem under RUR-reductions. However, the theorem's original formulation relies on integer lattices and matrices, which overlooks its combinatorial essence. To address this, the theorem is reformulated in terms of hypergraphs. The formalization follows the proof given by Goldwasser and Micciancio.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+A hypergraph is defined as a pair $(V, Z)$ consisting of a finite set of vertices, V, and a collection of subsets of V known as hyperedges. A hypergraph is called regular if all hyperedges have the same size, referred to as the degree of the hypergraph. An $h$-regular hypergraph $(V, Z)$ is considered, and a vector $T = (T_1, ..., T_n)$ of subsets of $V$ is chosen randomly. For any subset of vertices $U \subseteq V$, $T(U)$ represents a transformed vector obtained by taking the intersection sizes of the sets $T_i$ with $U$. $T(Z)$ denotes the collection of transformed sequences for all subsets $U \in Z$. This reformulation allows for a direct correspondence between the hypergraph representation and the matrix representation, where the hyperedges correspond to characteristic vectors in $\{0, 1\}^{\lvert V\rvert}$ and the vector $T = (T_1, ..., T_n)$ corresponds to a matrix $T \in \{0, 1\}^{n \times \lvert V\rvert}$ with rows being the characteristic vectors of the sets $T_i$. Consequently, $T(U) = Tu$, where $u$ represents the characteristic vector of set $U$. Notably, the scalar product of two vectors $x, y \in \{0, 1\}^{\lvert V\rvert}$ corresponds to the size of the intersection of the corresponding sets.
+
+The proof of Theorem 4.6 is divided into two stages. Initially, a weaker result is established, demonstrating that every vector $\{x \in \{0, 1\}^n$ belongs to $T(Z)$ with a high probability. Subsequently, a stronger property, as stated in Theorem 4.6, is proven. The distinction between the weak and strong versions lies in the order of quantification. While the strong version guarantees that $T$ is effective for all target vectors x with high probability, the weak version asserts that for any fixed target vector $x$, there exists an effective matrix $T$ with high probability.
+
+The weak version of the theorem is demonstrated in Theorem 6.8, employing a straightforward argument based on Chebyshev's inequality. In the last section, it is shown that the strong version of the theorem can be derived easily from the weak version using ideas similar to those employed in the proof of Sauer's Lemma, which is a combinatorial result established by Sauer, Perles, and Shelah. Sauer's Lemma, and its slightly weaker form established by Vapnik and Chervonenkis, provides insight into the existence of a solution comprising singleton sets $\lvert T_i \rvert = 1$ for any hypergraph $(V, Z)$ with $\lvert Z \rvert \ge \lvert V \rvert \cdot n$. However, the proof of Sauer's Lemma is non-constructive, only asserting the existence of $T$ without offering an effective (even probabilistic) method to find it. Theorem 4.6, therefore, can be regarded as a probabilistic variant of Sauer's Lemma.
+
+% include generated text of all theories
+\input{session}
+
+\bibliographystyle{abbrv}
+\bibliography{root}
+
+\end{document}

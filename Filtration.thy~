@@ -1,7 +1,6 @@
 theory Filtration
-imports "HOL-Probability.Probability" Sigma_Utils
-begin
-
+imports "HOL-Probability.Conditional_Expectation" "HOL-Probability.Stopping_Time" Measure_Space_Addendum
+begin                                                                                          
 
 subsection "Filtered Sigma Finite Measure"
 
