@@ -1,19 +1,20 @@
 chapter AFP
 
+
 session "Martingale" (AFP) = HOL +
   options [timeout = 5000, document = pdf, document_output = "output", show_question_marks = false]
   
   sessions
-    "HOL-Probability"
+  	"HOL-Probability"
   
   theories
-  	Measure_Space_Addendum
+    Measure_Space_Addendum
 	Elementary_Metric_Spaces_Addendum
 	Bochner_Integration_Addendum
 	Set_Integral_Addendum
 	Sigma_Finite_Measure_Addendum
   	Filtration
-    Banach_Conditional_Expectation
+	Conditional_Expectation_Banach
 	Stochastic_Process
 	Martingale
 

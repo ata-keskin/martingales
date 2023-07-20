@@ -110,6 +110,8 @@ sublocale discrete_time_adapted_process_order \<subseteq> discrete_time_adapted_
 sublocale discrete_time_adapted_process \<subseteq> discrete_time_stochastic_process by (unfold_locales)
 sublocale discrete_time_adapted_process \<subseteq> nat_filtered_sigma_finite_measure by (unfold_locales)
 
+subsection "Predictable Processes"
+
 context filtered_sigma_finite_measure
 begin
 
@@ -122,32 +124,6 @@ lemma sets_predictable_sigma[simp]: "sets predictable_sigma = sigma_sets (UNIV \
   unfolding predictable_sigma_def sets_measure_of_conv 
   using space_F sets.sets_into_space
   by (fastforce intro!: if_P)
-
-lemma in_predictable_sigmaI:
-  assumes "I = {bot} \<Longrightarrow> S \<in> sets (F bot)" "I \<noteq> {bot} \<Longrightarrow> I = (\<Union>i :: nat. \<Inter> j :: nat. {(ss i j)<..(ts i j)}) \<and> (\<forall>i j. S \<in> sets (F (ss i j :: 't)) \<and> ss i j < ts i j)"
-  shows "I \<times> S \<in> predictable_sigma"
-proof -
-  have *: "{{s<..t} \<times> A |A s t. A \<in> sets (F s) \<and> s < t} \<union> {{bot} \<times> A |A. A \<in> sets (F bot)} \<subseteq> Pow (UNIV \<times> space M)" 
-    using filtration.space_F filtration_axioms sets.sets_into_space by blast
-  show ?thesis
-  proof (cases "I = {bot}")
-    case True
-    have "I \<times> S \<in> {{bot} \<times> A |A. A \<in> sets (F bot)}" using assms True by blast
-    then show ?thesis using * by simp
-  next
-    case False
-    define \<SS> where "\<SS> = {(\<Union>i :: nat. \<Inter> j :: nat. {ss i j<..ts i j :: 't}) \<times> A |A ss ts. \<forall>i j. A \<in> sets (F (ss i j)) \<and> ss i j < ts i j}"
-    have S_in_sets_F: "S \<in> sets (F (ss i j))" and ss_less: "ss i j < ts i j" and I_eq: "I = (\<Union>i :: nat. \<Inter> j :: nat. {ss i j<..ts i j})" for i j using assms(2)[OF False] by auto
-    have **: "I \<times> S \<in> \<SS>" unfolding \<SS>_def by (simp add: I_eq, metis S_in_sets_F ss_less)
-    have "I \<times> S \<in> sigma_sets (UNIV \<times> space M) ({{s<..t} \<times> A |A s t. A \<in> sets (F s) \<and> s < t})"
-    proof (intro subsetD[OF _ **] sigma_sets_mono, clarsimp simp add: \<SS>_def, goal_cases)
-      case (1 A ss ts)
-      hence *: "(\<Union>i. \<Inter>j. {ss i j<..ts i j}) \<times> A = (\<Union>i. \<Inter>j. {ss i j<..ts i j} \<times> A)" by auto
-      thus ?case using space_F sets.sets_into_space 1 by (fastforce simp add: * intro!: sigma_sets.Union sigma_sets_Inter)
-    qed
-    thus ?thesis using * by (simp, meson sigma_sets_mono'' sigma_sets_top subsetD sup_ge1)
-  qed
-qed
 
 definition predictable :: "('t \<Rightarrow> 'a \<Rightarrow> 'b :: {second_countable_topology,banach}) \<Rightarrow> bool" where
   "predictable X = (case_prod X \<in> borel_measurable (predictable_sigma))"
@@ -206,7 +182,8 @@ next
   case (Union a)
   have a_in: "a i \<subseteq> UNIV \<times> space M" for i using Union(1) sets.sets_into_space sets_predictable_sigma space_predictable_sigma by metis
   hence A_in: "A i \<subseteq> space M" for i using Union(4) by blast
-  hence a_i: "a i = (\<Union>j. {j} \<times> (snd ` (a i \<inter> ({j} \<times> space M))))" for i by auto (smt (verit, del_insts) IntI Union.hyps(1) image_iff in_mono insertCI mem_Sigma_iff sets.sets_into_space sets_predictable_sigma snd_conv space_predictable_sigma)
+  have "snd x \<in> snd ` (a i \<inter> ({fst x} \<times> space M))" if "x \<in> a i" for i x using that a_in by fastforce
+  hence a_i: "a i = (\<Union>j. {j} \<times> (snd ` (a i \<inter> ({j} \<times> space M))))" for i by force
   have A_i: "A i = snd ` (\<Union> (range a) \<inter> ({i} \<times> space M))" for i unfolding Union(4) using A_in by force 
   have *: "snd ` (a j \<inter> ({Suc i} \<times> space M)) \<in> F i" "snd ` (a j \<inter> ({0} \<times> space M)) \<in> F 0" for j using Union(2,3)[OF a_i] by auto
   {
@@ -229,7 +206,7 @@ proof (cases i)
   case 0
   {
     fix S :: "'b set" assume open_S: "open S"
-    hence "{0} \<times> space M \<in> predictable_sigma" by (intro in_predictable_sigmaI[of "{0}"]) (auto simp add: space_F[symmetric, of bot])
+    hence "{0} \<times> space M \<in> predictable_sigma" by (auto simp add: bot_nat_def space_F[symmetric, of bot])
     moreover have "case_prod X -` S \<inter> (UNIV \<times> space M) \<in> predictable_sigma" using open_S by (intro predictableD[OF assms], simp add: borel_open)  
     ultimately have "case_prod X -` S \<inter> ({0} \<times> space M) \<in> predictable_sigma" unfolding sets_predictable_sigma using space_F sets.sets_into_space
       by (subst Times_Int_distrib1[of "{0}" UNIV "space M", simplified], subst inf.commute[of "_ \<times> _"], subst Int_assoc[symmetric], subst Int_range_binary) 
@@ -245,7 +222,8 @@ next
   case (Suc i)
   {
     fix S :: "'b set" assume open_S: "open S"
-    hence "{Suc i} \<times> space M \<in> predictable_sigma" by (intro in_predictable_sigmaI[of "{Suc i}" _ "\<lambda>_ _. i" "\<lambda>_ _. Suc i"]) (force simp add: space_F[symmetric, of bot], fastforce simp add: space_F[symmetric, of i])
+    have "{Suc i} = {i<..Suc i}" by fastforce
+    hence "{Suc i} \<times> space M \<in> predictable_sigma" unfolding space_F[symmetric, of i] by (auto intro!: sigma_sets.Basic)
     moreover have "case_prod X -` S \<inter> (UNIV \<times> space M) \<in> predictable_sigma" using open_S by (intro predictableD[OF assms], simp add: borel_open)
     ultimately have "case_prod X -` S \<inter> ({Suc i} \<times> space M) \<in> predictable_sigma" unfolding sets_predictable_sigma using space_F sets.sets_into_space
       by (subst Times_Int_distrib1[of "{Suc i}" UNIV "space M", simplified], subst inf.commute[of "_ \<times> _"], subst Int_assoc[symmetric], subst Int_range_binary) 
@@ -260,7 +238,5 @@ next
 qed
 
 end
-
-
 
 end

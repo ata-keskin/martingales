@@ -1,8 +1,10 @@
 theory Martingale                 
-  imports Stochastic_Process Banach_Conditional_Expectation "HOL-Probability.Probability"
+  imports Stochastic_Process Conditional_Expectation_Banach
 begin           
 
 subsection \<open>Martingale\<close>
+
+unbundle lattice_syntax
 
 locale martingale = adapted_process +
   assumes integrable: "\<And>i. integrable M (X i)"

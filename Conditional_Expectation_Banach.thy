@@ -1,6 +1,5 @@
-theory Banach_Conditional_Expectation                                                                                  
-imports "HOL-Probability.Conditional_Expectation"
-        Sigma_Finite_Measure_Addendum Bochner_Integration_Addendum Elementary_Metric_Spaces_Addendum
+theory Conditional_Expectation_Banach                                                                            
+imports "HOL-Probability.Conditional_Expectation" Sigma_Finite_Measure_Addendum Bochner_Integration_Addendum Elementary_Metric_Spaces_Addendum
 begin                                           
 
 definition has_cond_exp :: "'a measure \<Rightarrow> 'a measure \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> ('a \<Rightarrow> 'b::{real_normed_vector, second_countable_topology}) \<Rightarrow> bool" where 
@@ -24,29 +23,6 @@ lemma has_cond_expD:
         "integrable M g"
         "g \<in> borel_measurable F"
   using assms unfolding has_cond_exp_def by simp+
-
-(* Tower Property *)
-
-lemma has_cond_exp_nested_subalg:
-  fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
-  assumes "subalgebra M G" "subalgebra G F" "integrable M f" "has_cond_exp M F f h" "has_cond_exp M G f h'"
-  shows "has_cond_exp M F h' h"
-proof -
-  show ?thesis
-  proof (standard, goal_cases)
-    case (1 A)
-    show ?case by (metis 1 assms(2,4,5) has_cond_expD(1) in_mono subalgebra_def)
-  next
-    case 2
-    then show ?case using has_cond_expD(3)[OF assms(5)] by blast
-  next
-    case 3
-    then show ?case using has_cond_expD(3)[OF assms(4)] .
-  next
-    case 4
-    then show ?case using has_cond_expD(4)[OF assms(4)] .
-  qed
-qed
 
 definition cond_exp :: "'a measure \<Rightarrow> 'a measure \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> ('a \<Rightarrow> 'b::{banach, second_countable_topology})" where
   "cond_exp M F f = (if \<exists>g. has_cond_exp M F f g then (SOME g. has_cond_exp M F f g) else (\<lambda>_. 0))"
@@ -154,7 +130,7 @@ next
   ultimately show ?thesis unfolding cond_exp_def by auto
 qed
 
-lemma has_cond_exp_real[intro]:
+lemma has_cond_exp_real:
   fixes f :: "'a \<Rightarrow> real"
   assumes "integrable M f"
   shows "has_cond_exp M F f (real_cond_exp M F f)"
@@ -164,7 +140,7 @@ lemma cond_exp_real[intro]:
   fixes f :: "'a \<Rightarrow> real"
   assumes "integrable M f"
   shows "AE x in M. cond_exp M F f x = real_cond_exp M F f x" 
-  using has_cond_exp_charact assms by blast
+  using has_cond_exp_charact has_cond_exp_real assms by blast
 
 lemma cond_exp_cmult:
   fixes f :: "'a \<Rightarrow> real"
@@ -332,7 +308,7 @@ next
   have "AE x in M. norm (cond_exp M F (\<lambda>a. u a + v a) x) = norm (cond_exp M F u x + cond_exp M F v x)" using has_cond_exp_charact(2)[OF has_cond_exp_add, OF has_cond_exp_simple(1,1), OF add(1,2,3,4)] by fastforce
   moreover have "AE x in M. norm (cond_exp M F u x + cond_exp M F v x) \<le> norm (cond_exp M F u x) + norm (cond_exp M F v x)" using norm_triangle_ineq by blast
   moreover have "AE x in M. norm (cond_exp M F u x) + norm (cond_exp M F v x) \<le> cond_exp M F (\<lambda>x. norm (u x)) x + cond_exp M F (\<lambda>x. norm (v x)) x" using add(6,7) by fastforce
-  moreover have "AE x in M. cond_exp M F (\<lambda>x. norm (u x)) x + cond_exp M F (\<lambda>x. norm (v x)) x = cond_exp M F (\<lambda>x. norm (u x) + norm (v x)) x" using integrable_simple_function[OF add(1,2)] integrable_simple_function[OF add(3,4)] by (intro has_cond_exp_charact(2)[OF has_cond_exp_add[OF has_cond_exp_charact(1,1)], THEN AE_symmetric], auto)
+  moreover have "AE x in M. cond_exp M F (\<lambda>x. norm (u x)) x + cond_exp M F (\<lambda>x. norm (v x)) x = cond_exp M F (\<lambda>x. norm (u x) + norm (v x)) x" using integrable_simple_function[OF add(1,2)] integrable_simple_function[OF add(3,4)] by (intro has_cond_exp_charact(2)[OF has_cond_exp_add[OF has_cond_exp_charact(1,1)], THEN AE_symmetric], auto intro: has_cond_exp_real)
   moreover have "AE x in M. cond_exp M F (\<lambda>x. norm (u x) + norm (v x)) x = cond_exp M F (\<lambda>x. norm (u x + v x)) x" using add(5) integrable_simple_function[OF add(1,2)] integrable_simple_function[OF add(3,4)] by (intro cond_exp_cong, auto)
   ultimately show ?case by force
 qed
@@ -385,9 +361,9 @@ proof -
    
   hence dist_norm_integrable: "integrable M (\<lambda>x. norm (s i x - s j x))" for i j unfolding dist_norm by presburger
 
-  have "\<exists>N. \<forall>i\<ge>N. \<forall>j\<ge>N. LINT x|M. dist (cond_exp M F (s i) x) (cond_exp M F (s j) x) < e" if "e > 0" for e
+  have "\<exists>N. \<forall>i\<ge>N. \<forall>j\<ge>N. LINT x|M. dist (cond_exp M F (s i) x) (cond_exp M F (s j) x) < e" if e_pos: "e > 0" for e
   proof -
-    obtain N where *: "LINT x|M. diameter {s i x | i. n \<le> i} < e" if "n \<ge> N" for n using diameter_tendsto_zero by (smt (verit, del_insts) \<open>0 < e\<close> eventually_sequentially order_tendsto_iff)
+    obtain N where *: "LINT x|M. diameter {s i x | i. n \<le> i} < e" if "n \<ge> N" for n using that order_tendsto_iff[THEN iffD1, OF diameter_tendsto_zero, unfolded eventually_sequentially] e_pos by presburger
     {
       fix i j x assume asm: "i \<ge> N" "j \<ge> N" "x \<in> space M"
       have "case_prod dist ` ({s i x |i. N \<le> i} \<times> {s i x |i. N \<le> i}) = case_prod (\<lambda>i j. dist (s i x) (s j x)) ` ({N..} \<times> {N..})" by fast
@@ -477,11 +453,17 @@ next
   show ?case using has_cond_exp_lim[OF lim(1,3,4,5,6)] has_cond_exp_charact(1) by meson
 qed
 
+lemma has_cond_exp_nested_subalg:
+  fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
+  assumes "subalgebra G F" "has_cond_exp M F f h" "has_cond_exp M G f h'"
+  shows "has_cond_exp M F h' h"
+  by standard (metis assms has_cond_expD in_mono subalgebra_def)+
+
 lemma cond_exp_nested_subalg:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
   assumes "integrable M f" "subalgebra M G" "subalgebra G F"
   shows "AE \<xi> in M. cond_exp M F f \<xi> = cond_exp M F (cond_exp M G f) \<xi>"
-  using has_cond_expI assms sigma_finite_subalgebra_def by (auto intro!: has_cond_exp_nested_subalg[THEN has_cond_exp_charact(2), THEN AE_symmetric] sigma_finite_subalgebra.has_cond_expI[OF sigma_finite_subalgebra.intro[OF assms(2)]] nested_subalg_is_sigma_finite )
+  using has_cond_expI assms sigma_finite_subalgebra_def by (auto intro!: has_cond_exp_nested_subalg[THEN has_cond_exp_charact(2), THEN AE_symmetric] sigma_finite_subalgebra.has_cond_expI[OF sigma_finite_subalgebra.intro[OF assms(2)]] nested_subalg_is_sigma_finite)
 
 lemma cond_exp_set_integral:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
