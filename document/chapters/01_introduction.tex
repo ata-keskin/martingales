@@ -1,0 +1,22 @@
+% !TeX root = ../main.tex
+% Add the above to each chapter to make compiling the PDF easier in some editors.
+
+\chapter{Introduction}\label{chapter:introduction}
+
+In probability theory, a martingale is a stochastic process (a collection of random variables) that satisfies a specific property with respect to its conditional expectations. Martingales hold a central position in probability theory and stochastic processes, making them a fundamental concept for mathematicians. They provide a powerful way to study and analyze random phenomena, offering a formal framework for understanding the behavior of random variables over time.
+
+One of the key reasons why martingales are significant is their connection to stochastic stability. In various real-world scenarios, we encounter systems that evolve randomly over time. Martingales help us investigate whether these systems remain bounded or converge to certain values in the long run. This stability property is crucial for understanding the long-term behavior of dynamic processes in fields like physics, biology, and engineering.
+
+Moreover, martingales play a crucial role in the analysis of fair gambling games and betting strategies. They allow mathematicians to assess the expected gains and losses in games of chance, contributing to the study of probabilities and risk management in gambling and finance.
+
+In finance and economics, martingales are invaluable for modeling asset prices and option pricing. They provide insights into risk assessment, portfolio management, and the efficient market hypothesis, which postulates that asset prices fully reflect all available information.
+
+Martingales are also closely related to several important probability limit theorems. These theorems, such as the strong law of large numbers and the central limit theorem, help us understand the behavior of sample means and sums of random variables. They have profound implications in statistics, allowing us to draw conclusions about large datasets and making predictions based on limited information.
+
+In addition to their relevance in mathematics, martingales find applications in various interdisciplinary fields. Their ability to model randomness and analyze dynamic systems makes them useful in physics, biology, and computer science, among others. As a result, martingales are a foundational concept in probability theory, offering mathematicians a versatile and profound toolset to model randomness and analyze stochastic processes. Their applications span across diverse disciplines, making them a crucial and indispensable area of study for any mathematician seeking to understand and leverage the power of uncertainty and randomness in the world.
+
+In the scope of this thesis, we present a formalization of martingales in arbitrary Banach spaces using Isabelle/HOL. The background and related work section examines existing formalizations in two prominent formal proof libraries, mathlib and \ac{AFP}. Additionally, we conduct a short review of literature on conditional expectation and martingales in Banach spaces, laying a solid foundation for our research.
+
+The current formalization of conditional expectation in the Isabelle library is limited to real-valued functions. To overcome this limitation, we extend the construction of conditional expectation to general Banach spaces, employing an approach similar to the one in \cite{Hytoenen_2016}. Subsequently, we define stochastic processes and introduce the concepts of adaptedness and predictability.
+
+Moving forward, we rigorously define martingales, submartingales, and supermartingales, presenting their first consequences and corollaries. Particular emphasis is given to discrete-time martingales. The discussion section reflects on our formalization approach, challenges encountered, and potential limitations. Finally, we offer insights into future research directions.

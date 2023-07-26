@@ -1,0 +1,17 @@
+default:
+  image:
+    name: texlive/texlive:latest
+  tags: 
+    - Docker
+
+stages:
+- build
+
+pdf:
+  stage: build
+  script:
+  - make pdf 
+  artifacts:
+    paths:
+    - build/main.pdf
+    expire_in: 1 week

@@ -15,9 +15,12 @@
 {\isafoldtheory}%
 %
 \isadelimtheory
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \isanewline
 %
 \endisadelimtheory
-%
+\isanewline
+\isacommand{unbundle}\isamarkupfalse%
+\ lattice{\isacharunderscore}{\kern0pt}syntax%
 \isadelimdocument
 %
 \endisadelimdocument
@@ -37,7 +40,7 @@
 \isacommand{locale}\isamarkupfalse%
 \ filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ {\isacharequal}{\kern0pt}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ M\ {\isacharplus}{\kern0pt}\ filtration\ {\isachardoublequoteopen}space\ M{\isachardoublequoteclose}\ F\ \isakeyword{for}\ M\ \isakeyword{and}\ F\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}t\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ order{\isacharunderscore}{\kern0pt}bot{\isacharbraceright}{\kern0pt}\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}a\ measure{\isachardoublequoteclose}\ {\isacharplus}{\kern0pt}\isanewline
 \ \ \isakeyword{assumes}\ subalgebra{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isasymAnd}i{\isachardot}{\kern0pt}\ subalgebra\ M\ {\isacharparenleft}{\kern0pt}F\ i{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
-\ \ \ \ \ \ \isakeyword{and}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ {\isacharparenleft}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ M\ {\isacharparenleft}{\kern0pt}F\ bot{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ \ \ \ \ \ \isakeyword{and}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ {\isacharparenleft}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ M\ {\isacharparenleft}{\kern0pt}F\ {\isasymbottom}{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \isanewline
 \isacommand{locale}\isamarkupfalse%
 \ ennreal{\isacharunderscore}{\kern0pt}filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ {\isacharequal}{\kern0pt}\ filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ M\ F\ \isakeyword{for}\ M\ \isakeyword{and}\ F\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}ennreal\ {\isasymRightarrow}\ {\isacharunderscore}{\kern0pt}{\isachardoublequoteclose}\isanewline
@@ -123,35 +126,39 @@
 %:%11=1%:%
 %:%12=2%:%
 %:%13=3%:%
-%:%27=5%:%
-%:%37=7%:%
-%:%38=7%:%
-%:%39=8%:%
+%:%18=3%:%
+%:%21=4%:%
+%:%22=5%:%
+%:%23=5%:%
+%:%30=7%:%
 %:%40=9%:%
-%:%41=10%:%
-%:%42=11%:%
+%:%41=9%:%
+%:%42=10%:%
 %:%43=11%:%
 %:%44=12%:%
-%:%45=12%:%
+%:%45=13%:%
 %:%46=13%:%
 %:%47=14%:%
 %:%48=14%:%
-%:%50=14%:%
-%:%54=14%:%
-%:%55=14%:%
-%:%69=16%:%
-%:%79=18%:%
-%:%80=18%:%
-%:%81=19%:%
+%:%49=15%:%
+%:%50=16%:%
+%:%51=16%:%
+%:%53=16%:%
+%:%57=16%:%
+%:%58=16%:%
+%:%72=18%:%
 %:%82=20%:%
-%:%83=21%:%
+%:%83=20%:%
 %:%84=21%:%
 %:%85=22%:%
 %:%86=23%:%
-%:%87=24%:%
-%:%90=25%:%
-%:%94=25%:%
-%:%95=25%:%
-%:%100=25%:%
-%:%105=26%:%
-%:%110=27%:%
+%:%87=23%:%
+%:%88=24%:%
+%:%89=25%:%
+%:%90=26%:%
+%:%93=27%:%
+%:%97=27%:%
+%:%98=27%:%
+%:%103=27%:%
+%:%108=28%:%
+%:%113=29%:%

@@ -2,7 +2,7 @@ theory Stochastic_Process
 imports Filtered_Sigma_Finite_Measure
 begin      
 
-subsection "Stochastic Processes"
+subsection "Stochastic Process"
 
 locale stochastic_process = sigma_finite_measure M for M +
   fixes X :: "'t :: {second_countable_topology,linorder_topology} \<Rightarrow> 'a \<Rightarrow> 'b::{real_normed_vector, second_countable_topology}"
@@ -45,7 +45,7 @@ lemma uminus: "stochastic_process M (-X)" using scaleR_const[of "-1"] by (simp a
 
 end
 
-subsection "Adapted Processes"
+subsection "Adapted Process"
 
 locale adapted_process = filtered_sigma_finite_measure M F + stochastic_process M X for M and F :: "'t :: {second_countable_topology, linorder_topology, order_bot} \<Rightarrow> _" and X :: "'t \<Rightarrow> _ \<Rightarrow> _ :: {second_countable_topology, banach}" +
   assumes adapted[measurable]: "\<And>i. X i \<in> borel_measurable (F i)"

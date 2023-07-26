@@ -1,12 +1,14 @@
-theory Filtration
+theory Filtered_Sigma_Finite_Measure
 imports "HOL-Probability.Conditional_Expectation" "HOL-Probability.Stopping_Time" Measure_Space_Addendum
 begin                                                                                          
+
+unbundle lattice_syntax
 
 subsection "Filtered Sigma Finite Measure"
 
 locale filtered_sigma_finite_measure = sigma_finite_measure M + filtration "space M" F for M and F :: "'t :: {second_countable_topology, linorder_topology, order_bot} \<Rightarrow> 'a measure" +
   assumes subalgebra: "\<And>i. subalgebra M (F i)"
-      and sigma_finite: "sigma_finite_measure (restr_to_subalg M (F bot))"
+      and sigma_finite: "sigma_finite_measure (restr_to_subalg M (F \<bottom>))"
 
 locale ennreal_filtered_sigma_finite_measure = filtered_sigma_finite_measure M F for M and F :: "ennreal \<Rightarrow> _"
 locale nat_filtered_sigma_finite_measure = filtered_sigma_finite_measure M F for M and F :: "nat \<Rightarrow> _"

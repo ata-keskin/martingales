@@ -529,7 +529,7 @@ proof (rule has_cond_exp_charact, intro has_cond_expI')
   finally show "(\<integral>x\<in>A. (\<Sum>i\<in>I. f i x)\<partial>M) = (\<integral>x\<in>A. (\<Sum>i\<in>I. cond_exp M F (f i) x)\<partial>M)" by auto
 qed (auto simp add: assms integrable_cond_exp)
 
-subsection "Ordered Banach Spaces"
+subsection "Ordered Real Vectors"
 
 lemma cond_exp_gr_c:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"

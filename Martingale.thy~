@@ -4,6 +4,8 @@ begin
 
 subsection \<open>Martingale\<close>
 
+unbundle lattice_syntax
+
 locale martingale = adapted_process +
   assumes integrable: "\<And>i. integrable M (X i)"
       and martingale_property: "\<And>i j. i \<le> j \<Longrightarrow> AE \<xi> in M. X i \<xi> = cond_exp M (F i) (X j) \<xi>"
