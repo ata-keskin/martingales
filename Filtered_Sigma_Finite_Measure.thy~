@@ -1,0 +1,48 @@
+theory Filtered_Sigma_Finite_Measure
+imports "HOL-Probability.Conditional_Expectation" "HOL-Probability.Stopping_Time" Measure_Space_Addendum
+begin                                                                                          
+
+unbundle lattice_syntax
+
+section "Filtered Sigma Finite Measure"
+
+locale filtered_sigma_finite_measure = sigma_finite_measure M + filtration "space M" F for M and F :: "'t :: {second_countable_topology, linorder_topology, order_bot} \<Rightarrow> 'a measure" +
+  assumes subalgebra: "\<And>i. subalgebra M (F i)"
+      and sigma_finite: "sigma_finite_measure (restr_to_subalg M (F \<bottom>))"
+                                  
+sublocale filtered_sigma_finite_measure \<subseteq> sigma_finite_subalgebra M "F i" by (metis bot.extremum sigma_finite sigma_finite_subalgebra.intro subalgebra sets_F_mono sigma_finite_subalgebra.nested_subalg_is_sigma_finite subalgebra_def)
+
+subsection "Constant Filtration"
+
+sublocale sigma_finite_measure \<subseteq> constant_filtration: filtered_sigma_finite_measure M "\<lambda>_ :: 't :: {second_countable_topology, linorder_topology, order_bot}. M"
+  by (unfold_locales, (simp add: subalgebra_def)+) (metis infinity_ennreal_def sigma_finite_countable measure_of_of_measure[folded restr_to_subalg_def])
+
+subsection "Natural Filtration"
+
+definition natural_filtration :: "'a measure \<Rightarrow> 's measure \<Rightarrow> ('t \<Rightarrow> 'a \<Rightarrow> 's) \<Rightarrow> 't :: {second_countable_topology, linorder_topology, order_bot} \<Rightarrow> 'a measure" where
+  "natural_filtration M N Y = (\<lambda>t. sigma_gen (space M) N {Y i | i. i \<le> t})"
+
+lemma
+  assumes [measurable]: "\<And>i. Y i \<in> M \<rightarrow>\<^sub>M N"
+  shows sets_natural_filtration[simp]: "sets (natural_filtration M N Y t) = sigma_sets (space M) (\<Union>i \<le> t. {Y i -` A \<inter> space M | A. A \<in> N})" 
+    and space_natural_filtration[simp]: "space (natural_filtration M N Y t) = space M"
+  by (standard; subst natural_filtration_def) (auto simp add: natural_filtration_def space_restr_to_subalg subalgebra_def intro!: sets.sigma_sets_subset measurable_sets sigma_sets_mono)
+
+lemma subalgebra_natural_filtration: 
+  assumes [measurable]: "\<And>i. Y i \<in> M \<rightarrow>\<^sub>M N"
+  shows "subalgebra M (natural_filtration M N Y i)" by (simp add: subalgebra_def, auto intro!: sets.sigma_sets_subset measurable_sets)
+
+(* In order to show that the natural filtration yields a filtered sigma finite measure, we need to provide a countable exhausting set in the preimage of "Y \<bottom>" *)
+
+lemma (in sigma_finite_measure) natural_filtration:
+  assumes [measurable]: "\<And>i. Y i \<in> M \<rightarrow>\<^sub>M N"
+      and "countable A" "(\<Union>A) = space M" "\<And>a. a \<in> A \<Longrightarrow> emeasure M a \<noteq> \<infinity>" "\<And>a. a \<in> A \<Longrightarrow> \<exists>b \<in> N. a = Y \<bottom> -` b"
+    shows "filtered_sigma_finite_measure M (natural_filtration M N Y)"
+proof (unfold_locales)
+  have "A \<subseteq> sets (restr_to_subalg M (natural_filtration M N Y \<bottom>))" unfolding sets_restr_to_subalg[OF subalgebra_natural_filtration, OF assms(1)] using assms by simp fast
+  moreover have "\<Union> A = space (restr_to_subalg M (natural_filtration M N Y \<bottom>))" unfolding space_restr_to_subalg using assms by simp
+  moreover have "\<forall>a\<in>A. emeasure (restr_to_subalg M (natural_filtration M N Y \<bottom>)) a \<noteq> \<infinity>" using calculation(1) assms(4) by (auto simp add: sets_restr_to_subalg[OF subalgebra_natural_filtration] emeasure_restr_to_subalg[OF subalgebra_natural_filtration])
+  ultimately show "\<exists>A. countable A \<and> A \<subseteq> sets (restr_to_subalg M (natural_filtration M N Y \<bottom>)) \<and> \<Union> A = space (restr_to_subalg M (natural_filtration M N Y \<bottom>)) \<and> (\<forall>a\<in>A. emeasure (restr_to_subalg M (natural_filtration M N Y \<bottom>)) a \<noteq> \<infinity>)" using assms(2) by blast
+qed (simp, simp, intro sigma_sets_mono', auto intro: order_trans subalgebra_natural_filtration[OF assms(1)])
+
+end

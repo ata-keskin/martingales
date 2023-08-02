@@ -8,7 +8,7 @@ definition has_cond_exp :: "'a measure \<Rightarrow> 'a measure \<Rightarrow> ('
                         \<and> integrable M g 
                         \<and> g \<in> borel_measurable F)"
 
-lemma has_cond_expI'[intro]:
+lemma has_cond_expI':
   assumes "\<And>A. A \<in> sets F \<Longrightarrow> (\<integral> x \<in> A. f x \<partial>M) = (\<integral> x \<in> A. g x \<partial>M)"
           "integrable M f"
           "integrable M g"
@@ -52,6 +52,12 @@ lemma cond_exp_null:
   shows "cond_exp M F f = (\<lambda>_. 0)"
   unfolding cond_exp_def using assms by argo
 
+lemma has_cond_exp_nested_subalg:
+  fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
+  assumes "subalgebra G F" "has_cond_exp M F f h" "has_cond_exp M G f h'"
+  shows "has_cond_exp M F h' h"
+  by (intro has_cond_expI') (metis assms has_cond_expD in_mono subalgebra_def)+
+
 lemma has_cond_exp_charact:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes "has_cond_exp M F f g"
@@ -73,12 +79,21 @@ proof -
   then show "AE x in M. cond_exp M F f x = g x" using AE_restr_to_subalg[OF subalg] by simp
 qed
 
+lemma cond_exp_charact:
+  fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
+  assumes "\<And>A. A \<in> sets F \<Longrightarrow> (\<integral> x \<in> A. f x \<partial>M) = (\<integral> x \<in> A. g x \<partial>M)"
+          "integrable M f"
+          "integrable M g"
+          "g \<in> borel_measurable F"
+    shows "AE x in M. cond_exp M F f x = g x"
+  by (intro has_cond_exp_charact has_cond_expI' assms) auto
+
 lemma cond_exp_F_meas[intro, simp]:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes "integrable M f"
           "f \<in> borel_measurable F"
     shows "AE x in M. cond_exp M F f x = f x"
-  by (rule has_cond_exp_charact(2), auto intro: assms)
+  by (rule cond_exp_charact, auto intro: assms)
 
 text \<open>Congruence\<close>
 
@@ -138,7 +153,7 @@ lemma has_cond_exp_real:
   fixes f :: "'a \<Rightarrow> real"
   assumes "integrable M f"
   shows "has_cond_exp M F f (real_cond_exp M F f)"
-  by (standard, auto intro!: real_cond_exp_intA assms)
+  by (intro has_cond_expI', auto intro!: real_cond_exp_intA assms)
 
 lemma cond_exp_real[intro]:
   fixes f :: "'a \<Rightarrow> real"
@@ -278,7 +293,7 @@ proof-
   moreover have "(\<lambda>x. ennreal \<bar>f x\<bar>) \<in> borel_measurable M" by measurable
   moreover have "(\<lambda>x. ennreal (real_cond_exp M F (\<lambda>x. norm (f x)) x)) \<in> borel_measurable F" by measurable
   ultimately have "AE x in M. nn_cond_exp M F (\<lambda>x. ennreal \<bar>f x\<bar>) x = real_cond_exp M F (\<lambda>x. norm (f x)) x" by (intro nn_cond_exp_charact[THEN AE_symmetric], auto)
-    hence "AE x in M. nn_cond_exp M F (\<lambda>x. ennreal \<bar>f x\<bar>) x \<le> cond_exp M F (\<lambda>x. norm (f x)) x" using cond_exp_real[OF int] by force
+  hence "AE x in M. nn_cond_exp M F (\<lambda>x. ennreal \<bar>f x\<bar>) x \<le> cond_exp M F (\<lambda>x. norm (f x)) x" using cond_exp_real[OF int] by force
   moreover have "AE x in M. \<bar>real_cond_exp M F f x\<bar> = norm (cond_exp M F f x)" unfolding real_norm_def using cond_exp_real[OF assms] * by force
   ultimately have "AE x in M. ennreal (norm (cond_exp M F f x)) \<le> cond_exp M F (\<lambda>x. norm (f x)) x" using real_cond_exp_abs[OF assms[THEN borel_measurable_integrable]] by fastforce
   hence "AE x in M. enn2real (ennreal (norm (cond_exp M F f x))) \<le> enn2real (cond_exp M F (\<lambda>x. norm (f x)) x)" using ennreal_le_iff2 by force
@@ -446,22 +461,13 @@ lemma has_cond_expI:
   assumes "integrable M f"
   shows "has_cond_exp M F f (cond_exp M F f)"
   using assms
-proof (induction rule: integrable_induct')
-  case (base A c)
-  show ?case using has_cond_exp_indicator[OF base(1,2)] has_cond_exp_charact(1) by blast
-next
-  case (add u v)
-  show ?case using has_cond_exp_add[OF add(3,4)] has_cond_exp_charact(1) by blast
-next
-  case (lim f s)
-  show ?case using has_cond_exp_lim[OF lim(1,3,4,5,6)] has_cond_exp_charact(1) by meson
+proof -
+  obtain s where s_is: "\<And>i. simple_function M (s i)" "\<And>i. emeasure M {y \<in> space M. s i y \<noteq> 0} \<noteq> \<infinity>" "\<And>x. x \<in> space M \<Longrightarrow> (\<lambda>i. s i x) \<longlonglongrightarrow> f x" "\<And>x i. x \<in> space M \<Longrightarrow> norm (s i x) \<le> 2 * norm (f x)" using integrable_implies_simple_function_sequence[OF assms] by blast
+  show ?thesis using has_cond_exp_lim[OF assms s_is] has_cond_exp_charact(1) by metis
 qed
 
-lemma has_cond_exp_nested_subalg:
-  fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
-  assumes "subalgebra G F" "has_cond_exp M F f h" "has_cond_exp M G f h'"
-  shows "has_cond_exp M F h' h"
-  by standard (metis assms has_cond_expD in_mono subalgebra_def)+
+(* Now that we were able to show that the conditional expectation always exists, 
+   we can dont need to state everything in terms of has_cond_exp *)
 
 lemma cond_exp_nested_subalg:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
@@ -493,6 +499,16 @@ lemma cond_exp_diff':
   shows "AE x in M. cond_exp M F (f - g) x = cond_exp M F f x - cond_exp M F g x"
   unfolding fun_diff_def using assms by (rule cond_exp_diff)
 
+lemma cond_exp_scaleR_left:
+  fixes f :: "'a \<Rightarrow> real"
+  assumes "integrable M f"
+  shows "AE x in M. cond_exp M F (\<lambda>x. f x *\<^sub>R c) x = cond_exp M F f x *\<^sub>R c" 
+  using cond_exp_set_integral[OF assms] subalg assms unfolding subalgebra_def
+  by (intro cond_exp_charact,
+      subst set_integral_scaleR_left, blast, intro assms, 
+      subst set_integral_scaleR_left, blast, intro integrable_cond_exp)
+      auto
+
 lemma cond_exp_contraction:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes "integrable M f"
@@ -512,6 +528,104 @@ proof -
   moreover have "AE x in M. (\<lambda>i. norm (cond_exp M F (s (r (r' i))) x)) \<longlonglongrightarrow> norm (cond_exp M F f x)" using r LIMSEQ_subseq_LIMSEQ[OF tendsto_norm r'(2), unfolded comp_def] by fast
   ultimately show ?thesis using LIMSEQ_le r'(1) by fast
 qed
+
+(* The following lemma (pulling out whats known) is far from trivial *)
+
+lemma cond_exp_measurable_mult:
+  fixes f g :: "'a \<Rightarrow> real"
+  assumes [measurable]: "integrable M (\<lambda>x. f x * g x)" "integrable M g" "f \<in> borel_measurable F" 
+  shows "integrable M (\<lambda>x. f x * cond_exp M F g x)"
+        "AE x in M. cond_exp M F (\<lambda>x. f x * g x) x = f x * cond_exp M F g x"
+proof-
+  show integrable: "integrable M (\<lambda>x. f x * cond_exp M F g x)" using cond_exp_real[OF assms(2)] by (intro integrable_cong_AE_imp[OF real_cond_exp_intg(1), OF assms(1,3) assms(2)[THEN borel_measurable_integrable]] measurable_from_subalg[OF subalg]) auto
+  interpret sigma_finite_measure "restr_to_subalg M F" by (rule sigma_fin_subalg)
+  {
+    fix A assume asm: "A \<in> sets F"
+    hence asm': "A \<in> sets M" using subalg by (fastforce simp add: subalgebra_def)
+    have "set_lebesgue_integral M A (cond_exp M F (\<lambda>x. f x * g x)) = set_lebesgue_integral M A (\<lambda>x. f x * g x)" by (simp add: cond_exp_set_integral[OF assms(1) asm])
+    also have "... = set_lebesgue_integral M A (\<lambda>x. f x * real_cond_exp M F g x)" using borel_measurable_times[OF borel_measurable_indicator[OF asm] assms(3)] borel_measurable_integrable[OF assms(2)] integrable_mult_indicator[OF asm' assms(1)] by (fastforce simp add: set_lebesgue_integral_def mult.assoc[symmetric] intro: real_cond_exp_intg(2)[symmetric])
+    also have "... = set_lebesgue_integral M A (\<lambda>x. f x * cond_exp M F g x)" using cond_exp_real[OF assms(2)] asm' borel_measurable_cond_exp' borel_measurable_cond_exp2 measurable_from_subalg[OF subalg assms(3)] by (auto simp add: set_lebesgue_integral_def intro: integral_cong_AE)
+    finally have "set_lebesgue_integral M A (cond_exp M F (\<lambda>x. f x * g x)) = \<integral>x\<in>A. (f x * cond_exp M F g x)\<partial>M" .
+  }
+  hence "AE x in restr_to_subalg M F. cond_exp M F (\<lambda>x. f x * g x) x = f x * cond_exp M F g x" by (intro density_unique integrable_cond_exp integrable integrable_in_subalg subalg, measurable, simp add: set_lebesgue_integral_def integral_subalgebra2[OF subalg] sets_restr_to_subalg[OF subalg])
+  thus "AE x in M. cond_exp M F (\<lambda>x. f x * g x) x = f x * cond_exp M F g x" by (rule AE_restr_to_subalg[OF subalg])
+qed
+
+lemma cond_exp_measurable_scaleR:
+  fixes f :: "'a \<Rightarrow> real" and g :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach}"
+  assumes [measurable]: "integrable M (\<lambda>x. f x *\<^sub>R g x)" "integrable M g" "f \<in> borel_measurable F"
+  shows "integrable M (\<lambda>x. f x *\<^sub>R cond_exp M F g x)"
+        "AE x in M. cond_exp M F (\<lambda>x. f x *\<^sub>R g x) x = f x *\<^sub>R cond_exp M F g x"
+proof -
+  let ?F = "restr_to_subalg M F"
+  have subalg': "subalgebra M (restr_to_subalg M F)" by (metis sets_eq_imp_space_eq sets_restr_to_subalg subalg subalgebra_def)
+  {
+    fix z assume asm[measurable]: "integrable M (\<lambda>x. z x *\<^sub>R g x)" "z \<in> borel_measurable ?F"
+    hence asm'[measurable]: "z \<in> borel_measurable F" using measurable_in_subalg' subalg by blast
+    have "integrable M (\<lambda>x. z x *\<^sub>R cond_exp M F g x)" "LINT x|M. z x *\<^sub>R g x = LINT x|M. z x *\<^sub>R cond_exp M F g x"
+    proof -
+      obtain s where s_is: "\<And>i. simple_function ?F (s i)" "\<And>x. x \<in> space ?F \<Longrightarrow> (\<lambda>i. s i x) \<longlonglongrightarrow> z x" "\<And>i x. x \<in> space ?F \<Longrightarrow> norm (s i x) \<le> 2 * norm (z x)" using borel_measurable_implies_sequence_metric[OF asm(2), of 0] by force
+
+      (* We need to apply the dominated convergence theorem twice, therefore we need to show the following prerequisites *)
+
+      have s_scaleR_g_tendsto: "AE x in M. (\<lambda>i. s i x *\<^sub>R g x) \<longlonglongrightarrow> z x *\<^sub>R g x" using s_is(2) by (simp add: space_restr_to_subalg tendsto_scaleR)
+      have s_scaleR_cond_exp_g_tendsto: "AE x in ?F. (\<lambda>i. s i x *\<^sub>R cond_exp M F g x) \<longlonglongrightarrow> z x *\<^sub>R cond_exp M F g x" using s_is(2) by (simp add: tendsto_scaleR)
+
+      have s_scaleR_g_meas: "(\<lambda>x. s i x *\<^sub>R g x) \<in> borel_measurable M" for i using s_is(1)[THEN borel_measurable_simple_function, THEN subalg'[THEN measurable_from_subalg]] by simp
+      have s_scaleR_cond_exp_g_meas: "(\<lambda>x. s i x *\<^sub>R cond_exp M F g x) \<in> borel_measurable ?F" for i using s_is(1)[THEN borel_measurable_simple_function] measurable_in_subalg[OF subalg borel_measurable_cond_exp] by (fastforce intro: borel_measurable_scaleR)
+
+      have s_scaleR_g_AE_bdd: "AE x in M. norm (s i x *\<^sub>R g x) \<le> 2 * norm (z x *\<^sub>R g x)" for i using s_is(3) by (fastforce simp add: space_restr_to_subalg mult.assoc[symmetric] mult_right_mono)
+      {
+        fix i
+        have asm: "integrable M (\<lambda>x. norm (z x) * norm (g x))" using asm(1)[THEN integrable_norm] by simp
+        have "AE x in ?F. norm (s i x *\<^sub>R cond_exp M F g x) \<le> 2 * norm (z x) * norm (cond_exp M F g x)" using s_is(3) by (fastforce simp add: mult_mono)
+        moreover have "AE x in ?F. norm (z x) * cond_exp M F (\<lambda>x. norm (g x)) x = cond_exp M F (\<lambda>x. norm (z x) * norm (g x)) x" by (rule cond_exp_measurable_mult(2)[THEN AE_symmetric, OF asm integrable_norm, OF assms(2), THEN AE_restr_to_subalg2[OF subalg]], auto)
+        ultimately have "AE x in ?F. norm (s i x *\<^sub>R cond_exp M F g x) \<le> 2 * cond_exp M F (\<lambda>x. norm (z x *\<^sub>R g x)) x" using cond_exp_contraction[OF assms(2), THEN AE_restr_to_subalg2[OF subalg]] order_trans[OF _ mult_mono] by fastforce
+      }
+      note s_scaleR_cond_exp_g_AE_bdd = this
+
+      (* In the following section we need to pay attention to which measures we are using for integration. The rhs is F-measurable while the lhs is only M-measurable*)
+
+      {
+        fix i
+        have s_meas_M[measurable]: "s i \<in> borel_measurable M" by (meson borel_measurable_simple_function measurable_from_subalg s_is(1) subalg')
+        have s_meas_F[measurable]: "s i \<in> borel_measurable F" by (meson borel_measurable_simple_function measurable_in_subalg' s_is(1) subalg)
+
+        have s_scaleR_eq: "s i x *\<^sub>R h x = (\<Sum>y\<in>s i ` space M. (indicator (s i -` {y} \<inter> space M) x *\<^sub>R y) *\<^sub>R h x)" if "x \<in> space M" for x and h :: "'a \<Rightarrow> 'b" using simple_function_indicator_representation_banach[OF s_is(1), of x i] that unfolding space_restr_to_subalg scaleR_left.sum[of _ _ "h x", symmetric] by presburger
+        
+        have "LINT x|M. s i x *\<^sub>R g x = LINT x|M. (\<Sum>y\<in>s i ` space M. indicator (s i -` {y} \<inter> space M) x *\<^sub>R y *\<^sub>R g x)" using s_scaleR_eq by (intro Bochner_Integration.integral_cong) auto
+        also have "... = (\<Sum>y\<in>s i ` space M. LINT x|M. indicator (s i -` {y} \<inter> space M) x *\<^sub>R y *\<^sub>R g x)" by (intro Bochner_Integration.integral_sum integrable_mult_indicator[OF _ integrable_scaleR_right] assms(2)) simp
+        also have "... = (\<Sum>y\<in>s i ` space M.  y *\<^sub>R set_lebesgue_integral M (s i -` {y} \<inter> space M) g)" by (simp only: set_lebesgue_integral_def[symmetric]) simp
+        also have "... = (\<Sum>y\<in>s i ` space M.  y *\<^sub>R set_lebesgue_integral M (s i -` {y} \<inter> space M) (cond_exp M F g))" using assms(2) subalg borel_measurable_vimage[OF s_meas_F] by (subst cond_exp_set_integral, auto simp add: subalgebra_def) 
+        also have "... = (\<Sum>y\<in>s i ` space M. LINT x|M. indicator (s i -` {y} \<inter> space M) x *\<^sub>R y *\<^sub>R cond_exp M F g x)" by (simp only: set_lebesgue_integral_def[symmetric]) simp
+        also have "... = LINT x|M. (\<Sum>y\<in>s i ` space M. indicator (s i -` {y} \<inter> space M) x *\<^sub>R y *\<^sub>R cond_exp M F g x)" by (intro Bochner_Integration.integral_sum[symmetric] integrable_mult_indicator[OF _ integrable_scaleR_right]) auto
+        also have "... = LINT x|M. s i x *\<^sub>R cond_exp M F g x" using s_scaleR_eq by (intro Bochner_Integration.integral_cong) auto
+        finally have "LINT x|M. s i x *\<^sub>R g x = LINT x|?F. s i x *\<^sub>R cond_exp M F g x" by (simp add: integral_subalgebra2[OF subalg])
+      }
+      note integral_s_eq = this
+
+      (* Now we just plug in the results we obtained into DCT, and use the fact that limits are unique. *)
+
+      show "integrable M (\<lambda>x. z x *\<^sub>R cond_exp M F g x)" using s_scaleR_cond_exp_g_meas asm(2) borel_measurable_cond_exp' by (intro integrable_from_subalg[OF subalg] integrable_cond_exp integrable_dominated_convergence[OF _ _ _ s_scaleR_cond_exp_g_tendsto s_scaleR_cond_exp_g_AE_bdd]) (auto intro: measurable_from_subalg[OF subalg] integrable_in_subalg measurable_in_subalg subalg)
+         
+      have "(\<lambda>i. LINT x|M. s i x *\<^sub>R g x) \<longlonglongrightarrow> LINT x|M. z x *\<^sub>R g x" using s_scaleR_g_meas asm(1)[THEN integrable_norm] asm' borel_measurable_cond_exp' by (intro integral_dominated_convergence[OF _ _ _ s_scaleR_g_tendsto s_scaleR_g_AE_bdd]) (auto intro: measurable_from_subalg[OF subalg])
+      moreover have "(\<lambda>i. LINT x|?F. s i x *\<^sub>R cond_exp M F g x) \<longlonglongrightarrow> LINT x|?F. z x *\<^sub>R cond_exp M F g x" using s_scaleR_cond_exp_g_meas asm(2) borel_measurable_cond_exp' by (intro integral_dominated_convergence[OF _ _ _ s_scaleR_cond_exp_g_tendsto s_scaleR_cond_exp_g_AE_bdd]) (auto intro: measurable_from_subalg[OF subalg] integrable_in_subalg measurable_in_subalg subalg)
+      ultimately show "LINT x|M. z x *\<^sub>R g x = LINT x|M. z x *\<^sub>R cond_exp M F g x" using integral_s_eq using subalg by (simp add: LIMSEQ_unique integral_subalgebra2)
+    qed
+  }
+  note * = this
+
+  (* The main statement now follows with "z x := indicator A x * f x" *)
+  
+  show "integrable M (\<lambda>x. f x *\<^sub>R cond_exp M F g x)" using * assms measurable_in_subalg[OF subalg] by blast
+
+  {
+    fix A assume asm: "A \<in> F"
+    hence "integrable M (\<lambda>x. indicat_real A x *\<^sub>R f x *\<^sub>R g x)" using subalg by (fastforce simp add: subalgebra_def intro!: integrable_mult_indicator assms(1))
+    hence "set_lebesgue_integral M A (\<lambda>x. f x *\<^sub>R g x) = set_lebesgue_integral M A (\<lambda>x. f x *\<^sub>R cond_exp M F g x)" unfolding set_lebesgue_integral_def using asm by (auto intro!: * measurable_in_subalg[OF subalg])
+  }
+  thus "AE x in M. cond_exp M F (\<lambda>x. f x *\<^sub>R g x) x = f x *\<^sub>R cond_exp M F g x" using borel_measurable_cond_exp by (intro cond_exp_charact, auto intro!: * assms measurable_in_subalg[OF subalg])
+qed
   
 lemma cond_exp_sum [intro, simp]:
   fixes f :: "'t \<Rightarrow> 'a \<Rightarrow> 'b :: {second_countable_topology,banach}"
@@ -529,7 +643,7 @@ proof (rule has_cond_exp_charact, intro has_cond_expI')
   finally show "(\<integral>x\<in>A. (\<Sum>i\<in>I. f i x)\<partial>M) = (\<integral>x\<in>A. (\<Sum>i\<in>I. cond_exp M F (f i) x)\<partial>M)" by auto
 qed (auto simp add: assms integrable_cond_exp)
 
-subsection "Ordered Real Vectors"
+subsection "Ordered Banach Spaces"
 
 lemma cond_exp_gr_c:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
@@ -555,7 +669,7 @@ proof -
       show "LINT x|M. indicator A x *\<^sub>R c = LINT x|M. indicator A x *\<^sub>R f x" 
       proof (simp only: set_lebesgue_integral_def[symmetric], rule antisym)
         show "(\<integral>x\<in>A. c \<partial>M) \<le> (\<integral>x\<in>A. f x \<partial>M)" using assms(2) by (intro set_integral_mono_AE_banach) auto
-        have "(\<integral>x\<in>A. f x \<partial>M) = (\<integral>x\<in>A. cond_exp M F f x \<partial>M)" by (rule cond_exp_set_integral, auto simp add: \<open>integrable M f\<close>)
+        have "(\<integral>x\<in>A. f x \<partial>M) = (\<integral>x\<in>A. cond_exp M F f x \<partial>M)" by (rule cond_exp_set_integral, auto simp add: assms)
         also have "... \<le> (\<integral>x\<in>A. c \<partial>M)" using A by (auto intro!: set_integral_mono_banach simp add: X_def)
         finally show "(\<integral>x\<in>A. f x \<partial>M) \<le> (\<integral>x\<in>A. c \<partial>M)" by simp
       qed

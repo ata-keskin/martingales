@@ -1,11 +1,13 @@
 theory Stochastic_Process
-imports Filtered_Sigma_Finite_Measure
+imports Filtered_Measure "HOL-Analysis.Analysis" Complex_Main
 begin      
 
-subsection "Stochastic Process"
+section "Stochastic Process"
 
-locale stochastic_process = sigma_finite_measure M for M +
-  fixes X :: "'t :: {second_countable_topology,linorder_topology} \<Rightarrow> 'a \<Rightarrow> 'b::{real_normed_vector, second_countable_topology}"
+text \<open>A stochastic process is a collection of random variables, indexed by a type \<^typ>\<open>'t\<close>.\<close>
+
+locale stochastic_process =
+  fixes M and X :: "_ :: {second_countable_topology, order_bot, linorder_topology} \<Rightarrow> 'a \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes random_variable[measurable]: "\<And>i. X i \<in> borel_measurable M"
 begin
 
@@ -19,17 +21,17 @@ lemma compose:
 
 lemma norm: "stochastic_process M (\<lambda>i \<xi>. norm (X i \<xi>))" by (auto intro: compose borel_measurable_norm)
 
-lemma scaleR:
-  assumes "stochastic_process M R"
-  shows "stochastic_process M (\<lambda>i \<xi>. (R i \<xi>) *\<^sub>R (X i \<xi>))"
+lemma scaleR_right:
+  assumes "stochastic_process M Y"
+  shows "stochastic_process M (\<lambda>i \<xi>. (Y i \<xi>) *\<^sub>R (X i \<xi>))"
   by (unfold_locales) (simp add: borel_measurable_scaleR random_variable assms stochastic_process.random_variable)
 
-lemma scaleR_const_fun: 
+lemma scaleR_const_right: 
   assumes "f \<in> borel_measurable M" 
   shows "stochastic_process M (\<lambda>i \<xi>. f \<xi> *\<^sub>R (X i \<xi>))"
   by (unfold_locales, intro borel_measurable_scaleR assms random_variable)
 
-lemma scaleR_const: "stochastic_process M (\<lambda>i \<xi>. c *\<^sub>R (X i \<xi>))" by (auto intro: scaleR_const_fun borel_measurable_const)
+lemma scaleR_const: "stochastic_process M (\<lambda>i \<xi>. c *\<^sub>R (X i \<xi>))" by (auto intro: scaleR_const_right borel_measurable_const)
 
 lemma add:
   assumes "stochastic_process M Y"
@@ -43,47 +45,74 @@ lemma diff:
 
 lemma uminus: "stochastic_process M (-X)" using scaleR_const[of "-1"] by (simp add: fun_Compl_def)
 
+lemma partial_sum: "stochastic_process M (\<lambda>n \<xi>. \<Sum>i<n. X i \<xi>)" by (unfold_locales, simp)
+
+lemma partial_sum': "stochastic_process M (\<lambda>n \<xi>. \<Sum>i\<le>n. X i \<xi>)" by (unfold_locales, simp)
+
 end
+
+lemma stochastic_process_const:
+  assumes "f \<in> borel_measurable M"
+  shows "stochastic_process M (\<lambda>_. f)"
+  using assms by (unfold_locales)
+
+lemma stochastic_process_sum:
+  assumes "\<And>i. i \<in> I \<Longrightarrow> stochastic_process M (X i)"
+  shows "stochastic_process M (\<lambda>k \<xi>. \<Sum>i \<in> I. X i k \<xi>)" using assms[THEN stochastic_process.random_variable] by (unfold_locales, auto)
 
 subsection "Adapted Process"
 
-locale adapted_process = filtered_sigma_finite_measure M F + stochastic_process M X for M and F :: "'t :: {second_countable_topology, linorder_topology, order_bot} \<Rightarrow> _" and X :: "'t \<Rightarrow> _ \<Rightarrow> _ :: {second_countable_topology, banach}" +
+text \<open>We call a stochastic process \<^term>\<open>X\<close> adapted if \<^term>\<open>X i\<close> is \<^term>\<open>F i\<close>-borel-measurable for all indices \<^term>\<open>i :: 't\<close>.\<close>
+
+locale adapted_process = filtered_measure M F for M and F :: "_ :: {second_countable_topology, linorder_topology, order_bot} \<Rightarrow> _" and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {second_countable_topology, banach}" +
   assumes adapted[measurable]: "\<And>i. X i \<in> borel_measurable (F i)"
 begin
 
-lemma const_fun:
+lemma adaptedE[elim]:
+  assumes "\<lbrakk>\<And>j i. j \<le> i \<Longrightarrow> X j \<in> borel_measurable (F i)\<rbrakk> \<Longrightarrow> P"
+  shows P
+  using assms using adapted by (metis borel_measurable_subalgebra sets_F_mono space_F)
+
+end
+
+sublocale adapted_process \<subseteq> stochastic_process using measurable_from_subalg subalgebra adapted by (unfold_locales) blast
+
+lemma (in filtered_measure) adapted_process_const:
   assumes "f \<in> borel_measurable (F \<bottom>)"
   shows "adapted_process M F (\<lambda>_. f)"
   using assms by (unfold_locales) (blast intro: measurable_from_subalg subalgebra, metis borel_measurable_subalgebra bot.extremum sets_F_mono space_F)
 
+context adapted_process
+begin
+
 lemma compose:
   assumes "\<And>i. f i \<in> borel_measurable borel"
   shows "adapted_process M F (\<lambda>i \<xi>. (f i) (X i \<xi>))"
-  by (unfold_locales, intro measurable_compose[OF random_variable assms], intro measurable_compose[OF adapted assms])
+  by (unfold_locales) (intro measurable_compose[OF adapted assms])
 
 lemma norm: "adapted_process M F (\<lambda>i \<xi>. norm (X i \<xi>))" by (auto intro: compose borel_measurable_norm)
 
-lemma scaleR:
+lemma scaleR_right:
   assumes "adapted_process M F R"
   shows "adapted_process M F (\<lambda>i \<xi>. (R i \<xi>) *\<^sub>R (X i \<xi>))"
 proof -
   interpret R: adapted_process M F R by (rule assms)
-  show ?thesis by (unfold_locales) (auto simp add: borel_measurable_scaleR adapted random_variable assms R.random_variable R.adapted)
+  show ?thesis by (unfold_locales) (auto simp add: borel_measurable_scaleR adapted assms R.adapted)
 qed
   
-lemma scaleR_const_fun: 
+lemma scaleR_const_right: 
   assumes "f \<in> borel_measurable (F \<bottom>)" 
   shows "adapted_process M F (\<lambda>i \<xi>. f \<xi> *\<^sub>R (X i \<xi>))"
-  using assms by (fast intro: scaleR const_fun)
+  using assms by (fast intro: scaleR_right adapted_process_const)
 
-lemma scaleR_const: "adapted_process M F (\<lambda>i \<xi>. c *\<^sub>R (X i \<xi>))" by (auto intro: scaleR_const_fun borel_measurable_const)
+lemma scaleR_const: "adapted_process M F (\<lambda>i \<xi>. c *\<^sub>R (X i \<xi>))" by (auto intro: scaleR_const_right borel_measurable_const)
 
 lemma add:
   assumes "adapted_process M F Y"
   shows "adapted_process M F (\<lambda>i \<xi>. X i \<xi> + Y i \<xi>)"
 proof -
   interpret Y: adapted_process M F Y by (rule assms)
-  show ?thesis by (unfold_locales) (auto simp add: borel_measurable_add adapted random_variable Y.random_variable Y.adapted)
+  show ?thesis by (unfold_locales) (auto simp add: borel_measurable_add adapted Y.adapted)
 qed
 
 lemma diff:
@@ -91,47 +120,112 @@ lemma diff:
   shows "adapted_process M F (\<lambda>i \<xi>. X i \<xi> - Y i \<xi>)"
 proof -
   interpret Y: adapted_process M F Y by (rule assms)
-  show ?thesis by (unfold_locales) (auto simp add: borel_measurable_diff adapted random_variable Y.random_variable Y.adapted)
+  show ?thesis by (unfold_locales) (auto simp add: borel_measurable_diff adapted Y.adapted)
 qed
 
 lemma uminus: "adapted_process M F (-X)" using scaleR_const[of "-1"] by (simp add: fun_Compl_def)
 
+lemma partial_sum: "adapted_process M F (\<lambda>n \<xi>. \<Sum>i<n. X i \<xi>)" 
+proof (unfold_locales)
+  fix i :: 'b
+  have "X j \<in> borel_measurable (F i)" if "j \<le> i" for j using that adaptedE by meson
+  thus "(\<lambda>\<xi>. \<Sum>i<i. X i \<xi>) \<in> borel_measurable (F i)" by auto
+qed
+
+lemma partial_sum': "adapted_process M F (\<lambda>n \<xi>. \<Sum>i\<le>n. X i \<xi>)" 
+proof (unfold_locales)
+  fix i :: 'b
+  have "X j \<in> borel_measurable (F i)" if "j \<le> i" for j using that adaptedE by meson
+  thus "(\<lambda>\<xi>. \<Sum>i\<le>i. X i \<xi>) \<in> borel_measurable (F i)" by auto
+qed
+
 end
 
-locale adapted_process_order = adapted_process M F X for M F and X :: "'t :: {second_countable_topology, linorder_topology, order_bot} \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
+lemma (in filtered_measure) adapted_process_sum:
+  assumes "\<And>i. i \<in> I \<Longrightarrow> adapted_process M F (X i)"
+  shows "adapted_process M F (\<lambda>k \<xi>. \<Sum>i \<in> I. X i k \<xi>)" 
+proof -
+  {
+    fix i k assume "i \<in> I"
+    then interpret adapted_process M F "X i" using assms by simp
+    have "X i k \<in> borel_measurable M" "X i k \<in> borel_measurable (F k)" by auto
+  }
+  thus ?thesis by (unfold_locales, auto)
+qed
 
-subsection "Discrete-Time Processes"
+text \<open>A stochastic process is always adapted to the natural filtration it generates.\<close>
 
-locale discrete_time_stochastic_process = stochastic_process M X for M and X :: "nat \<Rightarrow> _ \<Rightarrow> _"
-locale discrete_time_adapted_process = adapted_process M F X for M F and X :: "nat \<Rightarrow> _ \<Rightarrow> _"
-locale discrete_time_adapted_process_order = adapted_process_order M F X for M F and X :: "nat \<Rightarrow> _ \<Rightarrow> _"
+sublocale stochastic_process \<subseteq> adapted_process_natural_filtration: adapted_process M "natural_filtration M borel X" X by (unfold_locales, simp, intro measurableI) auto
+ 
+subsection "Predictable Process"
 
-sublocale discrete_time_adapted_process_order \<subseteq> discrete_time_adapted_process by (unfold_locales)
-sublocale discrete_time_adapted_process \<subseteq> discrete_time_stochastic_process by (unfold_locales)
-sublocale discrete_time_adapted_process \<subseteq> nat_filtered_sigma_finite_measure by (unfold_locales)
-
-subsection "Predictable Processes"
-
-context filtered_sigma_finite_measure
+locale predictable_process = filtered_measure M F for M and F :: "_ :: {second_countable_topology, linorder_topology, order_bot} \<Rightarrow> _" and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {second_countable_topology, banach}" +
+  assumes "case_prod X \<in> borel_measurable (sigma (UNIV \<times> space M) ({{s<..t} \<times> A | A s t. A \<in> F s \<and> s < t} \<union> {{bot} \<times> A | A. A \<in> F bot}))"
 begin
 
-definition predictable_sigma :: "('t \<times> 'a) measure" where
-  "predictable_sigma = sigma (UNIV \<times> space M) ({{s<..t} \<times> A | A s t. A \<in> F s \<and> s < t} \<union> {{bot} \<times> A | A. A \<in> F bot})"
+text \<open>We introduce the constant \<^term>\<open>\<Sigma>\<^sub>P\<close> to denote the predictable sigma algebra.\<close>
 
-lemma space_predictable_sigma[simp]: "space predictable_sigma = (UNIV \<times> space M)" unfolding predictable_sigma_def space_measure_of_conv by blast
+definition predictable_sigma: "\<Sigma>\<^sub>P \<equiv> sigma (UNIV \<times> space M) ({{s<..t} \<times> A | A s t. A \<in> F s \<and> s < t} \<union> {{bot} \<times> A | A. A \<in> F bot})"
 
-lemma sets_predictable_sigma[simp]: "sets predictable_sigma = sigma_sets (UNIV \<times> space M) ({{s<..t} \<times> A | A s t. A \<in> F s \<and> s < t} \<union> {{bot} \<times> A | A. A \<in> F bot})" 
-  unfolding predictable_sigma_def sets_measure_of_conv 
+lemma predictable: "case_prod X \<in> borel_measurable \<Sigma>\<^sub>P" unfolding predictable_sigma using predictable_process_axioms predictable_process_axioms_def predictable_process_def by blast
+
+lemma space_predictable_sigma[simp]: "space \<Sigma>\<^sub>P = (UNIV \<times> space M)" unfolding predictable_sigma space_measure_of_conv by blast
+
+lemma sets_predictable_sigma[simp]: "sets \<Sigma>\<^sub>P = sigma_sets (UNIV \<times> space M) ({{s<..t} \<times> A | A s t. A \<in> F s \<and> s < t} \<union> {{bot} \<times> A | A. A \<in> F bot})" 
+  unfolding predictable_sigma sets_measure_of_conv 
   using space_F sets.sets_into_space
   by (fastforce intro!: if_P)
 
-definition predictable :: "('t \<Rightarrow> 'a \<Rightarrow> 'b :: {second_countable_topology,banach}) \<Rightarrow> bool" where
-  "predictable X = (case_prod X \<in> borel_measurable (predictable_sigma))"
+lemmas predictableD = measurable_sets[OF predictable, unfolded space_predictable_sigma]
 
-lemmas predictableD = measurable_sets[OF predictable_def[THEN iffD1], unfolded space_predictable_sigma]
+end
 
-lemma (in nat_filtered_sigma_finite_measure) predictable_sets_in_F:
-  assumes "(\<Union>i. {i} \<times> A i) \<in> predictable_sigma"
+text \<open>Every predictable process is also adapted.\<close>
+
+sublocale predictable_process \<subseteq> adapted_process
+proof (unfold_locales)
+  fix i :: 'b
+  {
+    fix S assume "S \<in> {{s<..t} \<times> A | A s t. A \<in> F s \<and> s < t} \<union> {{bot} \<times> A | A. A \<in> F bot}"
+    hence "Pair i -` S \<inter> space (F i) \<in> F i"
+    proof (cases)
+      assume "S \<in> {{s<..t} \<times> A |A s t. A \<in> sets (F s) \<and> s < t}"
+      then obtain s t A where S_is: "S = {s<..t} \<times> A" "s < t" "A \<in> F s" by blast
+      {
+        assume asm: "i \<in> {s<..t}"
+        hence "Pair i -` S \<inter> space (F i) = A" using S_is space_F sets.sets_into_space by blast
+        hence "Pair i -` S \<inter> space (F i) \<in> sets (F i)" using S_is(3) sets_F_mono[OF less_imp_le] asm by auto
+      }
+      thus "Pair i -` S \<inter> space (F i) \<in> sets (F i)" using S_is by (cases "i \<in> {s<..t}", blast, fastforce)
+    qed (auto)
+  }
+  hence "Pair i \<in> (F i) \<rightarrow>\<^sub>M \<Sigma>\<^sub>P" using space_F sets.sets_into_space by (intro measurable_sigma_sets, simp, fast, blast, meson)
+  hence "case_prod X o (Pair i) \<in> borel_measurable (F i)" using predictable by force
+  thus "X i \<in> borel_measurable (F i)" by (simp add: comp_def)
+qed
+
+subsection "Discrete-Time Process"
+
+text \<open>Locales for discrete-time processes.\<close>
+
+locale nat_stochastic_process = stochastic_process M X for M and X :: "nat \<Rightarrow> _ \<Rightarrow> _"
+locale nat_adapted_process = adapted_process M F X for M F and X :: "nat \<Rightarrow> _ \<Rightarrow> _"
+locale nat_predictable_process = predictable_process M F X for M F and X :: "nat \<Rightarrow> _ \<Rightarrow> _"
+
+sublocale nat_adapted_process \<subseteq> nat_stochastic_process by (unfold_locales)
+sublocale nat_predictable_process \<subseteq> nat_adapted_process by (unfold_locales)
+
+lemma (in nat_adapted_process) partial_sum_Suc: "nat_adapted_process M F (\<lambda>n \<xi>. \<Sum>i<n. X (Suc i) \<xi>)" 
+proof (unfold_locales)
+  fix i
+  have "X j \<in> borel_measurable (F i)" if "j \<le> i" for j using that adaptedE by meson
+  thus "(\<lambda>\<xi>. \<Sum>i<i. X (Suc i) \<xi>) \<in> borel_measurable (F i)" by auto
+qed
+
+text \<open>The following lemma characterizes predictability in a discrete-time setting.\<close>
+
+lemma (in nat_predictable_process) sets_in_filtration:
+  assumes "(\<Union>i. {i} \<times> A i) \<in> \<Sigma>\<^sub>P"
   shows "A (Suc i) \<in> F i" "A 0 \<in> F 0"
   using assms unfolding sets_predictable_sigma
 proof (induction "(\<Union>i. {i} \<times> A i)" arbitrary: A)
@@ -198,44 +292,99 @@ next
   }
 qed
 
-lemma (in nat_filtered_sigma_finite_measure) predictable_discrete_time_process_measurable:
-  assumes "predictable X"
-  shows "X i \<in> borel_measurable (F (i - 1))"
-proof (cases i)
-  case 0
-  {
-    fix S :: "'b set" assume open_S: "open S"
-    hence "{0} \<times> space M \<in> predictable_sigma" by (auto simp add: bot_nat_def space_F[symmetric, of bot])
-    moreover have "case_prod X -` S \<inter> (UNIV \<times> space M) \<in> predictable_sigma" using open_S by (intro predictableD[OF assms], simp add: borel_open)  
-    ultimately have "case_prod X -` S \<inter> ({0} \<times> space M) \<in> predictable_sigma" unfolding sets_predictable_sigma using space_F sets.sets_into_space
-      by (subst Times_Int_distrib1[of "{0}" UNIV "space M", simplified], subst inf.commute[of "_ \<times> _"], subst Int_assoc[symmetric], subst Int_range_binary) 
-         (intro sigma_sets_Inter binary_in_sigma_sets, fast)+
-    moreover have "case_prod X -` S \<inter> ({0} \<times> space M) = {0} \<times> (X 0 -` S \<inter> space M)" by (auto simp add: le_Suc_eq)
-    moreover have "... = (\<Union>i. {i} \<times> (if i = 0 then X 0 -` S \<inter> space M else {}))" by (auto split: if_splits)
-    ultimately have "(\<Union>i. {i} \<times> (if i = 0 then X 0 -` S \<inter> space M else {})) \<in> predictable_sigma" by argo
-    then have "X 0 -` S \<inter> space M \<in> sets (F 0)" using predictable_sets_in_F[of "\<lambda>i. if i = 0 then X 0 -` S \<inter> space M else {}"] by presburger
-  }
-  hence "X 0 \<in> borel_measurable (F 0)" by (fastforce simp add: bot_nat_def space_F intro!: borel_measurableI)
-  thus ?thesis using 0 by force
-next
-  case (Suc i)
-  {
-    fix S :: "'b set" assume open_S: "open S"
-    have "{Suc i} = {i<..Suc i}" by fastforce
-    hence "{Suc i} \<times> space M \<in> predictable_sigma" unfolding space_F[symmetric, of i] by (auto intro!: sigma_sets.Basic)
-    moreover have "case_prod X -` S \<inter> (UNIV \<times> space M) \<in> predictable_sigma" using open_S by (intro predictableD[OF assms], simp add: borel_open)
-    ultimately have "case_prod X -` S \<inter> ({Suc i} \<times> space M) \<in> predictable_sigma" unfolding sets_predictable_sigma using space_F sets.sets_into_space
-      by (subst Times_Int_distrib1[of "{Suc i}" UNIV "space M", simplified], subst inf.commute[of "_ \<times> _"], subst Int_assoc[symmetric], subst Int_range_binary) 
-         (intro sigma_sets_Inter binary_in_sigma_sets, fast)+
-    moreover have "case_prod X -` S \<inter> ({Suc i} \<times> space M) = {Suc i} \<times> (X (Suc i) -` S \<inter> space M)" by (auto simp add: le_Suc_eq)
-    moreover have "... = (\<Union>j. {j} \<times> (if j = Suc i then (X (Suc i) -` S \<inter> space M) else {}))" by (auto split: if_splits)
-    ultimately have "(\<Union>j. {j} \<times> (if j = Suc i then (X (Suc i) -` S \<inter> space M) else {})) \<in> predictable_sigma" by argo
-    then have "X (Suc i) -` S \<inter> space M \<in> sets (F i)" using predictable_sets_in_F[of "\<lambda>j. if j = Suc i then (X (Suc i) -` S \<inter> space M) else {}"] by presburger
-  }
-  hence "X (Suc i) \<in> borel_measurable (F i)" by (fastforce simp add: space_F intro!: borel_measurableI)
-  then show ?thesis using Suc by force
+text \<open>This leads to the following useful fact.\<close>
+
+corollary (in nat_predictable_process) adapted_Suc:
+  shows "nat_adapted_process M F (\<lambda>i. X (Suc i))"
+proof (unfold_locales, intro borel_measurableI)
+  fix S :: "'b set" and i assume open_S: "open S"
+  have "{Suc i} = {i<..Suc i}" by fastforce
+  hence "{Suc i} \<times> space M \<in> \<Sigma>\<^sub>P" unfolding space_F[symmetric, of i] sets_predictable_sigma by (intro sigma_sets.Basic) blast
+  moreover have "case_prod X -` S \<inter> (UNIV \<times> space M) \<in> \<Sigma>\<^sub>P" using open_S by (intro predictableD, simp add: borel_open)
+  ultimately have "case_prod X -` S \<inter> ({Suc i} \<times> space M) \<in> \<Sigma>\<^sub>P" unfolding sets_predictable_sigma using space_F sets.sets_into_space
+    by (subst Times_Int_distrib1[of "{Suc i}" UNIV "space M", simplified], subst inf.commute, subst Int_assoc[symmetric], subst Int_range_binary) 
+       (intro sigma_sets_Inter binary_in_sigma_sets, fast)+
+  moreover have "case_prod X -` S \<inter> ({Suc i} \<times> space M) = {Suc i} \<times> (X (Suc i) -` S \<inter> space M)" by (auto simp add: le_Suc_eq)
+  moreover have "... = (\<Union>j. {j} \<times> (if j = Suc i then (X (Suc i) -` S \<inter> space M) else {}))" by (auto split: if_splits)
+  ultimately have "(\<Union>j. {j} \<times> (if j = Suc i then (X (Suc i) -` S \<inter> space M) else {})) \<in> \<Sigma>\<^sub>P" by argo
+  thus "X (Suc i) -` S \<inter> space (F i) \<in> sets (F i)" using sets_in_filtration[of "\<lambda>j. if j = Suc i then (X (Suc i) -` S \<inter> space M) else {}"] space_F by presburger
 qed
 
-end
+subsection "Continuous-Time Process"
+
+text \<open>Locales for continuous-Time processes.\<close>
+
+locale ennreal_stochastic_process = stochastic_process M X for M and X :: "ennreal \<Rightarrow> _ \<Rightarrow> _"
+locale ennreal_adapted_process = adapted_process M F X for M F and X :: "ennreal \<Rightarrow> _ \<Rightarrow> _"
+locale ennreal_predictable_process = predictable_process M F X for M F and X :: "ennreal \<Rightarrow> _ \<Rightarrow> _"
+
+sublocale ennreal_adapted_process \<subseteq> ennreal_stochastic_process by (unfold_locales)
+sublocale ennreal_predictable_process \<subseteq> ennreal_adapted_process by (unfold_locales)
+
+subsection "Processes with an Ordering"
+
+text \<open>These locales are useful in the definition of sub- and supermartingales.\<close>
+
+locale stochastic_process_order = stochastic_process M X for M and X :: "_ :: {second_countable_topology,order_bot,linorder_topology} \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
+locale adapted_process_order = adapted_process M F X for M F and X :: "_ :: {second_countable_topology,order_bot,linorder_topology} \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
+locale predictable_process_order = predictable_process M F X for M F and X :: "_ :: {second_countable_topology,order_bot,linorder_topology} \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
+
+(* Discrete Time *)
+
+locale nat_stochastic_process_order = nat_stochastic_process M X for M and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
+locale nat_adapted_process_order = nat_adapted_process M F X for M F and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
+locale nat_predictable_process_order = nat_predictable_process M F X for M F and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
+
+sublocale nat_stochastic_process_order \<subseteq> stochastic_process_order by (unfold_locales)
+sublocale nat_adapted_process_order \<subseteq> adapted_process_order by (unfold_locales)
+sublocale nat_predictable_process_order \<subseteq> predictable_process_order by (unfold_locales)
+
+(* Continuous Time *)
+
+locale ennreal_stochastic_process_order = ennreal_stochastic_process M X for M and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
+locale ennreal_adapted_process_order = ennreal_adapted_process M F X for M F and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
+locale ennreal_predictable_process_order = ennreal_predictable_process M F X for M F and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
+
+sublocale ennreal_stochastic_process_order \<subseteq> stochastic_process_order by (unfold_locales)
+sublocale ennreal_adapted_process_order \<subseteq> adapted_process_order by (unfold_locales)
+sublocale ennreal_predictable_process_order \<subseteq> predictable_process_order by (unfold_locales)
+
+subsection "Sigma Finite Process"
+
+text \<open>Locales for processes with a sigma finite filtration.\<close>
+
+locale sigma_finite_adapted_process = adapted_process + filtered_sigma_finite_measure
+locale sigma_finite_predictable_process = predictable_process + filtered_sigma_finite_measure
+
+locale sigma_finite_adapted_process_order = adapted_process_order + filtered_sigma_finite_measure
+locale sigma_finite_predictable_process_order = predictable_process_order + filtered_sigma_finite_measure
+
+(* Discrete Time *)
+
+locale nat_sigma_finite_adapted_process = nat_adapted_process + filtered_sigma_finite_measure
+locale nat_sigma_finite_predictable_process = nat_predictable_process + filtered_sigma_finite_measure
+
+locale nat_sigma_finite_adapted_process_order = nat_adapted_process_order + filtered_sigma_finite_measure
+locale nat_sigma_finite_predictable_process_order = nat_predictable_process_order + filtered_sigma_finite_measure
+
+(* Continuous Time *)
+
+locale ennreal_sigma_finite_adapted_process = ennreal_adapted_process + filtered_sigma_finite_measure
+locale ennreal_sigma_finite_predictable_process = ennreal_predictable_process + filtered_sigma_finite_measure
+
+locale ennreal_sigma_finite_adapted_process_order = ennreal_adapted_process_order + filtered_sigma_finite_measure
+locale ennreal_sigma_finite_predictable_process_order = ennreal_predictable_process_order + filtered_sigma_finite_measure
+
+text \<open>Thus, right from the outset, we have pretty much every locale we may need.\<close>
+
+subsection "Stopping Times are Adapted Processes"
+
+lemma (in ennreal_filtered_measure)
+  assumes "stopping_time F T"
+  shows "ennreal_adapted_process M F (\<lambda>i \<xi>. T \<xi> - enn2real i)"
+proof (unfold_locales)
+  fix i
+  show "(\<lambda>\<xi>. T \<xi> - enn2real i) \<in> borel_measurable (F i)" sorry
+qed
 
 end

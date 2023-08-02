@@ -33,7 +33,7 @@ next
   thus ?case using measurable_mono[OF _ refl _ space_sigma_gen, of N M] measurable_sigma_gen_singleton by fast
 qed
 
-lemma measurable_family_iff_contains_sigma_gen:
+lemma measurable_iff_contains_sigma_gen':
   shows "(S \<subseteq> M \<rightarrow>\<^sub>M N) \<longleftrightarrow> S \<subseteq> space M \<rightarrow> space N \<and> sigma_gen (space M) N S \<subseteq> M"
 proof (standard, goal_cases)
   case 1

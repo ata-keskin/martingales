@@ -61,7 +61,7 @@ proof -
 qed
 
 (* Real Functional Analysis - Lang*)
-theorem averaging_theorem:
+lemma averaging_theorem:
   fixes f::"_ \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes [measurable]:"integrable M f" 
       and closed: "closed S"
