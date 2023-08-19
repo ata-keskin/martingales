@@ -1,3 +1,8 @@
-\chapter{\abstractname}
+﻿\chapter{\abstractname}
+This thesis presents a formalization of martingales in arbitrary Banach spaces using Isabelle/HOL. The primary focus lies in the formal construction of conditional expectation in Banach spaces, which extends the existing formulation for real-valued functions. Additionally, we introduce novel induction schemes for simple, integrable, and Borel measurable functions on Banach spaces, while generalizing existing lemmas and theorems on Bochner integration. These improvements accommodate scenarios with or without a real vector ordering.
 
-%TODO: Abstract
+Our formalization aims to replicate existing lemmas about martingales, submartingales, and supermartingales from the mathematical proof repository mathlib, which is primarily developed in Lean, based on homotopy type theory (HoTT). While mathlib explores formalization in Lean, we choose Isabelle/HOL as the theorem prover due to its powerful locale system that provides a structured and modular framework for representing these dynamic systems.
+
+The formalization of martingales and stochastic processes is achieved through Isabelle's locale system. We define the locale \lstinline{stochastic_process} to formalize stochastic processes over arbitrary Banach spaces. Similarly, we define adapted, progressively measurable and predictable processes via the locales \lstinline{adapted_process}, \lstinline{progressive_process} and \lstinline{predictable_process}. We also show sublocale relations and simple lemmas concerning vector space operations. Filtered measure spaces and $\sigma$-finite variants are introduced with the locales \lstinline{filtered_measure} and \lstinline{filtered_sigma_finite_measure}. This locale-based approach enhances readability and maintainability, allowing us to systematically express the key properties of stochastic processes and filtered measure spaces.
+
+Similarly, the locales \lstinline{martingale}, \lstinline{submartingale} and \lstinline{supermartingale} are introduced to formalize martingales and related constructs in Banach spaces. Our formalization provides a robust mathematical framework for analyzing random processes.

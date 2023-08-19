@@ -1,9 +1,82 @@
-% !TeX root = ../main.tex
+﻿% !TeX root = ../main.tex
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
 \chapter{Background and Related Work}\label{chapter:background}
 
 \section{Existing Formalizations}
-\subsection{LEAN - mathlib}
-\subsection{ISA-AFP}
-\section{Existing Material on the Topic}
+\subsection{Lean Mathematical Library}
+Our main motivation for formalizing a theory of martingales in Isabelle/HOL comes from the existing in-depth formalization of the same subject in \textsf{mathlib}. As stated on their online platform, ``The Lean mathematical library, \textsf{mathlib}, is a community-driven effort to build a unified library of mathematics formalized in the Lean proof assistant.'' The Lean-formalization of martingales consists of six documents. In the introductory Lean document \lstinline{basic.lean}, fundamentals of the theory of martingales are formalized. The aim of this bachelor's thesis is to reproduce the results contained within this file in Isabelle/HOL. As will become clear in a moment, this is not a straightforward task, since there are a lot of dependencies missing in the Isabelle/HOL libraries.
+
+The file \lstinline{basic.lean} contains definitions for martingales, submartingales and supermartingales. Also stated on the official documentation on \textsf{mathlib}, the main results of this document are:
+
+\begin{itemize}
+\item[$\rightarrow$]\lstinline[mathescape]{measure_theory.martingale $f$ $\mathcal{F}$ $\mu$:}
+\item[] \quad$f$ is a martingale with respect to filtration $\mathcal{F}$ and measure $\mu$.
+\item[$\rightarrow$]\lstinline[mathescape]{measure_theory.supermartingale $f$ $\mathcal{F}$ $\mu$:}
+\item[] \quad$f$ is a supermartingale with respect to filtration $\mathcal{F}$ and measure $\mu$.
+\item[$\rightarrow$]\lstinline[mathescape]{measure_theory.submartingale $f$ $\mathcal{F}$ $\mu$:}
+\item[] \quad$f$ is a submartingale with respect to filtration $\mathcal{F}$ and measure $\mu$.
+\item[$\rightarrow$]\lstinline[mathescape]{measure_theory.martingale_condexp $f$ $\mathcal{F}$ $\mu$:}
+\item[] \quad the sequence $(\mu[f \vert \mathcal{F}_i])_{i\in\mathcal{T}}$ is a martingale with respect to $\mathcal{F}$ and $\mu$, where $\mu[f \vert \mathcal{F}_i]$ denotes the conditional expectation of $f$ with respect to the subalgebra $\mathcal{F}_i$.
+\end{itemize}
+
+On a first note, we see that this theory relies heavily on the development of a conditional expectation operator. Prior to our development, the only formalization of conditional expectation in Isabelle/HOL was done in the real setting and resides in the theory document \lstinline{HOL-Probability.Conditional_Expectation}. This formalization was accomplished by S\`ebastien Gou\"ezel, presumably in anticipation of his latter entries \cite{Ergodic_Theory-AFP} and \cite{Lp-AFP}. We will delve further into the existing formalization and how our contribution improves upon it in the upcoming chapter.
+
+Within the \textsf{mathlib} formalization, the majority of lemmata on martingales require the measures in question to be finite. In our formalization of martingales, we will demonstrate that $\sigma$-finiteness suffices alone. This approach is also consistent with our generalized formalization of conditional expectation, as it inherits the $\sigma$-finiteness requirement from the preexisting formalization in the real setting.
+
+Another short-coming of the \textsf{mathlib} formalization is its treatment of predictable processes. The \textsf{mathlib} formalization contains the definition of adapted processes and progressively measurable processes. No explicit definition of a predictable process is given. Instead predictability is defined only in the discrete case, as a stochastic process which is adapted to the filtration $\lambda i. \; \mathcal{F}_{i + 1}$. In contrast, our formalization defines predictable processes more generally using the concept of a predictable $\sigma$-algebra. Similarly, we define adapted and progressively measurable process. One of the major advantages of our formalization is the use of locales and sublocale relations. Concretely, we will show the relationship ''\lstinline[mathescape]{stochastic $\supseteq$ adapted $\supseteq$ progressive $\supseteq$ predictable}``.
+
+Another important point to consider is the restrictions placed on the types in question. In the \textsf{mathlib} formalization, martingales are defined as a family of integrable functions $f : \iota \rightarrow \Omega \rightarrow E$. The \textsf{mathlib} formalization further requires that
+\begin{itemize}
+\item $\iota$ is a preordered set, 
+\item $\Omega$ is a measurable space (i.e. a set together with a $\sigma$-algebra $\Sigma$),
+\item $E$ is a normed, complete space with an addition operation.
+\end{itemize}
+
+These restrictions are easily replicated in our formalization using type classes and the type \lstinline[mathescape]{$'a$ measure}. We simply restrict ourselves to functions \lstinline[mathescape]{$f :$ $'t$ $\rightarrow$ $'a$ measure $\rightarrow$ $'b$}, where the type $'t$ is an instance of the class \lstinline{linorder_topology} and the type $'b$ is an instance of the class \lstinline{banach}. Furthermore, we fix an element $t_0$ of type $'t$ which represents the smallest element for which the function should be integrable. With this approach we can restrict ourselves to the index set $\{i :: \;'t \;\vert t_0 \le i\}$. The fact that we only need to consider this index set, which is bounded from below, will prove to be cruicial in certain steps in our development. It will also provide us with the ability to use the reals as an index set. With this specification, our approach mirrors the \textsf{mathlib} formalization, since $\sigma$-algebras are encoded as measures in Isabelle/HOL. The additional requirement that $'t$ (equivalently $\iota$ in the \textsf{mathlib} case) be linearly ordered is easily justified as well, since in most contexts the index set represents a temporal dimension, which can obviously be linearly ordered. Apart from this, the topology induced must also come from the ordering on $'t$, since otherwise we can't have a useful definition of predictability in the general sense.
+
+The main purpose of the \textsf{mathlib} formalization on martingales is to prove Doob's martingale convergence theorems, which concern discrete time and continuous time martingales (i.e. the naturals or the reals as indices). This justifies their focus on discrete time processes and the formulation of predictability only in the discrete case. More information on the specifics and the development of Doob's martingale convergence theorems is available in \cite{ying2022formalization}.
+
+This concludes our review of the \textsf{mathlib} formalization on martingales.
+
+\subsection{Archive of Formal Proofs}
+
+The \textsf{Archive of Formal Proofs} or \textsf{\ac{AFP}} is a digital repository of formalized proofs and theories developed using the Isabelle theorem prover and proof assistant. The \textsf{\ac{AFP}}  hosts a variety of formalizations and proofs, primarily in the fields of logic, mathematics, and computer science. The repository allows researchers, mathematicians, and computer scientists to share their formal proofs, theories, and related materials with the broader community. This sharing of formalized knowledge helps ensure correctness, encourages collaboration, and facilitates the advancement of various fields through rigorous and machine-verifiable proofs.
+
+The repository also offers a search function, which allows us to find if any formalization on martingales has been done previously. A quick search yields the theory file \lstinline{DiscretePricing.Martingale}. This entry \lstinline{DiscretePricing}, which is attributed to Mnacho Echenim, focuses on the formalization of the Binomial Options Pricing Model in finance. A development of discrete time real-valued martingales is given in order to introduce the concept of risk-neutral measures. Similar to the development on \textsf{mathlib}, the goal of this entry is not to formalize martingales. A partial formalization of martingales is only given as a byproduct. The actual conference paper detailing the formalization can be found here \cite{EchenimPeltier}.
+
+Apart from this entry, no other development on the theory of martingales is present on \textsf{\ac{AFP}}.
+\pagebreak
+
+\section{Existing Reference Material on the Topic}
+
+The main focus of our project is to formalize martingales in as general of a setting as possible. In this vein, we will study martingales defined on arbitrary Banach spaces, as opposed to the reals only. The main obstacle we will face is the development of conditional expectation in arbitrary Banach spaces. A great resource on this subject is the book \textit{Analysis in Banach Spaces} \cite{Hytoenen_2016} by Hytönen et al. As a primer for the upcoming chapter, we will quickly cover the basics of integration on Banach spaces. The following information can also be found in the aforementioned book.
+
+Integration on Banach spaces is usually done using the Bochner integral, which is defined similarly to the Lebesgue integral. For $(\Omega, \Sigma, \mu)$ a measure space and $E$ a Banach space, we define the Bochner integral as follows:
+
+\begin{itemize}
+\item[] First, we consider simple functions $s : \Omega \rightarrow E$. These are functions which can be expressed as finite sums of the form
+\[
+s(x) = \sum_{i=1}^n \chi_{A_i} \cdot_\mathbb{R} c_i\]
+where $\chi_A$ is the indicator function of a set $A \in \Sigma$ and $c_i \in E$. Here $\cdot_\mathbb{R}$ denotes the scalar multiplication. We call such a function $s$ Bochner integrable if $\mu(A_i) < \infty$ for all $i \in {1,\dots,n}$. In this case, we define the Bochner integral simply as the sum
+\[
+	\int s \; \textrm{d}\mu = \sum_{i=1}^n \mu(A_i) \cdot_\mathbb{R} c_i
+\]
+If we replace $E$ with $\mathbb{R}$, we can easily see that Bochner integrable simple functions are exactly those functions, which are Lebesgue integrable and simple.
+\item[] We call a function $f : \Omega \rightarrow E$ strongly $\mu$-measurable, if there exists a sequence $(f_n)_{n\in\mathbb{N}}$ of simple functions converging to $f$ $\mu$-almost everywhere.
+\item[] A strongly measurable function $f : \Omega \rightarrow E$ is called Bochner integrable with respect to $\mu$, if there exists a sequence of Bochner integrable simple functions $f_n : \Omega \rightarrow E$ such that
+\[
+	\lim_{n \to \infty} \int_\Omega \lVert f - f_n \rVert \; \textrm{d}\mu = 0
+\]
+The integral used in this definition is the ordinary Lebesgue integral. This definition makes sense, since $w \mapsto \lVert f(w) - f_n(w) \rVert$ is $\mu$-measurable and non-negative.
+\item[] It can be shown via the triangle inequality that the integrals $\int f_n\; \textrm{d}\mu$ form a Cauchy sequence. By completeness, this sequence converges to some element $\lim_{n \to \infty} \int f_n \; \textrm{d}\mu \in E$. This limit is called the Bochner integral of $f$ with respect to $\mu$:
+\[
+	\int f \; \textrm{d}\mu = \lim_{n \to \infty} \int f_n \; \textrm{d}\mu
+\]
+\end{itemize}
+
+A formalization of the Bochner integral is available in Isabelle/HOL in the theory file \lstinline{HOL-Analysis.Bochner_Integration}. This formalization, which is due to Johannes Hölzl, has the additional assumption that the space $E$ be second countable. One can show that a function $f$ is strongly measurable if and only if it is essentially separably valued and for all $A \in \mathcal{B}(E)$ we have $f^{-1}(A) \in \Sigma$. Here $\mathcal{B}(E)$ denotes the Borel $\sigma$-algebra on $E$. A function is called essentially separably valued if there exists a $\mu$-null set $N \subseteq \Omega$, such that $f (\Omega \setminus N)$ is separable as a subspace of $E$. Therefore, if $E$ is already a separable Banach space, a function $f : \Omega \rightarrow E$ is strongly measurable if and only if it is $\Sigma$-measurable.
+
+The book also contains an in depth section on the construction of the conditional expectation operator on Banach spaces. For our purposes, we only need to focus on the case where $f : \Omega \rightarrow E$ is a Bochner integrable function. In this case, the conditional expectation can be thought of as a linear operator $\mathbb{E(\cdot\vert\mathcal{F}} : L^1(\Omega; E) \rightarrow L^1(\Omega; E)$ with respect to a sub-$\sigma$-algebra. The book contains theorems for the existence and uniqueness of conditional expectations (up to $\mu$-null sets) for functions not only in $L^1(\Omega; E)$, but also $L^2(\Omega; E)$ and $L^0(\Omega; E)$, which is the space of strongly measurable functions. Unsuprisingly, the definition of conditional expectation in the last case is a bit more complicated, since it has to take into account the case where $f$ is not integrable.
+
+Another extensive reference regarding martingales in Banach spaces is the book \textit{Martingales in Banach Spaces} \cite{pisier_2016} by Gilles Pisier. This resource provides an in-depth exploration of the theory of martingales in Banach spaces at a graduate level. Given the limited scope of this thesis, the book serves as a supplementary resource, as only a select few of its results are applicable to our elementary objectives.
