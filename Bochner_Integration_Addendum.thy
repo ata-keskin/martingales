@@ -24,7 +24,7 @@ proof-
   thus ?thesis using that s by blast
 qed
 
-lemma simple_function_indicator_representation_banach:
+lemma simple_function_indicator_representation:
   fixes f ::"'a \<Rightarrow> 'b :: {second_countable_topology, banach}"
   assumes f: "simple_function M f" and x: "x \<in> space M"
   shows "f x = (\<Sum>y \<in> f ` space M. indicator (f -` {y} \<inter> space M) x *\<^sub>R y)"
@@ -37,18 +37,14 @@ proof -
   finally show ?thesis by auto
 qed
 
-lemma simple_function_indicator_representation_AE_banach:
+lemma simple_function_indicator_representation_AE:
   fixes f ::"'a \<Rightarrow> 'b :: {second_countable_topology, banach}"
   assumes f: "simple_function M f"
   shows "AE x in M. f x = (\<Sum>y \<in> f ` space M. indicator (f -` {y} \<inter> space M) x *\<^sub>R y)"  
-  by (metis (mono_tags, lifting) AE_I2 simple_function_indicator_representation_banach f)
+  by (metis (mono_tags, lifting) AE_I2 simple_function_indicator_representation f)
 
 lemmas simple_function_scaleR[intro] = simple_function_compose2[where h="(*\<^sub>R)"]
-
-lemma integrable_simple_function:
-  assumes "simple_function M f" "emeasure M {y \<in> space M. f y \<noteq> 0} \<noteq> \<infinity>"
-  shows "integrable M f"
-  using assms has_bochner_integral_simple_bochner_integrable integrable.simps simple_bochner_integrable.simps by blast
+lemmas integrable_simple_function = simple_bochner_integrable.intros[THEN has_bochner_integral_simple_bochner_integrable, THEN integrable.intros] 
 
 (* Induction rule for simple integrable functions *)
 lemma\<^marker>\<open>tag important\<close> simple_integrable_function_induct[consumes 2, case_names cong indicator add, induct set: simple_function]:
@@ -63,7 +59,7 @@ lemma\<^marker>\<open>tag important\<close> simple_integrable_function_induct[co
   shows "P f"
 proof-
   let ?f = "\<lambda>x. (\<Sum>y\<in>f ` space M. indicat_real (f -` {y} \<inter> space M) x *\<^sub>R y)"
-  have f_ae_eq: "f x = ?f x" if "x \<in> space M" for x using simple_function_indicator_representation_banach[OF f(1) that] .
+  have f_ae_eq: "f x = ?f x" if "x \<in> space M" for x using simple_function_indicator_representation[OF f(1) that] .
   moreover have "emeasure M {y \<in> space M. ?f y \<noteq> 0} \<noteq> \<infinity>" by (metis (no_types, lifting) Collect_cong calculation f(2))
   moreover have "P (\<lambda>x. \<Sum>y\<in>S. indicat_real (f -` {y} \<inter> space M) x *\<^sub>R y)"
                 "simple_function M (\<lambda>x. \<Sum>y\<in>S. indicat_real (f -` {y} \<inter> space M) x *\<^sub>R y)"
@@ -159,7 +155,7 @@ lemma\<^marker>\<open>tag important\<close> simple_integrable_function_induct_no
   shows "P f"
 proof-
   let ?f = "\<lambda>x. (\<Sum>y\<in>f ` space M. indicat_real (f -` {y} \<inter> space M) x *\<^sub>R y)"
-  have f_ae_eq: "f x = ?f x" if "x \<in> space M" for x using simple_function_indicator_representation_banach[OF f(1) that] .
+  have f_ae_eq: "f x = ?f x" if "x \<in> space M" for x using simple_function_indicator_representation[OF f(1) that] .
   moreover have "emeasure M {y \<in> space M. ?f y \<noteq> 0} \<noteq> \<infinity>" by (metis (no_types, lifting) Collect_cong calculation f(2))
   moreover have "P (\<lambda>x. \<Sum>y\<in>S. indicat_real (f -` {y} \<inter> space M) x *\<^sub>R y)"
                 "simple_function M (\<lambda>x. \<Sum>y\<in>S. indicat_real (f -` {y} \<inter> space M) x *\<^sub>R y)"

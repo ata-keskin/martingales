@@ -24,7 +24,7 @@ proof-
   thus ?thesis using that s by blast
 qed
 
-lemma banach_simple_function_indicator_representation:
+lemma simple_function_indicator_representation:
   fixes f ::"'a \<Rightarrow> 'b :: {second_countable_topology, banach}"
   assumes f: "simple_function M f" and x: "x \<in> space M"
   shows "f x = (\<Sum>y \<in> f ` space M. indicator (f -` {y} \<inter> space M) x *\<^sub>R y)"
@@ -37,11 +37,11 @@ proof -
   finally show ?thesis by auto
 qed
 
-lemma banach_simple_function_indicator_representation_AE:
+lemma simple_function_indicator_representation_AE:
   fixes f ::"'a \<Rightarrow> 'b :: {second_countable_topology, banach}"
   assumes f: "simple_function M f"
   shows "AE x in M. f x = (\<Sum>y \<in> f ` space M. indicator (f -` {y} \<inter> space M) x *\<^sub>R y)"  
-  by (metis (mono_tags, lifting) AE_I2 banach_simple_function_indicator_representation f)
+  by (metis (mono_tags, lifting) AE_I2 simple_function_indicator_representation f)
 
 lemmas simple_function_scaleR[intro] = simple_function_compose2[where h="(*\<^sub>R)"]
 

@@ -61,7 +61,7 @@ proof -
 qed
 
 (* Real Functional Analysis - Lang*)
-theorem averaging_theorem:
+lemma averaging_theorem:
   fixes f::"_ \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes [measurable]:"integrable M f" 
       and closed: "closed S"
@@ -133,14 +133,6 @@ proof (induct rule: sigma_finite_measure_induct)
   hence "AE x in N. f x \<notin> -S" using open_Compl[OF assms(2)] by (intro AE_iff_measurable[THEN iffD2], auto)
   thus ?case by force
 qed (simp add: pred_sets2[OF borel_closed] assms(2))
-
-lemma density_nonneg:
-  fixes f::"_ \<Rightarrow> 'b::{second_countable_topology, banach, linorder_topology, ordered_real_vector}"
-  assumes "integrable M f" 
-      and "\<And>A. A \<in> sets M \<Longrightarrow> set_lebesgue_integral M A f \<ge> 0"
-    shows "AE x in M. f x \<ge> 0"
-  using averaging_theorem[OF assms(1), of "{0..}", OF closed_atLeast] assms(2)
-  by (simp add: scaleR_nonneg_nonneg)
   
 lemma density_zero:
   fixes f::"'a \<Rightarrow> 'b::{second_countable_topology, banach}"
@@ -162,6 +154,14 @@ proof-
   }
   thus ?thesis using density_zero[OF Bochner_Integration.integrable_diff[OF assms(1,2)]] by (simp add: set_lebesgue_integral_def)
 qed
+
+lemma density_nonneg:
+  fixes f::"_ \<Rightarrow> 'b::{second_countable_topology, banach, linorder_topology, ordered_real_vector}"
+  assumes "integrable M f" 
+      and "\<And>A. A \<in> sets M \<Longrightarrow> set_lebesgue_integral M A f \<ge> 0"
+    shows "AE x in M. f x \<ge> 0"
+  using averaging_theorem[OF assms(1), of "{0..}", OF closed_atLeast] assms(2)
+  by (simp add: scaleR_nonneg_nonneg)
 
 lemma integral_nonneg_AE_eq_0_iff_AE:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"

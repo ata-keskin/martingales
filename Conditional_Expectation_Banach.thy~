@@ -1,4 +1,4 @@
-theory Conditional_Expectation_Banach                                                                            
+theory Conditional_Expectation_Banach                                                                 
 imports "HOL-Probability.Conditional_Expectation" Sigma_Finite_Measure_Addendum Bochner_Integration_Addendum Elementary_Metric_Spaces_Addendum
 begin                                           
 

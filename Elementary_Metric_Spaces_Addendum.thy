@@ -25,9 +25,7 @@ lemma bounded_imp_dist_bounded:
   shows "bounded ((\<lambda>(i, j). dist (s i) (s j)) ` ({n..} \<times> {n..}))"
   using bounded_dist_comp[OF bounded_fst bounded_snd, OF bounded_Times(1,1)[OF assms(1,1)]] by (rule bounded_subset, force) 
 
-(* The following lemma is the main result of this theory file. *)
-
-theorem cauchy_iff_diameter_tends_to_zero_and_bounded:
+lemma cauchy_iff_diameter_tends_to_zero_and_bounded:
   fixes s :: "nat \<Rightarrow> 'a :: real_normed_vector"
   shows "Cauchy s \<longleftrightarrow> ((\<lambda>n. diameter {s i | i. i \<ge> n}) \<longlonglongrightarrow> 0 \<and> bounded (range s))"
 proof -
