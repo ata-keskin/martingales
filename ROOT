@@ -13,10 +13,10 @@ session "Martingale" (AFP) = HOL +
 	Bochner_Integration_Addendum
 	Set_Integral_Addendum
 	Sigma_Finite_Measure_Addendum
-  	Filtration
+  	Filtered_Measure
 	Conditional_Expectation_Banach
 	Stochastic_Process
 	Martingale
 
   document_files
-  	"root.tex"
+  	"main.tex"

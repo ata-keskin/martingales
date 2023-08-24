@@ -272,7 +272,7 @@ definition \<Sigma>\<^sub>P :: "('b \<times> 'a) measure" where predictable_sigm
 
 lemma space_predictable_sigma[simp]: "space \<Sigma>\<^sub>P = ({t\<^sub>0..} \<times> space M)" unfolding predictable_sigma space_measure_of_conv by blast
 
-lemma sets_predictable_sigma[simp]: "sets \<Sigma>\<^sub>P = sigma_sets ({t\<^sub>0..} \<times> space M) ({{s<..t} \<times> A | A s t. A \<in> F s \<and> t\<^sub>0 \<le> s \<and> s < t} \<union> {{t\<^sub>0} \<times> A | A. A \<in> F t\<^sub>0})" 
+lemma sets_predictable_sigma: "sets \<Sigma>\<^sub>P = sigma_sets ({t\<^sub>0..} \<times> space M) ({{s<..t} \<times> A | A s t. A \<in> F s \<and> t\<^sub>0 \<le> s \<and> s < t} \<union> {{t\<^sub>0} \<times> A | A. A \<in> F t\<^sub>0})" 
   unfolding predictable_sigma using space_F sets.sets_into_space by (subst sets_measure_of) fastforce+
 
 lemma measurable_predictable_sigma_snd:
@@ -292,28 +292,70 @@ lemma measurable_predictable_sigma_fst:
   assumes "countable \<I>" "\<I> \<subseteq> {{s<..t} | s t. t\<^sub>0 \<le> s \<and> s < t}" "{t\<^sub>0<..} \<subseteq> (\<Union>\<I>)"
   shows "fst \<in> borel_measurable \<Sigma>\<^sub>P"
 proof -
-  have "A \<times> space M \<in> sets \<Sigma>\<^sub>P" if "A \<in> sigma_sets {t\<^sub>0..} {{s<..t} |s t. t\<^sub>0 \<le> s \<and> s < t}" for A unfolding sets_predictable_sigma using that 
+  have "A \<times> space M \<in> sets \<Sigma>\<^sub>P" if "A \<in> sigma_sets {t\<^sub>0..} {{s<..t} | s t. t\<^sub>0 \<le> s \<and> s < t}" for A unfolding sets_predictable_sigma using that 
   proof (induction rule: sigma_sets.induct)
     case (Basic a)
-    then show ?case using space_F by (intro sigma_sets.Basic) blast
+    thus ?case using space_F sets.top by blast
   next
     case (Compl a)
     have "({t\<^sub>0..} - a) \<times> space M = {t\<^sub>0..} \<times> space M - a \<times> space M" by blast
-    then show ?case using Compl by (fastforce intro: sigma_sets.Compl)
+    then show ?case using Compl(2)[THEN sigma_sets.Compl] by presburger
   next
     case (Union a)
     have "\<Union> (range a) \<times> space M = \<Union> (range (\<lambda>i. a i \<times> space M))" by blast
-    then show ?case using Union by (fastforce intro: sigma_sets.Union)
+    then show ?case using Union(2)[THEN sigma_sets.Union] by presburger
   qed (auto)
-
-  moreover have "restrict_space borel {t\<^sub>0..} = sigma {t\<^sub>0..} {{s<..t} | s t. t\<^sub>0 \<le> s \<and> s < t}" sorry
+  moreover have "restrict_space borel {t\<^sub>0..} = sigma {t\<^sub>0..} {{s<..t} | s t. t\<^sub>0 \<le> s \<and> s < t}"
+  proof -
+    have "sigma_sets {t\<^sub>0..} ((\<inter>) {t\<^sub>0..} ` sigma_sets UNIV (range greaterThan)) = sigma_sets {t\<^sub>0..} {{s<..t} |s t. t\<^sub>0 \<le> s \<and> s < t}"
+    proof (intro sigma_sets_eqI ; clarify)
+      fix A :: "'b set" assume asm: "A \<in> sigma_sets UNIV (range greaterThan)"
+      thus "{t\<^sub>0..} \<inter> A \<in> sigma_sets {t\<^sub>0..} {{s<..t} |s t. t\<^sub>0 \<le> s \<and> s < t}"
+      proof (induction rule: sigma_sets.induct)
+        case (Basic a)
+        then obtain s where s: "a = {s<..}" by blast
+        show ?case
+        proof (cases "t\<^sub>0 \<le> s")
+          case True
+          hence *: "{t\<^sub>0..} \<inter> a = (\<Union>i \<in> \<I>. {s<..} \<inter> i)" using s assms(3) by force
+          have "((\<inter>) {s<..} ` \<I>) \<subseteq> sigma_sets {t\<^sub>0..} {{s<..t} | s t. t\<^sub>0 \<le> s \<and> s < t}"
+          proof (clarify)
+            fix A assume "A \<in> \<I>"
+            then obtain s' t' where A: "A = {s'<..t'}" "t\<^sub>0 \<le> s'" "s' < t'" using assms(2) by blast
+            hence "{s<..} \<inter> A = {max s s'<..t'}" by fastforce
+            moreover have "t\<^sub>0 \<le> max s s'" using A True by linarith
+            moreover have "max s s' < t'" if "s < t'" using A that by linarith
+            moreover have "{s<..} \<inter> A = {}" if "\<not> s < t'" using A that by force
+            ultimately show "{s<..} \<inter> A \<in> sigma_sets {t\<^sub>0..} {{s<..t} |s t. t\<^sub>0 \<le> s \<and> s < t}" by (cases "s < t'") (blast, simp add: sigma_sets.Empty)
+          qed
+          thus ?thesis unfolding * using assms(1) by (intro sigma_sets_UNION) auto
+        next
+          case False
+          hence "{t\<^sub>0..} \<inter> a = {t\<^sub>0..}" using s by force
+          thus ?thesis using sigma_sets_top by auto
+        qed
+      next
+        case (Compl a)
+        have "{t\<^sub>0..} \<inter> (UNIV - a) = {t\<^sub>0..} - ({t\<^sub>0..} \<inter> a)" by blast
+        then show ?case using Compl(2)[THEN sigma_sets.Compl] by presburger
+      next
+        case (Union a)
+        have "{t\<^sub>0..} \<inter> \<Union> (range a) = \<Union> (range (\<lambda>i. {t\<^sub>0..} \<inter> a i))" by blast
+        then show ?case using Union(2)[THEN sigma_sets.Union] by presburger
+      qed (simp add: sigma_sets.Empty)
+    next 
+      fix s t assume asm: "t\<^sub>0 \<le> s" "s < t"
+      hence *: "{s<..t} = {s<..} \<inter> ({t\<^sub>0..} - {t<..})" by force
+      have "{s<..} \<in> sigma_sets {t\<^sub>0..} ((\<inter>) {t\<^sub>0..} ` sigma_sets UNIV (range greaterThan))" using asm by (intro sigma_sets.Basic) auto
+      moreover have "{t\<^sub>0..} - {t<..} \<in> sigma_sets {t\<^sub>0..} ((\<inter>) {t\<^sub>0..} ` sigma_sets UNIV (range greaterThan))" using asm by (intro sigma_sets.Compl sigma_sets.Basic) auto
+      ultimately show "{s<..t} \<in> sigma_sets {t\<^sub>0..} ((\<inter>) {t\<^sub>0..} ` sigma_sets UNIV (range greaterThan))" unfolding * Int_range_binary[of "{s<..}"] by (intro sigma_sets_Inter[OF _ binary_in_sigma_sets]) auto        
+    qed
+    thus ?thesis unfolding borel_Ioi restrict_space_def emeasure_sigma by (force intro: sigma_eqI)     
+  qed
   ultimately have "restrict_space borel {t\<^sub>0..} \<Otimes>\<^sub>M sigma (space M) {} \<subseteq> sets \<Sigma>\<^sub>P" 
-    unfolding sets_pair_measure sets_predictable_sigma space_measure_of_conv space_restrict_space
-    
-    apply (simp, intro sigma_sets_mono sigma_sets_top)
-     apply (simp add: sigma_sets_empty_eq)
-    apply auto
-    
+    unfolding sets_pair_measure space_restrict_space space_measure_of_conv
+    using space_predictable_sigma sets.sigma_algebra_axioms[of \<Sigma>\<^sub>P] 
+    by (intro sigma_algebra.sigma_sets_subset) (auto simp add: sigma_sets_empty_eq sets_measure_of_conv)
   moreover have "space (restrict_space borel {t\<^sub>0..} \<Otimes>\<^sub>M sigma (space M) {}) = space \<Sigma>\<^sub>P" by (simp add: space_pair_measure)
   moreover have "fst \<in> restrict_space borel {t\<^sub>0..} \<Otimes>\<^sub>M sigma (space M) {} \<rightarrow>\<^sub>M borel" by (fastforce intro: measurable_fst''[OF measurable_restrict_space1, of "\<lambda>x. x"]) 
   ultimately show ?thesis by (meson borel_measurable_subalgebra)
