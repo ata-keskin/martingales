@@ -1,5 +1,7 @@
 ﻿% !BIB TS-program = biber
 
+
+
 \RequirePackage[l2tabu,orthodox]{nag}
 
 % TODO: decide if one-sided/two-sided
@@ -8,8 +10,14 @@
 
 \usepackage{longtable}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage{isabelle/isabelle}
 \usepackage{isabelle/isabellesym}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
 
 % TODO: change citation style in settings
 \input{settings}
@@ -61,7 +69,7 @@
 
 \input{pages/title}
 \input{pages/disclaimer}
-\input{pages/acknowledgments}
+\input{pages/acknowledgements}
 \input{pages/abstract}
 \microtypesetup{protrusion=false}
 \tableofcontents{}

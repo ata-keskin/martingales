@@ -3,7 +3,154 @@
 
 \chapter{Conditional Expectation in Banach Spaces}\label{chapter:conditional_expectation}
 
+Conditional expectation extends the concept of expected value to situations where we have additional information about the outcomes. In a discrete setting, i.e. when the range of the random variables in question is countable, the setup is quite simple. Without loss of generality, let $(\Omega, \mathcal{F}, \mu)$ be a measure space. Let $E$ be a complete normed vector space, i.e. a Banach space, and $S \subseteq E$ be some countable subset. Given a random variable $X : \Omega \rightarrow S$ and an event $A \in \mathcal{F}$, the conditional expectation of $X$ given $A$, denoted as $\mathbb{E}(X \vert A)$, represents the expected value of $X$ given that $A$ occurs. In this simple case, we can directly define the conditional expectation as:
+
+\[
+	\mathbb{E}(X \vert A) = \sum_{w \in S} w \cdot \frac{\mu(\{X = w\} \cap A)}{\mu(A)}
+\]
+
+Of course, this definition only makes sense if the value on the right hand side is finite and $\mu(A) \neq 0$. Defined this way, the conditional expectation satisfies the following equality
+
+\begin{align*}
+	\int_A X \; \textrm{d} \mu &= \sum_{w \in S} w \cdot \mu(\{\mathbf{1}_A \cdot X = w\}) \\
+	&= \mu(A) \cdot \mathbb{E}(X \vert A) \\
+	&= \int_A \mathbb{E}(X \vert A) \; \textrm{d} \mu
+\end{align*}
+
+This observation motivates us to generalize the definition of conditional expectation to take into account not just a single event, but a collection of events. Fix $X : \Omega \rightarrow E$. Given a sub-$\sigma$-algebra $\mathcal{H} \subseteq \mathcal{F}$, we call an $\mathcal{H}$-measurable function $g : \Omega \rightarrow E$ a conditional expectation of $X$ with respect to the sub-$\sigma$-algebra $\mathcal{H}$ , denoted as $\mathbb{E}(X \vert \mathcal{H})$, if the following equality holds for all $A \in \mathcal{H}$
+
+\[
+	\int_A X \; \textrm{d} \mu = \int_A g \; \textrm{d} \mu
+\]
+
+In the case that $E = \mathbb{R}$, it is straightforward to show that such a function $g$ always exists (via Radon-Nikodym), and is unique up to a $\mu$-null set. Notice that $\mathbb{E}(X \vert \mathcal{H})$ is a function $\Omega \rightarrow E$, as opposed to some value in $E$.
+
+The suitable setting for defining the conditional expectation is when the sub-$\sigma$-algebra $\mathcal{H}$ gives rise to a $\sigma$-finite measure space, i.e. when $\mu\vert_\mathcal{H}$ is a $\sigma$-finite measure. Consider the trivial sub-$\sigma$-algebra $\{\varnothing, \Omega\}$. A function which is measurable with respect to this $\sigma$-algebra is necessarily constant. Therefore, if $\mu(\Omega) = \infty$, no conditional expectation can exist, since it would have to be equal to $0$ $\mu$-almost everywhere in order to be integrable.
+
+\begin{itemize}
+
+\item[\textit{Example}] Let $\mathcal{H} \subseteq \mathcal{F}$ be a sub-$\sigma$-algebra such that $\mu\vert_\mathcal{H}$ is a $\sigma$-finite measure. Given an integrable function $X : \Omega \rightarrow \mathbb{R}$, we can define a measure $\nu$ on $(\Omega, \mathcal{F})$ via
+
+\[
+	\nu(A) := \int_A X \; \textrm{d}\mu
+\]
+
+It is easy to verify that $\mu\vert_\mathcal{H}(A) = 0$ implies $\nu\vert_\mathcal{H}(A) = 0$, i.e. $\nu\vert_\mathcal{H}$ is absolutely continuous with respect to $\mu\vert_\mathcal{H}$. Using the Radon-Nikodym Theorem, we obtain an $\mathcal{H}$-measurable function $g : \Omega \rightarrow \mathbb{R}$ such that
+
+\[
+	\nu\vert_\mathcal{H}(A) = \int_A g \;\textrm{d}\mu\vert_\mathcal{H}
+\]
+
+Thus for any $A \in \mathcal{H}$, we have
+
+\[
+	\int_A X \; \textrm{d}\mu = \int_A g \;\textrm{d}\mu\vert_\mathcal{H} = \int_A g \;\textrm{d}\mu
+\]
+
+In the second equality, we use the fact that $g$ is $\mathcal{H}$-measurable. Radon-Nikodym also guarentees that this function $g$ is unique up to a $\mu\vert_\mathcal{H}$-null set. Since all $\mu\vert_\mathcal{H}$-null sets are also $\mu$-null sets, the function $g$ satisfies the requirements of the conditional expectation.
+
+\end{itemize}
+
+Technicalities aside, this shows that the conditional expectation always exists and is unique up to $\mu$-null set for all $X \in \mathcal{L}^1$. Our job now will be to construct a similar operator on arbitrary Banach spaces using methods from functional analysis and measure theory.
+
 \section{Preliminaries}
+In anticipation of our construction, we need to lift some results from the real setting to our more general setting. Our fundamental tool in this regard will be the \textbf{averaging theorem}. The proof of this theorem is due to Serge Lang \cite{Lang_1993}. The theorem allows us to make statements about a function's value almost everywhere, depending on the value it's integral takes on various sets of the measure space.
+
 \subsection{Averaging Theorem}
+
+Before we introduce and prove the averaging theorem, we will first show the following lemma which is crucial for our proof. While not stated exactly in this manner, our proof makes use of the characterization of second countable topological spaces given in the book General Topology \cite{engelking_1989} by Ryszard Engelking (Theorem 4.1.15).
+
+\begin{lemma}
+Let $E$ be a metric space with second countable metric topology. Then there exists a countable set $D \subseteq E$, such that the set of open balls
+\[
+	\mathcal{B} = \{ B_\varepsilon(x) \; \vert \; x \in D, \; \varepsilon \in \mathbb{Q} \cap (0, \infty) \}
+\]
+generates the topology on $E$. Here $B_\varepsilon(x)$ is the open ball of radius $\varepsilon$ with centre $x$.
+\end{lemma}
+
+\begin{proof}
+In the context of metric spaces, second countability is equivalent to separability. Consequently, there exists some non-empty countable subset $D \subseteq E$, which is dense in $E$. We want to show that this $D$ fulfills the statement above. For this end we will use the following equivalence which is valid for any $\mathcal{A} \subseteq \mathcal{P}(E)$
+
+\[
+	\mathcal{A} \textrm{ is topological basis} \Longleftrightarrow \forall \textrm{open } U.\; \forall x \in U.\; \exists A \in \mathcal{A}.\; x \in A \wedge A \subseteq U
+\]
+
+Let $U \subseteq E$ be open. Fix $x \in U$. Since $U$ is open and we are working with the metric topology, there is some $\varepsilon > 0$, such that $B_\varepsilon(x) \subseteq U$. Furthermore, we know that a set $D$ is dense if and only if for any non-empty open subset $O \subseteq E$, $D \cap O$ is also non-empty. Therefore, there exists some $y \in D \cap B_{\varepsilon/3}(x)$. Since $\mathbb{Q}$ is dense in $\mathbb{R}$, there exists some $r \in \mathbb{Q}$ with $e/3 < r < e/2$. It is easy to check that $x \in B_r(y)$ and $B_r(y) \subseteq U$ with $y \in D$ and $r \in \mathbb{Q} \cap (0, \infty)$. This concludes the proof.
+\end{proof}
+
+Now we are ready to state and subsequently prove the averaging theorem
+
+\begin{theorem} (Averaging Theorem)
+Let $(\Omega, \mathcal{F}, \mu)$ be some $\sigma$-finite measure space. Let $f \in L^1(\mu, E)$. Let $S$ be a closed subset of $E$ and assume that for all measurable sets $A \in \mathcal{F}$ with finite and non-zero measure the following holds
+\[
+	\frac{1}{\mu(A)}\int_A f \;\textrm{d}\mu \in S
+\]
+Then $f(x) \in S$ for $\mu$-almost all $x$.
+\end{theorem}
+\begin{proof}
+Without loss of generality we will show the statement assuming $\mu(\Omega) < \infty$. Let $v \in E$ and $v \notin S$. 
+
+We show by contradiction that if $B_r(v) \cap S = \varnothing$,  then $A := f^{-1}(B_r(v))$, the set of all $x \in \Omega$ such that $f(x) \in B_r(v)$, is a $\mu$-null set. Assume $\mu(A) > 0$. We have
+
+\begin{align*}
+	\left\lVert \frac{1}{\mu(A)}\int_A f \;\textrm{d}\mu  - v \right\rVert &= \left\lVert \frac{1}{\mu(A)}\int_A f - v \;\textrm{d}\mu \right\rVert \\
+	&\le \frac{1}{\mu(A)}\int_A \lVert f - v \rVert \;\textrm{d}\mu \\
+	&< r
+\end{align*}
+
+The last inequality follows from the fact that $f(x) \in B_r(v)$ for $x \in A$. This contradicts our first assumption. Therefore $\mu(A) = 0$.
+
+Similar to the notation in Isabelle, we will use $\neg S$ to denote the complement of $S$. $\neg S$ is an open subset of $E$. By the previous lemma, there exists open balls $B_{r_i}(w_i)$ with $r_i \in \mathbb{Q}_{\ge 0}$, $w_i \in D$ for $i \in \mathbb{N}$ such that $\bigcup_i B_{r_i}(w_i) = \neg S$. Obviously, $w_i \in E \setminus S$ and $B_{r_i}(w_i) \cap S = \varnothing$ for $i \in \mathbb{N}$. It follows
+
+\begin{align*}
+	\mu(f^{-1}(\neg S)) &= \mu\left(\bigcup_i f^{-1}(B_{r_i}(w_i))\right) \\
+	&\le \sum_i \mu(f^{-1}(B_{r_i}(w_i))) \\
+	&= 0
+\end{align*}
+
+Thus $\{f \notin S \}$ is a $\mu$-null set, which completes the proof.
+
+\end{proof}
+
+At the beginning of our proof, we assumed $\mu(\Omega) < \infty$ without loss of generality. This is only possible, since we assumed the measure space in question to be $\sigma$-finite. To simplify the formalization of proofs employing this argument, we have introduced the following induction scheme
+
+\begin{lstlisting}[mathescape, language = isabelle]
+lemma sigma_finite_measure_induct:
+  assumes "$\bigwedge (N :: \; 'a \; \texttt{measure}) \; \Omega. \;\; \texttt{finite\_measure} \; N$
+                              $\Longrightarrow N = \texttt{restrict\_space} \; M \; \Omega$
+                              $\Longrightarrow \Omega \in \texttt{sets} \; M$
+                              $\Longrightarrow \texttt{emeasure}\; N \; \Omega \neq \infty $
+                              $\Longrightarrow \texttt{emeasure}\; N \; \Omega \neq 0$
+                              $\Longrightarrow \texttt{almost\_everywhere} \; N \; Q$"
+      and "$\texttt{Measurable.pred} \; M \; Q$"
+    shows "$\texttt{almost\_everywhere} \; M \; Q$"
+\end{lstlisting}
+
+The induction scheme allows us prove results about a $\sigma$-finite measure space $M$, assuming that we can show the property on arbitrary subspaces of $M$ with finite measure. The proof is straightforward and uses the Auschöpfen Argument. (*TODO*)
+
+Now that we have the averaging theorem at our disposal, we can lift the following results from the real case, to our more general setting.
+
+\begin{corollary}
+	Let $f \in L^1(\mu, E)$ and $\int_A f \;\textrm{d}\mu = 0$ for all measurable sets $A \subseteq \Omega$. Then $f = 0$ $\mu$-almost everywhere. 
+\end{corollary}
+\begin{proof}
+	Apply the averaging theorem with $S = \{0\}$.
+\end{proof}
+
+\begin{corollary}
+	Let $f, g \in L^1(\mu, E)$ and $\int_A f \;\textrm{d}\mu = \int_A g \;\textrm{d}\mu$ for all measurable sets $A \subseteq \Omega$. Then $f = g$ $\mu$-almost everywhere. 
+\end{corollary}
+\begin{proof}
+	Follows directly from the previous corollary.
+\end{proof}
+
+\begin{corollary}
+	Let $$. Let $f \in L^1(\mu, E)$ and $\int_A f \;\textrm{d}\mu \ge 0$ for all measurable sets $A \subseteq \Omega$. Then $f$ is non-negative $\mu$-almost everywhere. 
+\end{corollary}
+\begin{proof}
+	Our first assumption guarantees that $E_{\ge 0} = \{ y \in E \;\vert\; y \ge 0 \}$ is a closed subset of $E$. Applying the averaging theorem on this set, yields the desired result.
+\end{proof}
+
 \section{Constructing the Conditional Expectation}
+
 \section{Linearly Ordered Banach Spaces}
