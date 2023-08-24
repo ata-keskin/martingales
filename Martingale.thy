@@ -212,9 +212,9 @@ proof (unfold_locales)
   {
     fix i j :: 'b assume asm: "t\<^sub>0 \<le> i" "i \<le> j"
     have "AE \<xi> in M. max (X i \<xi>) (Y i \<xi>) \<le> max (cond_exp M (F i) (X j) \<xi>) (cond_exp M (F i) (Y j) \<xi>)" using submartingale_property Y.submartingale_property asm unfolding max_def by fastforce
-    thus "AE \<xi> in M. max (X i \<xi>) (Y i \<xi>) \<le> cond_exp M (F i) (\<lambda>\<xi>. max (X j \<xi>) (Y j \<xi>)) \<xi>" using sigma_finite_subalgebra.cond_exp_max[OF _ integrable Y.integrable, of "F i" j j] asm by (fastforce intro: order.trans)
+    thus "AE \<xi> in M. max (X i \<xi>) (Y i \<xi>) \<le> cond_exp M (F i) (\<lambda>\<xi>. max (X j \<xi>) (Y j \<xi>)) \<xi>" using sigma_finite_subalgebra.cond_exp_max[OF _ integrable Y.integrable, of "F i" j j] asm by (fast intro: order.trans)
   }
-  show "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow>  (\<lambda>\<xi>. max (X i \<xi>) (Y i \<xi>)) \<in> borel_measurable (F i)" "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow>  integrable M (\<lambda>\<xi>. max (X i \<xi>) (Y i \<xi>))" by (force intro: Y.integrable integrable assms)+
+  show "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow> (\<lambda>\<xi>. max (X i \<xi>) (Y i \<xi>)) \<in> borel_measurable (F i)" "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow> integrable M (\<lambda>\<xi>. max (X i \<xi>) (Y i \<xi>))" by (force intro: Y.integrable integrable assms)+
 qed
 
 lemma max_0:
@@ -233,29 +233,30 @@ lemma (in sigma_finite_adapted_process_order) submartingale_of_cond_exp_diff_non
 proof (unfold_locales)
   {
     fix i j :: 'b assume asm: "t\<^sub>0 \<le> i" "i \<le> j"
-    show "AE \<xi> in M. X i \<xi> \<le> cond_exp M (F i) (X j) \<xi>" 
-      using diff_nonneg[OF asm] cond_exp_diff[OF integrable(1,1), of i j i] cond_exp_F_meas[OF integrable adapted, of i] by fastforce
+    thus "AE \<xi> in M. X i \<xi> \<le> cond_exp M (F i) (X j) \<xi>" 
+      using diff_nonneg[OF asm] sigma_finite_subalgebra.cond_exp_diff[OF _ integrable(1,1), of "F i" j i]
+            sigma_finite_subalgebra.cond_exp_F_meas[OF _ integrable adapted, of i] by fastforce
   }
 qed (intro integrable)
 
 lemma (in sigma_finite_adapted_process_order) submartingale_of_set_integral_le:
   assumes integrable: "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow> integrable M (X i)"
       and "\<And>A i j. t\<^sub>0 \<le> i \<Longrightarrow> i \<le> j \<Longrightarrow> A \<in> F i \<Longrightarrow> set_lebesgue_integral M A (X i) \<le> set_lebesgue_integral M A (X j)"
-    shows "submartingale M F X"
+    shows "submartingale M F t\<^sub>0 X"
 proof (unfold_locales)
   {
     fix i j :: 'b assume asm: "t\<^sub>0 \<le> i" "i \<le> j"
-    interpret r: sigma_finite_measure "restr_to_subalg M (F i)" by (simp add: sigma_fin_subalg)
+    interpret r: sigma_finite_measure "restr_to_subalg M (F i)" using asm sigma_finite_subalgebra.sigma_fin_subalg by blast
     {
       fix A assume "A \<in> restr_to_subalg M (F i)"
-      hence *: "A \<in> F i" using sets_restr_to_subalg subalgebra by blast
-      have "set_lebesgue_integral (restr_to_subalg M (F i)) A (X i) = set_lebesgue_integral M A (X i)" using * subalg by (auto simp: set_lebesgue_integral_def intro: integral_subalgebra2 borel_measurable_scaleR adapted borel_measurable_indicator) 
-      also have "... \<le> set_lebesgue_integral M A (cond_exp M (F i) (X j))" using * assms(2)[OF asm] cond_exp_set_integral[OF integrable] by auto
-      also have "... = set_lebesgue_integral (restr_to_subalg M (F i)) A (cond_exp M (F i) (X j))" using * subalg by (auto simp: set_lebesgue_integral_def intro!: integral_subalgebra2[symmetric] borel_measurable_scaleR borel_measurable_cond_exp borel_measurable_indicator)
-      finally have "0 \<le> set_lebesgue_integral (restr_to_subalg M (F i)) A (\<lambda>\<xi>. cond_exp M (F i) (X j) \<xi> - X i \<xi>)" using * subalg by (subst set_integral_diff, auto simp add: set_integrable_def sets_restr_to_subalg intro!: integrable adapted integrable_in_subalg borel_measurable_scaleR borel_measurable_indicator borel_measurable_cond_exp integrable_mult_indicator)
+      hence *: "A \<in> F i" using asm sets_restr_to_subalg subalgebra by blast
+      have "set_lebesgue_integral (restr_to_subalg M (F i)) A (X i) = set_lebesgue_integral M A (X i)" using * asm subalgebra by (auto simp: set_lebesgue_integral_def intro: integral_subalgebra2 borel_measurable_scaleR adapted borel_measurable_indicator) 
+      also have "... \<le> set_lebesgue_integral M A (cond_exp M (F i) (X j))" using * assms(2)[OF asm] asm sigma_finite_subalgebra.cond_exp_set_integral[OF _ integrable] by fastforce
+      also have "... = set_lebesgue_integral (restr_to_subalg M (F i)) A (cond_exp M (F i) (X j))" using * asm subalgebra by (auto simp: set_lebesgue_integral_def intro!: integral_subalgebra2[symmetric] borel_measurable_scaleR borel_measurable_cond_exp borel_measurable_indicator)
+      finally have "0 \<le> set_lebesgue_integral (restr_to_subalg M (F i)) A (\<lambda>\<xi>. cond_exp M (F i) (X j) \<xi> - X i \<xi>)" using * asm subalgebra by (subst set_integral_diff, auto simp add: set_integrable_def sets_restr_to_subalg intro!: integrable adapted integrable_in_subalg borel_measurable_scaleR borel_measurable_indicator borel_measurable_cond_exp integrable_mult_indicator)
     }
-    hence "AE \<xi> in restr_to_subalg M (F i). 0 \<le> cond_exp M (F i) (X j) \<xi> - X i \<xi>" by (intro r.density_nonneg integrable_in_subalg subalg borel_measurable_diff borel_measurable_cond_exp adapted Bochner_Integration.integrable_diff integrable_cond_exp integrable)
-    thus "AE \<xi> in M. X i \<xi> \<le> cond_exp M (F i) (X j) \<xi>" using AE_restr_to_subalg[OF subalg] by simp
+    hence "AE \<xi> in restr_to_subalg M (F i). 0 \<le> cond_exp M (F i) (X j) \<xi> - X i \<xi>" by (intro r.density_nonneg integrable_in_subalg asm subalgebra borel_measurable_diff borel_measurable_cond_exp adapted Bochner_Integration.integrable_diff integrable_cond_exp integrable)
+    thus "AE \<xi> in M. X i \<xi> \<le> cond_exp M (F i) (X j) \<xi>" using AE_restr_to_subalg[OF subalgebra] asm by simp
     }
 qed (intro integrable)
 
@@ -269,39 +270,39 @@ begin
 lemma set_integral_ge:
   assumes "A \<in> F i" "t\<^sub>0 \<le> i" "i \<le> j"
   shows "set_lebesgue_integral M A (X i) \<ge> set_lebesgue_integral M A (X j)"
-  unfolding cond_exp_set_integral[OF integrable assms(1), of j]
-  using supermartingale_property[OF assms(2)] 
-  by (simp only: set_lebesgue_integral_def, intro integral_mono_AE_banach, metis assms(1) in_mono integrable_mult_indicator subalgebra subalgebra_def integrable_cond_exp, metis assms(1) in_mono integrable integrable_mult_indicator subalgebra subalgebra_def)
-     (auto intro: scaleR_left_mono)
+  using supermartingale_property[OF assms(2), of j] assms subalgebra
+  by (subst sigma_finite_subalgebra.cond_exp_set_integral[OF _ integrable assms(1), of j])
+     (auto intro!: scaleR_left_mono integral_mono_AE_banach integrable_mult_indicator integrable simp add: subalgebra_def set_lebesgue_integral_def)
 
 lemma cond_exp_diff_nonneg:
   assumes "t\<^sub>0 \<le> i" "i \<le> j"
   shows "AE x in M. 0 \<le> cond_exp M (F i) (\<lambda>\<xi>. X i \<xi> - X j \<xi>) x"
-  using supermartingale_property[OF assms] cond_exp_diff[OF integrable(1,1), of i i j] cond_exp_F_meas[OF integrable adapted, of i] by fastforce
+  using assms supermartingale_property[OF assms] sigma_finite_subalgebra.cond_exp_diff[OF _ integrable(1,1), of "F i" i j] 
+        sigma_finite_subalgebra.cond_exp_F_meas[OF _ integrable adapted, of i] by fastforce
 
 lemma add[intro]:
-  assumes "supermartingale M F Y"
-  shows "supermartingale M F (\<lambda>i \<xi>. X i \<xi> + Y i \<xi>)"
+  assumes "supermartingale M F t\<^sub>0 Y"
+  shows "supermartingale M F t\<^sub>0 (\<lambda>i \<xi>. X i \<xi> + Y i \<xi>)"
 proof -
-  interpret Y: supermartingale M F Y by (rule assms)
+  interpret Y: supermartingale M F t\<^sub>0 Y by (rule assms)
   {
     fix i j :: 'b assume asm: "t\<^sub>0 \<le> i" "i \<le> j"
-    have "AE \<xi> in M. X i \<xi> + Y i \<xi> \<ge> cond_exp M (F i) (\<lambda>x. X j x + Y j x) \<xi>" 
-      using cond_exp_add[OF integrable supermartingale.integrable[OF assms], of i j j] 
+    hence "AE \<xi> in M. X i \<xi> + Y i \<xi> \<ge> cond_exp M (F i) (\<lambda>x. X j x + Y j x) \<xi>" 
+      using sigma_finite_subalgebra.cond_exp_add[OF _ integrable supermartingale.integrable[OF assms], of "F i" j j] 
             supermartingale_property[OF asm] supermartingale.supermartingale_property[OF assms asm] add_mono[of _ "X i _" _ "Y i _"] by force
   }
   thus ?thesis using assms by (unfold_locales) (auto simp add: borel_measurable_add random_variable adapted integrable Y.random_variable Y.adapted supermartingale.integrable)  
 qed
 
 lemma diff[intro]:
-  assumes "submartingale M F Y"
-  shows "supermartingale M F (\<lambda>i \<xi>. X i \<xi> - Y i \<xi>)"
+  assumes "submartingale M F t\<^sub>0 Y"
+  shows "supermartingale M F t\<^sub>0 (\<lambda>i \<xi>. X i \<xi> - Y i \<xi>)"
 proof -
-  interpret Y: submartingale M F Y by (rule assms)
+  interpret Y: submartingale M F t\<^sub>0 Y by (rule assms)
   {
     fix i j :: 'b assume asm: "t\<^sub>0 \<le> i" "i \<le> j"
-    have "AE \<xi> in M. X i \<xi> - Y i \<xi> \<ge> cond_exp M (F i) (\<lambda>x. X j x - Y j x) \<xi>" 
-      using cond_exp_diff[OF integrable submartingale.integrable[OF assms], of i j j, unfolded fun_diff_def] 
+    hence "AE \<xi> in M. X i \<xi> - Y i \<xi> \<ge> cond_exp M (F i) (\<lambda>x. X j x - Y j x) \<xi>" 
+      using sigma_finite_subalgebra.cond_exp_diff[OF _ integrable submartingale.integrable[OF assms], of "F i" j j, unfolded fun_diff_def] 
             supermartingale_property[OF asm] submartingale.submartingale_property[OF assms asm] diff_mono[of _ "X i _" "Y i _"] by force
   }
   thus ?thesis using assms by (unfold_locales) (auto simp add: borel_measurable_diff random_variable adapted integrable Y.random_variable Y.adapted submartingale.integrable)  
@@ -309,49 +310,47 @@ qed
 
 lemma scaleR_nonneg: 
   assumes "c \<ge> 0"
-  shows "supermartingale M F (\<lambda>i \<xi>. c *\<^sub>R X i \<xi>)"
+  shows "supermartingale M F t\<^sub>0 (\<lambda>i \<xi>. c *\<^sub>R X i \<xi>)"
 proof
   {
     fix i j :: 'b assume asm: "t\<^sub>0 \<le> i" "i \<le> j"
-    show "AE \<xi> in M. c *\<^sub>R X i \<xi> \<ge> cond_exp M (F i) (\<lambda>\<xi>. c *\<^sub>R X j \<xi>) \<xi>" 
-      using cond_exp_scaleR_right[OF integrable, of i "c" j] supermartingale_property[OF asm] 
-      by (auto intro!: scaleR_left_mono[OF _ assms])
+    thus "AE \<xi> in M. c *\<^sub>R X i \<xi> \<ge> cond_exp M (F i) (\<lambda>\<xi>. c *\<^sub>R X j \<xi>) \<xi>"
+      using sigma_finite_subalgebra.cond_exp_scaleR_right[OF _ integrable, of "F i" j c] supermartingale_property[OF asm] by (fastforce intro!: scaleR_left_mono[OF _ assms])
   }
 qed (auto simp add: borel_measurable_integrable borel_measurable_scaleR integrable random_variable adapted borel_measurable_const_scaleR)
 
 lemma scaleR_nonpos: 
   assumes "c \<le> 0"
-  shows "submartingale M F (\<lambda>i \<xi>. c *\<^sub>R X i \<xi>)"
+  shows "submartingale M F t\<^sub>0 (\<lambda>i \<xi>. c *\<^sub>R X i \<xi>)"
 proof
   {
     fix i j :: 'b assume asm: "t\<^sub>0 \<le> i" "i \<le> j"
-    show "AE \<xi> in M. c *\<^sub>R X i \<xi> \<le> cond_exp M (F i) (\<lambda>\<xi>. c *\<^sub>R X j \<xi>) \<xi>" 
-      using cond_exp_scaleR_right[OF integrable, of i "c" j] supermartingale_property[OF asm] 
-      by (auto intro!: scaleR_left_mono_neg[OF _ assms])
+    thus "AE \<xi> in M. c *\<^sub>R X i \<xi> \<le> cond_exp M (F i) (\<lambda>\<xi>. c *\<^sub>R X j \<xi>) \<xi>" 
+      using sigma_finite_subalgebra.cond_exp_scaleR_right[OF _ integrable, of "F i" j c] supermartingale_property[OF asm] by (fastforce intro!: scaleR_left_mono_neg[OF _ assms])
   }
 qed (auto simp add: borel_measurable_integrable borel_measurable_scaleR integrable random_variable adapted borel_measurable_const_scaleR)
 
 lemma uminus[intro]:
-  shows "submartingale M F (- X)"
+  shows "submartingale M F t\<^sub>0 (- X)"
   unfolding fun_Compl_def using scaleR_nonpos[of "-1"] by simp
 
 lemma min:
-  assumes "supermartingale M F Y"
-  shows "supermartingale M F (\<lambda>i \<xi>. min (X i \<xi>) (Y i \<xi>))"
+  assumes "supermartingale M F t\<^sub>0 Y"
+  shows "supermartingale M F t\<^sub>0 (\<lambda>i \<xi>. min (X i \<xi>) (Y i \<xi>))"
 proof (unfold_locales)
-  interpret Y: supermartingale M F Y by (rule assms)
+  interpret Y: supermartingale M F t\<^sub>0 Y by (rule assms)
   {
     fix i j :: 'b assume asm: "t\<^sub>0 \<le> i" "i \<le> j"
     have "AE \<xi> in M. min (X i \<xi>) (Y i \<xi>) \<ge> min (cond_exp M (F i) (X j) \<xi>) (cond_exp M (F i) (Y j) \<xi>)" using supermartingale_property Y.supermartingale_property asm unfolding min_def by fastforce
-    thus "AE \<xi> in M. min (X i \<xi>) (Y i \<xi>) \<ge> cond_exp M (F i) (\<lambda>\<xi>. min (X j \<xi>) (Y j \<xi>)) \<xi>" using cond_exp_min[OF integrable Y.integrable, of i j j] order.trans by fast
+    thus "AE \<xi> in M. min (X i \<xi>) (Y i \<xi>) \<ge> cond_exp M (F i) (\<lambda>\<xi>. min (X j \<xi>) (Y j \<xi>)) \<xi>" using sigma_finite_subalgebra.cond_exp_min[OF _ integrable Y.integrable, of "F i" j j] asm by (fast intro: order.trans)
   }
-  show "\<And>i. (\<lambda>\<xi>. min (X i \<xi>) (Y i \<xi>)) \<in> borel_measurable (F i)" "\<And>i. integrable M (\<lambda>\<xi>. min (X i \<xi>) (Y i \<xi>))" by (force intro: Y.integrable integrable assms)+
+  show "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow> (\<lambda>\<xi>. min (X i \<xi>) (Y i \<xi>)) \<in> borel_measurable (F i)" "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow> integrable M (\<lambda>\<xi>. min (X i \<xi>) (Y i \<xi>))" by (force intro: Y.integrable integrable assms)+
 qed
 
 lemma min_0:
-  shows "supermartingale M F (\<lambda>i \<xi>. min 0 (X i \<xi>))"
+  shows "supermartingale M F t\<^sub>0 (\<lambda>i \<xi>. min 0 (X i \<xi>))"
 proof -
-  interpret zero: martingale_order M F "\<lambda>_ _. 0" by (unfold_locales, auto)
+  interpret zero: martingale_order M F t\<^sub>0 "\<lambda>_ _. 0" by (force intro: martingale_order.intro)
   show ?thesis by (intro zero.min supermartingale_axioms)
 qed
 
@@ -360,25 +359,28 @@ end
 lemma (in sigma_finite_adapted_process_order) supermartingale_of_cond_exp_diff_nonneg: 
   assumes integrable: "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow> integrable M (X i)" 
       and diff_nonneg: "\<And>i j. t\<^sub>0 \<le> i \<Longrightarrow> i \<le> j \<Longrightarrow> AE x in M. 0 \<le> cond_exp M (F i) (\<lambda>\<xi>. X i \<xi> - X j \<xi>) x"
-    shows "supermartingale M F X"
+    shows "supermartingale M F t\<^sub>0 X"
 proof 
   {
-    fix i j :: 'b assume asm: "i \<le> j"
-    show "AE \<xi> in M. X i \<xi> \<ge> cond_exp M (F i) (X j) \<xi>" 
-      using diff_nonneg[OF asm] cond_exp_diff[OF integrable(1,1), of i i j] cond_exp_F_meas[OF integrable adapted, of i] by fastforce
+    fix i j :: 'b assume asm: "t\<^sub>0 \<le> i" "i \<le> j"
+    thus "AE \<xi> in M. X i \<xi> \<ge> cond_exp M (F i) (X j) \<xi>" 
+      using diff_nonneg[OF asm] sigma_finite_subalgebra.cond_exp_diff[OF _ integrable(1,1), of "F i" i j] 
+            sigma_finite_subalgebra.cond_exp_F_meas[OF _ integrable adapted, of i] by fastforce
   }
 qed (intro integrable)
 
 lemma (in sigma_finite_adapted_process_order) supermartingale_of_set_integral_ge:
   assumes integrable: "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow> integrable M (X i)" 
       and "\<And>A i j. t\<^sub>0 \<le> i \<Longrightarrow> i \<le> j \<Longrightarrow> A \<in> F i \<Longrightarrow> set_lebesgue_integral M A (X j) \<le> set_lebesgue_integral M A (X i)" 
-    shows "supermartingale M F X"
+    shows "supermartingale M F t\<^sub>0 X"
 proof -
-  interpret _: adapted_process M F "-X" by (rule uminus)
-  interpret uminus_X: sigma_finite_adapted_process_order M F "-X" ..
+  interpret _: adapted_process M F t\<^sub>0 "-X" by (rule uminus)
+  interpret uminus_X: sigma_finite_adapted_process_order M F t\<^sub>0 "-X" ..
   note * = set_integral_uminus[unfolded set_integrable_def, OF integrable_mult_indicator[OF _ integrable]]
-  have "supermartingale M F (-(- X))" using ord_eq_le_trans[OF * ord_le_eq_trans[OF le_imp_neg_le[OF assms(2)] *[symmetric]]] subalg
-    by (intro submartingale.uminus uminus_X.submartingale_of_set_integral_le) (auto simp add: subalgebra_def integrable fun_Compl_def, blast)
+  have "supermartingale M F t\<^sub>0 (-(- X))"
+    using ord_eq_le_trans[OF * ord_le_eq_trans[OF le_imp_neg_le[OF assms(2)] *[symmetric]]] subalgebra
+    by (intro submartingale.uminus uminus_X.submartingale_of_set_integral_le) 
+       (clarsimp simp add: fun_Compl_def subalgebra_def integrable | fastforce)+
   thus ?thesis unfolding fun_Compl_def by simp
 qed
 
@@ -445,7 +447,7 @@ qed (simp add: integrable)
 lemma (in nat_sigma_finite_adapted_process) martingale_of_cond_exp_diff_Suc_eq_zero:
   assumes integrable: "\<And>i. integrable M (X i)" 
       and "\<And>i. AE \<xi> in M. 0 = cond_exp M (F i) (\<lambda>\<xi>. X (Suc i) \<xi> - X i \<xi>) \<xi>" 
-    shows "martingale M F X"
+    shows "nat_martingale M F X"
 proof (intro martingale_nat integrable) 
   fix i 
   show "AE \<xi> in M. X i \<xi> = cond_exp M (F i) (X (Suc i)) \<xi>" using cond_exp_diff[OF integrable(1,1), of i "Suc i" i] cond_exp_F_meas[OF integrable adapted, of i] assms(2)[of i] by fastforce
@@ -462,13 +464,13 @@ proof (induction i)
 next
   case (Suc i)
   interpret S: nat_adapted_process M F "\<lambda>i. X (Suc i)" by (intro nat_predictable_process.adapted_Suc assms)
-  show ?case using Suc S.adapted[of i] submartingale_property[OF le_SucI, of i] cond_exp_F_meas[OF integrable, of "Suc i" i] Suc by fastforce
+  show ?case using Suc S.adapted[of i] submartingale_property[OF _ le_SucI, of i] sigma_finite_subalgebra.cond_exp_F_meas[OF _ integrable, of "F i" "Suc i"] by fastforce
 qed
 
 lemma (in nat_sigma_finite_adapted_process_order) submartingale_of_set_integral_le_Suc:
   assumes integrable: "\<And>i. integrable M (X i)" 
       and "\<And>A i. A \<in> F i \<Longrightarrow> set_lebesgue_integral M A (X i) \<le> set_lebesgue_integral M A (X (Suc i))" 
-    shows "submartingale M F X"
+    shows "nat_submartingale M F X"
 proof (intro nat_submartingale.intro submartingale_of_set_integral_le)
   fix i j A assume asm: "i \<le> j" "A \<in> sets (F i)"
   show "set_lebesgue_integral M A (X i) \<le> set_lebesgue_integral M A (X j)" using asm
@@ -479,14 +481,14 @@ proof (intro nat_submartingale.intro submartingale_of_set_integral_le)
     case (Suc n)
     hence *: "n = j - Suc i" by linarith
     have "Suc i \<le> j" using Suc(2,3) by linarith
-    thus ?case using sets_F_mono[OF le_SucI] Suc(4) Suc(1)[OF *] by (auto intro: assms(2)[THEN order_trans])
+    thus ?case using sets_F_mono[OF _ le_SucI] Suc(4) Suc(1)[OF *] by (auto intro: assms(2)[THEN order_trans])
   qed
 qed (simp add: integrable)
 
 lemma (in nat_sigma_finite_adapted_process_order) submartingale_nat:
   assumes integrable: "\<And>i. integrable M (X i)" 
       and "\<And>i. AE \<xi> in M. X i \<xi> \<le> cond_exp M (F i) (X (Suc i)) \<xi>" 
-    shows "submartingale M F X"
+    shows "nat_submartingale M F X"
   using subalg integrable assms(2)
   by (intro submartingale_of_set_integral_le_Suc ord_le_eq_trans[OF set_integral_mono_AE_banach cond_exp_set_integral[symmetric]], simp)
      (meson in_mono integrable_mult_indicator set_integrable_def subalgebra_def, meson integrable_cond_exp in_mono integrable_mult_indicator set_integrable_def subalgebra_def, fast+)
@@ -494,32 +496,33 @@ lemma (in nat_sigma_finite_adapted_process_order) submartingale_nat:
 lemma (in nat_sigma_finite_adapted_process_order) submartingale_of_cond_exp_diff_Suc_nonneg:
   assumes integrable: "\<And>i. integrable M (X i)" 
       and "\<And>i. AE \<xi> in M. 0 \<le> cond_exp M (F i) (\<lambda>\<xi>. X (Suc i) \<xi> - X i \<xi>) \<xi>" 
-    shows "submartingale M F X"
+    shows "nat_submartingale M F X"
 proof (intro submartingale_nat integrable) 
   fix i 
   show "AE \<xi> in M. X i \<xi> \<le> cond_exp M (F i) (X (Suc i)) \<xi>" using cond_exp_diff[OF integrable(1,1), of i "Suc i" i] cond_exp_F_meas[OF integrable adapted, of i] assms(2)[of i] by fastforce
 qed
 
 lemma (in nat_submartingale) partial_sum_scaleR:
-  assumes "adapted_process M F C" "\<And>i. AE \<xi> in M. 0 \<le> C i \<xi>" "\<And>i. AE \<xi> in M. C i \<xi> \<le> R"
-  shows "submartingale M F (\<lambda>n \<xi>. \<Sum>i<n. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>))"
+  assumes "nat_adapted_process M F C" "\<And>i. AE \<xi> in M. 0 \<le> C i \<xi>" "\<And>i. AE \<xi> in M. C i \<xi> \<le> R"
+  shows "nat_submartingale M F (\<lambda>n \<xi>. \<Sum>i<n. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>))"
 proof-
-  interpret C: adapted_process M F C by (rule assms)
+  interpret C: nat_adapted_process M F C by (rule assms)
   interpret C': nat_adapted_process M F "\<lambda>i \<xi>. C (i - 1) \<xi> *\<^sub>R (X i \<xi> - X (i - 1) \<xi>)" by (intro nat_adapted_process.intro adapted_process.scaleR_right adapted_process.diff, unfold_locales) (auto intro: adaptedD C.adaptedD)+
   interpret C'': nat_adapted_process M F "\<lambda>n \<xi>. \<Sum>i<n. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>)" by (rule C'.partial_sum_Suc[unfolded diff_Suc_1])
   interpret S: nat_sigma_finite_adapted_process_order M F "(\<lambda>n \<xi>. \<Sum>i<n. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>))" ..
-  have "integrable M (\<lambda>x. C i x *\<^sub>R (X (Suc i) x - X i x))" for i using assms(2,3)[of i] by (intro Bochner_Integration.integrable_bound[OF integrable_scaleR_right, OF Bochner_Integration.integrable_diff, OF integrable(1,1), of _ R "Suc i" i], auto simp add: mult_mono)
-  moreover have "AE \<xi> in M. 0 \<le> cond_exp M (F i) (\<lambda>\<xi>. (\<Sum>i<Suc i. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>)) - (\<Sum>i<i. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>))) \<xi>" for i using cond_exp_measurable_scaleR[OF calculation _ C.adapted, of i] cond_exp_diff_nonneg[OF le_SucI, OF order.refl, of i] assms(2,3)[of i] by (auto simp add: scaleR_nonneg_nonneg integrable)
+  have "integrable M (\<lambda>x. C i x *\<^sub>R (X (Suc i) x - X i x))" for i using assms(2,3)[of i] by (intro Bochner_Integration.integrable_bound[OF integrable_scaleR_right, OF Bochner_Integration.integrable_diff, OF integrable(1,1), of R "Suc i" i]) (auto simp add: mult_mono)
+  moreover have "AE \<xi> in M. 0 \<le> cond_exp M (F i) (\<lambda>\<xi>. (\<Sum>i<Suc i. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>)) - (\<Sum>i<i. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>))) \<xi>" for i 
+    using sigma_finite_subalgebra.cond_exp_measurable_scaleR[OF _ calculation _ C.adapted, of i] 
+          cond_exp_diff_nonneg[OF _ le_SucI, OF _ order.refl, of i] assms(2,3)[of i] by (fastforce simp add: scaleR_nonneg_nonneg integrable)
   ultimately show ?thesis by (intro S.submartingale_of_cond_exp_diff_Suc_nonneg Bochner_Integration.integrable_sum, blast+)
 qed
 
 lemma (in nat_submartingale) partial_sum_scaleR':
-  assumes "predictable_process M F C" "\<And>i. AE \<xi> in M. 0 \<le> C i \<xi>" "\<And>i. AE \<xi> in M. C i \<xi> \<le> R"
-  shows "submartingale M F (\<lambda>n \<xi>. \<Sum>i<n. C (Suc i) \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>))"
+  assumes "nat_predictable_process M F C" "\<And>i. AE \<xi> in M. 0 \<le> C i \<xi>" "\<And>i. AE \<xi> in M. C i \<xi> \<le> R"
+  shows "nat_submartingale M F (\<lambda>n \<xi>. \<Sum>i<n. C (Suc i) \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>))"
 proof -
-  interpret _: predictable_process M F C by (rule assms)
-  interpret C: nat_predictable_process M F C ..
-  interpret Suc_C: nat_adapted_process M F "\<lambda>i. C (Suc i)" by (rule C.adapted_Suc)
+  interpret C: nat_predictable_process M F C by (rule assms)
+  interpret Suc_C: nat_adapted_process M F "\<lambda>i. C (Suc i)" using C.adapted_Suc .
   show ?thesis by (intro partial_sum_scaleR[of _ R] assms) (intro_locales)
 qed
 
@@ -534,38 +537,40 @@ proof (induction i)
 next
   case (Suc i)
   interpret S: nat_adapted_process M F "\<lambda>i. X (Suc i)" by (intro nat_predictable_process.adapted_Suc assms)
-  show ?case using Suc S.adapted[of i] supermartingale_property[OF le_SucI, of i] cond_exp_F_meas[OF integrable, of "Suc i" i] Suc by fastforce
+  show ?case using Suc S.adapted[of i] supermartingale_property[OF _ le_SucI, of i] sigma_finite_subalgebra.cond_exp_F_meas[OF _ integrable, of "F i" "Suc i"] by fastforce
 qed
 
 lemma (in nat_sigma_finite_adapted_process_order) supermartingale_of_set_integral_ge_Suc:
   assumes integrable: "\<And>i. integrable M (X i)" 
       and "\<And>A i. A \<in> F i \<Longrightarrow> set_lebesgue_integral M A (X (Suc i)) \<le> set_lebesgue_integral M A (X i)" 
-    shows "supermartingale M F X"
+    shows "nat_supermartingale M F X"
 proof -
-  interpret _: adapted_process M F "-X" by (rule uminus)
+  interpret _: adapted_process M F 0 "-X" by (rule uminus)
   interpret uminus_X: nat_sigma_finite_adapted_process_order M F "-X" ..
   note * = set_integral_uminus[unfolded set_integrable_def, OF integrable_mult_indicator[OF _ integrable]]
-  have "supermartingale M F (-(- X))" using ord_eq_le_trans[OF * ord_le_eq_trans[OF le_imp_neg_le[OF assms(2)] *[symmetric]]] subalg
-    by (intro submartingale.uminus uminus_X.submartingale_of_set_integral_le_Suc) (auto simp add: subalgebra_def integrable fun_Compl_def, blast)
+  have "nat_supermartingale M F (-(- X))" 
+    using ord_eq_le_trans[OF * ord_le_eq_trans[OF le_imp_neg_le[OF assms(2)] *[symmetric]]] subalgebra
+    by (intro nat_supermartingale.intro submartingale.uminus nat_submartingale.axioms uminus_X.submartingale_of_set_integral_le_Suc) 
+       (clarsimp simp add: fun_Compl_def subalgebra_def integrable | fastforce)+
   thus ?thesis unfolding fun_Compl_def by simp
 qed
 
 lemma (in nat_sigma_finite_adapted_process_order) supermartingale_nat:
   assumes integrable: "\<And>i. integrable M (X i)" 
       and "\<And>i. AE \<xi> in M. X i \<xi> \<ge> cond_exp M (F i) (X (Suc i)) \<xi>" 
-    shows "supermartingale M F X"
+    shows "nat_supermartingale M F X"
 proof -
-  interpret _: adapted_process M F "-X" by (rule uminus)
+  interpret _: adapted_process M F 0 "-X" by (rule uminus)
   interpret uminus_X: nat_sigma_finite_adapted_process_order M F "-X" ..
   have "AE \<xi> in M. - X i \<xi> \<le> cond_exp M (F i) (\<lambda>x. - X (Suc i) x) \<xi>" for i using assms(2) cond_exp_uminus[OF integrable, of i "Suc i"] by force
-  hence "supermartingale M F (-(- X))" by (intro submartingale.uminus nat_submartingale.axioms uminus_X.submartingale_nat) (simp only: fun_Compl_def, intro integrable_minus integrable, auto simp add: fun_Compl_def)
+  hence "nat_supermartingale M F (-(- X))" by (intro nat_supermartingale.intro submartingale.uminus nat_submartingale.axioms uminus_X.submartingale_nat) (auto simp add: fun_Compl_def integrable)
   thus ?thesis unfolding fun_Compl_def by simp
 qed
 
 lemma (in nat_sigma_finite_adapted_process_order) supermartingale_of_cond_exp_diff_Suc_nonneg:
   assumes integrable: "\<And>i. integrable M (X i)" 
       and "\<And>i. AE \<xi> in M. 0 \<le> cond_exp M (F i) (\<lambda>\<xi>. X i \<xi> - X (Suc i) \<xi>) \<xi>" 
-    shows "supermartingale M F X"
+    shows "nat_supermartingale M F X"
 proof (intro supermartingale_nat integrable) 
   fix i 
   show "AE \<xi> in M. X i \<xi> \<ge> cond_exp M (F i) (X (Suc i)) \<xi>" using cond_exp_diff[OF integrable(1,1), of i i "Suc i"] cond_exp_F_meas[OF integrable adapted, of i] assms(2)[of i] by fastforce

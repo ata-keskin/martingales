@@ -307,16 +307,12 @@ proof -
   qed (auto)
 
   moreover have "restrict_space borel {t\<^sub>0..} = sigma {t\<^sub>0..} {{s<..t} | s t. t\<^sub>0 \<le> s \<and> s < t}"
-  proof -
-    have "sigma {t\<^sub>0..} (sets.restricted_space (sigma UNIV (Collect open)) {t\<^sub>0..}) = sigma {t\<^sub>0..} {{s<..t} |s t. t\<^sub>0 \<le> s \<and> s < t}"
-    unfolding restrict_space_def borel_def emeasure_sigma
-    apply (auto intro!: sigma_eqI)
-  ultimately have "restrict_space borel {t\<^sub>0..} \<Otimes>\<^sub>M sigma (space M) {} \<subseteq> sets \<Sigma>\<^sub>P" by (auto intro!: sigma_sets_mono simp add: sets_pair_measure sigma_sets_empty_eq sets_measure_of_conv)
-    
+    sorry
+  ultimately have "restrict_space borel {t\<^sub>0..} \<Otimes>\<^sub>M sigma (space M) {} \<subseteq> sets \<Sigma>\<^sub>P" sorry
     
   moreover have "space (restrict_space borel {t\<^sub>0..} \<Otimes>\<^sub>M sigma (space M) {}) = space \<Sigma>\<^sub>P" by (simp add: space_pair_measure)
   moreover have "fst \<in> restrict_space borel {t\<^sub>0..} \<Otimes>\<^sub>M sigma (space M) {} \<rightarrow>\<^sub>M borel" by (fastforce intro: measurable_fst''[OF measurable_restrict_space1, of "\<lambda>x. x"]) 
-  ultimately show ?thesis by (simp add: borel_measurable_subalgebra)
+  ultimately show ?thesis sorry
 qed
 
 end
@@ -545,8 +541,7 @@ qed
 
 text \<open>This leads to the following useful fact.\<close>
 
-theorem (in nat_predictable_process) adapted_Suc:
-  shows "nat_adapted_process M F (\<lambda>i. X (Suc i))"
+theorem (in nat_predictable_process) adapted_Suc: "nat_adapted_process M F (\<lambda>i. X (Suc i))"
 proof (unfold_locales, intro borel_measurableI)
   fix S :: "'b set" and i assume open_S: "open S"
   have "{Suc i} = {i<..Suc i}" by fastforce

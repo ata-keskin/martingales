@@ -306,13 +306,17 @@ proof -
     then show ?case using Union by (fastforce intro: sigma_sets.Union)
   qed (auto)
 
-  moreover have "restrict_space borel {t\<^sub>0..} = sigma {t\<^sub>0..} {{s<..t} | s t. t\<^sub>0 \<le> s \<and> s < t}"
-    sorry
-  ultimately have "restrict_space borel {t\<^sub>0..} \<Otimes>\<^sub>M sigma (space M) {} \<subseteq> sets \<Sigma>\<^sub>P" sorry
+  moreover have "restrict_space borel {t\<^sub>0..} = sigma {t\<^sub>0..} {{s<..t} | s t. t\<^sub>0 \<le> s \<and> s < t}" sorry
+  ultimately have "restrict_space borel {t\<^sub>0..} \<Otimes>\<^sub>M sigma (space M) {} \<subseteq> sets \<Sigma>\<^sub>P" 
+    unfolding sets_pair_measure sets_predictable_sigma space_measure_of_conv space_restrict_space
+    
+    apply (simp, intro sigma_sets_mono sigma_sets_top)
+     apply (simp add: sigma_sets_empty_eq)
+    apply auto
     
   moreover have "space (restrict_space borel {t\<^sub>0..} \<Otimes>\<^sub>M sigma (space M) {}) = space \<Sigma>\<^sub>P" by (simp add: space_pair_measure)
   moreover have "fst \<in> restrict_space borel {t\<^sub>0..} \<Otimes>\<^sub>M sigma (space M) {} \<rightarrow>\<^sub>M borel" by (fastforce intro: measurable_fst''[OF measurable_restrict_space1, of "\<lambda>x. x"]) 
-  ultimately show ?thesis sorry
+  ultimately show ?thesis by (meson borel_measurable_subalgebra)
 qed
 
 end
