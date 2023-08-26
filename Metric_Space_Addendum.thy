@@ -1,9 +1,9 @@
-theory Elementary_Metric_Spaces_Addendum
+theory Metric_Space_Addendum
   imports "HOL-Analysis.Elementary_Metric_Spaces" "HOL-Analysis.Bochner_Integration"
 begin
 
 lemma diameter_comp_strict_mono:
-  fixes s :: "nat \<Rightarrow> 'a :: real_normed_vector"
+  fixes s :: "nat \<Rightarrow> 'a :: metric_space"
   assumes "strict_mono r" "bounded {s i |i. r n \<le> i}"
   shows "diameter {s (r i) | i. n \<le> i} \<le> diameter {s i | i. r n \<le> i}"
 proof (rule diameter_subset)
@@ -26,17 +26,17 @@ lemma bounded_imp_dist_bounded:
   using bounded_dist_comp[OF bounded_fst bounded_snd, OF bounded_Times(1,1)[OF assms(1,1)]] by (rule bounded_subset, force) 
 
 lemma cauchy_iff_diameter_tends_to_zero_and_bounded:
-  fixes s :: "nat \<Rightarrow> 'a :: real_normed_vector"
+  fixes s :: "nat \<Rightarrow> 'a :: metric_space"
   shows "Cauchy s \<longleftrightarrow> ((\<lambda>n. diameter {s i | i. i \<ge> n}) \<longlonglongrightarrow> 0 \<and> bounded (range s))"
 proof -
   have "{s i |i. N \<le> i} \<noteq> {}" for N by blast
   hence diameter_SUP: "diameter {s i |i. N \<le> i} = (SUP (i, j) \<in> {N..} \<times> {N..}. dist (s i) (s j))" for N unfolding diameter_def by (auto intro!: arg_cong[of _ _ Sup])
   show ?thesis 
-  proof ((standard ; clarsimp), goal_cases)
-    case 1
+  proof ((intro iffI) ; clarsimp)
+    assume asm: "Cauchy s"
     have "\<exists>N. \<forall>n\<ge>N. norm (diameter {s i |i. n \<le> i}) < e" if e_pos: "e > 0" for e
     proof -
-      obtain N where dist_less: "dist (s n) (s m) < (1/2) * e" if "n \<ge> N" "m \<ge> N" for n m using 1 CauchyD e_pos dist_norm by (metis mult_pos_pos zero_less_divide_iff zero_less_numeral zero_less_one)
+      obtain N where dist_less: "dist (s n) (s m) < (1/2) * e" if "n \<ge> N" "m \<ge> N" for n m using asm e_pos by (metis Cauchy_def mult_pos_pos zero_less_divide_iff zero_less_numeral zero_less_one)
       {
         fix r assume "r \<ge> N"
         hence "dist (s n) (s m) < (1/2) * e" if "n \<ge> r" "m \<ge> r" for n m using dist_less that by simp
@@ -44,27 +44,27 @@ proof -
         also have "... < e" using e_pos by simp
         finally have "diameter {s i |i. r \<le> i} < e" using diameter_SUP by presburger
       }
-      moreover have "diameter {s i |i. r \<le> i} \<ge> 0" for r unfolding diameter_SUP using bounded_imp_dist_bounded[OF cauchy_imp_bounded, THEN bounded_imp_bdd_above, OF 1] by (intro cSup_upper2, auto)
+      moreover have "diameter {s i |i. r \<le> i} \<ge> 0" for r unfolding diameter_SUP using bounded_imp_dist_bounded[OF cauchy_imp_bounded, THEN bounded_imp_bdd_above, OF asm] by (intro cSup_upper2, auto)
       ultimately show ?thesis by auto
     qed                 
-    thus ?case using cauchy_imp_bounded[OF 1] by (simp add: LIMSEQ_iff)
+    thus "(\<lambda>n. diameter {s i |i. n \<le> i}) \<longlonglongrightarrow> 0 \<and> bounded (range s)" using cauchy_imp_bounded[OF asm] by (simp add: LIMSEQ_iff)
   next
-    case 2
+    assume asm: "(\<lambda>n. diameter {s i |i. n \<le> i}) \<longlonglongrightarrow> 0" "bounded (range s)"
     have "\<exists>N. \<forall>n\<ge>N. \<forall>m\<ge>N. dist (s n) (s m) < e" if e_pos: "e > 0" for e
     proof -
-      obtain N where diam_less: "diameter {s i |i. r \<le> i} < e" if "r \<ge> N" for r using LIMSEQ_D 2(1) e_pos by fastforce
+      obtain N where diam_less: "diameter {s i |i. r \<le> i} < e" if "r \<ge> N" for r using LIMSEQ_D asm(1) e_pos by fastforce
       {
         fix n m assume "n \<ge> N" "m \<ge> N"
-        hence "dist (s n) (s m) < e" using cSUP_lessD[OF bounded_imp_dist_bounded[THEN bounded_imp_bdd_above], OF 2(2) diam_less[unfolded diameter_SUP]] by auto
+        hence "dist (s n) (s m) < e" using cSUP_lessD[OF bounded_imp_dist_bounded[THEN bounded_imp_bdd_above], OF asm(2) diam_less[unfolded diameter_SUP]] by auto
       }
       thus ?thesis by blast
     qed
-    then show ?case by (intro CauchyI, simp add: dist_norm)
+    then show "Cauchy s" by (simp add: Cauchy_def)
   qed            
 qed
 
 context
-  fixes s r :: "nat \<Rightarrow> 'a \<Rightarrow> 'b :: {second_countable_topology, real_normed_vector, banach}" and M
+  fixes s :: "nat \<Rightarrow> 'a \<Rightarrow> 'b :: {second_countable_topology, banach}" and M
   assumes bounded: "\<And>x. x \<in> space M \<Longrightarrow> bounded (range (\<lambda>i. s i x))"
 begin
 

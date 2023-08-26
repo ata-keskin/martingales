@@ -1,5 +1,5 @@
 theory Conditional_Expectation_Banach                                                                 
-imports "HOL-Probability.Conditional_Expectation" Sigma_Finite_Measure_Addendum Bochner_Integration_Addendum Elementary_Metric_Spaces_Addendum
+imports "HOL-Probability.Conditional_Expectation" Sigma_Finite_Measure_Addendum Bochner_Integration_Addendum Metric_Space_Addendum
 begin                                           
 
 definition has_cond_exp :: "'a measure \<Rightarrow> 'a measure \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> ('a \<Rightarrow> 'b::{real_normed_vector, second_countable_topology}) \<Rightarrow> bool" where 
@@ -332,7 +332,7 @@ next
   ultimately show ?case by force
 qed
 
-lemma has_cond_exp_lim:
+lemma has_cond_exp_simple_lim:
     fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes integrable[measurable]: "integrable M f"
       and "\<And>i. simple_function M (s i)"
@@ -443,7 +443,7 @@ proof -
   thus thesis using AE_Cauchy Cauchy_convergent strict_mono_r by (auto intro!: that)
 qed
 
-lemma cond_exp_lim:
+lemma cond_exp_simple_lim:
     fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes [measurable]:"integrable M f"
       and "\<And>i. simple_function M (s i)"
@@ -452,10 +452,10 @@ lemma cond_exp_lim:
       and "\<And>x i. x \<in> space M \<Longrightarrow> norm (s i x) \<le> 2 * norm (f x)"
   obtains r where "AE x in M. (\<lambda>i. cond_exp M F (s (r i)) x) \<longlonglongrightarrow> cond_exp M F f x" "strict_mono r"
 proof -
-  obtain r where "AE x in M. cond_exp M F f x = lim (\<lambda>i. cond_exp M F (s (r i)) x)" "AE x in M. convergent (\<lambda>i. cond_exp M F (s (r i)) x)" "strict_mono r" using has_cond_exp_charact(2) by (auto intro: has_cond_exp_lim[OF assms])
+  obtain r where "AE x in M. cond_exp M F f x = lim (\<lambda>i. cond_exp M F (s (r i)) x)" "AE x in M. convergent (\<lambda>i. cond_exp M F (s (r i)) x)" "strict_mono r" using has_cond_exp_charact(2) by (auto intro: has_cond_exp_simple_lim[OF assms])
   thus ?thesis by (auto intro!: that[of r] simp: convergent_LIMSEQ_iff)
 qed
-  
+
 lemma has_cond_expI:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
   assumes "integrable M f"
@@ -463,7 +463,7 @@ lemma has_cond_expI:
   using assms
 proof -
   obtain s where s_is: "\<And>i. simple_function M (s i)" "\<And>i. emeasure M {y \<in> space M. s i y \<noteq> 0} \<noteq> \<infinity>" "\<And>x. x \<in> space M \<Longrightarrow> (\<lambda>i. s i x) \<longlonglongrightarrow> f x" "\<And>x i. x \<in> space M \<Longrightarrow> norm (s i x) \<le> 2 * norm (f x)" using integrable_implies_simple_function_sequence[OF assms] by blast
-  show ?thesis using has_cond_exp_lim[OF assms s_is] has_cond_exp_charact(1) by metis
+  show ?thesis using has_cond_exp_simple_lim[OF assms s_is] has_cond_exp_charact(1) by metis
 qed
 
 (* Now that we were able to show that the conditional expectation always exists, 
@@ -517,12 +517,12 @@ proof -
   obtain s where s: "\<And>i. simple_function M (s i)" "\<And>i. emeasure M {y \<in> space M. s i y \<noteq> 0} \<noteq> \<infinity>" "\<And>x. x \<in> space M \<Longrightarrow> (\<lambda>i. s i x) \<longlonglongrightarrow> f x" "\<And>i x. x \<in> space M \<Longrightarrow> norm (s i x) \<le> 2 * norm (f x)" 
     by (blast intro: integrable_implies_simple_function_sequence[OF assms])
 
-  obtain r where r: "AE x in M. (\<lambda>i. cond_exp M F (s (r i)) x) \<longlonglongrightarrow> cond_exp M F f x" "strict_mono r" using cond_exp_lim[OF assms s] by blast
+  obtain r where r: "AE x in M. (\<lambda>i. cond_exp M F (s (r i)) x) \<longlonglongrightarrow> cond_exp M F f x" "strict_mono r" using cond_exp_simple_lim[OF assms s] by blast
 
   have norm_s_r: "\<And>i. simple_function M (\<lambda>x. norm (s (r i) x))" "\<And>i. emeasure M {y \<in> space M. norm (s (r i) y) \<noteq> 0} \<noteq> \<infinity>" "\<And>x. x \<in> space M \<Longrightarrow> (\<lambda>i. norm (s (r i) x)) \<longlonglongrightarrow> norm (f x)" "\<And>i x. x \<in> space M \<Longrightarrow> norm (norm (s (r i) x)) \<le> 2 * norm (norm (f x))" 
     using s by (auto intro: LIMSEQ_subseq_LIMSEQ[OF tendsto_norm r(2), unfolded comp_def] simple_function_compose1) 
   
-  obtain r' where r': "AE x in M. (\<lambda>i. (cond_exp M F (\<lambda>x. norm (s (r (r' i)) x)) x)) \<longlonglongrightarrow> cond_exp M F (\<lambda>x. norm (f x)) x" "strict_mono r'" using cond_exp_lim[OF integrable_norm norm_s_r, OF assms] by blast
+  obtain r' where r': "AE x in M. (\<lambda>i. (cond_exp M F (\<lambda>x. norm (s (r (r' i)) x)) x)) \<longlonglongrightarrow> cond_exp M F (\<lambda>x. norm (f x)) x" "strict_mono r'" using cond_exp_simple_lim[OF integrable_norm norm_s_r, OF assms] by blast
 
   have "AE x in M. \<forall>i. norm (cond_exp M F (s (r (r' i))) x) \<le> cond_exp M F (\<lambda>x. norm (s (r (r' i)) x)) x" using s by (auto intro: cond_exp_contraction_simple simp add: AE_all_countable)
   moreover have "AE x in M. (\<lambda>i. norm (cond_exp M F (s (r (r' i))) x)) \<longlonglongrightarrow> norm (cond_exp M F f x)" using r LIMSEQ_subseq_LIMSEQ[OF tendsto_norm r'(2), unfolded comp_def] by fast

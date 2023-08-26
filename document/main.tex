@@ -25,16 +25,7 @@
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 \newtheorem*{example}{Example}
-\newtheoremstyle{break}
-  {\topsep}{\topsep}%
-  {}{}%
-  {\bfseries}{}%
-  {\newline}{}%
-\theoremstyle{break}
-\newtheorem{isatheorem}[theorem]{Theorem}
-\newtheorem{isacorollary}[theorem]{Corollary}
-\newtheorem{isalemma}[theorem]{Lemma}
-\newtheorem{isadefinition}[theorem]{Definition}
+
 
 % TODO: change citation style in settings
 \input{settings}
@@ -63,7 +54,21 @@
   basewidth={0.5em,0.45em},
   basicstyle=\ttfamily,
   mathescape,
+  tabsize=4
 }
+
+\newtheoremstyle{break}
+  {\topsep}{\topsep}%
+  {}{}%
+  {\bfseries}{}%
+  {\newline}{}%
+\theoremstyle{break}
+\newtheorem{isatheorem}[theorem]{Theorem}
+\newtheorem{isacorollary}[theorem]{Corollary}
+\newtheorem{isalemma}[theorem]{Lemma}
+\newtheorem{isadefinition}[theorem]{Definition}
+
+
 
 % TODO: change thesis information
 \newcommand*{\getUniversity}{Technische Universität München}

@@ -53,7 +53,7 @@ In anticipation of our construction, we need to lift some results from the real 
 Before we introduce and prove the averaging theorem, we will first show the following lemma which is crucial for our proof. While not stated exactly in this manner, our proof makes use of the characterization of second-countable topological spaces given in the book General Topology by Ryszard Engelking (Theorem 4.1.15) \cite{engelking_1989}.
 
 \begin{lemma}
-Let $E$ be a metric space with second-countable metric topology. Then there exists a countable set $D \subseteq E$, such that the set of open balls
+Let $E$ be a separable metric space. Then there exists a countable set $D \subseteq E$, such that the set of open balls
 \[
 	\mathcal{B} = \{ B_\varepsilon(x) \; \vert \; x \in D, \; \varepsilon \in \mathbb{Q} \cap (0, \infty) \}
 \]
@@ -108,17 +108,17 @@ At the beginning of our proof, we assumed $\mu(\Omega) < \infty$ without loss of
 
 \begin{isalemma}
 {\small
-\begin{lstlisting}[mathescape, language = isabelle]
-lemma sigma_finite_measure_induct:
-  assumes "$\bigwedge N \; \Omega. \;\; \texttt{finite\_measure} \; N$
-	  $\Longrightarrow N = \texttt{restrict\_space} \; M \; \Omega$
-	  $\Longrightarrow \Omega \in \texttt{sets} \; M$
-	  $\Longrightarrow \texttt{emeasure}\; N \; \Omega \neq \infty $
-	  $\Longrightarrow \texttt{emeasure}\; N \; \Omega \neq 0$
-	  $\Longrightarrow \texttt{almost\_everywhere} \; N \; Q$"
-  and "$\texttt{Measurable.pred} \; M \; Q$"
-  shows "$\texttt{almost\_everywhere} \; M \; Q$"
-\end{lstlisting}
+	\begin{lstlisting}[style=isabelle]
+	lemma sigma_finite_measure_induct:
+	  assumes "$\bigwedge N \; \Omega. \;\; \texttt{finite\_measure} \; N$
+			$\Longrightarrow N = \texttt{restrict\_space} \; M \; \Omega$
+			$\Longrightarrow \Omega \in \texttt{sets} \; M$
+			$\Longrightarrow \texttt{emeasure}\; N \; \Omega \neq \infty $
+			$\Longrightarrow \texttt{emeasure}\; N \; \Omega \neq 0$
+			$\Longrightarrow \texttt{almost\_everywhere} \; N \; Q$"
+	  and "$\texttt{Measurable.pred} \; M \; Q$"
+	  shows "$\texttt{almost\_everywhere} \; M \; Q$"
+	\end{lstlisting}
 }
 \end{isalemma}
 
@@ -154,11 +154,68 @@ The corollary on the uniqueness of densities is crucial in showing that the cond
 
 \subsection{Diameter Lemma}
 
-The following lemma provides a characterization of Cauchy sequences in metric spaces.
+The goal of this subsection is to prove the diameter lemma, which provides a characterization of Cauchy sequences in metric spaces.
+
+\begin{definition}
+Let $E$ be a metric space with metric $d : E \times E \rightarrow \mathbb{R}$. The diameter of a set $A$ is defined as
+\[
+	\textrm{diam}(A) = \sup_{x,y \in A} d(x,y)
+\]
+\end{definition}
+
+Intuitively the diameter of a set $A$ measures how spread out or "large" the set $A$ is with respect to the distance defined by the metric.
 
 \begin{lemma} (Diameter Lemma)
-	Let $(E, d : E \times E \rightarrow \mathbb{R}_{\ge 0})$ be a metric space. 
+	Let $E$ be a metric space with metric $d : E \times E \rightarrow \mathbb{R}$ and $(s_i)_{i\in\mathbb{N}} \subseteq E$ a sequence. Define $S_n = \{s_i \; \vert \; i \ge n \}$. The sequence $(s_i)_{i\in\mathbb{N}}$ is Cauchy, if and only if the $S_0$ is bounded and
+	\[
+		\lim_{n \to \infty} \textup{diam}(S_n) = 0
+	\]
 \end{lemma}
+\begin{proof}
+\;\newline
+$\Longrightarrow$: Assume $(s_i)_{i\in\mathbb{N}}$ is Cauchy. 
+
+Recall that a set $A$ is bounded if there exists some $x \in E$ and $\varepsilon \in \mathbb{R}$ such that $d(x,y) \le \varepsilon$ for all $y \in A$. Since $(s_i)_{i\in\mathbb{N}}$ Cauchy, there exists some $N \in \mathbb{N}$ such that $d(s_n,s_m) < 1$ for all $n, m \ge N$. The set $\{s_i \; \vert \; i \in \{0,\dots,N\}\}$ is bounded since it is finite. Thus there exists some $a \in \mathbb{R}$ such that $d(s_N, s_i) < a$ for all $i \in \{0,\dots,N\}$. Therefore $d(s_N, s_i) < \max(a,1)$ for all $i \in \mathbb{N}$, which shows that $S_0$ is bounded. 
+
+We know $S_n \subseteq S_m$ for $n \ge m$. Therefore $\textrm{diam}(S_n) < \infty$ for all $n \in \mathbb{N}$.
+
+Let $\varepsilon > 0$. Then there exists some $N \in \mathbb{N}$ such that $d(s_n,s_m) < \frac{1}{2} \varepsilon$ for all $n, m \ge N$. Hence
+\[
+	\textrm{diam}(S_N) = \sup_{x,y \in S_N} d(x,y) \le \frac{1}{2}\varepsilon < \varepsilon
+\]
+Furthermore, we have $\textrm{diam}(S_n) \le \textrm{diam}(S_N)$ for $n \ge N$ because of the subset relation stated above. Thus $\lim_{n \to \infty} \textup{diam}(S_n) = 0$.
+
+\noindent$\Longleftarrow:$ Assume $\lim_{n \to \infty} \textup{diam}(S_n) = 0$ and that $S_0$ is bounded. 
+
+Hence $\textrm{diam}(S_n) < \infty$ for all $n \in \mathbb{N}$ with the same argument as above. 
+
+Let $\varepsilon > 0$. There exists some $N \in \mathbb{N}$ such that $\sup_{x,y \in S_n} d(x,y) < \varepsilon$ for all $n \ge N$. Hence $d(x,y) < \varepsilon$ for all $x, y \in S_n$ for $n \ge N$. This implies $d(s_i,s_j) < \varepsilon$ for all $i, j \ge n \ge N$, which shows that $(s_i)_{i\in\mathbb{N}}$ is Cauchy.
+\end{proof}
+
+In our construction of the conditional expectation, we will use the diameter lemma to show that the limit of a sequence of simple functions admits a conditional expectation. In anticipation of this, we present the following lemmas concerning measurability and integrability.
+
+\begin{isalemma}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	lemma borel_measurable_diameter: 
+	  assumes "$\bigwedge x. \;x \in \texttt{space} \; M \implies \texttt{bounded} \; (\texttt{range} \; (\lambda i. \; s \; i \; x))$"
+			  "$\bigwedge i. \; (s \; i) \in \texttt{borel\_measurable} \; M$"
+	  shows "$(\lambda x. \; \texttt{diameter} \; \{s \; i \; x \; \vert \; i. \; n \le i \}) \in \texttt{borel\_measurable} \; M$"
+  	\end{lstlisting}
+}
+\end{isalemma}
+
+\begin{isalemma}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	lemma integrable_bound_diameter: 
+	  assumes "$\texttt{integrable} \; M \; f$" 
+	  and "$\bigwedge i. \; (s \; i) \in \texttt{borel\_measurable} \; M$"
+	  and "$\bigwedge x \; i. \; x \in \texttt{space} \; M \implies \texttt{norm} \; (s \; i \; x) \le f \; x$"
+	  shows "$\texttt{integrable} \; M \; (\lambda x. \; \texttt{diameter} \; \{s \; i \; x \; \vert \; i. \; n \le i\})$"
+  	\end{lstlisting}
+}
+\end{isalemma}
 
 \subsection{Induction Schemes for Simple Integrable Functions}
 
@@ -166,19 +223,20 @@ In the upcoming sections of our work, we will frequently need to prove statement
 
 \begin{isalemma}
 {\small
-\begin{lstlisting}[mathescape, language=isabelle]
-lemma simple_integrable_function_induct[case_names cong indicator add]:
-  assumes "$\texttt{simple\_function} \; M \; f$" "$\texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$"
-  assumes cong: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$ 
-                 $\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
-                 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x = g \; x) \implies P \; f \implies P \; g$"
-  assumes indicator: "$\bigwedge A \; y. \; A \in \texttt{sets} \; M \implies \texttt{emeasure} \; M \; A < \infty \implies P \; (\lambda x. \; \texttt{indicator} \; A \; x \cdot_\mathbb{R} y)$"
-  assumes add: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$
-                $\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
-                $\implies (\bigwedge z. \; z \in \texttt{space} \; M \implies \texttt{norm} \; (f \; z + g \; z) = \texttt{norm} \; (f \; z) + \texttt{norm} \; (g \; z))$
-                $\implies P \; f \implies P \; g \implies P \; (\lambda x. \; f \; x + g \; x)$"
-  shows "$P \; f$"
-\end{lstlisting}
+	\begin{lstlisting}[style=isabelle]
+	lemma simple_integrable_function_induct[case_names cong indicator add]:
+	  assumes "$\texttt{simple\_function} \; M \; f$" "$\texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$"
+	  assumes cong: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$ 
+					 $\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
+					 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x = g \; x) \implies P \; f \implies P \; g$"
+	  assumes indicator: "$\bigwedge A \; y. \; A \in \texttt{sets} \; M \implies \texttt{emeasure} \; M \; A < \infty$ 
+						  $\implies P \; (\lambda x. \; \texttt{indicator} \; A \; x \cdot_\mathbb{R} y)$"
+	  assumes add: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$
+					$\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
+					$\implies (\bigwedge z. \; z \in \texttt{space} \; M \implies \texttt{norm} \; (f \; z + g \; z) = \texttt{norm} \; (f \; z) + \texttt{norm} \; (g \; z))$
+					$\implies P \; f \implies P \; g \implies P \; (\lambda x. \; f \; x + g \; x)$"
+	  shows "$P \; f$"
+	\end{lstlisting}
 }
 \end{isalemma}
 
@@ -192,25 +250,25 @@ When working with an ordering on $E$, we may need to concern ourselves with non-
 
 \begin{isalemma}
 {\small
-\begin{lstlisting}[mathescape, language=isabelle]
-lemma simple_integrable_function_induct_nn[case_names cong indicator add]:
-  assumes "$\texttt{simple\_function} \; M \; f$" "$\texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$" 
-          "$\bigwedge x. \; x \in \texttt{space} \; M \longrightarrow f \; x \ge 0$"
-  assumes cong: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$ 
-                 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x \ge 0)$
-                 $\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
-                 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies g \; x \ge 0)$
-                 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x = g \; x) \implies P \; f \implies P \; g$"
-  assumes indicator: "$\bigwedge A \; y. \; ´y \ge 0$
-                $\implies A \in \texttt{sets} \; M \implies \texttt{emeasure} \; M \; A < \infty \implies P \; (\lambda x. \; \texttt{indicator} \; A \; x \cdot_\mathbb{R} y)$"
-  assumes add: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$
-                $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x \ge 0)$
-                $\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
-                $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies g \; x \ge 0)$
-                $\implies (\bigwedge z. \; z \in \texttt{space} \; M \implies \texttt{norm} \; (f \; z + g \; z) = \texttt{norm} \; (f \; z) + \texttt{norm} \; (g \; z))$
-                $\implies P \; f \implies P \; g \implies P \; (\lambda x. \; f \; x + g \; x)$"
-  shows "$P \; f$"
-\end{lstlisting}
+	\begin{lstlisting}[style=isabelle]
+	lemma simple_integrable_function_induct_nn[case_names cong indicator add]:
+	  assumes "$\texttt{simple\_function} \; M \; f$" "$\texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$" 
+			  "$\bigwedge x. \; x \in \texttt{space} \; M \longrightarrow f \; x \ge 0$"
+	  assumes cong: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$ 
+					 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x \ge 0)$
+					 $\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
+					 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies g \; x \ge 0)$
+					 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x = g \; x) \implies P \; f \implies P \; g$"
+	  assumes indicator: "$\bigwedge A \; y. \; y \ge 0 \implies A \in \texttt{sets} \; M \implies \texttt{emeasure} \; M \; A < \infty$
+						  $\implies P \; (\lambda x. \; \texttt{indicator} \; A \; x \cdot_\mathbb{R} y)$"
+	  assumes add: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$
+					$\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x \ge 0)$
+					$\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
+					$\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies g \; x \ge 0)$
+					$\implies (\bigwedge z. \; z \in \texttt{space} \; M \implies \texttt{norm} \; (f \; z + g \; z) = \texttt{norm} \; (f \; z) + \texttt{norm} \; (g \; z))$
+					$\implies P \; f \implies P \; g \implies P \; (\lambda x. \; f \; x + g \; x)$"
+	  shows "$P \; f$"
+	\end{lstlisting}
 }
 \end{isalemma}
 
@@ -270,8 +328,8 @@ This lemma entails the following corollary.
 
 In Isabelle, we can replace the assumption $f \in L^1(E)$ with Borel measurability, since a non-integrable function has the value of its integral set to $0$ by default. The lemma above can be stated as
 
-{\small
-\begin{lstlisting}[mathescape, language=isabelle]
+
+\begin{lstlisting}[style=isabelle]
 lemma integral_nonneg_AE_banach:
   assumes "$f \in \texttt{borel\_measurable} \; M$" and "AE $x$ in $M. \; 0 \le f \; x$"
   shows "$0 \le \texttt{integral}^L \; M \; f$"
@@ -279,7 +337,6 @@ proof (cases "integrable $M \; f$")
 $\dots$
 qed
 \end{lstlisting}
-}
 
 \section{Constructing the Conditional Expectation}
 
@@ -287,12 +344,12 @@ Before we can talk about \textit{the} conditional expectation, we must define wh
 
 \begin{isadefinition}
 {\small
-	\begin{lstlisting}[mathescape, language=isabelle]
+	\begin{lstlisting}[style=isabelle]
 		definition has_cond_exp :: "$'a \; \texttt{measure} \; \Rightarrow \; 'a \; \texttt{measure} \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \texttt{bool}$" where 
 		  "has_cond_exp $M \; F \; f \; g \; = (\forall A \in \texttt{sets} \; F. \; \int_A \; f \; \partial M = \int_A \; g \; \partial M)$
-					  $\wedge \; \texttt{integrable} \; M \; f $
-					  $\wedge \; \texttt{integrable} \; M \; g $
-					  $\wedge \; g \in \texttt{borel\_measurable} \; F$"
+	                  $\wedge \; \texttt{integrable} \; M \; f $
+	                  $\wedge \; \texttt{integrable} \; M \; g $
+	                  $\wedge \; g \in \texttt{borel\_measurable} \; F$"
 	\end{lstlisting}
 }
 \end{isadefinition}
@@ -303,7 +360,7 @@ This predicate precisely characterizes what it means for a function $f$ to have 
 
 \begin{isadefinition}
 {\small
-	\begin{lstlisting}[mathescape, language=isabelle]
+	\begin{lstlisting}[style=isabelle]
 		definition cond_exp :: "$'a \; \texttt{measure} \; \Rightarrow \; 'a \; \texttt{measure} \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \texttt{bool}$" where 
 		  "cond_exp $M \; F \; f \; = ($if$ \; \exists g. \; \texttt{has\_cond\_exp} \; M \; F \; f \; g \; $then$ \; ($SOME$ \; g. \; \texttt{has\_cond\_exp} \; M \; F \; f \; g) \; $else$ \; (\lambda \_. 0))$"
 	\end{lstlisting}
@@ -314,18 +371,18 @@ A major advantage of defining the conditional expectation this way is that it al
 
 \begin{isalemma}
 {\small
-	\begin{lstlisting}[mathescape, language=isabelle]
-		lemma borel_measurable_cond_exp: "cond_exp $M \; F \; f \; \in$ borel_measurable $F$"
-		  by (metis cond_exp_def someI has_cond_exp_def borel_measurable_const)
+	\begin{lstlisting}[style=isabelle]
+	lemma borel_measurable_cond_exp: "cond_exp $M \; F \; f \; \in$ borel_measurable $F$"
+	  by (metis cond_exp_def someI has_cond_exp_def borel_measurable_const)
 	\end{lstlisting}
 }
 \end{isalemma}
 
 \begin{isalemma}
 {\small
-	\begin{lstlisting}[mathescape, language=isabelle]
-lemma integrable_cond_exp: "integrable $M$ (cond_exp $M \; F \; f$)"
-  by (metis cond_exp_def has_cond_expD(3) integrable_zero someI)
+	\begin{lstlisting}[style=isabelle]
+	lemma integrable_cond_exp: "integrable $M$ (cond_exp $M \; F \; f$)"
+	  by (metis cond_exp_def has_cond_expD(3) integrable_zero someI)
 	\end{lstlisting}
 }
 \end{isalemma}
