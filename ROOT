@@ -1,6 +1,5 @@
 chapter AFP
 
-
 session "Martingale" (AFP) = HOL +
   options [timeout = 5000, document = pdf, document_output = "document/isabelle", show_question_marks = false]
   

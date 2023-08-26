@@ -24,9 +24,9 @@ lemma has_cond_expD:
         "g \<in> borel_measurable F"
   using assms unfolding has_cond_exp_def by simp+
 
-(* This definition provides the conditional expectation function cond_exp for a given function f with respect to measures M and F. 
-It uses the Hilbert choice operator (SOME) to select a suitable function g that satisfies the properties of conditional expectation. 
-If no such g exists, it returns the zero function. *)
+(* The predicate has_cond_exp precisely characterizes what it means for a function f to have
+   a conditional expectation g w.r.t the measure M and the sub-sigma-algebra F. 
+   Now we can use Hilbert's epsilon-operator SOME to define the conditional expectation, if it exists. *)
 
 definition cond_exp :: "'a measure \<Rightarrow> 'a measure \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> ('a \<Rightarrow> 'b::{banach, second_countable_topology})" where
   "cond_exp M F f = (if \<exists>g. has_cond_exp M F f g then (SOME g. has_cond_exp M F f g) else (\<lambda>_. 0))"

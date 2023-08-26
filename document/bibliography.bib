@@ -16,6 +16,17 @@
 	ISSN    = {2150-914x},
 }
 
+@inproceedings{hoelzl2011measuretheory,
+  author       = {Johannes H{\"o}lzl and Armin Heller},
+  title        = {Three Chapters of Measure Theory in {Isabelle/HOL}},
+  year         = {2011},
+  pages        = {135-151},
+  editor       = {Marko C. J. D. van Eekelen and Herman Geuvers and Julien Schmaltz and Freek Wiedijk},
+  booktitle    = {Interactive Theorem Proving (ITP 2011)},
+  series       = {LNCS},
+  volume       = {6898}
+}
+
 @article{Lp-AFP,
 	author  = {Sebastien Gou\"ezel},
 	title   = {Lp spaces},
@@ -28,12 +39,20 @@
 
 @misc{ying2022formalization,
 	title={A Formalization of Doob's Martingale Convergence Theorems in mathlib}, 
-	author={Kexing Ying and R\`emy Degenne},
+	author={Degenne, Rémy and Ying, Kexing},
 	year={2022},
 	eprint={2212.05578},
 	archivePrefix={arXiv},
 	primaryClass={cs.LO}
 }
+
+@misc{Degenne_Ying_2022, 
+	title={probability.martingale.basic - mathlib}, 
+	note = {\url{https://leanprover-community.github.io/mathlib_docs/probability/martingale/basic.html}, Accessed: 25 Aug 2023}, 
+	journal={Lean Mathematical Library - mathlib}, 
+	year={2022},
+	author={Degenne, Rémy and Ying, Kexing}
+	} 
 
 @inproceedings{EchenimPeltier,
 	author="Echenim, Mnacho
@@ -47,6 +66,15 @@
 	pages="546--562",
 	abstract="The binomial pricing model is an option valuation method based on a discrete-time model of the evolution of an equity market. It allows one to determine the fair price of derivatives from the payoff they generate at their expiration date. A formalization of this model in the proof assistant Isabelle is provided. We formalize essential notions in finance such as the no-arbitrage principle and prove that, under the hypotheses of the model, the market is complete, meaning that any European derivative can be replicated by creating a portfolio that generates the same payoff regardless of the evolution of the market.",
 	isbn="978-3-319-63046-5"
+}
+
+@misc{roldan2023,
+      title={Martingales for Physicists}, 
+      author={Édgar Roldán and Izaak Neri and Raphael Chetrite and Shamik Gupta and Simone Pigolotti and Frank Jülicher and Ken Sekimoto},
+      year={2023},
+      eprint={2210.09983},
+      archivePrefix={arXiv},
+      primaryClass={cond-mat.stat-mech}
 }
 
 @book{pisier_2016,
@@ -77,3 +105,56 @@
 	year={1989},
 	publisher={Heldermann}
 }
+
+@book{Musiela_Rutkowski_2005, 
+	place={Berlin}, 
+	title={Martingale methods in financial modelling}, 
+	publisher={Springer}, 
+	author={Musiela, Marek and Rutkowski, Marek}, 
+	year={2005}
+} 
+
+@article{fama1965,
+	ISSN = {00219398, 15375374},
+	URL = {http://www.jstor.org/stable/2350752},
+	author = {Eugene F. Fama},
+	journal = {The Journal of Business},
+	number = {1},
+	pages = {34--105},
+	publisher = {University of Chicago Press},
+	title = {The Behavior of Stock-Market Prices},
+	urldate = {2023-08-24},
+	volume = {38},
+	year = {1965}
+}
+
+@article{yaes1989,
+	ISSN = {00368075, 10959203},
+	URL = {http://www.jstor.org/stable/1703816},
+	author = {Robert J. Yaes and Arthur S. Bechhoefer},
+	journal = {Science},
+	number = {4911},
+	pages = {1424--1424},
+	publisher = {American Association for the Advancement of Science},
+	title = {The Efficient Market Hypothesis},
+	urldate = {2023-08-24},
+	volume = {244},
+	year = {1989}
+}
+
+@book{mitzenmacher_upfal_2005,
+	place={Cambridge},
+	title={Probability and Computing: Randomized Algorithms and Probabilistic Analysis},
+	DOI={10.1017/CBO9780511813603},
+	publisher={Cambridge University Press},
+	author={Mitzenmacher, Michael and Upfal, Eli},
+	year={2005}
+}
+
+@book{Nipkow-Paulson-Wenzel:2002,
+  author	= {Tobias Nipkow and Lawrence C. Paulson and Markus Wenzel},
+  title		= {Isabelle/HOL --- A Proof Assistant for Higher-Order Logic},
+  publisher	= {Springer},
+  series	= {LNCS},
+  volume	= 2283,
+  year		= 2002}

@@ -47,10 +47,13 @@ lemmas simple_function_scaleR[intro] = simple_function_compose2[where h="(*\<^su
 lemmas integrable_simple_function = simple_bochner_integrable.intros[THEN has_bochner_integral_simple_bochner_integrable, THEN integrable.intros] 
 
 (* Induction rule for simple integrable functions *)
+
 lemma\<^marker>\<open>tag important\<close> simple_integrable_function_induct[consumes 2, case_names cong indicator add, induct set: simple_function]:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach}"
   assumes f: "simple_function M f" "emeasure M {y \<in> space M. f y \<noteq> 0} \<noteq> \<infinity>"
-  assumes cong: "\<And>f g. simple_function M f \<Longrightarrow> emeasure M {y \<in> space M. f y \<noteq> 0} \<noteq> \<infinity> \<Longrightarrow> simple_function M g \<Longrightarrow> emeasure M {y \<in> space M. g y \<noteq> 0} \<noteq> \<infinity> \<Longrightarrow> (\<And>x. x \<in> space M \<Longrightarrow> f x = g x) \<Longrightarrow> P f \<Longrightarrow> P g"
+  assumes cong: "\<And>f g. simple_function M f \<Longrightarrow> emeasure M {y \<in> space M. f y \<noteq> 0} \<noteq> \<infinity> 
+                    \<Longrightarrow> simple_function M g \<Longrightarrow> emeasure M {y \<in> space M. g y \<noteq> 0} \<noteq> \<infinity> 
+                    \<Longrightarrow> (\<And>x. x \<in> space M \<Longrightarrow> f x = g x) \<Longrightarrow> P f \<Longrightarrow> P g"
   assumes indicator: "\<And>A y. A \<in> sets M \<Longrightarrow> emeasure M A < \<infinity> \<Longrightarrow> P (\<lambda>x. indicator A x *\<^sub>R y)"
   assumes add: "\<And>f g. simple_function M f \<Longrightarrow> emeasure M {y \<in> space M. f y \<noteq> 0} \<noteq> \<infinity> \<Longrightarrow> 
                       simple_function M g \<Longrightarrow> emeasure M {y \<in> space M. g y \<noteq> 0} \<noteq> \<infinity> \<Longrightarrow> 
@@ -143,7 +146,7 @@ proof-
 qed
 
 (* Induction rule for non-negative simple integrable functions *)
-lemma\<^marker>\<open>tag important\<close> simple_integrable_function_induct_nonneg[consumes 3, case_names cong indicator add, induct set: simple_function]:
+lemma\<^marker>\<open>tag important\<close> simple_integrable_function_induct_nn[consumes 3, case_names cong indicator add, induct set: simple_function]:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
   assumes f: "simple_function M f" "emeasure M {y \<in> space M. f y \<noteq> 0} \<noteq> \<infinity>" "\<And>x. x \<in> space M \<longrightarrow> f x \<ge> 0"
   assumes cong: "\<And>f g. simple_function M f \<Longrightarrow> emeasure M {y \<in> space M. f y \<noteq> 0} \<noteq> \<infinity> \<Longrightarrow> (\<And>x. x \<in> space M \<Longrightarrow> f x \<ge> 0) \<Longrightarrow> simple_function M g \<Longrightarrow> emeasure M {y \<in> space M. g y \<noteq> 0} \<noteq> \<infinity> \<Longrightarrow> (\<And>x. x \<in> space M \<Longrightarrow> g x \<ge> 0) \<Longrightarrow> (\<And>x. x \<in> space M \<Longrightarrow> f x = g x) \<Longrightarrow> P f \<Longrightarrow> P g"
@@ -371,7 +374,7 @@ proof cases
       fix h :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}" 
       assume "simple_function M h" "emeasure M {y \<in> space M. h y \<noteq> 0} \<noteq> \<infinity>" "\<And>x. x \<in> space M \<longrightarrow> h x \<ge> 0"
       hence *: "integral\<^sup>L M h \<ge> 0"
-      proof (induct rule: simple_integrable_function_induct_nonneg)
+      proof (induct rule: simple_integrable_function_induct_nn)
         case (cong f g)                   
         then show ?case using Bochner_Integration.integral_cong by force
       next

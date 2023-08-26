@@ -24,9 +24,9 @@ lemma has_cond_expD:
         "g \<in> borel_measurable F"
   using assms unfolding has_cond_exp_def by simp+
 
-(* This definition provides the conditional expectation function cond_exp for a given function f with respect to measures M and F. 
-It uses the Hilbert choice operator (SOME) to select a suitable function g that satisfies the properties of conditional expectation. 
-If no such g exists, it returns the zero function. *)
+(* The predicate has_cond_exp precisely characterizes what it means for a function f to have
+   a conditional expectation g w.r.t the measure M and the sub-sigma-algebra F. 
+   Now we can use Hilbert's epsilon-operator SOME to define the conditional expectation, if it exists. *)
 
 definition cond_exp :: "'a measure \<Rightarrow> 'a measure \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> ('a \<Rightarrow> 'b::{banach, second_countable_topology})" where
   "cond_exp M F f = (if \<exists>g. has_cond_exp M F f g then (SOME g. has_cond_exp M F f g) else (\<lambda>_. 0))"
@@ -591,7 +591,7 @@ proof -
         have s_meas_M[measurable]: "s i \<in> borel_measurable M" by (meson borel_measurable_simple_function measurable_from_subalg s_is(1) subalg')
         have s_meas_F[measurable]: "s i \<in> borel_measurable F" by (meson borel_measurable_simple_function measurable_in_subalg' s_is(1) subalg)
 
-        have s_scaleR_eq: "s i x *\<^sub>R h x = (\<Sum>y\<in>s i ` space M. (indicator (s i -` {y} \<inter> space M) x *\<^sub>R y) *\<^sub>R h x)" if "x \<in> space M" for x and h :: "'a \<Rightarrow> 'b" using simple_function_indicator_representation_banach[OF s_is(1), of x i] that unfolding space_restr_to_subalg scaleR_left.sum[of _ _ "h x", symmetric] by presburger
+        have s_scaleR_eq: "s i x *\<^sub>R h x = (\<Sum>y\<in>s i ` space M. (indicator (s i -` {y} \<inter> space M) x *\<^sub>R y) *\<^sub>R h x)" if "x \<in> space M" for x and h :: "'a \<Rightarrow> 'b" using simple_function_indicator_representation[OF s_is(1), of x i] that unfolding space_restr_to_subalg scaleR_left.sum[of _ _ "h x", symmetric] by presburger
         
         have "LINT x|M. s i x *\<^sub>R g x = LINT x|M. (\<Sum>y\<in>s i ` space M. indicator (s i -` {y} \<inter> space M) x *\<^sub>R y *\<^sub>R g x)" using s_scaleR_eq by (intro Bochner_Integration.integral_cong) auto
         also have "... = (\<Sum>y\<in>s i ` space M. LINT x|M. indicator (s i -` {y} \<inter> space M) x *\<^sub>R y *\<^sub>R g x)" by (intro Bochner_Integration.integral_sum integrable_mult_indicator[OF _ integrable_scaleR_right] assms(2)) simp

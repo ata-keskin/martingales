@@ -3,20 +3,17 @@
 
 \chapter{Conditional Expectation in Banach Spaces}\label{chapter:conditional_expectation}
 
-Conditional expectation extends the concept of expected value to situations where we have additional information about the outcomes. In a discrete setting, i.e. when the range of the random variables in question is countable, the setup is quite simple. Without loss of generality, let $(\Omega, \mathcal{F}, \mu)$ be a measure space. Let $E$ be a complete normed vector space, i.e. a Banach space, and $S \subseteq E$ be some countable subset. Given a random variable $X : \Omega \rightarrow S$ and an event $A \in \mathcal{F}$, the conditional expectation of $X$ given $A$, denoted as $\mathbb{E}(X \vert A)$, represents the expected value of $X$ given that $A$ occurs. In this simple case, we can directly define the conditional expectation as:
-
+Conditional expectation extends the concept of expected value to situations where we have additional information about the outcomes. In a discrete setting, i.e. when the range of the random variables in question is countable, the setup is quite simple. 
+\par Without loss of generality, let $(\Omega, \mathcal{F}, \mu)$ be a measure space. Let $E$ be a complete normed vector space, i.e. a Banach space, and $S \subseteq E$ be some countable subset. Given a random variable $X : \Omega \rightarrow S$ and an event $A \in \mathcal{F}$, the conditional expectation of $X$ given $A$, denoted as $\mathbb{E}(X \vert A)$, represents the expected value of $X$ given that $A$ occurs. In this simple case, we can directly define the conditional expectation as:
 \[
 	\mathbb{E}(X \vert A) = \sum_{w \in S} w \cdot \frac{\mu(\{X = w\} \cap A)}{\mu(A)}
 \]
-
 Of course, this definition only makes sense if the value on the right hand side is finite and $\mu(A) \neq 0$. Defined this way, the conditional expectation satisfies the following equality
-
 \begin{align*}
 	\int_A X \; \textrm{d} \mu &= \sum_{w \in S} w \cdot \mu(\{\mathbf{1}_A \cdot X = w\}) \\
 	&= \mu(A) \cdot \mathbb{E}(X \vert A) \\
 	&= \int_A \mathbb{E}(X \vert A) \; \textrm{d} \mu
 \end{align*}
-
 This observation motivates us to generalize the definition of conditional expectation to take into account not just a single event, but a collection of events. Fix $X : \Omega \rightarrow E$. Given a sub-$\sigma$-algebra $\mathcal{H} \subseteq \mathcal{F}$, we call an $\mathcal{H}$-measurable function $g : \Omega \rightarrow E$ a conditional expectation of $X$ with respect to the sub-$\sigma$-algebra $\mathcal{H}$ , denoted as $\mathbb{E}(X \vert \mathcal{H})$, if the following equality holds for all $A \in \mathcal{H}$
 
 \[
@@ -25,43 +22,38 @@ This observation motivates us to generalize the definition of conditional expect
 
 In the case that $E = \mathbb{R}$, it is straightforward to show that such a function $g$ always exists (via Radon-Nikodym), and is unique up to a $\mu$-null set. Notice that $\mathbb{E}(X \vert \mathcal{H})$ is a function $\Omega \rightarrow E$, as opposed to some value in $E$.
 
-The suitable setting for defining the conditional expectation is when the sub-$\sigma$-algebra $\mathcal{H}$ gives rise to a $\sigma$-finite measure space, i.e. when $\mu\vert_\mathcal{H}$ is a $\sigma$-finite measure. Consider the trivial sub-$\sigma$-algebra $\{\varnothing, \Omega\}$. A function which is measurable with respect to this $\sigma$-algebra is necessarily constant. Therefore, if $\mu(\Omega) = \infty$, no conditional expectation can exist, since it would have to be equal to $0$ $\mu$-almost everywhere in order to be integrable.
+The suitable setting for defining the conditional expectation is when the sub-$\sigma$-algebra $\mathcal{H}$ gives rise to a $\sigma$-finite measure space. This is the case when $\mu\vert_\mathcal{H}$, the restriction of $\mu$ to $\mathcal{H}$ is a $\sigma$-finite measure. To see what goes wrong, consider the trivial sub-$\sigma$-algebra $\{\varnothing, \Omega\}$. A function which is measurable with respect to this $\sigma$-algebra is necessarily constant. Therefore, if $\mu(\Omega) = \infty$, no conditional expectation can exist, since it would have to be equal to $0$ $\mu$-almost everywhere in order to be integrable.
 
-\begin{itemize}
-
-\item[\textit{Example}] Let $\mathcal{H} \subseteq \mathcal{F}$ be a sub-$\sigma$-algebra such that $\mu\vert_\mathcal{H}$ is a $\sigma$-finite measure. Given an integrable function $X : \Omega \rightarrow \mathbb{R}$, we can define a measure $\nu$ on $(\Omega, \mathcal{F})$ via
-
+\vspace{0.3cm}
+\begin{example}
+Let $\mathcal{H} \subseteq \mathcal{F}$ be a sub-$\sigma$-algebra such that $\mu\vert_\mathcal{H}$ is a $\sigma$-finite measure. Given an integrable function $X : \Omega \rightarrow \mathbb{R}$, we can define a measure $\nu$ on $(\Omega, \mathcal{F})$ via
 \[
 	\nu(A) := \int_A X \; \textrm{d}\mu
 \]
-
 It is easy to verify that $\mu\vert_\mathcal{H}(A) = 0$ implies $\nu\vert_\mathcal{H}(A) = 0$, i.e. $\nu\vert_\mathcal{H}$ is absolutely continuous with respect to $\mu\vert_\mathcal{H}$. Using the Radon-Nikodym Theorem, we obtain an $\mathcal{H}$-measurable function $g : \Omega \rightarrow \mathbb{R}$ such that
-
 \[
 	\nu\vert_\mathcal{H}(A) = \int_A g \;\textrm{d}\mu\vert_\mathcal{H}
 \]
-
 Thus for any $A \in \mathcal{H}$, we have
-
 \[
 	\int_A X \; \textrm{d}\mu = \int_A g \;\textrm{d}\mu\vert_\mathcal{H} = \int_A g \;\textrm{d}\mu
 \]
+In the second equality, we use the fact that $g$ is $\mathcal{H}$-measurable. Radon-Nikodym also guarentees that this function $g$ is unique up to a $\mu\vert_\mathcal{H}$-null set. Since all $\mu\vert_\mathcal{H}$-null sets are also $\mu$-null sets, the function $g$ satisfies the requirements of a conditional expectation.
+\end{example}
+\vspace{0.3cm}
 
-In the second equality, we use the fact that $g$ is $\mathcal{H}$-measurable. Radon-Nikodym also guarentees that this function $g$ is unique up to a $\mu\vert_\mathcal{H}$-null set. Since all $\mu\vert_\mathcal{H}$-null sets are also $\mu$-null sets, the function $g$ satisfies the requirements of the conditional expectation.
-
-\end{itemize}
-
-Technicalities aside, this shows that the conditional expectation always exists and is unique up to $\mu$-null set for all $X \in \mathcal{L}^1$. Our job now will be to construct a similar operator on arbitrary Banach spaces using methods from functional analysis and measure theory.
+Technicalities aside, this shows that the conditional expectation always exists and is unique up to $\mu$-null set for all $X \in \mathcal{L}^1(\mathbb{R})$. Our job now will be to construct a similar operator on arbitrary Banach spaces using methods from functional analysis and measure theory.
 
 \section{Preliminaries}
+
 In anticipation of our construction, we need to lift some results from the real setting to our more general setting. Our fundamental tool in this regard will be the \textbf{averaging theorem}. The proof of this theorem is due to Serge Lang \cite{Lang_1993}. The theorem allows us to make statements about a function's value almost everywhere, depending on the value it's integral takes on various sets of the measure space.
 
 \subsection{Averaging Theorem}
 
-Before we introduce and prove the averaging theorem, we will first show the following lemma which is crucial for our proof. While not stated exactly in this manner, our proof makes use of the characterization of second countable topological spaces given in the book General Topology \cite{engelking_1989} by Ryszard Engelking (Theorem 4.1.15).
+Before we introduce and prove the averaging theorem, we will first show the following lemma which is crucial for our proof. While not stated exactly in this manner, our proof makes use of the characterization of second-countable topological spaces given in the book General Topology by Ryszard Engelking (Theorem 4.1.15) \cite{engelking_1989}.
 
 \begin{lemma}
-Let $E$ be a metric space with second countable metric topology. Then there exists a countable set $D \subseteq E$, such that the set of open balls
+Let $E$ be a metric space with second-countable metric topology. Then there exists a countable set $D \subseteq E$, such that the set of open balls
 \[
 	\mathcal{B} = \{ B_\varepsilon(x) \; \vert \; x \in D, \; \varepsilon \in \mathbb{Q} \cap (0, \infty) \}
 \]
@@ -69,7 +61,7 @@ generates the topology on $E$. Here $B_\varepsilon(x)$ is the open ball of radiu
 \end{lemma}
 
 \begin{proof}
-In the context of metric spaces, second countability is equivalent to separability. Consequently, there exists some non-empty countable subset $D \subseteq E$, which is dense in $E$. We want to show that this $D$ fulfills the statement above. For this end we will use the following equivalence which is valid for any $\mathcal{A} \subseteq \mathcal{P}(E)$
+In the context of metric spaces, second-countability is equivalent to separability. Consequently, there exists some non-empty countable subset $D \subseteq E$, which is dense in $E$. We want to show that this $D$ fulfills the statement above. For this end we will use the following equivalence which is valid for any $\mathcal{A} \subseteq \mathcal{P}(E)$
 
 \[
 	\mathcal{A} \textrm{ is topological basis} \Longleftrightarrow \forall \textrm{open } U.\; \forall x \in U.\; \exists A \in \mathcal{A}.\; x \in A \wedge A \subseteq U
@@ -81,7 +73,7 @@ Let $U \subseteq E$ be open. Fix $x \in U$. Since $U$ is open and we are working
 Now we are ready to state and subsequently prove the averaging theorem
 
 \begin{theorem} (Averaging Theorem)
-Let $(\Omega, \mathcal{F}, \mu)$ be some $\sigma$-finite measure space. Let $f \in L^1(\mu, E)$. Let $S$ be a closed subset of $E$ and assume that for all measurable sets $A \in \mathcal{F}$ with finite and non-zero measure the following holds
+Let $(\Omega, \mathcal{F}, \mu)$ be some $\sigma$-finite measure space. Let $f \in L^1(E)$. Let $S$ be a closed subset of $E$ and assume that for all measurable sets $A \in \mathcal{F}$ with finite and non-zero measure the following holds
 \[
 	\frac{1}{\mu(A)}\int_A f \;\textrm{d}\mu \in S
 \]
@@ -100,10 +92,10 @@ We show by contradiction that if $B_r(v) \cap S = \varnothing$,  then $A := f^{-
 
 The last inequality follows from the fact that $f(x) \in B_r(v)$ for $x \in A$. This contradicts our first assumption. Therefore $\mu(A) = 0$.
 
-Similar to the notation in Isabelle, we will use $\neg S$ to denote the complement of $S$. $\neg S$ is an open subset of $E$. By the previous lemma, there exists open balls $B_{r_i}(w_i)$ with $r_i \in \mathbb{Q}_{\ge 0}$, $w_i \in D$ for $i \in \mathbb{N}$ such that $\bigcup_i B_{r_i}(w_i) = \neg S$. Obviously, $w_i \in E \setminus S$ and $B_{r_i}(w_i) \cap S = \varnothing$ for $i \in \mathbb{N}$. It follows
+Similar to the notation in Isabelle, we will use $-S$ to denote the complement of $S$. $- S$ is an open subset of $E$. By the previous lemma, there exist open balls $B_{r_i}(w_i)$ with $r_i \in \mathbb{Q}_{\ge 0}$, $w_i \in D$ for $i \in \mathbb{N}$ such that $\bigcup_i B_{r_i}(w_i) = - S$. Obviously, $w_i \in E \setminus S$ and $B_{r_i}(w_i) \cap S = \varnothing$ for $i \in \mathbb{N}$. It follows
 
 \begin{align*}
-	\mu(f^{-1}(\neg S)) &= \mu\left(\bigcup_i f^{-1}(B_{r_i}(w_i))\right) \\
+	\mu(f^{-1}(- S)) &= \mu\left(\bigcup_i f^{-1}(B_{r_i}(w_i))\right) \\
 	&\le \sum_i \mu(f^{-1}(B_{r_i}(w_i))) \\
 	&= 0
 \end{align*}
@@ -114,43 +106,241 @@ Thus $\{f \notin S \}$ is a $\mu$-null set, which completes the proof.
 
 At the beginning of our proof, we assumed $\mu(\Omega) < \infty$ without loss of generality. This is only possible, since we assumed the measure space in question to be $\sigma$-finite. To simplify the formalization of proofs employing this argument, we have introduced the following induction scheme
 
+\begin{isalemma}
+{\small
 \begin{lstlisting}[mathescape, language = isabelle]
 lemma sigma_finite_measure_induct:
-  assumes "$\bigwedge (N :: \; 'a \; \texttt{measure}) \; \Omega. \;\; \texttt{finite\_measure} \; N$
-                              $\Longrightarrow N = \texttt{restrict\_space} \; M \; \Omega$
-                              $\Longrightarrow \Omega \in \texttt{sets} \; M$
-                              $\Longrightarrow \texttt{emeasure}\; N \; \Omega \neq \infty $
-                              $\Longrightarrow \texttt{emeasure}\; N \; \Omega \neq 0$
-                              $\Longrightarrow \texttt{almost\_everywhere} \; N \; Q$"
-      and "$\texttt{Measurable.pred} \; M \; Q$"
-    shows "$\texttt{almost\_everywhere} \; M \; Q$"
+  assumes "$\bigwedge N \; \Omega. \;\; \texttt{finite\_measure} \; N$
+	  $\Longrightarrow N = \texttt{restrict\_space} \; M \; \Omega$
+	  $\Longrightarrow \Omega \in \texttt{sets} \; M$
+	  $\Longrightarrow \texttt{emeasure}\; N \; \Omega \neq \infty $
+	  $\Longrightarrow \texttt{emeasure}\; N \; \Omega \neq 0$
+	  $\Longrightarrow \texttt{almost\_everywhere} \; N \; Q$"
+  and "$\texttt{Measurable.pred} \; M \; Q$"
+  shows "$\texttt{almost\_everywhere} \; M \; Q$"
 \end{lstlisting}
+}
+\end{isalemma}
 
-The induction scheme allows us prove results about a $\sigma$-finite measure space $M$, assuming that we can show the property on arbitrary subspaces of $M$ with finite measure. The proof is straightforward and uses the Auschöpfen Argument. (*TODO*)
+This induction scheme allows us prove results about a $\sigma$-finite measure space $M$, assuming that we can show the property on arbitrary subspaces of $M$ with finite measure. For ease of use we include additional assumptions such as $\texttt{emeasure}\; N \; \Omega \neq 0$ which let us to avoid unnecessary trivial cases. The proof of this induction scheme is straightforward.
+\begin{proof}
+Let $M = (\Omega, \Sigma, \mu)$ be a $\sigma$-finite measure space. There exists a family of sets with finite measure $(\Omega_i)_{i \in \mathbb{N}}$ such that $\bigcup_{i \in \mathbb{N}} \Omega_i = \Omega$. By assumption, the property $Q$ holds $\mu$-almost everywhere on all $\Omega_i$. Therefore the sets $\Omega_i \cap \{\neg Q\} \in \Sigma\vert_{\Omega_i} \subseteq \Sigma$ are all $\mu$-null sets. This means that $\bigcup_{i \in \mathbb{N}} (\Omega_i \cap \{\neg Q\}) = \{\neg Q\}$ is also $\mu$-null set, which completes the proof.
+\end{proof}
 
 Now that we have the averaging theorem at our disposal, we can lift the following results from the real case, to our more general setting.
 
 \begin{corollary}
-	Let $f \in L^1(\mu, E)$ and $\int_A f \;\textrm{d}\mu = 0$ for all measurable sets $A \subseteq \Omega$. Then $f = 0$ $\mu$-almost everywhere. 
+	Let $f \in L^1(E)$ and $\int_A f \;\textrm{d}\mu = 0$ for all measurable sets $A \subseteq \Omega$. Then $f = 0$ $\mu$-almost everywhere. 
 \end{corollary}
 \begin{proof}
 	Apply the averaging theorem with $S = \{0\}$.
 \end{proof}
 
-\begin{corollary}
-	Let $f, g \in L^1(\mu, E)$ and $\int_A f \;\textrm{d}\mu = \int_A g \;\textrm{d}\mu$ for all measurable sets $A \subseteq \Omega$. Then $f = g$ $\mu$-almost everywhere. 
+\begin{corollary} (Uniqueness of Densities)
+	Let $f, g \in L^1(E)$ and $\int_A f \;\textrm{d}\mu = \int_A g \;\textrm{d}\mu$ for all measurable sets $A \subseteq \Omega$. Then $f = g$ $\mu$-almost everywhere. 
 \end{corollary}
 \begin{proof}
 	Follows directly from the previous corollary.
 \end{proof}
 
 \begin{corollary}
-	Let $$. Let $f \in L^1(\mu, E)$ and $\int_A f \;\textrm{d}\mu \ge 0$ for all measurable sets $A \subseteq \Omega$. Then $f$ is non-negative $\mu$-almost everywhere. 
+	Let $E$ be linearly orderable. Let $f \in L^1(E)$ and $\int_A f \;\textrm{d}\mu \ge 0$ for all measurable sets $A \subseteq \Omega$. Then $f$ is non-negative $\mu$-almost everywhere. 
 \end{corollary}
 \begin{proof}
-	Our first assumption guarantees that $E_{\ge 0} = \{ y \in E \;\vert\; y \ge 0 \}$ is a closed subset of $E$. Applying the averaging theorem on this set, yields the desired result.
+	Our first assumption guarantees that $\{ y \in E \;\vert\; y \ge 0 \}$ is a closed subset of $E$. Applying the averaging theorem on this set, yields the desired result.
 \end{proof}
+
+The corollary on the uniqueness of densities is crucial in showing that the conditional expectation is unique as an element of $L^1(E)$.
+
+\subsection{Diameter Lemma}
+
+The following lemma provides a characterization of Cauchy sequences in metric spaces.
+
+\begin{lemma} (Diameter Lemma)
+	Let $(E, d : E \times E \rightarrow \mathbb{R}_{\ge 0})$ be a metric space. 
+\end{lemma}
+
+\subsection{Induction Schemes for Simple Integrable Functions}
+
+In the upcoming sections of our work, we will frequently need to prove statements about simple integrable functions. For simple functions $s : \Omega \rightarrow \mathbb{R}_{\ge 0} \cup \{\infty\}$, the Isabelle theory \texttt{HOL\_Analysis.Nonnegative\_Lebesgue\_Integration} already provides an induction scheme \texttt{simple\_function\_induct}. For our purposes we extend this scheme to cover simple integrable functions $s : \Omega \rightarrow E$. Notice that a simple function $s$ is integrable if and only if $\mu(\{s \neq 0\}) < \infty$. The new induction scheme is as follows
+
+\begin{isalemma}
+{\small
+\begin{lstlisting}[mathescape, language=isabelle]
+lemma simple_integrable_function_induct[case_names cong indicator add]:
+  assumes "$\texttt{simple\_function} \; M \; f$" "$\texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$"
+  assumes cong: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$ 
+                 $\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
+                 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x = g \; x) \implies P \; f \implies P \; g$"
+  assumes indicator: "$\bigwedge A \; y. \; A \in \texttt{sets} \; M \implies \texttt{emeasure} \; M \; A < \infty \implies P \; (\lambda x. \; \texttt{indicator} \; A \; x \cdot_\mathbb{R} y)$"
+  assumes add: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$
+                $\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
+                $\implies (\bigwedge z. \; z \in \texttt{space} \; M \implies \texttt{norm} \; (f \; z + g \; z) = \texttt{norm} \; (f \; z) + \texttt{norm} \; (g \; z))$
+                $\implies P \; f \implies P \; g \implies P \; (\lambda x. \; f \; x + g \; x)$"
+  shows "$P \; f$"
+\end{lstlisting}
+}
+\end{isalemma}
+
+The idea of the induction scheme is simple. We know $f$ can be represented $\mu$-a.e. as a finite sum $\sum_{i=1}^n \mathbf{1}_{A_i} \cdot_\mathbb{R} c_i$  for some collection of measurable sets $(A_i)_{i=1,\dots,n}$ and elements $c_i \in E$. We do induction on $n$. In this sense, ``indicator'' corresponds to the induction basis, while ``add'' corresponds to the induction step. Since $f$ is representable as a finite sum $\mu$-a.e. we need the additional assumption ``cong'' to make sure $P$ is a well defined predicate on the space $L^1(E)$.
+
+\begin{remark}
+To make proving certain properties easier, we have the additional assumption $\lVert f(x) + g(x) \rVert = \lVert f(x) \rVert + \lVert g(x) \rVert$ in the induction step ``add''. It is easy to see why we can assume this without loss of generality. If we have some simple function $s = \sum_{i=1}^n \mathbf{1}_{A_i} \cdot_\mathbb{R} c_i$, we can assume the sets $A_i$ to be pairwise disjoint. Thus, if $x \in A_j$ for some $j \le n$ we have $\lVert s(x) \rVert = \lVert \mathbf{1}_{A_j}(x) \cdot c_j\rVert = \sum_{i=1}^n \mathbf{1}_{A_i} \cdot \lVert c_i \rVert$.
+\end{remark}
+
+When working with an ordering on $E$, we may need to concern ourselves with non-negative simple functions. For this goal, we have the following induction scheme.
+
+\begin{isalemma}
+{\small
+\begin{lstlisting}[mathescape, language=isabelle]
+lemma simple_integrable_function_induct_nn[case_names cong indicator add]:
+  assumes "$\texttt{simple\_function} \; M \; f$" "$\texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$" 
+          "$\bigwedge x. \; x \in \texttt{space} \; M \longrightarrow f \; x \ge 0$"
+  assumes cong: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$ 
+                 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x \ge 0)$
+                 $\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
+                 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies g \; x \ge 0)$
+                 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x = g \; x) \implies P \; f \implies P \; g$"
+  assumes indicator: "$\bigwedge A \; y. \; ´y \ge 0$
+                $\implies A \in \texttt{sets} \; M \implies \texttt{emeasure} \; M \; A < \infty \implies P \; (\lambda x. \; \texttt{indicator} \; A \; x \cdot_\mathbb{R} y)$"
+  assumes add: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$
+                $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x \ge 0)$
+                $\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
+                $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies g \; x \ge 0)$
+                $\implies (\bigwedge z. \; z \in \texttt{space} \; M \implies \texttt{norm} \; (f \; z + g \; z) = \texttt{norm} \; (f \; z) + \texttt{norm} \; (g \; z))$
+                $\implies P \; f \implies P \; g \implies P \; (\lambda x. \; f \; x + g \; x)$"
+  shows "$P \; f$"
+\end{lstlisting}
+}
+\end{isalemma}
+
+The induction scheme looks complicated and cumbersome, but in essence it is the same induction scheme as the previous one with the added assumption of non-negativity everywhere. The proof is also largely the same. We just need to show that the partial sums stay non-negative all the way through.
+
+\subsection{Bochner Integration on Linearly Ordered Banach Spaces}
+
+In the context of real numbers, the following statement is easy to show.
+\begin{center}
+Let $f, g : \Omega \rightarrow \mathbb{R}$ be integrable and $f \ge g$ $\mu$-a.e., then $\int f\;\textrm{d} \mu \ge \int g\;\textrm{d} \mu$. 
+\end{center}
+In this subsection, we aim to provide similar results for functions $f, g : \Omega \rightarrow E$ with $E$ a linearly ordered Banach space. For the remainder of our discourse a topological space $E$ is linearly ordered, if there exists a total ordering on $E$ such that the topology on $E$ and the order topology induced by the ordering coincide.
+
+We start with the following lemma
+
+\begin{lemma}
+	Let $f \in L^1(E)$ and $f \ge 0$ $\mu$-a.e. Then $\int f \;\textrm{d}\mu \ge 0$.
+\end{lemma}
+\begin{proof}
+	Since $f \in L^1(E)$, there exists a sequence of integrable simple functions $(s_n)_{n \in \mathbb{N}}$, such that $\lim_{n \to \infty} s_n(x) = f(x)$ $\mu$-a.e. and $\lim_{n \to \infty} \int s_n \;\textrm{d}\mu = \int f \;\textrm{d}\mu$. At first, we have no further information about $s_n$. However, since we know that $f \ge 0$ $\mu$-a.e, it follows that $f = \max(0,f)$ $\mu$-a.e. Using dominated convergence and the fact that the function $\max(0,\cdot)$ is continuous w.r.t to the order topology on $E$, we can show
+\[
+	\lim_{n \to \infty} \max(0, s_n(x)) = \max(0, f(x)) \; \mu\textrm{-a.e.}
+\]
+and
+\[
+	\lim_{n \to \infty} \int \max(0, s_n) \;\textrm{d}\mu = \int \max(0, f) \;\textrm{d}\mu
+\]
+The function $\max(0, s_n)$ is still a simple and integrable function, which has the additional property of being always non-negative. 
+
+We will now show that if $h$ is a non-negative simple function, then $\int h \;\textrm{d}\mu \ge 0$. For this purpose we will use the induction scheme for non-negative simple integrable functions that we proved in the previous subsection.
+
+\paragraph{Case ``cong'':} Let $h = g$ $\mu$-a.e. and $\int g \;\textrm{d}\mu \ge 0$. It follows directly
+\[
+	\int h \;\textrm{d}\mu = \int g \;\textrm{d}\mu \ge 0
+\]
+
+\paragraph{Case ``indicator'':} Let $h = \mathbf{1}_A \cdot_\mathbb{R} y$ for some measurable set $A$ with finite measure and $y \in E$ with $y \ge 0$. It follows directly 
+\[
+	\int h \;\textrm{d}\mu = \mu(A) \cdot_\mathbb{R} y \ge 0
+\]
+
+\paragraph{Case ``add'':} Let $h = h_1 + h_2$ for some simple integrable functions $h_1$ and $h_2$. By the induction hypothesis, we have $\int h_i \;\textrm{d}\mu \ge 0$ for $i = 1,2$. Therefore
+\[
+	\int h \;\textrm{d}\mu = \int h_1 \;\textrm{d}\mu + \int h_2 \;\textrm{d}\mu \ge 0
+\]
+
+Hence, we know $\int \max(0, s_n) \;\textrm{d}\mu \ge 0$ for all $n \in \mathbb{N}$. Therefore, the same must hold for the limit $\lim_{n \to \infty} \int \max(0, s_n) \;\textrm{d}\mu = \int \max(0, f) \;\textrm{d}\mu$. Since $f = \max(0,f)$ $\mu$-a.e., we have $\int f \;\textrm{d}\mu = \int \max(0, f) \;\textrm{d}\mu$ and the statement follows.
+
+\end{proof}
+\begin{remark}
+For the proof of this statement, we need the topology on $E$ to coincide with the order topology. Otherwise, we can't guarantee statements such as $(\forall i. \; x_i \ge 0) \implies \lim_{i \to \infty} x_i \ge 0$ or the continuity of the $\max$ function.
+\end{remark}
+This lemma entails the following corollary.
+\begin{corollary}
+	Let $f, g \in L^1(E)$ and $f \ge g$ $\mu$-a.e. Then $\int f\;\textrm{d} \mu \ge \int g\;\textrm{d} \mu$.
+\end{corollary}
+
+In Isabelle, we can replace the assumption $f \in L^1(E)$ with Borel measurability, since a non-integrable function has the value of its integral set to $0$ by default. The lemma above can be stated as
+
+{\small
+\begin{lstlisting}[mathescape, language=isabelle]
+lemma integral_nonneg_AE_banach:
+  assumes "$f \in \texttt{borel\_measurable} \; M$" and "AE $x$ in $M. \; 0 \le f \; x$"
+  shows "$0 \le \texttt{integral}^L \; M \; f$"
+proof (cases "integrable $M \; f$") 
+$\dots$
+qed
+\end{lstlisting}
+}
 
 \section{Constructing the Conditional Expectation}
 
-\section{Linearly Ordered Banach Spaces}
+Before we can talk about \textit{the} conditional expectation, we must define what it means for a function to have \textit{a} conditional expectation. For this purpose we define the following predicate
+
+\begin{isadefinition}
+{\small
+	\begin{lstlisting}[mathescape, language=isabelle]
+		definition has_cond_exp :: "$'a \; \texttt{measure} \; \Rightarrow \; 'a \; \texttt{measure} \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \texttt{bool}$" where 
+		  "has_cond_exp $M \; F \; f \; g \; = (\forall A \in \texttt{sets} \; F. \; \int_A \; f \; \partial M = \int_A \; g \; \partial M)$
+					  $\wedge \; \texttt{integrable} \; M \; f $
+					  $\wedge \; \texttt{integrable} \; M \; g $
+					  $\wedge \; g \in \texttt{borel\_measurable} \; F$"
+	\end{lstlisting}
+}
+\end{isadefinition}
+
+
+This predicate precisely characterizes what it means for a function $f$ to have a conditional expectation $g$ w.r.t the measure $M$ and the sub-$\sigma$-algebra $F$. Now we can use Hilbert's $\epsilon$-operator, \lstinline[language=isabelle]{SOME} in Isabelle \cite{Nipkow-Paulson-Wenzel:2002}, to define \textit{the} conditional expectation, if it exists.
+
+
+\begin{isadefinition}
+{\small
+	\begin{lstlisting}[mathescape, language=isabelle]
+		definition cond_exp :: "$'a \; \texttt{measure} \; \Rightarrow \; 'a \; \texttt{measure} \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \texttt{bool}$" where 
+		  "cond_exp $M \; F \; f \; = ($if$ \; \exists g. \; \texttt{has\_cond\_exp} \; M \; F \; f \; g \; $then$ \; ($SOME$ \; g. \; \texttt{has\_cond\_exp} \; M \; F \; f \; g) \; $else$ \; (\lambda \_. 0))$"
+	\end{lstlisting}
+}
+\end{isadefinition}
+
+A major advantage of defining the conditional expectation this way is that it allows us to make statements about its measurability and integrability, without needing to show existence or uniqueness. We have
+
+\begin{isalemma}
+{\small
+	\begin{lstlisting}[mathescape, language=isabelle]
+		lemma borel_measurable_cond_exp: "cond_exp $M \; F \; f \; \in$ borel_measurable $F$"
+		  by (metis cond_exp_def someI has_cond_exp_def borel_measurable_const)
+	\end{lstlisting}
+}
+\end{isalemma}
+
+\begin{isalemma}
+{\small
+	\begin{lstlisting}[mathescape, language=isabelle]
+lemma integrable_cond_exp: "integrable $M$ (cond_exp $M \; F \; f$)"
+  by (metis cond_exp_def has_cond_expD(3) integrable_zero someI)
+	\end{lstlisting}
+}
+\end{isalemma}
+
+
+\subsection{Uniqueness}
+
+\subsection{Existence}
+
+\subsection{Properties of the Conditional Expectation}
+
+\subsubsection{Tower Property}
+
+\subsubsection{Contractivity}
+
+\subsubsection{Pulling Out What's Known}
+
+\section{Conditional Expectation on Linearly Ordered Banach Spaces}
