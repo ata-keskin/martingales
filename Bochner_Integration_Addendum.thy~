@@ -263,33 +263,33 @@ qed
 lemma cauchy_L1_AE_cauchy_subseq:
   fixes s :: "nat \<Rightarrow> 'a \<Rightarrow> 'b::{banach, second_countable_topology}"
   assumes [measurable]: "\<And>n. integrable M (s n)"
-      and "\<And>e. e > 0 \<Longrightarrow> \<exists>N. \<forall>i\<ge>N. \<forall>j\<ge>N. LINT x|M. norm (s i x - s j x) < e"
+      and "\<And>e. e > 0 \<Longrightarrow> \<exists>N. \<forall>i\<ge>N. \<forall>j\<ge>N. LINT x|M. dist (s i x) (s j x) < e"
   obtains r where "strict_mono r" "AE x in M. Cauchy (\<lambda>i. s (r i) x)"
 proof-
-  have "\<exists>r. \<forall>n. (\<forall>i\<ge>r n. \<forall>j\<ge> r n. LINT x|M. norm (s i x - s j x) < (1 / 2) ^ n) \<and> (r (Suc n) > r n)"
+  have "\<exists>r. \<forall>n. (\<forall>i\<ge>r n. \<forall>j\<ge> r n. LINT x|M. dist (s i x) (s j x) < (1 / 2) ^ n) \<and> (r (Suc n) > r n)"
   proof (intro dependent_nat_choice, goal_cases)
     case 1
     then show ?case using assms(2) by presburger
   next
     case (2 x n)
-    obtain N where *: "LINT x|M. norm (s i x - s j x) < (1 / 2) ^ Suc n" if "i \<ge> N" "j \<ge> N" for i j using assms(2)[of "(1 / 2) ^ Suc n"] by auto
+    obtain N where *: "LINT x|M. dist (s i x) (s j x) < (1 / 2) ^ Suc n" if "i \<ge> N" "j \<ge> N" for i j using assms(2)[of "(1 / 2) ^ Suc n"] by auto
     {
       fix i j assume "i \<ge> max N (Suc x)" "j \<ge> max N (Suc x)"
-      hence "integral\<^sup>L M (\<lambda>x. norm (s i x - s j x)) < (1 / 2) ^ Suc n" using * by fastforce
+      hence "integral\<^sup>L M (\<lambda>x. dist (s i x) (s j x)) < (1 / 2) ^ Suc n" using * by fastforce
     }
     then show ?case by fastforce
   qed
-  then obtain r where strict_mono: "strict_mono r" and "\<forall>i\<ge>r n. \<forall>j\<ge> r n. LINT x|M. norm (s i x - s j x) < (1 / 2) ^ n" for n using strict_mono_Suc_iff by blast
-  hence r_is: "LINT x|M. norm (s (r (Suc n)) x - s (r n) x) < (1 / 2) ^ n" for n by (simp add: strict_mono_leD)
+  then obtain r where strict_mono: "strict_mono r" and "\<forall>i\<ge>r n. \<forall>j\<ge> r n. LINT x|M. dist (s i x) (s j x) < (1 / 2) ^ n" for n using strict_mono_Suc_iff by blast
+  hence r_is: "LINT x|M. dist (s (r (Suc n)) x) (s (r n) x) < (1 / 2) ^ n" for n by (simp add: strict_mono_leD)
 
-  define g where "g = (\<lambda>n x. (\<Sum>i\<le>n. ennreal (norm (s (r (Suc i)) x - s (r i) x))))"
-  define g' where "g' = (\<lambda>x. \<Sum>i. ennreal (norm (s (r (Suc i)) x - s (r i) x)))"
+  define g where "g = (\<lambda>n x. (\<Sum>i\<le>n. ennreal (dist (s (r (Suc i)) x) (s (r i) x))))"
+  define g' where "g' = (\<lambda>x. \<Sum>i. ennreal (dist (s (r (Suc i)) x) (s (r i) x)))"
 
   have integrable_g: "(\<integral>\<^sup>+ x. g n x \<partial>M) < 2" for n
   proof -
-    have "(\<integral>\<^sup>+ x. g n x \<partial>M) = (\<integral>\<^sup>+ x. (\<Sum>i\<le>n. ennreal (norm (s (r (Suc i)) x - s (r i) x))) \<partial>M)" using g_def by simp
-    also have "... = (\<Sum>i\<le>n. (\<integral>\<^sup>+ x. ennreal (norm (s (r (Suc i)) x - s (r i) x)) \<partial>M))" by (intro nn_integral_sum, simp)
-    also have "... = (\<Sum>i\<le>n. LINT x|M. norm (s (r (Suc i)) x - s (r i) x))" unfolding dist_norm using assms(1) by (subst nn_integral_eq_integral[OF integrable_norm], auto)
+    have "(\<integral>\<^sup>+ x. g n x \<partial>M) = (\<integral>\<^sup>+ x. (\<Sum>i\<le>n. ennreal (dist (s (r (Suc i)) x) (s (r i) x))) \<partial>M)" using g_def by simp
+    also have "... = (\<Sum>i\<le>n. (\<integral>\<^sup>+ x. ennreal (dist (s (r (Suc i)) x) (s (r i) x)) \<partial>M))" by (intro nn_integral_sum, simp)
+    also have "... = (\<Sum>i\<le>n. LINT x|M. dist (s (r (Suc i)) x) (s (r i) x))" unfolding dist_norm using assms(1) by (subst nn_integral_eq_integral[OF integrable_norm], auto)
     also have "... < ennreal (\<Sum>i\<le>n. (1 / 2) ^ i)" by (intro ennreal_lessI[OF sum_pos sum_strict_mono[OF finite_atMost _ r_is]], auto)
     also have "... \<le> ennreal 2" unfolding sum_gp0[of "1 / 2" n] by (intro ennreal_leI, auto)
     finally show "(\<integral>\<^sup>+ x. g n x \<partial>M) < 2" by simp
@@ -307,7 +307,7 @@ proof-
     finally show ?thesis .
   qed
   hence "AE x in M. g' x < \<infinity>" by (intro finite_nn_integral_imp_ae_finite) (auto simp add: order_le_less_trans g'_def)
-  moreover have "summable (\<lambda>i. norm (s (r (Suc i)) x - s (r i) x))" if "g' x \<noteq> \<infinity>" for x using that unfolding g'_def by (intro summable_suminf_not_top) fastforce+ 
+  moreover have "summable (\<lambda>i. dist (s (r (Suc i)) x) (s (r i) x))" if "g' x \<noteq> \<infinity>" for x using that unfolding g'_def by (intro summable_suminf_not_top, intro zero_le_dist, fastforce) 
   ultimately have ae_summable: "AE x in M. summable (\<lambda>i. s (r (Suc i)) x - s (r i) x)" using summable_norm_cancel unfolding dist_norm by force
 
   {
@@ -318,6 +318,7 @@ proof-
     hence "(\<lambda>n. s (r n) x - s (r 0) x + s (r 0) x) \<longlonglongrightarrow> (\<Sum>i. s (r (Suc i)) x - s (r i) x) + s (r 0) x" by (intro isCont_tendsto_compose[of _ "\<lambda>z. z + s (r 0) x"], auto)
     hence "Cauchy (\<lambda>n. s (r n) x)" by (simp add: LIMSEQ_imp_Cauchy)
   }
+
   hence "AE x in M. Cauchy (\<lambda>i. s (r i) x)" using ae_summable by fast
   thus ?thesis by (rule that[OF strict_mono(1)])
 qed

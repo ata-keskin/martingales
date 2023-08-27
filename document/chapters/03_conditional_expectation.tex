@@ -166,7 +166,7 @@ Let $E$ be a metric space with metric $d : E \times E \rightarrow \mathbb{R}$. T
 Intuitively the diameter of a set $A$ measures how spread out or "large" the set $A$ is with respect to the distance defined by the metric.
 
 \begin{lemma} (Diameter Lemma)
-	Let $E$ be a metric space with metric $d : E \times E \rightarrow \mathbb{R}$ and $(s_i)_{i\in\mathbb{N}} \subseteq E$ a sequence. Define $S_n = \{s_i \; \vert \; i \ge n \}$. The sequence $(s_i)_{i\in\mathbb{N}}$ is Cauchy, if and only if the $S_0$ is bounded and
+	Let $E$ be a metric space with metric $d : E \times E \rightarrow \mathbb{R}$ and $(s_i)_{i\in\mathbb{N}} \subseteq E$ a sequence. Define $S_n = \{s_i \; \vert \; i \ge n \}$. The sequence $(s_i)_{i\in\mathbb{N}}$ is Cauchy, if and only if $S_0$ is bounded and
 	\[
 		\lim_{n \to \infty} \textup{diam}(S_n) = 0
 	\]
@@ -179,9 +179,9 @@ Recall that a set $A$ is bounded if there exists some $x \in E$ and $\varepsilon
 
 We know $S_n \subseteq S_m$ for $n \ge m$. Therefore $\textrm{diam}(S_n) < \infty$ for all $n \in \mathbb{N}$.
 
-Let $\varepsilon > 0$. Then there exists some $N \in \mathbb{N}$ such that $d(s_n,s_m) < \frac{1}{2} \varepsilon$ for all $n, m \ge N$. Hence
+Let $\varepsilon > 0$. Then there exists some $N \in \mathbb{N}$ such that $d(s_n,s_m) < \frac{\varepsilon}{2}$ for all $n, m \ge N$. Hence
 \[
-	\textrm{diam}(S_N) = \sup_{x,y \in S_N} d(x,y) \le \frac{1}{2}\varepsilon < \varepsilon
+	\textrm{diam}(S_N) = \sup_{x,y \in S_N} d(x,y) \le \frac{\varepsilon}{2} < \varepsilon
 \]
 Furthermore, we have $\textrm{diam}(S_n) \le \textrm{diam}(S_N)$ for $n \ge N$ because of the subset relation stated above. Thus $\lim_{n \to \infty} \textup{diam}(S_n) = 0$.
 
@@ -201,6 +201,7 @@ In our construction of the conditional expectation, we will use the diameter lem
 	  assumes "$\bigwedge x. \;x \in \texttt{space} \; M \implies \texttt{bounded} \; (\texttt{range} \; (\lambda i. \; s \; i \; x))$"
 			  "$\bigwedge i. \; (s \; i) \in \texttt{borel\_measurable} \; M$"
 	  shows "$(\lambda x. \; \texttt{diameter} \; \{s \; i \; x \; \vert \; i. \; n \le i \}) \in \texttt{borel\_measurable} \; M$"
+	  $\dots$
   	\end{lstlisting}
 }
 \end{isalemma}
@@ -210,16 +211,19 @@ In our construction of the conditional expectation, we will use the diameter lem
 	\begin{lstlisting}[style=isabelle]
 	lemma integrable_bound_diameter: 
 	  assumes "$\texttt{integrable} \; M \; f$" 
-	  and "$\bigwedge i. \; (s \; i) \in \texttt{borel\_measurable} \; M$"
-	  and "$\bigwedge x \; i. \; x \in \texttt{space} \; M \implies \texttt{norm} \; (s \; i \; x) \le f \; x$"
+			  "$\bigwedge i. \; (s \; i) \in \texttt{borel\_measurable} \; M$"
+			  "$\bigwedge x \; i. \; x \in \texttt{space} \; M \implies \texttt{norm} \; (s \; i \; x) \le f \; x$"
 	  shows "$\texttt{integrable} \; M \; (\lambda x. \; \texttt{diameter} \; \{s \; i \; x \; \vert \; i. \; n \le i\})$"
+	  $\dots$
   	\end{lstlisting}
 }
 \end{isalemma}
 
-\subsection{Induction Schemes for Simple Integrable Functions}
+The proofs are straightforward and depend on the measurability of the supremum function.
 
-In the upcoming sections of our work, we will frequently need to prove statements about simple integrable functions. For simple functions $s : \Omega \rightarrow \mathbb{R}_{\ge 0} \cup \{\infty\}$, the Isabelle theory \texttt{HOL\_Analysis.Nonnegative\_Lebesgue\_Integration} already provides an induction scheme \texttt{simple\_function\_induct}. For our purposes we extend this scheme to cover simple integrable functions $s : \Omega \rightarrow E$. Notice that a simple function $s$ is integrable if and only if $\mu(\{s \neq 0\}) < \infty$. The new induction scheme is as follows
+\subsection{Induction Schemes for Integrable Simple Functions}
+
+In the upcoming sections of our work, we will frequently need to prove statements about integrable simple functions. For simple functions $s : \Omega \rightarrow \mathbb{R}_{\ge 0} \cup \{\infty\}$, the Isabelle theory \texttt{HOL\_Analysis.Nonnegative\_Lebesgue\_Integration} already provides an induction scheme \texttt{simple\_function\_induct}. For our purposes we extend this scheme to cover integrable simple functions $s : \Omega \rightarrow E$. Notice that a simple function $s$ is integrable if and only if $\mu(\{s \neq 0\}) < \infty$. The new induction scheme is as follows
 
 \begin{isalemma}
 {\small
@@ -298,7 +302,7 @@ and
 \]
 The function $\max(0, s_n)$ is still a simple and integrable function, which has the additional property of being always non-negative. 
 
-We will now show that if $h$ is a non-negative simple function, then $\int h \;\textrm{d}\mu \ge 0$. For this purpose we will use the induction scheme for non-negative simple integrable functions that we proved in the previous subsection.
+We will now show that if $h$ is a non-negative simple function, then $\int h \;\textrm{d}\mu \ge 0$. For this purpose we will use the induction scheme for non-negative integrable simple functions that we proved in the previous subsection.
 
 \paragraph{Case ``cong'':} Let $h = g$ $\mu$-a.e. and $\int g \;\textrm{d}\mu \ge 0$. It follows directly
 \[
@@ -310,7 +314,7 @@ We will now show that if $h$ is a non-negative simple function, then $\int h \;\
 	\int h \;\textrm{d}\mu = \mu(A) \cdot_\mathbb{R} y \ge 0
 \]
 
-\paragraph{Case ``add'':} Let $h = h_1 + h_2$ for some simple integrable functions $h_1$ and $h_2$. By the induction hypothesis, we have $\int h_i \;\textrm{d}\mu \ge 0$ for $i = 1,2$. Therefore
+\paragraph{Case ``add'':} Let $h = h_1 + h_2$ for some integrable simple functions $h_1$ and $h_2$. By the induction hypothesis, we have $\int h_i \;\textrm{d}\mu \ge 0$ for $i = 1,2$. Therefore
 \[
 	\int h \;\textrm{d}\mu = \int h_1 \;\textrm{d}\mu + \int h_2 \;\textrm{d}\mu \ge 0
 \]
@@ -326,17 +330,18 @@ This lemma entails the following corollary.
 	Let $f, g \in L^1(E)$ and $f \ge g$ $\mu$-a.e. Then $\int f\;\textrm{d} \mu \ge \int g\;\textrm{d} \mu$.
 \end{corollary}
 
-In Isabelle, we can replace the assumption $f \in L^1(E)$ with Borel measurability, since a non-integrable function has the value of its integral set to $0$ by default. The lemma above can be stated as
+In Isabelle, we can replace the assumption $f \in L^1(E)$ with Borel measurability, since a non-integrable function has the value of its integral set to $0$ by default. The previous lemma can be stated as
 
-
+{\small
 \begin{lstlisting}[style=isabelle]
 lemma integral_nonneg_AE_banach:
-  assumes "$f \in \texttt{borel\_measurable} \; M$" and "AE $x$ in $M. \; 0 \le f \; x$"
+  assumes "$f \in \texttt{borel\_measurable} \; M$" and "AE$ \; x \; $in$ \; M. \; 0 \le f \; x$"
   shows "$0 \le \texttt{integral}^L \; M \; f$"
 proof (cases "integrable $M \; f$") 
 $\dots$
 qed
 \end{lstlisting}
+}
 
 \section{Constructing the Conditional Expectation}
 
@@ -344,13 +349,13 @@ Before we can talk about \textit{the} conditional expectation, we must define wh
 
 \begin{isadefinition}
 {\small
-	\begin{lstlisting}[style=isabelle]
-		definition has_cond_exp :: "$'a \; \texttt{measure} \; \Rightarrow \; 'a \; \texttt{measure} \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \texttt{bool}$" where 
-		  "has_cond_exp $M \; F \; f \; g \; = (\forall A \in \texttt{sets} \; F. \; \int_A \; f \; \partial M = \int_A \; g \; \partial M)$
-	                  $\wedge \; \texttt{integrable} \; M \; f $
-	                  $\wedge \; \texttt{integrable} \; M \; g $
-	                  $\wedge \; g \in \texttt{borel\_measurable} \; F$"
-	\end{lstlisting}
+\begin{lstlisting}[style=isabelle]
+	definition has_cond_exp :: "$'a \; \texttt{measure} \; \Rightarrow \; 'a \; \texttt{measure} \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \texttt{bool}$" where 
+	  "has_cond_exp $M \; F \; f \; g \; = (\forall A \in \texttt{sets} \; F. \; \int_A \; f \; \partial M = \int_A \; g \; \partial M)$
+							  $\wedge \; \texttt{integrable} \; M \; f $
+							  $\wedge \; \texttt{integrable} \; M \; g $
+							  $\wedge \; g \in \texttt{borel\_measurable} \; F$"
+\end{lstlisting}
 }
 \end{isadefinition}
 
@@ -367,7 +372,7 @@ This predicate precisely characterizes what it means for a function $f$ to have 
 }
 \end{isadefinition}
 
-A major advantage of defining the conditional expectation this way is that it allows us to make statements about its measurability and integrability, without needing to show existence or uniqueness. We have
+A major advantage of defining the conditional expectation this way is that it allows us to make statements about its measurability and integrability, without needing to show existence or uniqueness.
 
 \begin{isalemma}
 {\small
@@ -387,12 +392,245 @@ A major advantage of defining the conditional expectation this way is that it al
 }
 \end{isalemma}
 
-
 \subsection{Uniqueness}
+
+The conditional expectation of a function is unique up to a $\mu$-null set. 
+
+\begin{lemma}
+	Let $f, g \in L^1(E)$ such that ``$\normalfont\texttt{has\_cond\_exp} \; M \; F \; f \; g$'' holds. Then 
+	\par\noindent ``$\normalfont\texttt{has\_cond\_exp} \; M \; F \; f \; (\texttt{cond\_exp} \; M \; F \; f)$'' and
+	\[
+		\normalfont\texttt{cond\_exp} \; M \; F \; f = g \;\; \mu\texttt{-a.e.}
+	\]
+\end{lemma}
+\begin{proof}
+	The first statement follows directly from the definition of \texttt{cond\_exp}. To show $\texttt{cond\_exp} \; M \; F \; f = g \; \mu\texttt{-a.e.}$ we argue as follows. By the definition of \texttt{has\_cond\_exp} we have for any $A \in \texttt{sets} \; F$
+	\[
+		\int_A \; f \; \textrm{d}\mu = \int_A \; g \; \textrm{d}\mu
+	\]
+	and
+	\[
+		\int_A \; f \; \textrm{d}\mu = \int_A \; \texttt{cond\_exp} \; M \; F \; f \; \textrm{d}\mu
+	\]
+	Together with the lemma on the uniqueness of densities, we have 
+	\par\noindent$\texttt{cond\_exp} \; M \; F \; f = g \;\; \mu\vert_F\texttt{-a.e.}$. The lemma follows from the fact that all $\mu\vert_F$-null sets are also $\mu$-null sets.
+\end{proof}
+
+Hence, we have the following succint characterization.
+
+\begin{isalemma}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	lemma cond_exp_charact:
+	  assumes "$\bigwedge A \in \texttt{sets} \; F. \; \int_A \; f \; \partial M = \int_A \; g \; \partial M$"
+			  "$\texttt{integrable} \; M \; f$"
+			  "$\texttt{integrable} \; M \; g$"
+			  "$g \in \texttt{borel\_measurable} \; F$"
+		shows "AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; F \; f \; x = g \; x$"
+	  by (intro has_cond_exp_charact has_cond_expI' assms) auto
+	\end{lstlisting}
+}
+\end{isalemma}
 
 \subsection{Existence}
 
+Showing the existence is a bit more involved. Specifically, what we aim to show is that $\normalfont\texttt{has\_cond\_exp} \; M \; F \; f \; (\texttt{cond\_exp} \; M \; F \; f)$ holds for any Bochner integrable $f$. We will use the standard machinery of measure theory. First, we will prove existence for indicator functions. Then we will extend our proof by linearity to simple functions. Finally we use a limiting argument to show that the conditional expectation exists for all Bochner integrable functions.
+
+The conditional expectation operator has already been formalized for real valued functions by S\`ebastien Gou\"ezel via the definition \texttt{real\_cond\_exp}. The following lemmas show that our definition characterizes the same operator, at least in the real case.
+
+\begin{isalemma}
+{\small
+	\begin{lstlisting}[style=isabelle]
+lemma has_cond_exp_real:
+  assumes "$\texttt{integrable} \; M \; f$"
+  shows "$\texttt{has\_cond\_exp} \; M \; F \; f \; (\texttt{real\_cond\_exp} \; M \; F \; f)$"
+  by (intro has_cond_expI', auto intro!: real_cond_exp_intA assms)
+	\end{lstlisting}
+}
+\end{isalemma}
+
+\begin{isalemma}
+{\small
+	\begin{lstlisting}[style=isabelle]
+lemma cond_exp_real:
+  assumes "$\texttt{integrable} \; M \; f$"
+  shows "AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; F \; f \; x = \texttt{real\_cond\_exp} \; M \; F \; f \; x$" 
+  using has_cond_exp_charact has_cond_exp_real assms by blast
+	\end{lstlisting}
+}
+\end{isalemma}
+
+We can now show that the conditional expectation of indicator functions exist.
+
+\begin{lemma}
+	Let $A \subseteq \Omega$ be measurable with $\mu(A) < \infty$ and $y \in E$. Then
+	\[
+		\normalfont\texttt{has\_cond\_exp} \; M \; F \; (\mathbf{1}_A \cdot_\mathbb{R} y) \; ((\texttt{real\_cond\_exp} \; M \; F \; \mathbf{1}_A) \cdot_\mathbb{R} y)
+	\]
+\end{lemma}
+\begin{proof}
+	The statement follows directly from the linearity of the Bochner integral and the previous lemmas.
+\end{proof}
+
+Next, we show the following lemma concerning the sum of two conditional expectations.
+
+\begin{lemma}
+	Assume $\normalfont\texttt{has\_cond\_exp} \; M \; F \; f \; f'$ and $\normalfont\texttt{has\_cond\_exp} \; M \; F \; g \; g'$. Then
+	\[
+		\normalfont\texttt{has\_cond\_exp} \; M \; F \; (f + g) \; (f' + g')
+	\]
+\end{lemma}
+\begin{proof}
+	The statement follows directly from the linearity of the Bochner integral.
+\end{proof}
+
+Now, we can show that the conditional expectation of integrable simple functions exist.
+
+\begin{isalemma}
+{\small
+	\begin{lstlisting}[style=isabelle]
+corollary has_cond_exp_simple:
+  assumes "$\texttt{simple\_function} \; M \; f$" "$\texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$"
+  shows "$\normalfont\texttt{has\_cond\_exp} \; M \; F \; f \; (\texttt{cond\_exp} \; M \; F \; f)$"
+  using assms
+proof (induction rule: simple_integrable_function_induct)
+  case (cong f g)
+  then show ?case using has_cond_exp_cong by (metis (no_types, opaque_lifting)
+						Bochner_Integration.integrable_cong has_cond_expD(2)
+						has_cond_exp_charact(1))
+next
+  case (indicator A y)
+  then show ?case using has_cond_exp_charact[OF has_cond_exp_indicator] by fast
+next
+  case (add u v)
+  then show ?case using has_cond_exp_add has_cond_exp_charact(1) by blast
+qed
+	\end{lstlisting}
+}
+\end{isalemma}
+
+Now comes the most difficult part. Given a convergent sequence of integrable simple functions $(s_n)_{n \in \mathbb{N}}$, we must show that the sequence $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ is also convergent. Furthermore, we must show that this limit satisfies the properties of a conditional expectation. Unfortunately, we will only be able to show that this sequence convergence in $L^1$. Luckily, this is enough to show that the operator $\texttt{cond\_exp} \; M \; F$ preserves limits as a function $L^1(E) \rightarrow L^1(E)$. We need the following lemma for this purpose
+
+\begin{lemma} (Contraction for Simple Functions)
+	Let $f : \Omega \rightarrow E$ be an integrable simple function. Then
+	\[
+		\normalfont\lVert \texttt{cond\_exp} \; M \; F \; s \rVert \le \texttt{cond\_exp} \; M \; F \; (\lambda x. \lVert s \; x \rVert)
+	\]
+\end{lemma}
+\begin{proof}
+	In the real case, one can show this property by decomposing a function into positive and negative parts. The statement follows via the induction scheme \par\noindent\texttt{integrable\_simple\_function\_induct}. 
+\end{proof}
+
+The following lemma is the most involved result of our formalization.
+
+\begin{lemma}
+	Let $f : \Omega \rightarrow E$ be an integrable function. Let $(s_n)_{n \in \mathbb{N}}$ be a sequence of integrable simple functions, such that $\lim_{n \to \infty} s_n(x) = f(x)$ and $\forall n. \;\lVert s_n(x) \rVert \le 2 \cdot \lVert f(x) \rVert$ for $\mu$-almost all $x$. Then there exists some subsequence $(s_{r_n})_{n \in \mathbb{N}}$ such that
+	\[
+		\normalfont (\texttt{cond\_exp} \; M \; F \; s_{r_n})_{n \in \mathbb{N}} \; \textrm{is Cauchy} \; \mu\textrm{-a.e.}
+	\]
+	and
+	\[
+		\normalfont \texttt{has\_cond\_exp} \; M \; F \; f \; (\lim_{n \to \infty} \texttt{cond\_exp} \; M \; F \; s_{r_n})
+	\]
+\end{lemma}
+\begin{proof}
+	The sequence $(s_n)_{n \in \mathbb{N}}$ is Cauchy $\mu$a.e. Hence $\lim_{n \to \infty} \textrm{diam}(S_n(x)) = 0$, with $S_n(x) := \{s_i(x) \; \vert \; i \ge n \}$ by the diameter lemma. Furthermore
+	\[
+		\lVert\textrm{diam}(S_n(x))\rVert \le 4 \cdot \lVert f(x) \rVert \; \mu\textrm{-a.e.}
+	\]
+	using the triangle inequality and our second assumption. We have already shown that $\textrm{diam}(S_n(x))$ is measurable. We apply the dominated convergence theorem and get
+	\[
+		\lim_{n \to \infty} \int \textrm{diam}(S_n(x)) \; \textrm{d}\mu = 0
+	\]
+	We will now show that $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ is Cauchy in the $L^1$ norm.
+	Let $\varepsilon > 0$. Hence there is some $N \in \mathbb{N}$ such that $\int \textrm{diam}(S_n(x)) < \varepsilon$. Thus for any $i,j \ge N$, we have
+	\[
+		\int \lVert s_i(x) - s_j(x) \rVert \; \textrm{d}\mu \le \int \textrm{diam}(S_N(x)) \; \textrm{d}\mu < \varepsilon
+	\]
+	by the monotonicity of the integral. Furthermore
+	\begin{align*}
+		&\quad\;\int \lVert (\texttt{cond\_exp} \; M \; F \; s_i)(x) - (\texttt{cond\_exp} \; M \; F \; s_j)(x) \rVert \; \textrm{d}\mu \\
+		&= \int \lVert (\texttt{cond\_exp} \; M \; F \; (s_i - s_j))(x) \rVert \; \textrm{d}\mu \\
+		&\le \int (\texttt{cond\_exp} \; M \; F \; (\lambda x.\; \lVert s_i(x) - s_j(x)\rVert))(x) \; \textrm{d}\mu \\
+		&= \int \lVert s_i(x) - s_j(x)\rVert \; \textrm{d}\mu \\
+		&< \varepsilon
+	\end{align*}
+	since $s_i(x)-s_j(x)$ is an integrable simple function and conditional expectation already exists in the real setting. Hence $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ is Cauchy in the $L^1$ norm. Therefore, there exists some subsequence $(\texttt{cond\_exp} \; M \; F \; s_{r_n})_{n \in \mathbb{N}}$ that convergences $\mu$-a.e. We have for all $n \in \mathbb{N}$
+	\[
+		\lVert (\texttt{cond\_exp} \; M \; F \; s_{r_n}) (x) \rVert \le \texttt{cond\_exp} \; M \; F \; (\lambda x. \; 2 \cdot \lVert f(x)\rVert) \; \mu\textrm{-a.e.}
+	\]
+	Together with the dominated convergence theorem, this implies that \par\noindent$\lim_{n \to \infty} (\texttt{cond\_exp} \; M \; F \; s_{r_n})$ is integrable. \par\noindent As the limit of $F$-measurable functions, $\lim_{n \to \infty} (\texttt{cond\_exp} \; M \; F \; s_{r_n})$ is also $F$-measurable. Finally, we have for $A \in \texttt{sets} \; F$
+	\begin{align*}
+		\int_A (\lim_{n \to \infty} (\texttt{cond\_exp} \; M \; F \; s_{r_n}))(x) \; \textrm{d}\mu &= \lim_{n \to \infty} \int_A (\texttt{cond\_exp} \; M \; F \; s_{r_n})(x) \; \textrm{d}\mu \\
+		&= \lim_{n \to \infty} \int_A s_{r_n}(x) \; \textrm{d}\mu \\
+		&= \int_A f(x) \; \textrm{d}\mu 
+	\end{align*}
+	In the first and last equality we have again used the dominated convergence theorem. The statement follows from the definition of \texttt{has\_cond\_exp}.
+\end{proof}
+
+At one point in the proof of our lemma, we have used the fact that a convergent sequence in $L^1$ admits a subsequence which is convergent in the underlying norm $\mu$-a.e. This result is stated in Isabelle as follows
+
+{\small
+	\begin{lstlisting}[style=isabelle]
+	proposition tendsto_L1_AE_subseq:
+	  fixes u :: "$\texttt{nat} \Rightarrow 'a \Rightarrow 'b$"
+	  assumes "$\bigwedge n. \; \texttt{integrable} \; M \; (u \; n)$"
+		  and "$(\lambda n. \; (\int \; \texttt{norm} \;(u \; n \; x) \; \partial M)) \longrightarrow 0$"
+	  shows "$\exists r \;:: \; \texttt{nat} \Rightarrow \texttt{nat}. \; \texttt{strict\_mono} \; r \wedge ($AE$\; x \; $in$ \; M. \; (\lambda n. \; u \; (r \; n) \; x) \longrightarrow 0)$"
+	\end{lstlisting}
+}
+
+In our case, we can't easily formulate the convergence of $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ in the $L^1$ norm in the manner stated above. Therefore we have introduced the following lemma which is more flexible. Mathematically, the underlying argument is the same.
+
+\begin{isalemma}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	lemma cauchy_L1_AE_cauchy_subseq:
+	  fixes s :: "$\texttt{nat} \Rightarrow 'a \Rightarrow 'b$"
+	  assumes "$\bigwedge n. \; \texttt{integrable} \; M \; (s \; n)$"
+		  and "$\bigwedge e. \; e > 0 \implies \exists N. \; \forall i\ge N. \forall j \ge N. \; $LINT$ \; x\vert M. \; \texttt{norm} \; (s \; i \; x \; - \; s \; j \; x) < e$"
+	  obtains $r$ where "$\texttt{strict\_mono} \; r$" "AE$ \; x \; $in$ \; M. \; \texttt{Cauchy} \; (\lambda i. \; s \; (r \; i) \; x)$"
+	\end{lstlisting}
+}
+\end{isalemma}
+
+
+The main result of this subsection is formalized in Isabelle as follows
+
+\begin{isacorollary}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	corollary has_cond_expI:
+	  assumes "$\texttt{integrable} \; M \; f$"
+	  shows "$\texttt{has\_cond\_exp} \; M \; F \; f \; (\texttt{cond\_exp} \; M \; F \; f)$"
+	proof -
+	  obtain s where s_is: "$\bigwedge i. \; \texttt{simple\_function} \; M \; (s \; i)$" 
+	  					   "$\bigwedge i. \; \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; s \; i \; y \neq 0\} \neq \infty$" 
+						   "$\bigwedge x. \; x \in \texttt{space} \; M \implies (\lambda i. \; s \; i \; x) \longrightarrow f \; x$" 
+						   "$\bigwedge x \; i. \; x \in \texttt{space} \; M \implies \; \texttt{norm} \; (s \; i \; x) \le 2 \cdot \texttt{norm} \; (f \; x)$" 
+				   using integrable_implies_simple_function_sequence[OF assms] by blast
+	  show ?thesis using has_cond_exp_simple_lim[OF assms s_is] has_cond_exp_charact(1) by metis
+	qed
+	\end{lstlisting}
+}
+\end{isacorollary}
+
 \subsection{Properties of the Conditional Expectation}
+
+\subsubsection{Identity on $F$-measurable functions}
+
+If an integrable function $f$ is already $F$-measurable, then $\texttt{cond\_exp} \; M \; F \; f = f \;\;\mu\texttt{-a.e.}$ This is a corollary of the lemma on the characterization of \texttt{cond\_exp}.
+\begin{isacorollary}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	corollary cond_exp_F_meas:
+	  assumes "$\texttt{integrable} \; M \; f$"
+			  "$f \in \texttt{borel\_measurable} \; F$"
+		shows "AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; F \; f \; x = f \; x$"
+	  by (rule cond_exp_charact, auto intro: assms)
+	\end{lstlisting}
+}
+\end{isacorollary}
 
 \subsubsection{Tower Property}
 
