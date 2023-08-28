@@ -371,8 +371,7 @@ proof -
     thus ?thesis by fast
   qed
   ultimately have diameter_tendsto_zero: "(\<lambda>n. LINT x|M. diameter {s i x | i. n \<le> i}) \<longlonglongrightarrow> 0" by (intro integral_dominated_convergence[OF borel_measurable_const[of 0] _ integrable_4f, simplified]) (fast+)
-  
-  have diameter_integrable: "integrable M (\<lambda>x. diameter {s i x | i. n \<le> i})" for n using assms(1,5) by (intro integrable_bound_diameter[OF bounded_range_s integrable_2f], auto)
+
 
   have dist_integrable: "integrable M (\<lambda>x. dist (s i x) (s j x))" for i j 
     using assms(5) dist_triangle3[of "s i _" _ 0, THEN order_trans, OF add_mono, of _ "2 * norm (f _)"]
@@ -380,28 +379,18 @@ proof -
    
   hence dist_norm_integrable: "integrable M (\<lambda>x. norm (s i x - s j x))" for i j unfolding dist_norm by presburger
 
-  have "\<exists>N. \<forall>i\<ge>N. \<forall>j\<ge>N. LINT x|M. norm (cond_exp M F (s i) x - cond_exp M F (s j) x) < e" if e_pos: "e > 0" for e
-  proof -
-    obtain N where *: "LINT x|M. diameter {s i x | i. n \<le> i} < e" if "n \<ge> N" for n using that order_tendsto_iff[THEN iffD1, OF diameter_tendsto_zero, unfolded eventually_sequentially] e_pos by presburger
-    {
-      fix i j x assume asm: "i \<ge> N" "j \<ge> N" "x \<in> space M"
-      have "case_prod dist ` ({s i x |i. N \<le> i} \<times> {s i x |i. N \<le> i}) = case_prod (\<lambda>i j. dist (s i x) (s j x)) ` ({N..} \<times> {N..})" by fast
-      hence "diameter {s i x | i. N \<le> i} = (SUP (i, j) \<in> {N..} \<times> {N..}. dist (s i x) (s j x))" unfolding diameter_def by auto
-      moreover have "(SUP (i, j) \<in> {N..} \<times> {N..}. dist (s i x) (s j x)) \<ge> dist (s i x) (s j x)" using asm bounded_imp_bdd_above[OF bounded_imp_dist_bounded, OF bounded_range_s] by (intro cSup_upper, auto)
-      ultimately have "diameter {s i x | i. N \<le> i} \<ge> dist (s i x) (s j x)" by presburger
-    }
-    hence "LINT x|M. dist (s i x) (s j x) < e" if "i \<ge> N" "j \<ge> N" for i j using that * by (intro integral_mono[OF dist_integrable diameter_integrable, THEN order.strict_trans1], blast+)
-    moreover have "LINT x|M. norm (cond_exp M F (s i) x - cond_exp M F (s j) x) \<le> LINT x|M. dist (s i x) (s j x)" for i j
-    proof -
-      have "LINT x|M. norm (cond_exp M F (s i) x - cond_exp M F (s j) x) = LINT x|M. norm (cond_exp M F (s i) x + - 1 *\<^sub>R cond_exp M F (s j) x)" unfolding dist_norm by simp
-      also have "... = LINT x|M. norm (cond_exp M F (\<lambda>x. s i x - s j x) x)" using has_cond_exp_charact(2)[OF has_cond_exp_add[OF _ has_cond_exp_scaleR_right, OF has_cond_exp_charact(1,1), OF has_cond_exp_simple(1,1)[OF assms(2,3)]], THEN AE_symmetric, of i "-1" j] by (intro integral_cong_AE) force+      
-      also have "... \<le> LINT x|M. cond_exp M F (\<lambda>x. norm (s i x - s j x)) x" using cond_exp_contraction_simple[OF _ fin_sup, of i j] integrable_cond_exp assms(2) by (intro integral_mono_AE, fast+)
-      also have "... = LINT x|M. norm (s i x - s j x)" unfolding set_integral_space(1)[OF integrable_cond_exp, symmetric] set_integral_space[OF dist_norm_integrable, symmetric] by (intro has_cond_expD(1)[OF has_cond_exp_simple[OF _ fin_sup_norm], symmetric]) (metis assms(2) simple_function_compose1 simple_function_diff, metis sets.top subalg subalgebra_def)
-      finally show ?thesis unfolding dist_norm .  
-    qed
-    ultimately show ?thesis using order.strict_trans1 by meson
-  qed
-  then obtain r where strict_mono_r: "strict_mono r" and AE_Cauchy: "AE x in M. Cauchy (\<lambda>i. cond_exp M F (s (r i)) x)" by (rule cauchy_L1_AE_cauchy_subseq[OF integrable_cond_exp], auto)
+
+  have "AE x in M. norm (diameter {cond_exp M F (s i) x | i. n \<le> i}) \<le> diameter {s i x | i. n \<le> i}" for n sorry
+
+  have diameter_integrable: "integrable M (\<lambda>x. diameter {s i x | i. n \<le> i})" for n using assms(1,5) by (intro integrable_bound_diameter[OF bounded_range_s integrable_2f], auto)
+  have diameter_cond_exp_integrable: "integrable M (\<lambda>x. norm (diameter {cond_exp M F (s i) x | i. n \<le> i}))" for n 
+    using assms(1,5) by (intro integrable_bound_diameter[OF bounded_range_s integrable_2f], auto)
+
+  hence "LINT x|M. norm (diameter {cond_exp M F (s i) x | i. n \<le> i}) \<le> LINT x|M. diameter {s i x | i. n \<le> i}" for n 
+    apply (intro integral_mono_AE diameter_integrable)
+  have "(\<lambda>n. LINT x|M. norm (diameter {cond_exp M F (s i) x | i. n \<le> i})) \<longlonglongrightarrow> 0" sorry
+  then obtain r where strict_mono_r: "strict_mono r" and AE_Cauchy: "AE x in M. Cauchy (\<lambda>i. cond_exp M F (s (r i)) x)" 
+    using tendsto_L1_AE_subseq[OF ]
   hence ae_lim_cond_exp: "AE x in M. (\<lambda>n. cond_exp M F (s (r n)) x) \<longlonglongrightarrow> lim (\<lambda>n. cond_exp M F (s (r n)) x)" using Cauchy_convergent_iff convergent_LIMSEQ_iff by fastforce
 
   have cond_exp_bounded: "AE x in M. norm (cond_exp M F (s (r n)) x) \<le> cond_exp M F (\<lambda>x. 2 * norm (f x)) x" for n
