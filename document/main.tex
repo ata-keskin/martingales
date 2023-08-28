@@ -37,13 +37,16 @@
 
 \definecolor{isarblue}{HTML}{006699}
 \definecolor{isargreen}{HTML}{009966}
+\definecolor{isarlightblue}{HTML}{0099ff}
 \lstdefinelanguage{isabelle}{%
-    keywords=[1]{type_synonym,datatype,fun,abbreviation,definition,proof,lemma,proposition,theorem,corollary,next,qed,using,by,show,have},
+    keywords=[1]{type_synonym,datatype,fun,abbreviation,definition,proof,lemma,proposition,theorem,corollary,next,qed,using,unfolding,by,have,moreover,ultimately},
     keywordstyle=[1]\bfseries\color{isarblue},
     keywords=[2]{where,fixes,obtains,assumes,shows,and},
     keywordstyle=[2]\bfseries\color{isargreen},
     keywords=[3]{if,then,else,SOME,let,in,AE,LINT},
     keywordstyle=[3]\color{isarblue},
+	keywords=[4]{define, assume, fix, show, thus},
+    keywordstyle=[4]\color{isarlightblue},
 }
 \lstdefinestyle{isabelle}
 {%

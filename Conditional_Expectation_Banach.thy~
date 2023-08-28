@@ -380,7 +380,7 @@ proof -
    
   hence dist_norm_integrable: "integrable M (\<lambda>x. norm (s i x - s j x))" for i j unfolding dist_norm by presburger
 
-  have "\<exists>N. \<forall>i\<ge>N. \<forall>j\<ge>N. LINT x|M. dist (cond_exp M F (s i) x) (cond_exp M F (s j) x) < e" if e_pos: "e > 0" for e
+  have "\<exists>N. \<forall>i\<ge>N. \<forall>j\<ge>N. LINT x|M. norm (cond_exp M F (s i) x - cond_exp M F (s j) x) < e" if e_pos: "e > 0" for e
   proof -
     obtain N where *: "LINT x|M. diameter {s i x | i. n \<le> i} < e" if "n \<ge> N" for n using that order_tendsto_iff[THEN iffD1, OF diameter_tendsto_zero, unfolded eventually_sequentially] e_pos by presburger
     {
@@ -391,9 +391,9 @@ proof -
       ultimately have "diameter {s i x | i. N \<le> i} \<ge> dist (s i x) (s j x)" by presburger
     }
     hence "LINT x|M. dist (s i x) (s j x) < e" if "i \<ge> N" "j \<ge> N" for i j using that * by (intro integral_mono[OF dist_integrable diameter_integrable, THEN order.strict_trans1], blast+)
-    moreover have "LINT x|M. dist (cond_exp M F (s i) x) (cond_exp M F (s j) x) \<le> LINT x|M. dist (s i x) (s j x)" for i j
+    moreover have "LINT x|M. norm (cond_exp M F (s i) x - cond_exp M F (s j) x) \<le> LINT x|M. dist (s i x) (s j x)" for i j
     proof -
-      have "LINT x|M. dist (cond_exp M F (s i) x) (cond_exp M F (s j) x) = LINT x|M. norm (cond_exp M F (s i) x + - 1 *\<^sub>R cond_exp M F (s j) x)" unfolding dist_norm by simp
+      have "LINT x|M. norm (cond_exp M F (s i) x - cond_exp M F (s j) x) = LINT x|M. norm (cond_exp M F (s i) x + - 1 *\<^sub>R cond_exp M F (s j) x)" unfolding dist_norm by simp
       also have "... = LINT x|M. norm (cond_exp M F (\<lambda>x. s i x - s j x) x)" using has_cond_exp_charact(2)[OF has_cond_exp_add[OF _ has_cond_exp_scaleR_right, OF has_cond_exp_charact(1,1), OF has_cond_exp_simple(1,1)[OF assms(2,3)]], THEN AE_symmetric, of i "-1" j] by (intro integral_cong_AE) force+      
       also have "... \<le> LINT x|M. cond_exp M F (\<lambda>x. norm (s i x - s j x)) x" using cond_exp_contraction_simple[OF _ fin_sup, of i j] integrable_cond_exp assms(2) by (intro integral_mono_AE, fast+)
       also have "... = LINT x|M. norm (s i x - s j x)" unfolding set_integral_space(1)[OF integrable_cond_exp, symmetric] set_integral_space[OF dist_norm_integrable, symmetric] by (intro has_cond_expD(1)[OF has_cond_exp_simple[OF _ fin_sup_norm], symmetric]) (metis assms(2) simple_function_compose1 simple_function_diff, metis sets.top subalg subalgebra_def)

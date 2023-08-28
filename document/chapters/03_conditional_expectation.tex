@@ -244,10 +244,10 @@ In the upcoming sections of our work, we will frequently need to prove statement
 }
 \end{isalemma}
 
-The idea of the induction scheme is simple. We know $f$ can be represented $\mu$-a.e. as a finite sum $\sum_{i=1}^n \mathbf{1}_{A_i} \cdot_\mathbb{R} c_i$  for some collection of measurable sets $(A_i)_{i=1,\dots,n}$ and elements $c_i \in E$. We do induction on $n$. In this sense, ``indicator'' corresponds to the induction basis, while ``add'' corresponds to the induction step. Since $f$ is representable as a finite sum $\mu$-a.e. we need the additional assumption ``cong'' to make sure $P$ is a well defined predicate on the space $L^1(E)$.
+The idea of the induction scheme is simple. We know $f$ can be represented $\mu$-a.e. as a finite sum $\sum_{i=1}^n \mathbf{1}_{A_i} \cdot c_i$  for some collection of measurable sets $(A_i)_{i=1,\dots,n}$ and elements $c_i \in E$. We do induction on $n$. In this sense, ``indicator'' corresponds to the induction basis, while ``add'' corresponds to the induction step. Since $f$ is representable as a finite sum $\mu$-a.e. we need the additional assumption ``cong'' to make sure $P$ is a well defined predicate on the space $L^1(E)$.
 
 \begin{remark}
-To make proving certain properties easier, we have the additional assumption $\lVert f(x) + g(x) \rVert = \lVert f(x) \rVert + \lVert g(x) \rVert$ in the induction step ``add''. It is easy to see why we can assume this without loss of generality. If we have some simple function $s = \sum_{i=1}^n \mathbf{1}_{A_i} \cdot_\mathbb{R} c_i$, we can assume the sets $A_i$ to be pairwise disjoint. Thus, if $x \in A_j$ for some $j \le n$ we have $\lVert s(x) \rVert = \lVert \mathbf{1}_{A_j}(x) \cdot c_j\rVert = \sum_{i=1}^n \mathbf{1}_{A_i} \cdot \lVert c_i \rVert$.
+To make proving certain properties easier, we have the additional assumption $\lVert f(x) + g(x) \rVert = \lVert f(x) \rVert + \lVert g(x) \rVert$ in the induction step ``add''. It is easy to see why we can assume this without loss of generality. If we have some simple function $s = \sum_{i=1}^n \mathbf{1}_{A_i} \cdot c_i$, we can assume the sets $A_i$ to be pairwise disjoint. Thus, if $x \in A_j$ for some $j \le n$ we have $\lVert s(x) \rVert = \lVert \mathbf{1}_{A_j}(x) \cdot c_j\rVert = \sum_{i=1}^n \mathbf{1}_{A_i} \cdot \lVert c_i \rVert$.
 \end{remark}
 
 When working with an ordering on $E$, we may need to concern ourselves with non-negative simple functions. For this goal, we have the following induction scheme.
@@ -309,9 +309,9 @@ We will now show that if $h$ is a non-negative simple function, then $\int h \;\
 	\int h \;\textrm{d}\mu = \int g \;\textrm{d}\mu \ge 0
 \]
 
-\paragraph{Case ``indicator'':} Let $h = \mathbf{1}_A \cdot_\mathbb{R} y$ for some measurable set $A$ with finite measure and $y \in E$ with $y \ge 0$. It follows directly 
+\paragraph{Case ``indicator'':} Let $h = \mathbf{1}_A \cdot y$ for some measurable set $A$ with finite measure and $y \in E$ with $y \ge 0$. It follows directly 
 \[
-	\int h \;\textrm{d}\mu = \mu(A) \cdot_\mathbb{R} y \ge 0
+	\int h \;\textrm{d}\mu = \mu(A) \cdot y \ge 0
 \]
 
 \paragraph{Case ``add'':} Let $h = h_1 + h_2$ for some integrable simple functions $h_1$ and $h_2$. By the induction hypothesis, we have $\int h_i \;\textrm{d}\mu \ge 0$ for $i = 1,2$. Therefore
@@ -342,6 +342,45 @@ $\dots$
 qed
 \end{lstlisting}
 }
+
+Furthermore, we have the following two corollaries, that also make use of the lemma on the uniqueness of densities.
+
+\begin{isacorollary}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	lemma integral_nonneg_AE_eq_0_iff_AE:
+	  assumes "$\texttt{integrable} \; M \; f$" and nonneg: "AE$ \; x \; $in$ \; M. \; 0 \le f \; x$"
+	  shows "$\texttt{integral}^L \; M \; f = 0 \longleftrightarrow \; ($AE$ \; x \; $in$ \; M. \; f \; x = 0)$"
+	proof 
+	  assume *: "$\texttt{integral}^L \; M \; f = 0$"
+	  {
+		fix $A$ assume asm: "$A \in \texttt{sets} \; M$"
+		have "$0 \le \texttt{integral}^L \; M \; (\lambda x. \; \texttt{indicator} \; A \; x \cdot f \; x)$" using nonneg by $\dots$
+		moreover have "$\dots \le \texttt{integral}^L \; M \; f$" using nonneg by $\dots$
+		ultimately have "$\texttt{set\_lebesgue\_integral} \; M \; A \; f = 0$" 
+			unfolding set_lebesgue_integral_def using * by force
+	  }
+	  thus "AE x in M. f x = 0" by (intro density_zero f, blast)
+	qed (auto simp add: integral_eq_zero_AE)
+	\end{lstlisting}
+}
+\end{isacorollary}
+
+\begin{isacorollary}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	lemma integral_eq_mono_AE_eq_AE:
+	  assumes "$\texttt{integrable} \; M \; f$" "$\texttt{integrable} \; M \; g$" 
+			  "$\texttt{integral}^L \; M \; f = \texttt{integral}^L \; M \; g$" "AE$ \; x \; $in$ \; M. \; f \; x \le g \; x$" 
+	  shows "AE$ \; x \; $in$ \; M. \; f \; x = g \; x$"
+	proof -
+	  define $h$ where "$h = (\lambda x. \; g \; x - f \; x)$"
+	  have "AE$ \; x \; $in$ \; M. \; h \; x = 0$" unfolding h_def using assms by $\dots$
+	  then show ?thesis unfolding h_def by auto
+	qed
+	\end{lstlisting}
+}
+\end{isacorollary}
 
 \section{Constructing the Conditional Expectation}
 
@@ -465,7 +504,7 @@ We can now show that the conditional expectation of indicator functions exist.
 \begin{lemma}
 	Let $A \subseteq \Omega$ be measurable with $\mu(A) < \infty$ and $y \in E$. Then
 	\[
-		\normalfont\texttt{has\_cond\_exp} \; M \; F \; (\mathbf{1}_A \cdot_\mathbb{R} y) \; ((\texttt{real\_cond\_exp} \; M \; F \; \mathbf{1}_A) \cdot_\mathbb{R} y)
+		\normalfont\texttt{has\_cond\_exp} \; M \; F \; (\mathbf{1}_A \cdot y) \; ((\texttt{real\_cond\_exp} \; M \; F \; \mathbf{1}_A) \cdot y)
 	\]
 \end{lemma}
 \begin{proof}
@@ -511,7 +550,7 @@ qed
 
 Now comes the most difficult part. Given a convergent sequence of integrable simple functions $(s_n)_{n \in \mathbb{N}}$, we must show that the sequence $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ is also convergent. Furthermore, we must show that this limit satisfies the properties of a conditional expectation. Unfortunately, we will only be able to show that this sequence convergence in $L^1$. Luckily, this is enough to show that the operator $\texttt{cond\_exp} \; M \; F$ preserves limits as a function $L^1(E) \rightarrow L^1(E)$. We need the following lemma for this purpose
 
-\begin{lemma} (Contraction for Simple Functions)
+\begin{lemma} (Contractivity for Simple Functions)
 	Let $f : \Omega \rightarrow E$ be an integrable simple function. Then
 	\[
 		\normalfont\lVert \texttt{cond\_exp} \; M \; F \; s \rVert \le \texttt{cond\_exp} \; M \; F \; (\lambda x. \lVert s \; x \rVert)
@@ -634,8 +673,110 @@ If an integrable function $f$ is already $F$-measurable, then $\texttt{cond\_exp
 
 \subsubsection{Tower Property}
 
+The following property is called the \textit{tower property} of the conditional expectation.
+
+\begin{lemma}
+	Let $F$ and $G$ be nested sub-$\sigma$-algebras, i.e. $F \subseteq G \subseteq M$. Then, for any $f \in L^1(E)$, we have
+	\[
+		\normalfont \texttt{cond\_exp} \; M \; F \; (\texttt{cond\_exp} \; M \; G \; f) = \texttt{cond\_exp} \; M \; F \; f \; \mu\textrm{-a.e.}
+	\]
+\end{lemma}
+\begin{proof}
+	For any $A \in F$, we have
+	\begin{align*}
+		\int_A \texttt{cond\_exp} \; M \; G \; f \; \textrm{d} \mu &= \int_A f \; \textrm{d} \mu \\
+		&= \int_A \texttt{cond\_exp} \; M \; F \; f \; \textrm{d} \mu
+	\end{align*}
+	since $A$ is also in $G$. The characterization lemma yields the result.
+\end{proof}
+
 \subsubsection{Contractivity}
+
+A linear operator $L : V \rightarrow W$ between normed vector spaces $V$ and $W$ is called a \textit{contraction} if it's operator norm
+\[
+	\lVert L \rVert_{\texttt{op}} = \inf\{ c \geq 0 : \lVert Lv \rVert_W \leq c \lVert v \rVert_V \textrm{ for all } v \in V \}
+\]
+is less than or equal to 1. Such an operator always preserves limits and has other useful properties in functional analysis \cite{sznagy2010}.
+
+\begin{lemma} (Contractivity)
+	Let $f \in L^1(E)$. Then
+	\[
+		\normalfont\lVert \texttt{cond\_exp} \; M \; F \; f \rVert \le \texttt{cond\_exp} \; M \; F \; (\lambda x. \lVert f(x) \rVert)
+	\]
+\end{lemma}
+\begin{proof}
+	We have already shown contractivity in the case of simple functions. Since $f$ is integrable, there exists a sequence of simple functions $(s_n)_{n \in \mathbb{N}}$ such that
+	\[
+		\lim_{n \rightarrow \infty} s_n= f \; \mu\textrm{-a.e.}
+	\]
+	and
+	\[
+		\lVert s_n(x) \rVert \le 2 \cdot \lVert f(x) \rVert \; \mu\textrm{-a.e. for all } n \in \mathbb{N}
+	\]
+	Using the results of the previous subsection, we obtain a subsequence $(s_{r_n})_{n \in \mathbb{N}}$ such that
+	\[
+		\lim_{n \rightarrow \infty} (\texttt{cond\_exp} \; M \; F \; s_{r_n}) = \texttt{cond\_exp} \; M \; F \; f \quad \mu\textrm{-a.e.}
+	\]
+	With the exact same arguments applied to the sequence of simple functions $(\lambda x. \lVert s_{r_n}(x) \rVert)_{n \in \mathbb{N}}$, we obtain a sub-subsequence $(s_{r_{r'_n}})_{n \in \mathbb{N}}$ such that
+	\[
+		\lim_{n \rightarrow \infty} (\texttt{cond\_exp} \; M \; F \; (\lambda x. \lVert s_{r_{r'_n}}(x) \rVert)) = \texttt{cond\_exp} \; M \; F \; (\lambda x. \lVert f(x)\rVert) \quad\mu\textrm{-a.e.}
+	\]
+	Furthermore, we have
+	\[
+		\lVert \texttt{cond\_exp} \; M \; F \; s_{r_{r'_n}} \rVert \le \texttt{cond\_exp} \; M \; F \; (\lambda x. \lVert s_{r_{r'_n}}(x) \rVert) \quad\mu\textrm{-a.e.}
+	\]
+	for all $n \in \mathbb{N}$, since the functions in question are simple. Taking the limits on both sides and using the continuity of the norm yields the result.
+\end{proof}
 
 \subsubsection{Pulling Out What's Known}
 
+The following property of the conditional expectation is called ``pulling out what's known''. 
+
+\begin{lemma}
+	Let $f : \Omega \rightarrow \mathbb{R}$ be an $F$-measurable function. Let $g \in L^1(E)$ and $f \cdot g \in L^1(E)$. Then
+	\[
+		\normalfont \texttt{cond\_exp} \; M \; F \; (f \cdot g) = f \cdot \texttt{cond\_exp} \; M \; F \; g \quad \mu\textrm{-a.e.}
+	\]
+\end{lemma}
+\begin{proof}
+	The proof of this lemma is involved as well. Therefore we will only focus on the core idea of the proof. We will also assume that the result already holds in the real setting. We show the following seemingly less general statement for $z : \Omega \rightarrow \mathbb{R}$ $F$-measurable and $z \cdot g \in L^1(E)$:
+	\[
+		\int z \cdot g \; \textrm{d} \mu = \int z \cdot \texttt{cond\_exp} \; M \; F \; g \; \textrm{d}
+	\]
+	The result will follow by taking $z = f \cdot \mathbf{1}_A$ for $A \in F$.
+	Since $z$ is measurable, there exists some sequence of simple functions $(s_n)_{n \in \mathbb{N}}$ such that
+	\[
+		\lim_{n \rightarrow \infty} s_n= z \; \mu\textrm{-a.e.}
+	\]
+	and
+	\[
+		\lvert s_n(x) \rvert \le 2 \cdot \lvert z(x) \rvert \; \mu\textrm{-a.e. for all } n \in \mathbb{N}
+	\]
+	In this case one can easily check that
+	\[
+		\int s_n \cdot g \; \textrm{d} \mu = \int s_n \cdot \texttt{cond\_exp} \; M \; F \; g \; \textrm{d}
+	\]
+	for all $n \in \mathbb{N}$
+	
+	By our additional assumption that the result already holds in the real case, we have
+	\[
+	\lvert z \cdot \texttt{cond\_exp} \; M \; F \; (\lambda x. \lVert g(x \rVert))\rvert = \texttt{cond\_exp} \; M \; F \; (\lambda x. \lvert z(x) \cdot \lVert g(x)\rVert\rvert)
+	\]
+	Using the contractivity of the conditional expectation and the above bound on $s_n$, it follows that 
+	\[
+		\lVert s_n \cdot \texttt{cond\_exp} \; M \; F \; g \rVert \le 2 \cdot \texttt{cond\_exp} \; M \; F \; (\lambda x. \lvert z(x) \cdot \lVert g(x)\rVert\rvert)
+	\]
+	Applying the dominated convergence theorem twice, we get
+	\[
+		\lim_{n \rightarrow \infty} \int s_n \cdot g \; \textrm{d} \mu = \int z \cdot g \; \textrm{d} \mu
+	\]
+	and
+	\[
+		\lim_{n \rightarrow \infty} \int s_n \cdot \texttt{cond\_exp} \; M \; F \; g \; \textrm{d} \mu = \int z \cdot \texttt{cond\_exp} \; M \; F \; g \; \textrm{d} \mu
+	\]
+	Since the sequence on the right hand side are equal, the statement follows from the fact that limits are unique.
+\end{proof}
+
 \section{Conditional Expectation on Linearly Ordered Banach Spaces}
+
+In the presence of an ordering, we can prove certain monotonicity properties of the conditional expectation. We start with the following two 

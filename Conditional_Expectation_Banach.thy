@@ -678,7 +678,7 @@ proof -
     then have "AE x\<in>A in M. c = f x" by auto
     then have "AE x\<in>A in M. False" using assms(2) by auto
     have "A \<in> null_sets M" unfolding ae_filter_def by (meson AE_iff_null_sets \<open>A \<in> sets M\<close> \<open>AE x\<in>A in M. False\<close>)
-    then show False using A(3)by (simp add: emeasure_restr_to_subalg null_setsD1 subalg)
+    then show False using A(3) by (simp add: emeasure_restr_to_subalg null_setsD1 subalg)
   qed
   then show ?thesis using AE_iff_null_sets[OF X_in_M] unfolding X_def by auto
 qed
@@ -689,7 +689,7 @@ lemma cond_exp_less_c:
   shows "AE x in M. cond_exp M F f x < c"
 proof -
   have "AE x in M. cond_exp M F f x = - cond_exp M F (\<lambda>x. - f x) x" using cond_exp_uminus[OF assms(1)] by auto
-  moreover have "AE x in M. cond_exp M F (\<lambda>x. -f x) x > -c"  using assms by (intro cond_exp_gr_c) auto
+  moreover have "AE x in M. cond_exp M F (\<lambda>x. - f x) x > - c"  using assms by (intro cond_exp_gr_c) auto
   ultimately show ?thesis by (force simp add: minus_less_iff)
 qed
 
