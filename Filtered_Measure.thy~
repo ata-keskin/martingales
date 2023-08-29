@@ -1,5 +1,5 @@
 theory Filtered_Measure
-imports "HOL-Probability.Conditional_Expectation"
+imports "HOL-Probability.Conditional_Expectation" Measure_Space_Addendum
 begin                                                                                          
 
 subsection \<open>Filtered Measure\<close>

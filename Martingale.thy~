@@ -10,19 +10,19 @@ locale martingale = sigma_finite_adapted_process +
 
 locale martingale_order = martingale M F t\<^sub>0 X for M F t\<^sub>0 and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
 
-lemma (in sigma_finite_filtered_measure) martingale_const[intro]:  
+lemma (in filtered_sigma_finite_measure) martingale_const[intro]:  
   assumes "integrable M f" "f \<in> borel_measurable (F t\<^sub>0)"
   shows "martingale M F t\<^sub>0 (\<lambda>_. f)"
   using assms sigma_finite_subalgebra.cond_exp_F_meas[OF _ assms(1), THEN AE_symmetric] borel_measurable_mono
   by (unfold_locales) blast+
 
-lemma (in sigma_finite_filtered_measure) martingale_cond_exp[intro]:  
+lemma (in filtered_sigma_finite_measure) martingale_cond_exp[intro]:  
   assumes "integrable M f"
   shows "martingale M F t\<^sub>0 (\<lambda>i. cond_exp M (F i) f)"
   using sigma_finite_subalgebra.borel_measurable_cond_exp' borel_measurable_cond_exp 
   by (unfold_locales) (auto intro: sigma_finite_subalgebra.cond_exp_nested_subalg[OF _ assms] simp add: subalgebra_F subalgebra)
 
-lemma (in sigma_finite_filtered_measure) martingale_zero[intro]: "martingale M F t\<^sub>0 (\<lambda>_ _. 0)" by fastforce
+lemma (in filtered_sigma_finite_measure) martingale_zero[intro]: "martingale M F t\<^sub>0 (\<lambda>_ _. 0)" by fastforce
   
 subsection \<open>Submartingale\<close>
 

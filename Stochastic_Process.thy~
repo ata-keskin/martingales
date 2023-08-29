@@ -117,11 +117,11 @@ end
 sublocale stochastic_process \<subseteq> filtered_measure_natural_filtration: filtered_measure M "natural_filtration M t\<^sub>0 X" t\<^sub>0
     by (unfold_locales) (intro subalgebra_natural_filtration, simp only: sets_natural_filtration, intro sigma_sets_subseteq, force) 
 
-text \<open>In order to show that the natural filtration constitutes a filtered sigma finite measure, we need to provide a countable exhausting set in the preimage of \<^term>\<open>X t\<^sub>0\<close>.\<close>
+text \<open>In order to show that the natural filtration constitutes a filtered sigma finite measure, we need to provide a countable exhausting set in the preimage of \<^term>\<open>Y t\<^sub>0\<close>.\<close>
 
 lemma (in sigma_finite_measure) sigma_finite_filtered_measure_natural_filtration:
   assumes "stochastic_process M t\<^sub>0 X"
-      and exhausting_set: "countable A" "(\<Union>A) = space M" "\<And>a. a \<in> A \<Longrightarrow> emeasure M a \<noteq> \<infinity>" "\<And>a. a \<in> A \<Longrightarrow> \<exists>b \<in> borel. a = X t\<^sub>0 -` b \<inter> space M"
+      and exhausting_set: "countable A" "(\<Union>A) = space M" "\<And>a. a \<in> A \<Longrightarrow> emeasure M a \<noteq> \<infinity>" "\<And>a. a \<in> A \<Longrightarrow> \<exists>b \<in> borel. a = X t\<^sub>0 -` b"
     shows "sigma_finite_filtered_measure M (natural_filtration M t\<^sub>0 X) t\<^sub>0"
 proof (unfold_locales)
   interpret stochastic_process M t\<^sub>0 X by (rule assms)
@@ -132,14 +132,6 @@ proof (unfold_locales)
   ultimately show "\<exists>A. countable A \<and> A \<subseteq> sets (restr_to_subalg M (natural_filtration M t\<^sub>0 X t\<^sub>0)) \<and> \<Union> A = space (restr_to_subalg M (natural_filtration M t\<^sub>0 X t\<^sub>0)) \<and> (\<forall>a\<in>A. emeasure (restr_to_subalg M (natural_filtration M t\<^sub>0 X t\<^sub>0)) a \<noteq> \<infinity>)" using exhausting_set by blast
   show "\<And>i j. \<lbrakk>t\<^sub>0 \<le> i; i \<le> j\<rbrakk> \<Longrightarrow> sets (natural_filtration M t\<^sub>0 X i) \<subseteq> sets (natural_filtration M t\<^sub>0 X j)" using filtered_measure_natural_filtration.subalgebra_F by (simp add: subalgebra_def)
 qed (auto intro: stochastic_process.subalgebra_natural_filtration assms(1))
-
-lemma (in finite_measure) sigma_finite_filtered_measure_natural_filtration:
-  assumes "stochastic_process M t\<^sub>0 X"
-  shows "sigma_finite_filtered_measure M (natural_filtration M t\<^sub>0 X) t\<^sub>0"
-proof (intro sigma_finite_filtered_measure_natural_filtration[OF assms(1), of "{space M}"])
-  have "space M = X t\<^sub>0 -` UNIV \<inter> space M" by blast
-  thus "\<And>a. a \<in> {space M} \<Longrightarrow> \<exists>b\<in>sets borel. a = X t\<^sub>0 -` b \<inter> space M" by force
-qed (auto)
 
 subsection "Adapted Process"
 

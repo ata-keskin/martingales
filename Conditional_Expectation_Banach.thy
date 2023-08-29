@@ -660,7 +660,7 @@ proof -
     then obtain A where A: "A \<in> sets (restr_to_subalg M F)" "A \<subseteq> X" "emeasure (restr_to_subalg M F) A > 0" "emeasure (restr_to_subalg M F) A < \<infinity>"
       using sigma_fin_subalg by (metis emeasure_notin_sets ennreal_0 infinity_ennreal_def le_less_linear neq_top_trans not_gr_zero order_refl sigma_finite_measure.approx_PInf_emeasure_with_finite)
     hence [simp]: "A \<in> sets F" using subalg sets_restr_to_subalg by blast
-    hence [simp]: "A \<in> sets M" using sets_restr_to_subalg subalg subalgebra_def by blast
+    hence A_in_sets_M[simp]: "A \<in> sets M" using sets_restr_to_subalg subalg subalgebra_def by blast
     have [simp]: "set_integrable M A (\<lambda>x. c)" using A subalg by (auto simp add: set_integrable_def emeasure_restr_to_subalg) 
     have [simp]: "set_integrable M A f" unfolding set_integrable_def by (rule integrable_mult_indicator, auto simp add: assms(1))
     have "AE x in M. indicator A x *\<^sub>R c = indicator A x *\<^sub>R f x"
@@ -672,18 +672,17 @@ proof -
         also have "... \<le> (\<integral>x\<in>A. c \<partial>M)" using A by (auto intro!: set_integral_mono_banach simp add: X_def)
         finally show "(\<integral>x\<in>A. f x \<partial>M) \<le> (\<integral>x\<in>A. c \<partial>M)" by simp
       qed
-      then have "measure M A *\<^sub>R c = LINT x|M. indicator A x *\<^sub>R f x" using A by (auto simp: set_lebesgue_integral_def emeasure_restr_to_subalg subalg)
       show "AE x in M. indicator A x *\<^sub>R c \<le> indicator A x *\<^sub>R f x" using assms by (auto simp add: X_def indicator_def)
     qed (auto simp add: set_integrable_def[symmetric])
-    then have "AE x\<in>A in M. c = f x" by auto
-    then have "AE x\<in>A in M. False" using assms(2) by auto
-    have "A \<in> null_sets M" unfolding ae_filter_def by (meson AE_iff_null_sets \<open>A \<in> sets M\<close> \<open>AE x\<in>A in M. False\<close>)
-    then show False using A(3) by (simp add: emeasure_restr_to_subalg null_setsD1 subalg)
+    hence "AE x\<in>A in M. c = f x" by auto
+    hence "AE x\<in>A in M. False" using assms(2) by auto
+    hence "A \<in> null_sets M" using AE_iff_null_sets A_in_sets_M by metis
+    thus False using A(3) by (simp add: emeasure_restr_to_subalg null_setsD1 subalg)
   qed
-  then show ?thesis using AE_iff_null_sets[OF X_in_M] unfolding X_def by auto
+  thus ?thesis using AE_iff_null_sets[OF X_in_M] unfolding X_def by auto
 qed
 
-lemma cond_exp_less_c:
+corollary cond_exp_less_c:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
   assumes "integrable M f" "AE x in M. f x < c"
   shows "AE x in M. cond_exp M F f x < c"
@@ -721,7 +720,7 @@ proof -
   thus ?thesis using AE_restr_to_subalg[OF subalg] averaging_theorem[OF integrable_in_subalg closed_atLeast, OF subalg borel_measurable_cond_exp integrable_cond_exp] by auto
 qed
 
-lemma cond_exp_le_c:
+corollary cond_exp_le_c:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
   assumes "integrable M f"
       and "AE x in M. f x \<le> c"
@@ -732,14 +731,14 @@ proof -
   ultimately show ?thesis by (force simp add: minus_le_iff)
 qed
 
-lemma cond_exp_mono:
+corollary cond_exp_mono:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
   assumes "integrable M f" "integrable M g" "AE x in M. f x \<le> g x"
   shows "AE x in M. cond_exp M F f x \<le> cond_exp M F g x"
   using cond_exp_le_c[OF Bochner_Integration.integrable_diff, OF assms(1,2), of 0] 
         cond_exp_diff[OF assms(1,2)] assms(3) by auto
                                       
-lemma cond_exp_min:
+corollary cond_exp_min:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
   assumes "integrable M f" "integrable M g"
   shows "AE \<xi> in M. cond_exp M F (\<lambda>x. min (f x) (g x)) \<xi> \<le> min (cond_exp M F f \<xi>) (cond_exp M F g \<xi>)"
@@ -749,7 +748,7 @@ proof -
   ultimately show "AE \<xi> in M. cond_exp M F (\<lambda>x. min (f x) (g x)) \<xi> \<le> min (cond_exp M F f \<xi>) (cond_exp M F g \<xi>)" by fastforce
 qed
 
-lemma cond_exp_max:
+corollary cond_exp_max:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
   assumes "integrable M f" "integrable M g"
   shows "AE \<xi> in M. cond_exp M F (\<lambda>x. max (f x) (g x)) \<xi> \<ge> max (cond_exp M F f \<xi>) (cond_exp M F g \<xi>)"
@@ -759,13 +758,13 @@ proof -
   ultimately show "AE \<xi> in M. cond_exp M F (\<lambda>x. max (f x) (g x)) \<xi> \<ge> max (cond_exp M F f \<xi>) (cond_exp M F g \<xi>)" by fastforce
 qed
 
-lemma cond_exp_inf:
+corollary cond_exp_inf:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector, lattice}"
   assumes "integrable M f" "integrable M g"
   shows "AE \<xi> in M. cond_exp M F (\<lambda>x. inf (f x) (g x)) \<xi> \<le> inf (cond_exp M F f \<xi>) (cond_exp M F g \<xi>)"
   unfolding inf_min using assms by (rule cond_exp_min)
 
-lemma cond_exp_sup:
+corollary cond_exp_sup:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector, lattice}"
   assumes "integrable M f" "integrable M g"
   shows "AE \<xi> in M. cond_exp M F (\<lambda>x. sup (f x) (g x)) \<xi> \<ge> sup (cond_exp M F f \<xi>) (cond_exp M F g \<xi>)"

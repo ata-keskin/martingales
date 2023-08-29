@@ -4,16 +4,21 @@
 \chapter{Conditional Expectation in Banach Spaces}\label{chapter:conditional_expectation}
 
 Conditional expectation extends the concept of expected value to situations where we have additional information about the outcomes. In a discrete setting, i.e. when the range of the random variables in question is countable, the setup is quite simple. 
-\par Without loss of generality, let $(\Omega, \mathcal{F}, \mu)$ be a measure space. Let $E$ be a complete normed vector space, i.e. a Banach space, and $S \subseteq E$ be some countable subset. Given a random variable $X : \Omega \rightarrow S$ and an event $A \in \mathcal{F}$, the conditional expectation of $X$ given $A$, denoted as $\mathbb{E}(X \vert A)$, represents the expected value of $X$ given that $A$ occurs. In this simple case, we can directly define the conditional expectation as:
+\par Let $(\Omega, \mathcal{F}, \mu)$ be a measure space. Let $E$ be a complete normed vector space, i.e. a Banach space, and $S \subseteq E$ be some countable subset. Let $X : \Omega \rightarrow S$ be an integrable random variable and an event $A \in \mathcal{F}$ with $\mu(A) < \infty$. The conditional expectation of $X$ given $A$, denoted as $\mathbb{E}(X \vert A)$, represents the expected value of $X$ given that $A$ occurs. In this simple case, we can directly define the conditional expectation as:
 \[
-	\mathbb{E}(X \vert A) = \sum_{w \in S} w \cdot \frac{\mu(\{X = w\} \cap A)}{\mu(A)}
+	\mathbb{E}(X \vert A) = \sum_{w \in S} \frac{\mu(\{X = w\} \cap A)}{\mu(A)} \cdot w
 \]
 Of course, this definition only makes sense if the value on the right hand side is finite and $\mu(A) \neq 0$. Defined this way, the conditional expectation satisfies the following equality
 \begin{align*}
-	\int_A X \; \textrm{d} \mu &= \sum_{w \in S} w \cdot \mu(\{\mathbf{1}_A \cdot X = w\}) \\
+	\int_A X \; \textrm{d} \mu &= \sum_{w \in S} \mu(\{\mathbf{1}_A \cdot X = w\}) \cdot w\\
 	&= \mu(A) \cdot \mathbb{E}(X \vert A) \\
 	&= \int_A \mathbb{E}(X \vert A) \; \textrm{d} \mu
 \end{align*}
+
+\begin{remark}
+	We use the notation ``$c \; \cdot \; w$'' to denote the scalar multiplication of $c \in \mathbb{R}$ and $w \in E$. When $E = \mathbb{R}$, it is just the standard multiplication on $\mathbb{R}$. 
+\end{remark}
+
 This observation motivates us to generalize the definition of conditional expectation to take into account not just a single event, but a collection of events. Fix $X : \Omega \rightarrow E$. Given a sub-$\sigma$-algebra $\mathcal{H} \subseteq \mathcal{F}$, we call an $\mathcal{H}$-measurable function $g : \Omega \rightarrow E$ a conditional expectation of $X$ with respect to the sub-$\sigma$-algebra $\mathcal{H}$ , denoted as $\mathbb{E}(X \vert \mathcal{H})$, if the following equality holds for all $A \in \mathcal{H}$
 
 \[
@@ -72,7 +77,7 @@ Let $U \subseteq E$ be open. Fix $x \in U$. Since $U$ is open and we are working
 
 Now we are ready to state and subsequently prove the averaging theorem
 
-\begin{theorem} (Averaging Theorem)
+\begin{theorem} (Averaging Theorem) \par
 Let $(\Omega, \mathcal{F}, \mu)$ be some $\sigma$-finite measure space. Let $f \in L^1(E)$. Let $S$ be a closed subset of $E$ and assume that for all measurable sets $A \in \mathcal{F}$ with finite and non-zero measure the following holds
 \[
 	\frac{1}{\mu(A)}\int_A f \;\textrm{d}\mu \in S
@@ -118,6 +123,7 @@ At the beginning of our proof, we assumed $\mu(\Omega) < \infty$ without loss of
 			$\Longrightarrow \texttt{almost\_everywhere} \; N \; Q$"
 	  and "$\texttt{Measurable.pred} \; M \; Q$"
 	  shows "$\texttt{almost\_everywhere} \; M \; Q$"
+	  $\dots$
 	\end{lstlisting}
 }
 \end{isalemma}
@@ -136,7 +142,7 @@ Now that we have the averaging theorem at our disposal, we can lift the followin
 	Apply the averaging theorem with $S = \{0\}$.
 \end{proof}
 
-\begin{corollary} (Uniqueness of Densities)
+\begin{corollary} (Uniqueness of Densities) \par
 	Let $f, g \in L^1(E)$ and $\int_A f \;\textrm{d}\mu = \int_A g \;\textrm{d}\mu$ for all measurable sets $A \subseteq \Omega$. Then $f = g$ $\mu$-almost everywhere. 
 \end{corollary}
 \begin{proof}
@@ -165,7 +171,7 @@ Let $E$ be a metric space with metric $d : E \times E \rightarrow \mathbb{R}$. T
 
 Intuitively the diameter of a set $A$ measures how spread out or "large" the set $A$ is with respect to the distance defined by the metric.
 
-\begin{lemma} (Diameter Lemma)
+\begin{lemma} (Diameter Lemma)\par
 	Let $E$ be a metric space with metric $d : E \times E \rightarrow \mathbb{R}$ and $(s_i)_{i\in\mathbb{N}} \subseteq E$ a sequence. Define $S_n = \{s_i \; \vert \; i \ge n \}$. The sequence $(s_i)_{i\in\mathbb{N}}$ is Cauchy, if and only if $S_0$ is bounded and
 	\[
 		\lim_{n \to \infty} \textup{diam}(S_n) = 0
@@ -228,18 +234,19 @@ In the upcoming sections of our work, we will frequently need to prove statement
 \begin{isalemma}
 {\small
 	\begin{lstlisting}[style=isabelle]
-	lemma simple_integrable_function_induct[case_names cong indicator add]:
+	lemma integrable_simple_function_induct[case_names cong indicator add]:
 	  assumes "$\texttt{simple\_function} \; M \; f$" "$\texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$"
 	  assumes cong: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$ 
 					 $\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
 					 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x = g \; x) \implies P \; f \implies P \; g$"
 	  assumes indicator: "$\bigwedge A \; y. \; A \in \texttt{sets} \; M \implies \texttt{emeasure} \; M \; A < \infty$ 
-						  $\implies P \; (\lambda x. \; \texttt{indicator} \; A \; x \cdot_\mathbb{R} y)$"
+						  $\implies P \; (\lambda x. \; \texttt{indicator} \; A \; x \cdot_R y)$"
 	  assumes add: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$
 					$\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
 					$\implies (\bigwedge z. \; z \in \texttt{space} \; M \implies \texttt{norm} \; (f \; z + g \; z) = \texttt{norm} \; (f \; z) + \texttt{norm} \; (g \; z))$
 					$\implies P \; f \implies P \; g \implies P \; (\lambda x. \; f \; x + g \; x)$"
 	  shows "$P \; f$"
+	  $\dots$
 	\end{lstlisting}
 }
 \end{isalemma}
@@ -255,7 +262,7 @@ When working with an ordering on $E$, we may need to concern ourselves with non-
 \begin{isalemma}
 {\small
 	\begin{lstlisting}[style=isabelle]
-	lemma simple_integrable_function_induct_nn[case_names cong indicator add]:
+	lemma integrable_simple_function_induct_nn[case_names cong indicator add]:
 	  assumes "$\texttt{simple\_function} \; M \; f$" "$\texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$" 
 			  "$\bigwedge x. \; x \in \texttt{space} \; M \longrightarrow f \; x \ge 0$"
 	  assumes cong: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$ 
@@ -264,7 +271,7 @@ When working with an ordering on $E$, we may need to concern ourselves with non-
 					 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies g \; x \ge 0)$
 					 $\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x = g \; x) \implies P \; f \implies P \; g$"
 	  assumes indicator: "$\bigwedge A \; y. \; y \ge 0 \implies A \in \texttt{sets} \; M \implies \texttt{emeasure} \; M \; A < \infty$
-						  $\implies P \; (\lambda x. \; \texttt{indicator} \; A \; x \cdot_\mathbb{R} y)$"
+						  $\implies P \; (\lambda x. \; \texttt{indicator} \; A \; x \cdot_R y)$"
 	  assumes add: "$\bigwedge f \; g. \; \texttt{simple\_function} \; M \; f \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$
 					$\implies (\bigwedge x. \; x \in \texttt{space} \; M \implies f \; x \ge 0)$
 					$\implies \texttt{simple\_function} \; M \; g \implies \texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; g \; y \neq 0\} \neq \infty$
@@ -272,6 +279,7 @@ When working with an ordering on $E$, we may need to concern ourselves with non-
 					$\implies (\bigwedge z. \; z \in \texttt{space} \; M \implies \texttt{norm} \; (f \; z + g \; z) = \texttt{norm} \; (f \; z) + \texttt{norm} \; (g \; z))$
 					$\implies P \; f \implies P \; g \implies P \; (\lambda x. \; f \; x + g \; x)$"
 	  shows "$P \; f$"
+	  $\dots$
 	\end{lstlisting}
 }
 \end{isalemma}
@@ -349,7 +357,7 @@ Furthermore, we have the following two corollaries, that also make use of the le
 {\small
 	\begin{lstlisting}[style=isabelle]
 	lemma integral_nonneg_AE_eq_0_iff_AE:
-	  assumes "$\texttt{integrable} \; M \; f$" and nonneg: "AE$ \; x \; $in$ \; M. \; 0 \le f \; x$"
+	  assumes f: "$\texttt{integrable} \; M \; f$" and nonneg: "AE$ \; x \; $in$ \; M. \; 0 \le f \; x$"
 	  shows "$\texttt{integral}^L \; M \; f = 0 \longleftrightarrow \; ($AE$ \; x \; $in$ \; M. \; f \; x = 0)$"
 	proof 
 	  assume *: "$\texttt{integral}^L \; M \; f = 0$"
@@ -532,7 +540,7 @@ corollary has_cond_exp_simple:
   assumes "$\texttt{simple\_function} \; M \; f$" "$\texttt{emeasure} \; M \; \{y \in \texttt{space} \; M. \; f \; y \neq 0\} \neq \infty$"
   shows "$\normalfont\texttt{has\_cond\_exp} \; M \; F \; f \; (\texttt{cond\_exp} \; M \; F \; f)$"
   using assms
-proof (induction rule: simple_integrable_function_induct)
+proof (induction rule: integrable_simple_function_induct)
   case (cong f g)
   then show ?case using has_cond_exp_cong by (metis (no_types, opaque_lifting)
 						Bochner_Integration.integrable_cong has_cond_expD(2)
@@ -550,7 +558,7 @@ qed
 
 Now comes the most difficult part. Given a convergent sequence of integrable simple functions $(s_n)_{n \in \mathbb{N}}$, we must show that the sequence $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ is also convergent. Furthermore, we must show that this limit satisfies the properties of a conditional expectation. Unfortunately, we will only be able to show that this sequence convergence in $L^1$. Luckily, this is enough to show that the operator $\texttt{cond\_exp} \; M \; F$ preserves limits as a function $L^1(E) \rightarrow L^1(E)$. We need the following lemma for this purpose
 
-\begin{lemma} (Contractivity for Simple Functions)
+\begin{lemma} (Contractivity for Simple Functions) \par
 	Let $f : \Omega \rightarrow E$ be an integrable simple function. Then
 	\[
 		\normalfont\lVert \texttt{cond\_exp} \; M \; F \; s \rVert \le \texttt{cond\_exp} \; M \; F \; (\lambda x. \lVert s \; x \rVert)
@@ -616,6 +624,7 @@ At one point in the proof of our lemma, we have used the fact that a convergent 
 	  assumes "$\bigwedge n. \; \texttt{integrable} \; M \; (u \; n)$"
 		  and "$(\lambda n. \; (\int \; \texttt{norm} \;(u \; n \; x) \; \partial M)) \longrightarrow 0$"
 	  shows "$\exists r \;:: \; \texttt{nat} \Rightarrow \texttt{nat}. \; \texttt{strict\_mono} \; r \wedge ($AE$\; x \; $in$ \; M. \; (\lambda n. \; u \; (r \; n) \; x) \longrightarrow 0)$"
+	  $\dots$
 	\end{lstlisting}
 }
 
@@ -629,6 +638,7 @@ In our case, we can't easily formulate the convergence of $(\texttt{cond\_exp} \
 	  assumes "$\bigwedge n. \; \texttt{integrable} \; M \; (s \; n)$"
 		  and "$\bigwedge e. \; e > 0 \implies \exists N. \; \forall i\ge N. \forall j \ge N. \; $LINT$ \; x\vert M. \; \texttt{norm} \; (s \; i \; x \; - \; s \; j \; x) < e$"
 	  obtains $r$ where "$\texttt{strict\_mono} \; r$" "AE$ \; x \; $in$ \; M. \; \texttt{Cauchy} \; (\lambda i. \; s \; (r \; i) \; x)$"
+	  $\dots$
 	\end{lstlisting}
 }
 \end{isalemma}
@@ -692,13 +702,13 @@ The following property is called the \textit{tower property} of the conditional 
 
 \subsubsection{Contractivity}
 
-A linear operator $L : V \rightarrow W$ between normed vector spaces $V$ and $W$ is called a \textit{contraction} if it's operator norm
+A linear operator $L : V \rightarrow W$ between normed vector spaces $V$ and $W$ is called a \textit{contraction} if its operator norm
 \[
 	\lVert L \rVert_{\texttt{op}} = \inf\{ c \geq 0 : \lVert Lv \rVert_W \leq c \lVert v \rVert_V \textrm{ for all } v \in V \}
 \]
 is less than or equal to 1. Such an operator always preserves limits and has other useful properties in functional analysis \cite{sznagy2010}.
 
-\begin{lemma} (Contractivity)
+\begin{lemma} (Contractivity) \par
 	Let $f \in L^1(E)$. Then
 	\[
 		\normalfont\lVert \texttt{cond\_exp} \; M \; F \; f \rVert \le \texttt{cond\_exp} \; M \; F \; (\lambda x. \lVert f(x) \rVert)
@@ -723,9 +733,22 @@ is less than or equal to 1. Such an operator always preserves limits and has oth
 	\]
 	Furthermore, we have
 	\[
-		\lVert \texttt{cond\_exp} \; M \; F \; s_{r_{r'_n}} \rVert \le \texttt{cond\_exp} \; M \; F \; (\lambda x. \lVert s_{r_{r'_n}}(x) \rVert) \quad\mu\textrm{-a.e.}
+		\lVert (\texttt{cond\_exp} \; M \; F \; s_{r_{r'_n}})(x) \rVert \le (\texttt{cond\_exp} \; M \; F \; (\lambda x. \lVert s_{r_{r'_n}}(x) \rVert))(x) \quad\mu\textrm{-a.e.}
 	\]
 	for all $n \in \mathbb{N}$, since the functions in question are simple. Taking the limits on both sides and using the continuity of the norm yields the result.
+\end{proof}
+
+\begin{corollary}
+	The linear operator $\normalfont\texttt{cond\_exp} \; M \; F : L^1(E) \rightarrow L^1(E)$ is a contraction.
+\end{corollary}
+\begin{proof}
+	Let $f \in L^1(E)$. From the previous lemma we have 
+	\begin{align*}
+		\lVert \texttt{cond\_exp} \; M \; F \; f \rVert_1 &= \int \lVert \texttt{cond\_exp} \; M \; F \; f \rVert \; \textrm{d} \mu \\
+		&\le \int \texttt{cond\_exp} \; M \; F \; (\lambda x. \lVert f(x) \rVert) \; \textrm{d} \mu \\
+		&= \int \lVert f \rVert \textrm{d} \mu = \lVert f \rVert_1\\
+	\end{align*}
+	Hence $\lVert \texttt{cond\_exp} \; M \; F \rVert_{\texttt{op}} \le 1$
 \end{proof}
 
 \subsubsection{Pulling Out What's Known}
@@ -779,4 +802,109 @@ The following property of the conditional expectation is called ``pulling out wh
 
 \section{Conditional Expectation on Linearly Ordered Banach Spaces}
 
-In the presence of an ordering, we can prove certain monotonicity properties of the conditional expectation. We start with the following two 
+In the presence of an ordering, we can prove certain monotonicity properties of the conditional expectation. We start with the following two lemmas
+
+\begin{lemma}
+	Let $f \in L^1(E)$. Assume $f \ge c$ $\mu$-a.e. for some $c \in E$. Then 
+	\[
+		\normalfont\texttt{cond\_exp} \; M \; F \; f \ge c \quad \mu\textrm{-a.e.}
+	\]
+\end{lemma}
+\begin{proof}
+	We will show the statement using the averaging theorem. Let $A \in F$ be a measurable set with $\mu(A) < \infty$. Then
+	\begin{align*}
+		c &= \frac{1}{\mu(A)} \int_A c \; \textrm{d} \mu \\
+		&\le \frac{1}{\mu(A)} \int_A f \; \textrm{d} \mu \\
+		&= \frac{1}{\mu(A)} \int_A \texttt{cond\_exp} \; M \; F \; f \; \textrm{d} \mu \\
+		&= \frac{1}{\mu(A)} \int_A \texttt{cond\_exp} \; M \; F \; f \; \textrm{d} \mu\vert_F \\
+	\end{align*}
+	Hence $\int_A \texttt{cond\_exp} \; M \; F \; f \; \textrm{d} \mu\vert_F \in \{x \in E \;\vert\; x \ge c \}$. The statement follows from the fact that $\{x \in E \;\vert\; x \ge c \}$ is closed.
+\end{proof}
+
+\begin{lemma}
+	Let $f \in L^1(E)$. Assume $f > c$ $\mu$-a.e. for some $c \in E$. Then 
+	\[
+		\normalfont\texttt{cond\_exp} \; M \; F \; f > c \quad \mu\textrm{-a.e.}
+	\]
+\end{lemma}
+\begin{proof}
+	The averaging theorem is not applicable in this case since $\{x \in E \;\vert\; x > c \}$ is not closed. Therefore, we argue as follows.
+	
+	Let $S = \{\texttt{cond\_exp} \; M \; F \; f \le c\}$. The conditional expectation $\texttt{cond\_exp} \; M \; F \; f$ is $F$-measurable, hence $S \in F$. Since $F$ is a $\sigma$-finite sub-$\sigma$-algebra, we can assume without loss of generality that $\mu(S) < \infty$.
+	The assumption $f > c$ $\mu$-a.e. implies
+	\[
+		\int_S f \; \textrm{d} \mu \ge \int_S c \; \textrm{d} \mu
+	\]
+	Furthermore, by the definition of $S$
+	\begin{align*}
+		\int_S c \; \textrm{d} \mu &\ge \int_S \texttt{cond\_exp} \; M \; F \; f \; \textrm{d} \mu \\
+		&= \int_S f \; \textrm{d} \mu
+	\end{align*}
+	Hence $\int_S f \; \textrm{d} \mu = \int_S c \; \textrm{d} \mu$. By Corollary 3.1.16, we have
+	\[
+		\mathbf{1}_S \cdot f = \mathbf{1}_S \cdot c \quad \mu\textrm{-a.e.}
+	\]
+	Because of our assumption $f > c$ $\mu$-a.e., this can only be the case if $S$ is a $\mu$-null set, which completes the proof.
+\end{proof}
+
+The corresponding lemmas for $(\le)$ and $(<)$ are simple corollaries.
+
+\begin{isacorollary}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	corollary cond_exp_le_c:
+	  assumes "$\texttt{integrable} \; M \; f$" "AE$ \; x \; $in$ \; M. \; f \; x \le c$"
+	  shows "AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; F \; f \; x \le c$"
+	  $\dots$
+	\end{lstlisting}
+}
+\end{isacorollary}
+
+\begin{isacorollary}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	corollary cond_exp_less_c:
+	  assumes "$\texttt{integrable} \; M \; f$" "AE$ \; x \; $in$ \; M. \; f \; x < c$"
+	  shows "AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; F \; f \; x < c$"
+	  $\dots$
+	\end{lstlisting}
+}
+\end{isacorollary}
+
+Finally, we can demonstrate the operator's monotonicity and that it preserves the pointwise maximum and minimum of two integrable functions.
+
+\begin{isacorollary}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	corollary cond_exp_mono:
+	  assumes "$\texttt{integrable} \; M \; f$" "$\texttt{integrable} \; M \; g$" "AE$ \; x \; $in$ \; M. \; f \; x \le g \; x$"
+	  shows "AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; F \; f \; x \le \texttt{cond\_exp} \; M \; F \; g \; x$"
+	  using cond_exp_le_c[OF Bochner_Integration.integrable_diff, OF assms(1,2), of 0] 
+			cond_exp_diff[OF assms(1,2)] assms(3) by auto
+	\end{lstlisting}
+}
+\end{isacorollary}
+
+\begin{isacorollary}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	corollary cond_exp_max:
+	  assumes "$\texttt{integrable} \; M \; f$" "$\texttt{integrable} \; M \; g$"
+	  shows "AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; F \; (\lambda x. \; \max \; (f \; x) \; (g \; x)) \; x = \max \; (\texttt{cond\_exp} \; M \; F \; f \; x) \; (\texttt{cond\_exp} \; M \; F \; g \; x)$"
+	  $\dots$
+	\end{lstlisting}
+}
+\end{isacorollary}
+
+\begin{isacorollary}
+{\small
+	\begin{lstlisting}[style=isabelle]
+	corollary cond_exp_min:
+	  assumes "$\texttt{integrable} \; M \; f$" "$\texttt{integrable} \; M \; g$"
+	  shows "AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; F \; (\lambda x. \; \min \; (f \; x) \; (g \; x)) \; x = \min \; (\texttt{cond\_exp} \; M \; F \; f \; x) \; (\texttt{cond\_exp} \; M \; F \; g \; x)$"
+	  $\dots$
+	\end{lstlisting}
+}
+\end{isacorollary}
+
+Apart from some auxillary lemmas that we left out on purpose, this wraps up our overview of the formalization of the conditional expectation operator.
