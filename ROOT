@@ -8,7 +8,7 @@ session "Martingale" (AFP) = HOL +
 
   theories
 	Measure_Space_Addendum
-	Metric_Spaces_Addendum
+	Elementary_Metric_Spaces_Addendum
 	Bochner_Integration_Addendum
 	Set_Integral_Addendum
 	Sigma_Finite_Measure_Addendum

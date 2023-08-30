@@ -262,7 +262,7 @@ This concludes our development of filtered measure spaces.
 
 \section{Adapted Processes}
 
-A process $X$ is called adapted with respect to a filtration $F$ if, for every index $t \ge t_0$, the random variable $X_t$ is measurable with respect to the $\sigma$-algebra $F_t$. This means that the value of $X_t$ depends only on the information available up to time $t$. In other words, the process ``adapts'' to the information in a way that it cannot anticipate future values based on events that have not occurred yet. We formalize this notion by introducing the following locale.
+A process $X$ is called adapted with respect to a filtration $F$ if, for every index $t \ge t_0$, the random variable $X_t$ is measurable with respect to the $\sigma$-algebra $F_t$. This means that the value of $X_t$ depends only on the information available up to time $t$. In other words, the process ``adapts'' to the information in a way that it cannot anticipate future values based on events that have not occurred yet. We introduce the following locale.
 
 \begin{isalemma}
 {\small
@@ -274,8 +274,42 @@ locale adapted_process = filtered_measure $M$ $F$ $t_0$ for $M$ $F$ $t_0$
 }
 \end{isalemma}
 
+An adapted process is necessarily a stochastic process. This follows directly from the fact that $F_i \subseteq M$ for all $i \ge t_0$.
+
+\begin{isalemma}
+{\small
+\begin{lstlisting}[style=isabelle]
+sublocale adapted_process $\subseteq$ stochastic_process using measurable_from_subalg subalgebra adapted by (unfold_locales) blast
+
+sublocale nat_adapted_process $\subseteq$ nat_stochastic_process ..
+sublocale real_adapted_process $\subseteq$ real_stochastic_process ..
+\end{lstlisting}
+}
+\end{isalemma}
+
+
+In the other direction, a stochastic process is always adapted to the natural filtration it generates.
+
+\begin{isalemma}
+{\small
+\begin{lstlisting}[style=isabelle]
+sublocale stochastic_process $\subseteq$ adapted_natural: 
+	adapted_process $M$ "natural_filtration $M$ $t_0$ $X$" $t_0$ $X$ 
+  by (unfold_locales) (auto simp add: natural_filtration_def 
+  					   intro: random_variable measurable_sigma_gen) 
+\end{lstlisting}
+}
+\end{isalemma}
+
+Adapted processes are cruicial for defining martingales. A martingale is by definition an adapted process. In the following section, we will explore progressively measurable processes, even though they are not directly relevant to our formalization of martingales. This serves two purposes: first, to replicate the corresponding results on \textsf{mathlib}, and second, to establish a solid foundation for future projects to build upon.
 
 \section{Progressively Measurable Processes}
+
+The definition of a progressively measurable process is more intricate.
+
+\begin{definition}
+	A stochastic process $X$ is called progressively measurable (or simply \texit{progressive}) if, for every index $t \ge t_0$, the map
+
 \section{Predictable Processes}
 
 \section{Discrete Time Processes}

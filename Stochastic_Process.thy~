@@ -117,11 +117,11 @@ end
 sublocale stochastic_process \<subseteq> filtered_measure_natural_filtration: filtered_measure M "natural_filtration M t\<^sub>0 X" t\<^sub>0
     by (unfold_locales) (intro subalgebra_natural_filtration, simp only: sets_natural_filtration, intro sigma_sets_subseteq, force) 
 
-text \<open>In order to show that the natural filtration constitutes a filtered sigma finite measure, we need to provide a countable exhausting set in the preimage of \<^term>\<open>Y t\<^sub>0\<close>.\<close>
+text \<open>In order to show that the natural filtration constitutes a filtered sigma finite measure, we need to provide a countable exhausting set in the preimage of \<^term>\<open>X t\<^sub>0\<close>.\<close>
 
 lemma (in sigma_finite_measure) sigma_finite_filtered_measure_natural_filtration:
   assumes "stochastic_process M t\<^sub>0 X"
-      and exhausting_set: "countable A" "(\<Union>A) = space M" "\<And>a. a \<in> A \<Longrightarrow> emeasure M a \<noteq> \<infinity>" "\<And>a. a \<in> A \<Longrightarrow> \<exists>b \<in> borel. a = X t\<^sub>0 -` b"
+      and exhausting_set: "countable A" "(\<Union>A) = space M" "\<And>a. a \<in> A \<Longrightarrow> emeasure M a \<noteq> \<infinity>" "\<And>a. a \<in> A \<Longrightarrow> \<exists>b \<in> borel. a = X t\<^sub>0 -` b \<inter> space M"
     shows "sigma_finite_filtered_measure M (natural_filtration M t\<^sub>0 X) t\<^sub>0"
 proof (unfold_locales)
   interpret stochastic_process M t\<^sub>0 X by (rule assms)
@@ -132,6 +132,14 @@ proof (unfold_locales)
   ultimately show "\<exists>A. countable A \<and> A \<subseteq> sets (restr_to_subalg M (natural_filtration M t\<^sub>0 X t\<^sub>0)) \<and> \<Union> A = space (restr_to_subalg M (natural_filtration M t\<^sub>0 X t\<^sub>0)) \<and> (\<forall>a\<in>A. emeasure (restr_to_subalg M (natural_filtration M t\<^sub>0 X t\<^sub>0)) a \<noteq> \<infinity>)" using exhausting_set by blast
   show "\<And>i j. \<lbrakk>t\<^sub>0 \<le> i; i \<le> j\<rbrakk> \<Longrightarrow> sets (natural_filtration M t\<^sub>0 X i) \<subseteq> sets (natural_filtration M t\<^sub>0 X j)" using filtered_measure_natural_filtration.subalgebra_F by (simp add: subalgebra_def)
 qed (auto intro: stochastic_process.subalgebra_natural_filtration assms(1))
+
+lemma (in finite_measure) sigma_finite_filtered_measure_natural_filtration:
+  assumes "stochastic_process M t\<^sub>0 X"
+  shows "sigma_finite_filtered_measure M (natural_filtration M t\<^sub>0 X) t\<^sub>0"
+proof (intro sigma_finite_filtered_measure_natural_filtration[OF assms(1), of "{space M}"])
+  have "space M = X t\<^sub>0 -` UNIV \<inter> space M" by blast
+  thus "\<And>a. a \<in> {space M} \<Longrightarrow> \<exists>b\<in>sets borel. a = X t\<^sub>0 -` b \<inter> space M" by force
+qed (auto)
 
 subsection "Adapted Process"
 
@@ -321,6 +329,38 @@ sublocale progressive_process \<subseteq> adapted_process using measurable_compo
 
 sublocale nat_progressive_process \<subseteq> nat_adapted_process ..
 sublocale real_progressive_process \<subseteq> real_adapted_process ..
+
+text \<open>In the discrete setting, adaptedness is equivalent to progressive measurability.\<close>
+
+sublocale nat_adapted_process \<subseteq> nat_progressive_process
+proof (unfold_locales)
+  fix i :: nat
+
+  have "(\<lambda>(j, y). min i j) -` S \<inter> {0..i} \<times> space (F i) = {0..i} \<inter> S"
+  have "(\<lambda>(j, y). min i j) \<in> restrict_space borel {0..i} \<Otimes>\<^sub>M F i \<rightarrow>\<^sub>M restrict_space borel {0..i}" 
+    apply (intro measurableI, force)
+    apply (simp add: space_pair_measure space_restrict_space sets_pair_measure)
+    apply (intro sigma_sets.Basic)
+    
+    
+  hence "(\<lambda>(j, x). (min i j, x)) \<in> restrict_space borel {0..i} \<Otimes>\<^sub>M F i \<rightarrow>\<^sub>M restrict_space borel {0..i} \<Otimes>\<^sub>M F i" by (intro measurable_pair) simp+
+  moreover have "case_prod X \<in> borel_measurable (restrict_space borel {0..i} \<Otimes>\<^sub>M F i)"
+  proof (intro borel_measurableI)
+    fix S :: "'b set" assume open_S: "open S"
+    {
+      fix j assume asm: "j \<le> i"
+      hence "X j -` S \<inter> space M \<in> F i" using adaptedD[of j, THEN measurable_sets] space_F open_S by fastforce
+      moreover have "case_prod X -` S \<inter> {j} \<times> space M = {j} \<times> (X j -` S \<inter> space M)" for j by fast
+      moreover have "{j :: nat} \<in> restrict_space borel {0..i}" using asm by (simp add: sets_restrict_space_iff)
+      ultimately have "case_prod X -` S \<inter> {j} \<times> space M \<in> restrict_space borel {0..i} \<Otimes>\<^sub>M F i" by simp
+    }
+    hence "(\<lambda>j. (\<lambda>(x, y). X x y) -` S \<inter> {j} \<times> space M) ` {..i} \<subseteq> restrict_space borel {0..i} \<Otimes>\<^sub>M F i" by blast
+    moreover have "case_prod X -` S \<inter> space (restrict_space borel {0..i} \<Otimes>\<^sub>M F i) = (\<Union>j\<le>i. case_prod X -` S \<inter> {j} \<times> space M)" unfolding space_pair_measure space_restrict_space space_F by force  
+    ultimately show "case_prod X -` S \<inter> space (restrict_space borel {0..i} \<Otimes>\<^sub>M F i) \<in> restrict_space borel {0..i} \<Otimes>\<^sub>M F i" by (metis sets.countable_UN)
+  qed
+  moreover have "(\<lambda>(x, y). X x y) o (\<lambda>(j, x). (min i j, x)) = (\<lambda>(j, x). X (min i j) x)" by fastforce
+  ultimately show "(\<lambda>(j, x). X (min i j) x) \<in> borel_measurable (restrict_space borel {0..i} \<Otimes>\<^sub>M F i)" by (metis measurable_comp)
+qed
 
 subsection "Predictable Process"
 

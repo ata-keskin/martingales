@@ -1,5 +1,5 @@
 theory Bochner_Integration_Addendum
-  imports "HOL-Analysis.Bochner_Integration"
+  imports "HOL-Analysis.Bochner_Integration" Elementary_Metric_Spaces_Addendum
 begin
 
 subsection "Simple Functions"
@@ -263,33 +263,33 @@ qed
 lemma cauchy_L1_AE_cauchy_subseq:
   fixes s :: "nat \<Rightarrow> 'a \<Rightarrow> 'b::{banach, second_countable_topology}"
   assumes [measurable]: "\<And>n. integrable M (s n)"
-      and "\<And>e. e > 0 \<Longrightarrow> \<exists>N. \<forall>i\<ge>N. \<forall>j\<ge>N. LINT x|M. dist (s i x) (s j x) < e"
+      and "\<And>e. e > 0 \<Longrightarrow> \<exists>N. \<forall>i\<ge>N. \<forall>j\<ge>N. LINT x|M. norm (s i x - s j x) < e"
   obtains r where "strict_mono r" "AE x in M. Cauchy (\<lambda>i. s (r i) x)"
 proof-
-  have "\<exists>r. \<forall>n. (\<forall>i\<ge>r n. \<forall>j\<ge> r n. LINT x|M. dist (s i x) (s j x) < (1 / 2) ^ n) \<and> (r (Suc n) > r n)"
+  have "\<exists>r. \<forall>n. (\<forall>i\<ge>r n. \<forall>j\<ge> r n. LINT x|M. norm (s i x - s j x) < (1 / 2) ^ n) \<and> (r (Suc n) > r n)"
   proof (intro dependent_nat_choice, goal_cases)
     case 1
     then show ?case using assms(2) by presburger
   next
     case (2 x n)
-    obtain N where *: "LINT x|M. dist (s i x) (s j x) < (1 / 2) ^ Suc n" if "i \<ge> N" "j \<ge> N" for i j using assms(2)[of "(1 / 2) ^ Suc n"] by auto
+    obtain N where *: "LINT x|M. norm (s i x - s j x) < (1 / 2) ^ Suc n" if "i \<ge> N" "j \<ge> N" for i j using assms(2)[of "(1 / 2) ^ Suc n"] by auto
     {
       fix i j assume "i \<ge> max N (Suc x)" "j \<ge> max N (Suc x)"
-      hence "integral\<^sup>L M (\<lambda>x. dist (s i x) (s j x)) < (1 / 2) ^ Suc n" using * by fastforce
+      hence "integral\<^sup>L M (\<lambda>x. norm (s i x - s j x)) < (1 / 2) ^ Suc n" using * by fastforce
     }
     then show ?case by fastforce
   qed
-  then obtain r where strict_mono: "strict_mono r" and "\<forall>i\<ge>r n. \<forall>j\<ge> r n. LINT x|M. dist (s i x) (s j x) < (1 / 2) ^ n" for n using strict_mono_Suc_iff by blast
-  hence r_is: "LINT x|M. dist (s (r (Suc n)) x) (s (r n) x) < (1 / 2) ^ n" for n by (simp add: strict_mono_leD)
+  then obtain r where strict_mono: "strict_mono r" and "\<forall>i\<ge>r n. \<forall>j\<ge> r n. LINT x|M. norm (s i x - s j x) < (1 / 2) ^ n" for n using strict_mono_Suc_iff by blast
+  hence r_is: "LINT x|M. norm (s (r (Suc n)) x - s (r n) x) < (1 / 2) ^ n" for n by (simp add: strict_mono_leD)
 
-  define g where "g = (\<lambda>n x. (\<Sum>i\<le>n. ennreal (dist (s (r (Suc i)) x) (s (r i) x))))"
-  define g' where "g' = (\<lambda>x. \<Sum>i. ennreal (dist (s (r (Suc i)) x) (s (r i) x)))"
+  define g where "g = (\<lambda>n x. (\<Sum>i\<le>n. ennreal (norm (s (r (Suc i)) x - s (r i) x))))"
+  define g' where "g' = (\<lambda>x. \<Sum>i. ennreal (norm (s (r (Suc i)) x - s (r i) x)))"
 
   have integrable_g: "(\<integral>\<^sup>+ x. g n x \<partial>M) < 2" for n
   proof -
-    have "(\<integral>\<^sup>+ x. g n x \<partial>M) = (\<integral>\<^sup>+ x. (\<Sum>i\<le>n. ennreal (dist (s (r (Suc i)) x) (s (r i) x))) \<partial>M)" using g_def by simp
-    also have "... = (\<Sum>i\<le>n. (\<integral>\<^sup>+ x. ennreal (dist (s (r (Suc i)) x) (s (r i) x)) \<partial>M))" by (intro nn_integral_sum, simp)
-    also have "... = (\<Sum>i\<le>n. LINT x|M. dist (s (r (Suc i)) x) (s (r i) x))" unfolding dist_norm using assms(1) by (subst nn_integral_eq_integral[OF integrable_norm], auto)
+    have "(\<integral>\<^sup>+ x. g n x \<partial>M) = (\<integral>\<^sup>+ x. (\<Sum>i\<le>n. ennreal (norm (s (r (Suc i)) x - s (r i) x))) \<partial>M)" using g_def by simp
+    also have "... = (\<Sum>i\<le>n. (\<integral>\<^sup>+ x. ennreal (norm (s (r (Suc i)) x - s (r i) x)) \<partial>M))" by (intro nn_integral_sum, simp)
+    also have "... = (\<Sum>i\<le>n. LINT x|M. norm (s (r (Suc i)) x - s (r i) x))" unfolding dist_norm using assms(1) by (subst nn_integral_eq_integral[OF integrable_norm], auto)
     also have "... < ennreal (\<Sum>i\<le>n. (1 / 2) ^ i)" by (intro ennreal_lessI[OF sum_pos sum_strict_mono[OF finite_atMost _ r_is]], auto)
     also have "... \<le> ennreal 2" unfolding sum_gp0[of "1 / 2" n] by (intro ennreal_leI, auto)
     finally show "(\<integral>\<^sup>+ x. g n x \<partial>M) < 2" by simp
@@ -307,7 +307,7 @@ proof-
     finally show ?thesis .
   qed
   hence "AE x in M. g' x < \<infinity>" by (intro finite_nn_integral_imp_ae_finite) (auto simp add: order_le_less_trans g'_def)
-  moreover have "summable (\<lambda>i. dist (s (r (Suc i)) x) (s (r i) x))" if "g' x \<noteq> \<infinity>" for x using that unfolding g'_def by (intro summable_suminf_not_top, intro zero_le_dist, fastforce) 
+  moreover have "summable (\<lambda>i. norm (s (r (Suc i)) x - s (r i) x))" if "g' x \<noteq> \<infinity>" for x using that unfolding g'_def by (intro summable_suminf_not_top) fastforce+ 
   ultimately have ae_summable: "AE x in M. summable (\<lambda>i. s (r (Suc i)) x - s (r i) x)" using summable_norm_cancel unfolding dist_norm by force
 
   {
@@ -318,7 +318,6 @@ proof-
     hence "(\<lambda>n. s (r n) x - s (r 0) x + s (r 0) x) \<longlonglongrightarrow> (\<Sum>i. s (r (Suc i)) x - s (r i) x) + s (r 0) x" by (intro isCont_tendsto_compose[of _ "\<lambda>z. z + s (r 0) x"], auto)
     hence "Cauchy (\<lambda>n. s (r n) x)" by (simp add: LIMSEQ_imp_Cauchy)
   }
-
   hence "AE x in M. Cauchy (\<lambda>i. s (r i) x)" using ae_summable by fast
   thus ?thesis by (rule that[OF strict_mono(1)])
 qed
@@ -403,5 +402,62 @@ lemma integral_mono_banach:
   assumes "integrable M f" "integrable M g" "\<And>x. x \<in> space M \<Longrightarrow> f x \<le> g x"
   shows "integral\<^sup>L M f \<le> integral\<^sup>L M g"
   using integral_mono_AE_banach assms by blast
+
+subsection "Integrability of the Diameter"
+
+
+context
+  fixes s :: "nat \<Rightarrow> 'a \<Rightarrow> 'b :: {second_countable_topology, banach}" and M
+  assumes bounded: "\<And>x. x \<in> space M \<Longrightarrow> bounded (range (\<lambda>i. s i x))"
+begin
+
+lemma borel_measurable_diameter: 
+  assumes [measurable]: "\<And>i. (s i) \<in> borel_measurable M"
+  shows "(\<lambda>x. diameter {s i x |i. n \<le> i}) \<in> borel_measurable M"
+proof -
+  have "{s i x |i. N \<le> i} \<noteq> {}" for x N by blast
+  hence diameter_SUP: "diameter {s i x |i. N \<le> i} = (SUP (i, j) \<in> {N..} \<times> {N..}. dist (s i x) (s j x))" for x N unfolding diameter_def by (auto intro!: arg_cong[of _ _ Sup])
+  
+  have "case_prod dist ` ({s i x |i. n \<le> i} \<times> {s i x |i. n \<le> i}) = ((\<lambda>(i, j). dist (s i x) (s j x)) ` ({n..} \<times> {n..}))" for x by fast
+  hence *: "(\<lambda>x. diameter {s i x |i. n \<le> i}) =  (\<lambda>x. Sup ((\<lambda>(i, j). dist (s i x) (s j x)) ` ({n..} \<times> {n..})))" using diameter_SUP by (simp add: case_prod_beta')
+  
+  have "bounded ((\<lambda>(i, j). dist (s i x) (s j x)) ` ({n..} \<times> {n..}))" if "x \<in> space M" for x by (rule bounded_imp_dist_bounded[OF bounded, OF that])
+  hence bdd: "bdd_above ((\<lambda>(i, j). dist (s i x) (s j x)) ` ({n..} \<times> {n..}))" if "x \<in> space M" for x using that bounded_imp_bdd_above by presburger
+  have "fst p \<in> borel_measurable M" "snd p \<in> borel_measurable M" if "p \<in> s ` {n..} \<times> s ` {n..}" for p using that by fastforce+
+  hence "(\<lambda>x. fst p x - snd p x) \<in> borel_measurable M" if "p \<in> s ` {n..} \<times> s ` {n..}" for p using that borel_measurable_diff by simp
+  hence "(\<lambda>x. case p of (f, g) \<Rightarrow> dist (f x) (g x)) \<in> borel_measurable M" if "p \<in> s ` {n..} \<times> s ` {n..}" for p unfolding dist_norm using that by measurable
+  moreover have "countable (s ` {n..} \<times> s ` {n..})" by (intro countable_SIGMA countable_image, auto)
+  ultimately show ?thesis unfolding * by (auto intro!: borel_measurable_cSUP bdd)
+qed
+
+lemma integrable_bound_diameter:
+  fixes f :: "'a \<Rightarrow> real"
+  assumes "integrable M f" 
+      and [measurable]: "\<And>i. (s i) \<in> borel_measurable M"
+      and "\<And>x i. x \<in> space M \<Longrightarrow> norm (s i x) \<le> f x"
+    shows "integrable M (\<lambda>x. diameter {s i x |i. n \<le> i})"
+proof -
+  have "{s i x |i. N \<le> i} \<noteq> {}" for x N by blast
+  hence diameter_SUP: "diameter {s i x |i. N \<le> i} = (SUP (i, j) \<in> {N..} \<times> {N..}. dist (s i x) (s j x))" for x N unfolding diameter_def by (auto intro!: arg_cong[of _ _ Sup])
+  {
+    fix x assume x: "x \<in> space M"
+    let ?S = "(\<lambda>(i, j). dist (s i x) (s j x)) ` ({n..} \<times> {n..})"
+    have "case_prod dist ` ({s i x |i. n \<le> i} \<times> {s i x |i. n \<le> i}) = (\<lambda>(i, j). dist (s i x) (s j x)) ` ({n..} \<times> {n..})" by fast
+    hence *: "diameter {s i x |i. n \<le> i} =  Sup ?S" using diameter_SUP by (simp add: case_prod_beta')
+    
+    have "bounded ?S" by (rule bounded_imp_dist_bounded[OF bounded[OF x]])
+    hence Sup_S_nonneg:"0 \<le> Sup ?S" by (auto intro!: cSup_upper2 x bounded_imp_bdd_above)
+
+    have "dist (s i x) (s j x) \<le>  2 * f x" for i j by (intro dist_triangle2[THEN order_trans, of _ 0]) (metis norm_conv_dist assms(3) x add_mono mult_2)
+    hence "\<forall>c \<in> ?S. c \<le> 2 * f x" by force
+    hence "Sup ?S \<le> 2 * f x" by (intro cSup_least, auto)
+    hence "norm (Sup ?S) \<le> 2 * norm (f x)" using Sup_S_nonneg by auto
+    also have "... = norm (2 *\<^sub>R f x)" by simp
+    finally have "norm (diameter {s i x |i. n \<le> i}) \<le> norm (2 *\<^sub>R f x)" unfolding * .
+  }
+  hence "AE x in M. norm (diameter {s i x |i. n \<le> i}) \<le> norm (2 *\<^sub>R f x)" by blast
+  thus  "integrable M (\<lambda>x. diameter {s i x |i. n \<le> i})" using borel_measurable_diameter by (intro Bochner_Integration.integrable_bound[OF assms(1)[THEN integrable_scaleR_right[of 2]]], measurable)
+qed
+end    
 
 end

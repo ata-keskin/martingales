@@ -75,7 +75,7 @@ In the context of metric spaces, second-countability is equivalent to separabili
 Let $U \subseteq E$ be open. Fix $x \in U$. Since $U$ is open and we are working with the metric topology, there is some $\varepsilon > 0$, such that $B_\varepsilon(x) \subseteq U$. Furthermore, we know that a set $D$ is dense if and only if for any non-empty open subset $O \subseteq E$, $D \cap O$ is also non-empty. Therefore, there exists some $y \in D \cap B_{\varepsilon/3}(x)$. Since $\mathbb{Q}$ is dense in $\mathbb{R}$, there exists some $r \in \mathbb{Q}$ with $e/3 < r < e/2$. It is easy to check that $x \in B_r(y)$ and $B_r(y) \subseteq U$ with $y \in D$ and $r \in \mathbb{Q} \cap (0, \infty)$. This concludes the proof.
 \end{proof}
 
-Now we are ready to state and subsequently prove the averaging theorem
+Now we are ready to state and subsequently prove the averaging theorem.
 
 \begin{theorem} (Averaging Theorem) \par
 Let $(\Omega, \mathcal{F}, \mu)$ be some $\sigma$-finite measure space. Let $f \in L^1(E)$. Let $S$ be a closed subset of $E$ and assume that for all measurable sets $A \in \mathcal{F}$ with finite and non-zero measure the following holds
@@ -109,7 +109,7 @@ Thus $\{f \notin S \}$ is a $\mu$-null set, which completes the proof.
 
 \end{proof}
 
-At the beginning of our proof, we assumed $\mu(\Omega) < \infty$ without loss of generality. This is only possible, since we assumed the measure space in question to be $\sigma$-finite. To simplify the formalization of proofs employing this argument, we have introduced the following induction scheme
+At the beginning of our proof, we assumed $\mu(\Omega) < \infty$ without loss of generality. This is only possible since we assumed the measure space in question to be $\sigma$-finite. To simplify the formalization of proofs employing this argument, we have introduced the following induction scheme
 
 \begin{isalemma}
 {\small
@@ -128,7 +128,7 @@ At the beginning of our proof, we assumed $\mu(\Omega) < \infty$ without loss of
 }
 \end{isalemma}
 
-This induction scheme allows us prove results about a $\sigma$-finite measure space $M$, assuming that we can show the property on arbitrary subspaces of $M$ with finite measure. For ease of use we include additional assumptions such as $\texttt{emeasure}\; N \; \Omega \neq 0$ which let us to avoid unnecessary trivial cases. The proof of this induction scheme is straightforward.
+This induction scheme allows us prove results about a $\sigma$-finite measure space $M$, assuming that we can show the property on arbitrary subspaces of $M$ with finite measure. For increased usability, we include additional assumptions such as $\texttt{emeasure}\; N \; \Omega \neq 0$ which let us to avoid unnecessary trivial cases. The proof of this induction scheme is straightforward.
 \begin{proof}
 Let $M = (\Omega, \Sigma, \mu)$ be a $\sigma$-finite measure space. There exists a family of sets with finite measure $(\Omega_i)_{i \in \mathbb{N}}$ such that $\bigcup_{i \in \mathbb{N}} \Omega_i = \Omega$. By assumption, the property $Q$ holds $\mu$-almost everywhere on all $\Omega_i$. Therefore the sets $\Omega_i \cap \{\neg Q\} \in \Sigma\vert_{\Omega_i} \subseteq \Sigma$ are all $\mu$-null sets. This means that $\bigcup_{i \in \mathbb{N}} (\Omega_i \cap \{\neg Q\}) = \{\neg Q\}$ is also $\mu$-null set, which completes the proof.
 \end{proof}
@@ -190,7 +190,7 @@ Let $\varepsilon > 0$. Then there exists some $N \in \mathbb{N}$ such that $d(s_
 	\textrm{diam}(S_N) = \sup_{x,y \in S_N} d(x,y) \le \frac{\varepsilon}{2} < \varepsilon
 \]
 Furthermore, we have $\textrm{diam}(S_n) \le \textrm{diam}(S_N)$ for $n \ge N$ because of the subset relation stated above. Thus $\lim_{n \to \infty} \textup{diam}(S_n) = 0$.
-
+\vspace{0.2cm}\par\noindent
 \noindent$\Longleftarrow:$ Assume $\lim_{n \to \infty} \textup{diam}(S_n) = 0$ and that $S_0$ is bounded. 
 
 Hence $\textrm{diam}(S_n) < \infty$ for all $n \in \mathbb{N}$ with the same argument as above. 
@@ -286,13 +286,15 @@ When working with an ordering on $E$, we may need to concern ourselves with non-
 
 The induction scheme looks complicated and cumbersome, but in essence it is the same induction scheme as the previous one with the added assumption of non-negativity everywhere. The proof is also largely the same. We just need to show that the partial sums stay non-negative all the way through.
 
+\pagebreak
+
 \subsection{Bochner Integration on Linearly Ordered Banach Spaces}
 
-In the context of real numbers, the following statement is easy to show.
+When working with the real numbers, the following statement is easy to show.
 \begin{center}
 Let $f, g : \Omega \rightarrow \mathbb{R}$ be integrable and $f \ge g$ $\mu$-a.e., then $\int f\;\textrm{d} \mu \ge \int g\;\textrm{d} \mu$. 
 \end{center}
-In this subsection, we aim to provide similar results for functions $f, g : \Omega \rightarrow E$ with $E$ a linearly ordered Banach space. For the remainder of our discourse a topological space $E$ is linearly ordered, if there exists a total ordering on $E$ such that the topology on $E$ and the order topology induced by the ordering coincide.
+In this subsection, we aim to provide similar results for functions $f, g : \Omega \rightarrow E$ with $E$ a linearly ordered Banach space. For the remainder of our discourse, a topological space $E$ is linearly ordered, if there exists a total ordering on $E$ such that the topology on $E$ and the order topology induced by the ordering coincide.
 
 We start with the following lemma
 
@@ -310,7 +312,7 @@ and
 \]
 The function $\max(0, s_n)$ is still a simple and integrable function, which has the additional property of being always non-negative. 
 
-We will now show that if $h$ is a non-negative simple function, then $\int h \;\textrm{d}\mu \ge 0$. For this purpose we will use the induction scheme for non-negative integrable simple functions that we proved in the previous subsection.
+We will now show that if $h$ is a non-negative simple function, then $\int h \;\textrm{d}\mu \ge 0$. For this purpose, we will use the induction scheme for non-negative integrable simple functions that we proved in the previous subsection.
 
 \paragraph{Case ``cong'':} Let $h = g$ $\mu$-a.e. and $\int g \;\textrm{d}\mu \ge 0$. It follows directly
 \[

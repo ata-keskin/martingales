@@ -9,7 +9,7 @@
 \isatagtheory
 \isacommand{theory}\isamarkupfalse%
 \ Filtered{\isacharunderscore}{\kern0pt}Measure\isanewline
-\isakeyword{imports}\ {\isachardoublequoteopen}HOL{\isacharminus}{\kern0pt}Probability{\isachardot}{\kern0pt}Conditional{\isacharunderscore}{\kern0pt}Expectation{\isachardoublequoteclose}\ Measure{\isacharunderscore}{\kern0pt}Space{\isacharunderscore}{\kern0pt}Addendum\isanewline
+\isakeyword{imports}\ {\isachardoublequoteopen}HOL{\isacharminus}{\kern0pt}Probability{\isachardot}{\kern0pt}Conditional{\isacharunderscore}{\kern0pt}Expectation{\isachardoublequoteclose}\isanewline
 \isakeyword{begin}%
 \endisatagtheory
 {\isafoldtheory}%
@@ -24,7 +24,7 @@
 %
 \isatagdocument
 %
-\isamarkupsection{Filtered Measure%
+\isamarkupsubsection{Filtered Measure%
 }
 \isamarkuptrue%
 %
@@ -113,7 +113,7 @@
 %
 \isatagdocument
 %
-\isamarkupsection{Filtered Sigma Finite Measure%
+\isamarkupsubsection{Filtered Sigma Finite Measure%
 }
 \isamarkuptrue%
 %
@@ -128,11 +128,11 @@
 The locale presented here is a generalization of the \isa{sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}subalgebra} for a particular filtration.%
 \end{isamarkuptext}\isamarkuptrue%
 \isacommand{locale}\isamarkupfalse%
-\ filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ {\isacharequal}{\kern0pt}\ filtered{\isacharunderscore}{\kern0pt}measure\ {\isacharplus}{\kern0pt}\isanewline
+\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}filtered{\isacharunderscore}{\kern0pt}measure\ {\isacharequal}{\kern0pt}\ filtered{\isacharunderscore}{\kern0pt}measure\ {\isacharplus}{\kern0pt}\isanewline
 \ \ \isakeyword{assumes}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}subalgebra\ M\ {\isacharparenleft}{\kern0pt}F\ t\isactrlsub {\isadigit{0}}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \isanewline
 \isacommand{lemma}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}\isakeyword{in}\ filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure{\isacharparenright}{\kern0pt}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}subalgebra{\isacharunderscore}{\kern0pt}F{\isacharbrackleft}{\kern0pt}intro{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\isanewline
+\ {\isacharparenleft}{\kern0pt}\isakeyword{in}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}filtered{\isacharunderscore}{\kern0pt}measure{\isacharparenright}{\kern0pt}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}subalgebra{\isacharunderscore}{\kern0pt}F{\isacharbrackleft}{\kern0pt}intro{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}t\isactrlsub {\isadigit{0}}\ {\isasymle}\ i{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{shows}\ {\isachardoublequoteopen}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}subalgebra\ M\ {\isacharparenleft}{\kern0pt}F\ i{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 %
@@ -157,265 +157,7 @@ The locale presented here is a generalization of the \isa{sigma{\isacharundersco
 %
 \isatagdocument
 %
-\isamarkupsubsection{Constant Filtration%
-}
-\isamarkuptrue%
-%
-\endisatagdocument
-{\isafolddocument}%
-%
-\isadelimdocument
-%
-\endisadelimdocument
-\isacommand{lemma}\isamarkupfalse%
-\ filtered{\isacharunderscore}{\kern0pt}measure{\isacharunderscore}{\kern0pt}constant{\isacharunderscore}{\kern0pt}filtration{\isacharcolon}{\kern0pt}\isanewline
-\ \ \isakeyword{assumes}\ {\isachardoublequoteopen}subalgebra\ M\ F{\isachardoublequoteclose}\isanewline
-\ \ \isakeyword{shows}\ {\isachardoublequoteopen}filtered{\isacharunderscore}{\kern0pt}measure\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}{\isacharunderscore}{\kern0pt}{\isachardot}{\kern0pt}\ F{\isacharparenright}{\kern0pt}\ t\isactrlsub {\isadigit{0}}{\isachardoublequoteclose}\isanewline
-%
-\isadelimproof
-\ \ %
-\endisadelimproof
-%
-\isatagproof
-\isacommand{using}\isamarkupfalse%
-\ assms\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}unfold{\isacharunderscore}{\kern0pt}locales{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}auto\ simp\ add{\isacharcolon}{\kern0pt}\ subalgebra{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}%
-\endisatagproof
-{\isafoldproof}%
-%
-\isadelimproof
-\isanewline
-%
-\endisadelimproof
-\isanewline
-\isacommand{sublocale}\isamarkupfalse%
-\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}subalgebra\ {\isasymsubseteq}\ constant{\isacharunderscore}{\kern0pt}filtration{\isacharcolon}{\kern0pt}\ filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ M\ {\isachardoublequoteopen}{\isasymlambda}{\isacharunderscore}{\kern0pt}\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharprime}{\kern0pt}t\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharbraceright}{\kern0pt}{\isachardot}{\kern0pt}\ F{\isachardoublequoteclose}\ t\isactrlsub {\isadigit{0}}\isanewline
-%
-\isadelimproof
-\ \ %
-\endisadelimproof
-%
-\isatagproof
-\isacommand{using}\isamarkupfalse%
-\ subalg\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}unfold{\isacharunderscore}{\kern0pt}locales{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}auto\ simp\ add{\isacharcolon}{\kern0pt}\ subalgebra{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}%
-\endisatagproof
-{\isafoldproof}%
-%
-\isadelimproof
-%
-\endisadelimproof
-%
-\isadelimdocument
-%
-\endisadelimdocument
-%
-\isatagdocument
-%
-\isamarkupsubsection{Natural Filtration%
-}
-\isamarkuptrue%
-%
-\endisatagdocument
-{\isafolddocument}%
-%
-\isadelimdocument
-%
-\endisadelimdocument
-%
-\begin{isamarkuptext}%
-A natural filtration for a family of random variables \isa{Y} is an increasing sequence of sigma algebras generated by all events involving the process up to the time index \isa{t}, i.e., \isa{{\isasymSigma}\ t\ {\isacharequal}{\kern0pt}\ {\isasymsigma}\ {\isacharbraceleft}{\kern0pt}Y\ s\ {\isacharbar}{\kern0pt}s{\isachardot}{\kern0pt}\ s\ {\isasymle}\ t{\isacharbraceright}{\kern0pt}}.%
-\end{isamarkuptext}\isamarkuptrue%
-\isacommand{definition}\isamarkupfalse%
-\ natural{\isacharunderscore}{\kern0pt}filtration\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ measure\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b\ {\isasymRightarrow}\ {\isacharparenleft}{\kern0pt}{\isacharprime}{\kern0pt}b\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}c\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ topological{\isacharunderscore}{\kern0pt}space{\isacharparenright}{\kern0pt}\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharbraceright}{\kern0pt}\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}a\ measure{\isachardoublequoteclose}\ \isakeyword{where}\isanewline
-\ \ {\isachardoublequoteopen}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ {\isacharequal}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymlambda}t{\isachardot}{\kern0pt}\ sigma{\isacharunderscore}{\kern0pt}gen\ {\isacharparenleft}{\kern0pt}space\ M{\isacharparenright}{\kern0pt}\ borel\ {\isacharbraceleft}{\kern0pt}Y\ i\ {\isacharbar}{\kern0pt}\ i{\isachardot}{\kern0pt}\ i\ {\isasymin}\ {\isacharbraceleft}{\kern0pt}t\isactrlsub {\isadigit{0}}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}t{\isacharbraceright}{\kern0pt}{\isacharbraceright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
-\isanewline
-\isacommand{context}\isamarkupfalse%
-\isanewline
-\ \ \isakeyword{fixes}\ Y\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharbraceright}{\kern0pt}\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}c\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ topological{\isacharunderscore}{\kern0pt}space{\isachardoublequoteclose}\ \isakeyword{and}\ M\ N\ t\isactrlsub {\isadigit{0}}\isanewline
-\ \ \isakeyword{assumes}\ Y{\isacharunderscore}{\kern0pt}meas{\isacharbrackleft}{\kern0pt}measurable{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isasymAnd}i{\isachardot}{\kern0pt}\ t\isactrlsub {\isadigit{0}}\ {\isasymle}\ i\ {\isasymLongrightarrow}\ Y\ i\ {\isasymin}\ borel{\isacharunderscore}{\kern0pt}measurable\ M{\isachardoublequoteclose}\isanewline
-\isakeyword{begin}\isanewline
-\isanewline
-\isacommand{lemma}\isamarkupfalse%
-\ sets{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharprime}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}sets\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ t{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ sigma{\isacharunderscore}{\kern0pt}sets\ {\isacharparenleft}{\kern0pt}space\ M{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymUnion}i{\isasymin}{\isacharbraceleft}{\kern0pt}t\isactrlsub {\isadigit{0}}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}t{\isacharbraceright}{\kern0pt}{\isachardot}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}Y\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ A\ {\isasyminter}\ space\ M\ {\isacharbar}{\kern0pt}\ A{\isachardot}{\kern0pt}\ A\ {\isasymin}\ borel{\isacharbraceright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
-%
-\isadelimproof
-\ \ %
-\endisadelimproof
-%
-\isatagproof
-\isacommand{unfolding}\isamarkupfalse%
-\ natural{\isacharunderscore}{\kern0pt}filtration{\isacharunderscore}{\kern0pt}def\ sets{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}gen\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}intro\ sigma{\isacharunderscore}{\kern0pt}sets{\isacharunderscore}{\kern0pt}eqI{\isacharparenright}{\kern0pt}\ blast{\isacharplus}{\kern0pt}%
-\endisatagproof
-{\isafoldproof}%
-%
-\isadelimproof
-\isanewline
-%
-\endisadelimproof
-\isanewline
-\isacommand{lemma}\isamarkupfalse%
-\isanewline
-\ \ \isakeyword{shows}\ sets{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}sets\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ t{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ sigma{\isacharunderscore}{\kern0pt}sets\ {\isacharparenleft}{\kern0pt}space\ M{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymUnion}i{\isasymin}{\isacharbraceleft}{\kern0pt}t\isactrlsub {\isadigit{0}}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}t{\isacharbraceright}{\kern0pt}{\isachardot}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}Y\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ A\ {\isasyminter}\ space\ M\ {\isacharbar}{\kern0pt}\ A{\isachardot}{\kern0pt}\ open\ A{\isacharbraceright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isanewline
-\ \ \ \ \isakeyword{and}\ space{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharbrackleft}{\kern0pt}simp{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}space\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ t{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ space\ M{\isachardoublequoteclose}\isanewline
-%
-\isadelimproof
-%
-\endisadelimproof
-%
-\isatagproof
-\isacommand{proof}\isamarkupfalse%
-\ {\isacharminus}{\kern0pt}\isanewline
-\ \ \isacommand{show}\isamarkupfalse%
-\ {\isachardoublequoteopen}space\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ t{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ space\ M{\isachardoublequoteclose}\ \isacommand{unfolding}\isamarkupfalse%
-\ natural{\isacharunderscore}{\kern0pt}filtration{\isacharunderscore}{\kern0pt}def\ space{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}gen\ \isacommand{{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}}\isamarkupfalse%
-\isanewline
-\ \ \isacommand{show}\isamarkupfalse%
-\ {\isachardoublequoteopen}sets\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ t{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ sigma{\isacharunderscore}{\kern0pt}sets\ {\isacharparenleft}{\kern0pt}space\ M{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymUnion}i{\isasymin}{\isacharbraceleft}{\kern0pt}t\isactrlsub {\isadigit{0}}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}t{\isacharbraceright}{\kern0pt}{\isachardot}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}Y\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ A\ {\isasyminter}\ space\ M\ {\isacharbar}{\kern0pt}\ A{\isachardot}{\kern0pt}\ open\ A{\isacharbraceright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{unfolding}\isamarkupfalse%
-\ sets{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharprime}{\kern0pt}\isanewline
-\ \ \isacommand{proof}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}intro\ sigma{\isacharunderscore}{\kern0pt}sets{\isacharunderscore}{\kern0pt}eqI{\isacharcomma}{\kern0pt}\ clarify{\isacharparenright}{\kern0pt}\isanewline
-\ \ \ \ \isacommand{fix}\isamarkupfalse%
-\ i\ \isakeyword{and}\ A\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}c\ set{\isachardoublequoteclose}\ \isacommand{assume}\isamarkupfalse%
-\ asm{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}i\ {\isasymin}\ {\isacharbraceleft}{\kern0pt}t\isactrlsub {\isadigit{0}}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}t{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\ {\isachardoublequoteopen}\ A\ {\isasymin}\ sets\ borel{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{hence}\isamarkupfalse%
-\ {\isachardoublequoteopen}A\ {\isasymin}\ sigma{\isacharunderscore}{\kern0pt}sets\ UNIV\ {\isacharbraceleft}{\kern0pt}S{\isachardot}{\kern0pt}\ open\ S{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{unfolding}\isamarkupfalse%
-\ borel{\isacharunderscore}{\kern0pt}def\ \isacommand{by}\isamarkupfalse%
-\ simp\isanewline
-\ \ \ \ \isacommand{thus}\isamarkupfalse%
-\ {\isachardoublequoteopen}Y\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ A\ {\isasyminter}\ space\ M\ {\isasymin}\ sigma{\isacharunderscore}{\kern0pt}sets\ {\isacharparenleft}{\kern0pt}space\ M{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymUnion}i{\isasymin}{\isacharbraceleft}{\kern0pt}t\isactrlsub {\isadigit{0}}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}t{\isacharbraceright}{\kern0pt}{\isachardot}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}Y\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ A\ {\isasyminter}\ space\ M\ {\isacharbar}{\kern0pt}A{\isachardot}{\kern0pt}\ open\ A{\isacharbraceright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{proof}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}induction{\isacharparenright}{\kern0pt}\isanewline
-\ \ \ \ \ \ \isacommand{case}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}Compl\ a{\isacharparenright}{\kern0pt}\isanewline
-\ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}Y\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ {\isacharparenleft}{\kern0pt}UNIV\ {\isacharminus}{\kern0pt}\ a{\isacharparenright}{\kern0pt}\ {\isasyminter}\ space\ M\ {\isacharequal}{\kern0pt}\ space\ M\ {\isacharminus}{\kern0pt}\ {\isacharparenleft}{\kern0pt}Y\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ a\ {\isasyminter}\ space\ M{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
-\ blast\isanewline
-\ \ \ \ \ \ \isacommand{then}\isamarkupfalse%
-\ \isacommand{show}\isamarkupfalse%
-\ {\isacharquery}{\kern0pt}case\ \isacommand{using}\isamarkupfalse%
-\ Compl{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharbrackleft}{\kern0pt}THEN\ sigma{\isacharunderscore}{\kern0pt}sets{\isachardot}{\kern0pt}Compl{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
-\ presburger\isanewline
-\ \ \ \ \isacommand{next}\isamarkupfalse%
-\isanewline
-\ \ \ \ \ \ \isacommand{case}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}Union\ a{\isacharparenright}{\kern0pt}\isanewline
-\ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}Y\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ {\isasymUnion}\ {\isacharparenleft}{\kern0pt}range\ a{\isacharparenright}{\kern0pt}\ {\isasyminter}\ space\ M\ {\isacharequal}{\kern0pt}\ {\isasymUnion}\ {\isacharparenleft}{\kern0pt}range\ {\isacharparenleft}{\kern0pt}{\isasymlambda}j{\isachardot}{\kern0pt}\ Y\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ a\ j\ {\isasyminter}\ space\ M{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
-\ blast\isanewline
-\ \ \ \ \ \ \isacommand{then}\isamarkupfalse%
-\ \isacommand{show}\isamarkupfalse%
-\ {\isacharquery}{\kern0pt}case\ \isacommand{using}\isamarkupfalse%
-\ Union{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharbrackleft}{\kern0pt}THEN\ sigma{\isacharunderscore}{\kern0pt}sets{\isachardot}{\kern0pt}Union{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
-\ presburger\isanewline
-\ \ \ \ \isacommand{qed}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}auto\ intro{\isacharcolon}{\kern0pt}\ asm{\isacharparenright}{\kern0pt}\isanewline
-\ \ \isacommand{qed}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}intro\ sigma{\isacharunderscore}{\kern0pt}sets{\isachardot}{\kern0pt}Basic{\isacharcomma}{\kern0pt}\ fastforce{\isacharparenright}{\kern0pt}\isanewline
-\isacommand{qed}\isamarkupfalse%
-%
-\endisatagproof
-{\isafoldproof}%
-%
-\isadelimproof
-\isanewline
-%
-\endisadelimproof
-\isanewline
-\isacommand{lemma}\isamarkupfalse%
-\ subalgebra{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharcolon}{\kern0pt}\ \isanewline
-\ \ \isakeyword{shows}\ {\isachardoublequoteopen}subalgebra\ M\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ i{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isanewline
-%
-\isadelimproof
-\ \ %
-\endisadelimproof
-%
-\isatagproof
-\isacommand{unfolding}\isamarkupfalse%
-\ subalgebra{\isacharunderscore}{\kern0pt}def\ \isacommand{using}\isamarkupfalse%
-\ measurable{\isacharunderscore}{\kern0pt}family{\isacharunderscore}{\kern0pt}iff{\isacharunderscore}{\kern0pt}contains{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}gen\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}force\ simp\ add{\isacharcolon}{\kern0pt}\ natural{\isacharunderscore}{\kern0pt}filtration{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}%
-\endisatagproof
-{\isafoldproof}%
-%
-\isadelimproof
-\isanewline
-%
-\endisadelimproof
-\isanewline
-\isacommand{global{\isacharunderscore}{\kern0pt}interpretation}\isamarkupfalse%
-\ filtered{\isacharunderscore}{\kern0pt}measure{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharcolon}{\kern0pt}\ filtered{\isacharunderscore}{\kern0pt}measure\ M\ {\isachardoublequoteopen}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y{\isachardoublequoteclose}\ t\isactrlsub {\isadigit{0}}\ \isanewline
-%
-\isadelimproof
-\ \ %
-\endisadelimproof
-%
-\isatagproof
-\isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}unfold{\isacharunderscore}{\kern0pt}locales{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}intro\ subalgebra{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharcomma}{\kern0pt}\ simp\ only{\isacharcolon}{\kern0pt}\ sets{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharcomma}{\kern0pt}\ intro\ sigma{\isacharunderscore}{\kern0pt}sets{\isacharunderscore}{\kern0pt}subseteq{\isacharcomma}{\kern0pt}\ force{\isacharparenright}{\kern0pt}%
-\endisatagproof
-{\isafoldproof}%
-%
-\isadelimproof
-\ \isanewline
-%
-\endisadelimproof
-\isanewline
-\isacommand{end}\isamarkupfalse%
-%
-\begin{isamarkuptext}%
-In order to show that the natural filtration constitutes a filtered sigma finite measure, we need to provide a countable exhausting set in the preimage of \isa{Y\ t\isactrlsub {\isadigit{0}}}.%
-\end{isamarkuptext}\isamarkuptrue%
-\isacommand{lemma}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}\isakeyword{in}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure{\isacharparenright}{\kern0pt}\ filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharcolon}{\kern0pt}\isanewline
-\ \ \isakeyword{assumes}\ {\isacharbrackleft}{\kern0pt}measurable{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isasymAnd}i{\isachardot}{\kern0pt}\ t\isactrlsub {\isadigit{0}}\ {\isasymle}\ i\ {\isasymLongrightarrow}\ Y\ i\ {\isasymin}\ borel{\isacharunderscore}{\kern0pt}measurable\ M{\isachardoublequoteclose}\isanewline
-\ \ \ \ \ \ \isakeyword{and}\ exhausting{\isacharunderscore}{\kern0pt}set{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}countable\ A{\isachardoublequoteclose}\ {\isachardoublequoteopen}{\isacharparenleft}{\kern0pt}{\isasymUnion}A{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ space\ M{\isachardoublequoteclose}\ {\isachardoublequoteopen}{\isasymAnd}a{\isachardot}{\kern0pt}\ a\ {\isasymin}\ A\ {\isasymLongrightarrow}\ emeasure\ M\ a\ {\isasymnoteq}\ {\isasyminfinity}{\isachardoublequoteclose}\ {\isachardoublequoteopen}{\isasymAnd}a{\isachardot}{\kern0pt}\ a\ {\isasymin}\ A\ {\isasymLongrightarrow}\ {\isasymexists}b\ {\isasymin}\ borel{\isachardot}{\kern0pt}\ a\ {\isacharequal}{\kern0pt}\ Y\ t\isactrlsub {\isadigit{0}}\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ b{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isakeyword{shows}\ {\isachardoublequoteopen}filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ M\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y{\isacharparenright}{\kern0pt}\ t\isactrlsub {\isadigit{0}}{\isachardoublequoteclose}\isanewline
-%
-\isadelimproof
-%
-\endisadelimproof
-%
-\isatagproof
-\isacommand{proof}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}unfold{\isacharunderscore}{\kern0pt}locales{\isacharparenright}{\kern0pt}\isanewline
-\ \ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}A\ {\isasymsubseteq}\ sets\ {\isacharparenleft}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ M\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ t\isactrlsub {\isadigit{0}}{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
-\ assms{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}\ exhausting{\isacharunderscore}{\kern0pt}set\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}simp\ add{\isacharcolon}{\kern0pt}\ sets{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalgebra{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharbrackright}{\kern0pt}\ sets{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharprime}{\kern0pt}{\isacharparenright}{\kern0pt}\ fast\isanewline
-\ \ \isacommand{moreover}\isamarkupfalse%
-\ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}{\isasymUnion}\ A\ {\isacharequal}{\kern0pt}\ space\ {\isacharparenleft}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ M\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ t\isactrlsub {\isadigit{0}}{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{unfolding}\isamarkupfalse%
-\ space{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ \isacommand{using}\isamarkupfalse%
-\ exhausting{\isacharunderscore}{\kern0pt}set\ \isacommand{by}\isamarkupfalse%
-\ simp\isanewline
-\ \ \isacommand{moreover}\isamarkupfalse%
-\ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}{\isasymforall}a{\isasymin}A{\isachardot}{\kern0pt}\ emeasure\ {\isacharparenleft}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ M\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ t\isactrlsub {\isadigit{0}}{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ a\ {\isasymnoteq}\ {\isasyminfinity}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
-\ calculation{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}\ exhausting{\isacharunderscore}{\kern0pt}set{\isacharparenleft}{\kern0pt}{\isadigit{3}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}auto\ simp\ add{\isacharcolon}{\kern0pt}\ sets{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalgebra{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharbrackright}{\kern0pt}\ emeasure{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalgebra{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
-\ \ \isacommand{ultimately}\isamarkupfalse%
-\ \isacommand{show}\isamarkupfalse%
-\ {\isachardoublequoteopen}{\isasymexists}A{\isachardot}{\kern0pt}\ countable\ A\ {\isasymand}\ A\ {\isasymsubseteq}\ sets\ {\isacharparenleft}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ M\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ t\isactrlsub {\isadigit{0}}{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ {\isasymand}\ {\isasymUnion}\ A\ {\isacharequal}{\kern0pt}\ space\ {\isacharparenleft}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ M\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ t\isactrlsub {\isadigit{0}}{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ {\isasymand}\ {\isacharparenleft}{\kern0pt}{\isasymforall}a{\isasymin}A{\isachardot}{\kern0pt}\ emeasure\ {\isacharparenleft}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ M\ {\isacharparenleft}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ M\ t\isactrlsub {\isadigit{0}}\ Y\ t\isactrlsub {\isadigit{0}}{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ a\ {\isasymnoteq}\ {\isasyminfinity}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
-\ exhausting{\isacharunderscore}{\kern0pt}set\ \isacommand{by}\isamarkupfalse%
-\ blast\isanewline
-\isacommand{qed}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}auto\ intro{\isacharcolon}{\kern0pt}\ subalgebra{\isacharunderscore}{\kern0pt}natural{\isacharunderscore}{\kern0pt}filtration\ assms{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}%
-\endisatagproof
-{\isafoldproof}%
-%
-\isadelimproof
-%
-\endisadelimproof
-%
-\isadelimdocument
-%
-\endisadelimdocument
-%
-\isatagdocument
-%
-\isamarkupsubsection{Typed locales%
+\isamarkupsubsubsection{Typed locales%
 }
 \isamarkuptrue%
 %
@@ -500,12 +242,12 @@ In order to show that the natural filtration constitutes a filtered sigma finite
 \isanewline
 \isanewline
 \isacommand{locale}\isamarkupfalse%
-\ nat{\isacharunderscore}{\kern0pt}filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ {\isacharequal}{\kern0pt}\ filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ M\ F\ {\isadigit{0}}\ \isakeyword{for}\ M\ \isakeyword{and}\ F\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}nat\ {\isasymRightarrow}\ {\isacharunderscore}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ nat{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}filtered{\isacharunderscore}{\kern0pt}measure\ {\isacharequal}{\kern0pt}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}filtered{\isacharunderscore}{\kern0pt}measure\ M\ F\ {\isadigit{0}}\ \isakeyword{for}\ M\ \isakeyword{and}\ F\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}nat\ {\isasymRightarrow}\ {\isacharunderscore}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \isacommand{locale}\isamarkupfalse%
-\ real{\isacharunderscore}{\kern0pt}filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ {\isacharequal}{\kern0pt}\ filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ M\ F\ {\isadigit{0}}\ \isakeyword{for}\ M\ \isakeyword{and}\ F\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}real\ {\isasymRightarrow}\ {\isacharunderscore}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ real{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}filtered{\isacharunderscore}{\kern0pt}measure\ {\isacharequal}{\kern0pt}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}filtered{\isacharunderscore}{\kern0pt}measure\ M\ F\ {\isadigit{0}}\ \isakeyword{for}\ M\ \isakeyword{and}\ F\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}real\ {\isasymRightarrow}\ {\isacharunderscore}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \isanewline
 \isacommand{sublocale}\isamarkupfalse%
-\ nat{\isacharunderscore}{\kern0pt}filtered{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ {\isasymsubseteq}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}subalgebra\ M\ {\isachardoublequoteopen}F\ i{\isachardoublequoteclose}%
+\ nat{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}filtered{\isacharunderscore}{\kern0pt}measure\ {\isasymsubseteq}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}subalgebra\ M\ {\isachardoublequoteopen}F\ i{\isachardoublequoteclose}%
 \isadelimproof
 \ %
 \endisadelimproof
@@ -519,7 +261,62 @@ In order to show that the natural filtration constitutes a filtered sigma finite
 \isadelimproof
 %
 \endisadelimproof
+%
+\isadelimdocument
+%
+\endisadelimdocument
+%
+\isatagdocument
+%
+\isamarkupsubsubsection{Constant Filtration%
+}
+\isamarkuptrue%
+%
+\endisatagdocument
+{\isafolddocument}%
+%
+\isadelimdocument
+%
+\endisadelimdocument
+\isacommand{lemma}\isamarkupfalse%
+\ filtered{\isacharunderscore}{\kern0pt}measure{\isacharunderscore}{\kern0pt}constant{\isacharunderscore}{\kern0pt}filtration{\isacharcolon}{\kern0pt}\isanewline
+\ \ \isakeyword{assumes}\ {\isachardoublequoteopen}subalgebra\ M\ F{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{shows}\ {\isachardoublequoteopen}filtered{\isacharunderscore}{\kern0pt}measure\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}{\isacharunderscore}{\kern0pt}{\isachardot}{\kern0pt}\ F{\isacharparenright}{\kern0pt}\ t\isactrlsub {\isadigit{0}}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+\ \ %
+\endisadelimproof
+%
+\isatagproof
+\isacommand{using}\isamarkupfalse%
+\ assms\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}unfold{\isacharunderscore}{\kern0pt}locales{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}auto\ simp\ add{\isacharcolon}{\kern0pt}\ subalgebra{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
 \isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{sublocale}\isamarkupfalse%
+\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}subalgebra\ {\isasymsubseteq}\ constant{\isacharunderscore}{\kern0pt}filtration{\isacharcolon}{\kern0pt}\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}filtered{\isacharunderscore}{\kern0pt}measure\ M\ {\isachardoublequoteopen}{\isasymlambda}{\isacharunderscore}{\kern0pt}\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharprime}{\kern0pt}t\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharbraceright}{\kern0pt}{\isachardot}{\kern0pt}\ F{\isachardoublequoteclose}\ t\isactrlsub {\isadigit{0}}\isanewline
+%
+\isadelimproof
+\ \ %
+\endisadelimproof
+%
+\isatagproof
+\isacommand{using}\isamarkupfalse%
+\ subalg\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}unfold{\isacharunderscore}{\kern0pt}locales{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}auto\ simp\ add{\isacharcolon}{\kern0pt}\ subalgebra{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
 %
 \isadelimtheory
 \isanewline
@@ -601,194 +398,71 @@ In order to show that the natural filtration constitutes a filtered sigma finite
 %:%170=44%:%
 %:%171=44%:%
 %:%172=45%:%
-%:%173=46%:%
+%:%173=45%:%
+%:%174=46%:%
+%:%175=47%:%
 %:%176=47%:%
-%:%180=47%:%
-%:%181=47%:%
-%:%182=47%:%
-%:%187=47%:%
-%:%190=48%:%
-%:%191=49%:%
-%:%192=49%:%
-%:%195=50%:%
-%:%199=50%:%
-%:%200=50%:%
-%:%201=50%:%
-%:%215=52%:%
-%:%227=54%:%
-%:%229=56%:%
-%:%230=56%:%
-%:%231=57%:%
-%:%232=58%:%
-%:%233=59%:%
-%:%234=59%:%
-%:%235=60%:%
-%:%236=61%:%
-%:%237=62%:%
-%:%238=63%:%
-%:%239=64%:%
-%:%240=64%:%
-%:%243=65%:%
-%:%247=65%:%
-%:%248=65%:%
-%:%249=65%:%
-%:%254=65%:%
-%:%257=66%:%
-%:%258=67%:%
-%:%259=67%:%
-%:%260=68%:%
-%:%261=69%:%
-%:%268=70%:%
-%:%269=70%:%
-%:%270=71%:%
-%:%271=71%:%
-%:%272=71%:%
-%:%273=71%:%
-%:%274=72%:%
-%:%275=72%:%
-%:%276=72%:%
-%:%277=73%:%
-%:%278=73%:%
-%:%279=74%:%
-%:%280=74%:%
-%:%281=74%:%
-%:%282=75%:%
-%:%283=75%:%
-%:%284=75%:%
-%:%285=75%:%
-%:%286=76%:%
-%:%287=76%:%
-%:%288=77%:%
-%:%289=77%:%
-%:%290=78%:%
-%:%291=78%:%
-%:%292=79%:%
-%:%293=79%:%
-%:%294=79%:%
-%:%295=80%:%
-%:%296=80%:%
-%:%297=80%:%
-%:%298=80%:%
-%:%299=80%:%
-%:%300=81%:%
-%:%301=81%:%
-%:%302=82%:%
-%:%303=82%:%
-%:%304=83%:%
-%:%305=83%:%
-%:%306=83%:%
-%:%307=84%:%
-%:%308=84%:%
-%:%309=84%:%
-%:%310=84%:%
-%:%311=84%:%
-%:%312=85%:%
-%:%313=85%:%
-%:%314=86%:%
-%:%315=86%:%
-%:%316=87%:%
-%:%322=87%:%
-%:%325=88%:%
-%:%326=89%:%
-%:%327=89%:%
-%:%328=90%:%
-%:%331=91%:%
-%:%335=91%:%
-%:%336=91%:%
-%:%337=91%:%
-%:%338=91%:%
-%:%343=91%:%
-%:%346=92%:%
-%:%347=93%:%
-%:%348=93%:%
-%:%351=94%:%
-%:%355=94%:%
-%:%356=94%:%
-%:%361=94%:%
-%:%364=95%:%
-%:%365=96%:%
-%:%368=98%:%
-%:%370=100%:%
-%:%371=100%:%
-%:%372=101%:%
-%:%373=102%:%
-%:%374=103%:%
-%:%381=104%:%
-%:%382=104%:%
-%:%383=105%:%
-%:%384=105%:%
-%:%385=105%:%
-%:%386=105%:%
-%:%387=106%:%
-%:%388=106%:%
-%:%389=106%:%
-%:%390=106%:%
-%:%391=106%:%
-%:%392=106%:%
-%:%393=107%:%
-%:%394=107%:%
-%:%395=107%:%
-%:%396=107%:%
-%:%397=107%:%
-%:%398=108%:%
-%:%399=108%:%
-%:%400=108%:%
-%:%401=108%:%
-%:%402=108%:%
-%:%403=109%:%
-%:%404=109%:%
-%:%418=111%:%
-%:%428=113%:%
-%:%429=113%:%
-%:%430=114%:%
-%:%431=114%:%
-%:%432=115%:%
-%:%433=116%:%
-%:%434=116%:%
-%:%435=117%:%
-%:%436=118%:%
-%:%437=119%:%
-%:%438=119%:%
-%:%441=120%:%
-%:%445=120%:%
-%:%446=120%:%
-%:%447=120%:%
-%:%452=120%:%
-%:%455=121%:%
-%:%456=122%:%
-%:%457=122%:%
-%:%458=123%:%
-%:%459=124%:%
-%:%462=125%:%
-%:%466=125%:%
-%:%467=125%:%
-%:%468=125%:%
-%:%469=125%:%
-%:%474=125%:%
-%:%477=126%:%
-%:%478=127%:%
-%:%479=127%:%
-%:%480=128%:%
-%:%481=129%:%
-%:%484=130%:%
-%:%488=130%:%
-%:%489=130%:%
-%:%490=130%:%
-%:%495=130%:%
-%:%498=131%:%
-%:%499=132%:%
-%:%500=132%:%
-%:%501=133%:%
-%:%502=134%:%
-%:%503=134%:%
-%:%504=135%:%
-%:%505=135%:%
-%:%506=136%:%
-%:%507=137%:%
-%:%508=137%:%
-%:%510=137%:%
-%:%514=137%:%
-%:%515=137%:%
-%:%522=137%:%
-%:%525=138%:%
-%:%530=139%:%
+%:%177=48%:%
+%:%178=49%:%
+%:%179=50%:%
+%:%180=50%:%
+%:%183=51%:%
+%:%187=51%:%
+%:%188=51%:%
+%:%189=51%:%
+%:%194=51%:%
+%:%197=52%:%
+%:%198=53%:%
+%:%199=53%:%
+%:%200=54%:%
+%:%201=55%:%
+%:%204=56%:%
+%:%208=56%:%
+%:%209=56%:%
+%:%210=56%:%
+%:%211=56%:%
+%:%216=56%:%
+%:%219=57%:%
+%:%220=58%:%
+%:%221=58%:%
+%:%222=59%:%
+%:%223=60%:%
+%:%226=61%:%
+%:%230=61%:%
+%:%231=61%:%
+%:%232=61%:%
+%:%237=61%:%
+%:%240=62%:%
+%:%241=63%:%
+%:%242=63%:%
+%:%243=64%:%
+%:%244=65%:%
+%:%245=65%:%
+%:%246=66%:%
+%:%247=66%:%
+%:%248=67%:%
+%:%249=68%:%
+%:%250=68%:%
+%:%252=68%:%
+%:%256=68%:%
+%:%257=68%:%
+%:%271=70%:%
+%:%281=72%:%
+%:%282=72%:%
+%:%283=73%:%
+%:%284=74%:%
+%:%287=75%:%
+%:%291=75%:%
+%:%292=75%:%
+%:%293=75%:%
+%:%298=75%:%
+%:%301=76%:%
+%:%302=77%:%
+%:%303=77%:%
+%:%306=78%:%
+%:%310=78%:%
+%:%311=78%:%
+%:%312=78%:%
+%:%317=78%:%
+%:%322=79%:%
+%:%327=80%:%

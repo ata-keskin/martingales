@@ -1,5 +1,5 @@
 theory Bochner_Integration_Addendum
-  imports "HOL-Analysis.Bochner_Integration"
+  imports "HOL-Analysis.Bochner_Integration" Elementary_Metric_Spaces_Addendum
 begin
 
 subsection "Simple Functions"
@@ -260,6 +260,9 @@ proof (rule ccontr, goal_cases)
   ultimately show ?case using assms(2) by simp
 qed
 
+(* L1 Convergence Implies Subsequence - Convenience Lemma *)
+(* I am pretty sure we don't actually need this lemma *)
+
 lemma cauchy_L1_AE_cauchy_subseq:
   fixes s :: "nat \<Rightarrow> 'a \<Rightarrow> 'b::{banach, second_countable_topology}"
   assumes [measurable]: "\<And>n. integrable M (s n)"
@@ -322,6 +325,8 @@ proof-
   thus ?thesis by (rule that[OF strict_mono(1)])
 qed
 
+subsection "Linearly Ordered Banach Spaces"
+
 lemma integrable_max[simp, intro]:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology}"
   assumes fg[measurable]: "integrable M f" "integrable M g"
@@ -344,8 +349,6 @@ proof -
   have "norm (min (f x) (g x)) \<le> norm (f x) \<or> norm (min (f x) (g x)) \<le> norm (g x)" for x by linarith
   thus ?thesis by (intro integrable_bound[OF integrable_max[OF integrable_norm(1,1), OF assms]], auto)
 qed
-
-(* Versions of \<^thm>\<open>Bochner_Integration.integral_mono_AE\<close> for arbitrary orders *)
 
 lemma integral_nonneg_AE_banach:                        
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
@@ -402,5 +405,61 @@ lemma integral_mono_banach:
   assumes "integrable M f" "integrable M g" "\<And>x. x \<in> space M \<Longrightarrow> f x \<le> g x"
   shows "integral\<^sup>L M f \<le> integral\<^sup>L M g"
   using integral_mono_AE_banach assms by blast
+
+subsection "Integrability and Measurability of the Diameter"
+
+context
+  fixes s :: "nat \<Rightarrow> 'a \<Rightarrow> 'b :: {second_countable_topology, banach}" and M
+  assumes bounded: "\<And>x. x \<in> space M \<Longrightarrow> bounded (range (\<lambda>i. s i x))"
+begin
+
+lemma borel_measurable_diameter: 
+  assumes [measurable]: "\<And>i. (s i) \<in> borel_measurable M"
+  shows "(\<lambda>x. diameter {s i x |i. n \<le> i}) \<in> borel_measurable M"
+proof -
+  have "{s i x |i. N \<le> i} \<noteq> {}" for x N by blast
+  hence diameter_SUP: "diameter {s i x |i. N \<le> i} = (SUP (i, j) \<in> {N..} \<times> {N..}. dist (s i x) (s j x))" for x N unfolding diameter_def by (auto intro!: arg_cong[of _ _ Sup])
+  
+  have "case_prod dist ` ({s i x |i. n \<le> i} \<times> {s i x |i. n \<le> i}) = ((\<lambda>(i, j). dist (s i x) (s j x)) ` ({n..} \<times> {n..}))" for x by fast
+  hence *: "(\<lambda>x. diameter {s i x |i. n \<le> i}) =  (\<lambda>x. Sup ((\<lambda>(i, j). dist (s i x) (s j x)) ` ({n..} \<times> {n..})))" using diameter_SUP by (simp add: case_prod_beta')
+  
+  have "bounded ((\<lambda>(i, j). dist (s i x) (s j x)) ` ({n..} \<times> {n..}))" if "x \<in> space M" for x by (rule bounded_imp_dist_bounded[OF bounded, OF that])
+  hence bdd: "bdd_above ((\<lambda>(i, j). dist (s i x) (s j x)) ` ({n..} \<times> {n..}))" if "x \<in> space M" for x using that bounded_imp_bdd_above by presburger
+  have "fst p \<in> borel_measurable M" "snd p \<in> borel_measurable M" if "p \<in> s ` {n..} \<times> s ` {n..}" for p using that by fastforce+
+  hence "(\<lambda>x. fst p x - snd p x) \<in> borel_measurable M" if "p \<in> s ` {n..} \<times> s ` {n..}" for p using that borel_measurable_diff by simp
+  hence "(\<lambda>x. case p of (f, g) \<Rightarrow> dist (f x) (g x)) \<in> borel_measurable M" if "p \<in> s ` {n..} \<times> s ` {n..}" for p unfolding dist_norm using that by measurable
+  moreover have "countable (s ` {n..} \<times> s ` {n..})" by (intro countable_SIGMA countable_image, auto)
+  ultimately show ?thesis unfolding * by (auto intro!: borel_measurable_cSUP bdd)
+qed
+
+lemma integrable_bound_diameter:
+  fixes f :: "'a \<Rightarrow> real"
+  assumes "integrable M f" 
+      and [measurable]: "\<And>i. (s i) \<in> borel_measurable M"
+      and "\<And>x i. x \<in> space M \<Longrightarrow> norm (s i x) \<le> f x"
+    shows "integrable M (\<lambda>x. diameter {s i x |i. n \<le> i})"
+proof -
+  have "{s i x |i. N \<le> i} \<noteq> {}" for x N by blast
+  hence diameter_SUP: "diameter {s i x |i. N \<le> i} = (SUP (i, j) \<in> {N..} \<times> {N..}. dist (s i x) (s j x))" for x N unfolding diameter_def by (auto intro!: arg_cong[of _ _ Sup])
+  {
+    fix x assume x: "x \<in> space M"
+    let ?S = "(\<lambda>(i, j). dist (s i x) (s j x)) ` ({n..} \<times> {n..})"
+    have "case_prod dist ` ({s i x |i. n \<le> i} \<times> {s i x |i. n \<le> i}) = (\<lambda>(i, j). dist (s i x) (s j x)) ` ({n..} \<times> {n..})" by fast
+    hence *: "diameter {s i x |i. n \<le> i} =  Sup ?S" using diameter_SUP by (simp add: case_prod_beta')
+    
+    have "bounded ?S" by (rule bounded_imp_dist_bounded[OF bounded[OF x]])
+    hence Sup_S_nonneg:"0 \<le> Sup ?S" by (auto intro!: cSup_upper2 x bounded_imp_bdd_above)
+
+    have "dist (s i x) (s j x) \<le>  2 * f x" for i j by (intro dist_triangle2[THEN order_trans, of _ 0]) (metis norm_conv_dist assms(3) x add_mono mult_2)
+    hence "\<forall>c \<in> ?S. c \<le> 2 * f x" by force
+    hence "Sup ?S \<le> 2 * f x" by (intro cSup_least, auto)
+    hence "norm (Sup ?S) \<le> 2 * norm (f x)" using Sup_S_nonneg by auto
+    also have "... = norm (2 *\<^sub>R f x)" by simp
+    finally have "norm (diameter {s i x |i. n \<le> i}) \<le> norm (2 *\<^sub>R f x)" unfolding * .
+  }
+  hence "AE x in M. norm (diameter {s i x |i. n \<le> i}) \<le> norm (2 *\<^sub>R f x)" by blast
+  thus  "integrable M (\<lambda>x. diameter {s i x |i. n \<le> i})" using borel_measurable_diameter by (intro Bochner_Integration.integrable_bound[OF assms(1)[THEN integrable_scaleR_right[of 2]]], measurable)
+qed
+end    
 
 end
