@@ -400,30 +400,6 @@
 \isanewline
 %
 \endisadelimproof
-\isanewline
-\isacommand{lemma}\isamarkupfalse%
-\ density{\isacharunderscore}{\kern0pt}nonneg{\isacharcolon}{\kern0pt}\isanewline
-\ \ \isakeyword{fixes}\ f{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isachardoublequoteopen}{\isacharunderscore}{\kern0pt}\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ ordered{\isacharunderscore}{\kern0pt}real{\isacharunderscore}{\kern0pt}vector{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
-\ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\ \isanewline
-\ \ \ \ \ \ \isakeyword{and}\ {\isachardoublequoteopen}{\isasymAnd}A{\isachardot}{\kern0pt}\ A\ {\isasymin}\ sets\ M\ {\isasymLongrightarrow}\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral\ M\ A\ f\ {\isasymge}\ {\isadigit{0}}{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isakeyword{shows}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ f\ x\ {\isasymge}\ {\isadigit{0}}{\isachardoublequoteclose}\isanewline
-%
-\isadelimproof
-\ \ %
-\endisadelimproof
-%
-\isatagproof
-\isacommand{using}\isamarkupfalse%
-\ averaging{\isacharunderscore}{\kern0pt}theorem{\isacharbrackleft}{\kern0pt}OF\ assms{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}{\isacharcomma}{\kern0pt}\ of\ {\isachardoublequoteopen}{\isacharbraceleft}{\kern0pt}{\isadigit{0}}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}{\isacharcomma}{\kern0pt}\ OF\ closed{\isacharunderscore}{\kern0pt}atLeast{\isacharbrackright}{\kern0pt}\ assms{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}\isanewline
-\ \ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}simp\ add{\isacharcolon}{\kern0pt}\ scaleR{\isacharunderscore}{\kern0pt}nonneg{\isacharunderscore}{\kern0pt}nonneg{\isacharparenright}{\kern0pt}%
-\endisatagproof
-{\isafoldproof}%
-%
-\isadelimproof
-\isanewline
-%
-\endisadelimproof
 \ \ \isanewline
 \isacommand{lemma}\isamarkupfalse%
 \ density{\isacharunderscore}{\kern0pt}zero{\isacharcolon}{\kern0pt}\isanewline
@@ -489,6 +465,30 @@
 \endisadelimproof
 \isanewline
 \isacommand{lemma}\isamarkupfalse%
+\ density{\isacharunderscore}{\kern0pt}nonneg{\isacharcolon}{\kern0pt}\isanewline
+\ \ \isakeyword{fixes}\ f{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isachardoublequoteopen}{\isacharunderscore}{\kern0pt}\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ ordered{\isacharunderscore}{\kern0pt}real{\isacharunderscore}{\kern0pt}vector{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\ \isanewline
+\ \ \ \ \ \ \isakeyword{and}\ {\isachardoublequoteopen}{\isasymAnd}A{\isachardot}{\kern0pt}\ A\ {\isasymin}\ sets\ M\ {\isasymLongrightarrow}\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral\ M\ A\ f\ {\isasymge}\ {\isadigit{0}}{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isakeyword{shows}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ f\ x\ {\isasymge}\ {\isadigit{0}}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+\ \ %
+\endisadelimproof
+%
+\isatagproof
+\isacommand{using}\isamarkupfalse%
+\ averaging{\isacharunderscore}{\kern0pt}theorem{\isacharbrackleft}{\kern0pt}OF\ assms{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}{\isacharcomma}{\kern0pt}\ of\ {\isachardoublequoteopen}{\isacharbraceleft}{\kern0pt}{\isadigit{0}}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}{\isacharcomma}{\kern0pt}\ OF\ closed{\isacharunderscore}{\kern0pt}atLeast{\isacharbrackright}{\kern0pt}\ assms{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}\isanewline
+\ \ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}simp\ add{\isacharcolon}{\kern0pt}\ scaleR{\isacharunderscore}{\kern0pt}nonneg{\isacharunderscore}{\kern0pt}nonneg{\isacharparenright}{\kern0pt}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
 \ integral{\isacharunderscore}{\kern0pt}nonneg{\isacharunderscore}{\kern0pt}AE{\isacharunderscore}{\kern0pt}eq{\isacharunderscore}{\kern0pt}{\isadigit{0}}{\isacharunderscore}{\kern0pt}iff{\isacharunderscore}{\kern0pt}AE{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ ordered{\isacharunderscore}{\kern0pt}real{\isacharunderscore}{\kern0pt}vector{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ f{\isacharbrackleft}{\kern0pt}measurable{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\ \isakeyword{and}\ nonneg{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ {\isadigit{0}}\ {\isasymle}\ f\ x{\isachardoublequoteclose}\isanewline
@@ -538,7 +538,7 @@
 %
 \endisadelimproof
 \isanewline
-\isacommand{lemma}\isamarkupfalse%
+\isacommand{corollary}\isamarkupfalse%
 \ integral{\isacharunderscore}{\kern0pt}eq{\isacharunderscore}{\kern0pt}mono{\isacharunderscore}{\kern0pt}AE{\isacharunderscore}{\kern0pt}eq{\isacharunderscore}{\kern0pt}AE{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ g\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ ordered{\isacharunderscore}{\kern0pt}real{\isacharunderscore}{\kern0pt}vector{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\ {\isachardoublequoteopen}integrable\ M\ g{\isachardoublequoteclose}\ {\isachardoublequoteopen}integral\isactrlsup L\ M\ f\ {\isacharequal}{\kern0pt}\ integral\isactrlsup L\ M\ g{\isachardoublequoteclose}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ f\ x\ {\isasymle}\ g\ x{\isachardoublequoteclose}\ \isanewline
@@ -959,37 +959,37 @@
 %:%431=147%:%
 %:%432=148%:%
 %:%433=149%:%
-%:%436=150%:%
 %:%440=150%:%
 %:%441=150%:%
 %:%442=151%:%
 %:%443=151%:%
-%:%448=151%:%
-%:%451=152%:%
-%:%452=153%:%
-%:%453=153%:%
-%:%454=154%:%
+%:%444=152%:%
+%:%445=152%:%
+%:%446=152%:%
+%:%447=153%:%
+%:%448=153%:%
+%:%449=153%:%
+%:%450=153%:%
+%:%451=154%:%
+%:%452=154%:%
+%:%453=155%:%
+%:%454=155%:%
 %:%455=155%:%
-%:%456=156%:%
-%:%457=157%:%
-%:%464=158%:%
-%:%465=158%:%
-%:%466=159%:%
-%:%467=159%:%
-%:%468=160%:%
-%:%469=160%:%
+%:%456=155%:%
+%:%457=156%:%
+%:%463=156%:%
+%:%466=157%:%
+%:%467=158%:%
+%:%468=158%:%
+%:%469=159%:%
 %:%470=160%:%
 %:%471=161%:%
-%:%472=161%:%
-%:%473=161%:%
-%:%474=161%:%
-%:%475=162%:%
-%:%476=162%:%
-%:%477=163%:%
-%:%478=163%:%
+%:%472=162%:%
+%:%475=163%:%
 %:%479=163%:%
 %:%480=163%:%
 %:%481=164%:%
+%:%482=164%:%
 %:%487=164%:%
 %:%490=165%:%
 %:%491=166%:%

@@ -39,9 +39,9 @@
 \ \ {\isachardoublequoteopen}sigma{\isacharunderscore}{\kern0pt}gen\ {\isasymOmega}\ N\ S\ {\isasymequiv}\ sigma\ {\isasymOmega}\ {\isacharparenleft}{\kern0pt}{\isasymUnion}f\ {\isasymin}\ S{\isachardot}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}f\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ A\ {\isasyminter}\ {\isasymOmega}\ {\isacharbar}{\kern0pt}\ A{\isachardot}{\kern0pt}\ A\ {\isasymin}\ N{\isacharbraceright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \isanewline
 \isacommand{lemma}\isamarkupfalse%
-\ {\isacharbrackleft}{\kern0pt}simp{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\isanewline
+\isanewline
 \ \ \isakeyword{shows}\ sets{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}gen{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}sets\ {\isacharparenleft}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}gen\ {\isasymOmega}\ N\ S{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ sigma{\isacharunderscore}{\kern0pt}sets\ {\isasymOmega}\ {\isacharparenleft}{\kern0pt}{\isasymUnion}f\ {\isasymin}\ S{\isachardot}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}f\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ A\ {\isasyminter}\ {\isasymOmega}\ {\isacharbar}{\kern0pt}\ A{\isachardot}{\kern0pt}\ A\ {\isasymin}\ N{\isacharbraceright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isanewline
-\ \ \ \ \isakeyword{and}\ space{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}gen{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}space\ {\isacharparenleft}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}gen\ {\isasymOmega}\ N\ S{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ {\isasymOmega}{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isakeyword{and}\ space{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}gen{\isacharbrackleft}{\kern0pt}simp{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}space\ {\isacharparenleft}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}gen\ {\isasymOmega}\ N\ S{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ {\isasymOmega}{\isachardoublequoteclose}\isanewline
 %
 \isadelimproof
 \ \ %
@@ -70,7 +70,7 @@
 \isatagproof
 \isacommand{using}\isamarkupfalse%
 \ assms\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}intro\ measurableI{\isacharcomma}{\kern0pt}\ auto{\isacharparenright}{\kern0pt}%
+\ {\isacharparenleft}{\kern0pt}intro\ measurableI{\isacharcomma}{\kern0pt}\ auto\ simp\ add{\isacharcolon}{\kern0pt}\ sets{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}gen{\isacharparenright}{\kern0pt}%
 \endisatagproof
 {\isafoldproof}%
 %
@@ -140,7 +140,7 @@
 \endisadelimproof
 \isanewline
 \isacommand{lemma}\isamarkupfalse%
-\ measurable{\isacharunderscore}{\kern0pt}iff{\isacharunderscore}{\kern0pt}contains{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}gen{\isacharprime}{\kern0pt}{\isacharcolon}{\kern0pt}\isanewline
+\ measurable{\isacharunderscore}{\kern0pt}family{\isacharunderscore}{\kern0pt}iff{\isacharunderscore}{\kern0pt}contains{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}gen{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{shows}\ {\isachardoublequoteopen}{\isacharparenleft}{\kern0pt}S\ {\isasymsubseteq}\ M\ {\isasymrightarrow}\isactrlsub M\ N{\isacharparenright}{\kern0pt}\ {\isasymlongleftrightarrow}\ S\ {\isasymsubseteq}\ space\ M\ {\isasymrightarrow}\ space\ N\ {\isasymand}\ sigma{\isacharunderscore}{\kern0pt}gen\ {\isacharparenleft}{\kern0pt}space\ M{\isacharparenright}{\kern0pt}\ N\ S\ {\isasymsubseteq}\ M{\isachardoublequoteclose}\isanewline
 %
 \isadelimproof

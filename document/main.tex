@@ -13,9 +13,6 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
-\usepackage{isabelle/isabelle}
-\usepackage{isabelle/isabellesym}
-
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}[theorem]{Corollary}
@@ -41,12 +38,12 @@
 \lstdefinelanguage{isabelle}{%
     keywords=[1]{locale,sublocale,global_interpretation,interpretation,context,definition,proof,lemma,proposition,theorem,corollary,next,qed,using,unfolding,by,have,moreover,ultimately},
     keywordstyle=[1]\bfseries\color{isarblue},
-    keywords=[2]{where,fixes,obtains,assumes,shows,and,begin,end},
+    keywords=[2]{where,fixes,obtains,assumes,shows,and,begin,end,for},
     keywordstyle=[2]\bfseries\color{isargreen},
     keywords=[3]{if,then,else,SOME,let,in,AE,LINT},
     keywordstyle=[3]\color{isarblue},
 	keywords=[4]{define,assume,fix,show,thus},
-    keywordstyle=[4]\color{isarlightblue},
+    keywordstyle=[4]\bfseries\color{isarlightblue},
 }
 \lstdefinestyle{isabelle}
 {%
@@ -110,9 +107,9 @@
 \input{chapters/01_introduction} %2
 \input{chapters/02_background} %5
 \input{chapters/03_conditional_expectation} %21
-\input{chapters/04_stochastic_processes} %10
-\input{chapters/05_martingales} %10
-\input{chapters/06_discussion} %10
+\input{chapters/04_stochastic_processes} %15
+\input{chapters/05_martingales} %15
+\input{chapters/06_discussion} %6
 \input{chapters/07_conclusion} %1
 % TODO: add more chapters here
 
@@ -123,7 +120,6 @@
 \addchap{Abbreviations}
 \begin{acronym}
 	\itemsep-.25\baselineskip
-	\acro{TUM}[TUM]{Technical University of Munich}
 	\acro{AFP}[AFP]{Archive of Formal Proofs}
 	% TODO: add acronyms
 \end{acronym}

@@ -8,8 +8,8 @@
 %
 \isatagtheory
 \isacommand{theory}\isamarkupfalse%
-\ Conditional{\isacharunderscore}{\kern0pt}Expectation{\isacharunderscore}{\kern0pt}Banach\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \isanewline
-\isakeyword{imports}\ {\isachardoublequoteopen}HOL{\isacharminus}{\kern0pt}Probability{\isachardot}{\kern0pt}Conditional{\isacharunderscore}{\kern0pt}Expectation{\isachardoublequoteclose}\ Sigma{\isacharunderscore}{\kern0pt}Finite{\isacharunderscore}{\kern0pt}Measure{\isacharunderscore}{\kern0pt}Addendum\ Bochner{\isacharunderscore}{\kern0pt}Integration{\isacharunderscore}{\kern0pt}Addendum\ Elementary{\isacharunderscore}{\kern0pt}Metric{\isacharunderscore}{\kern0pt}Spaces{\isacharunderscore}{\kern0pt}Addendum\isanewline
+\ Conditional{\isacharunderscore}{\kern0pt}Expectation{\isacharunderscore}{\kern0pt}Banach\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \isanewline
+\isakeyword{imports}\ {\isachardoublequoteopen}HOL{\isacharminus}{\kern0pt}Probability{\isachardot}{\kern0pt}Conditional{\isacharunderscore}{\kern0pt}Expectation{\isachardoublequoteclose}\ Sigma{\isacharunderscore}{\kern0pt}Finite{\isacharunderscore}{\kern0pt}Measure{\isacharunderscore}{\kern0pt}Addendum\isanewline
 \isakeyword{begin}%
 \endisatagtheory
 {\isafoldtheory}%
@@ -27,7 +27,7 @@
 \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ {\isasymand}\ g\ {\isasymin}\ borel{\isacharunderscore}{\kern0pt}measurable\ F{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \isanewline
 \isacommand{lemma}\isamarkupfalse%
-\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}expI{\isacharprime}{\kern0pt}{\isacharbrackleft}{\kern0pt}intro{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\isanewline
+\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}expI{\isacharprime}{\kern0pt}{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}{\isasymAnd}A{\isachardot}{\kern0pt}\ A\ {\isasymin}\ sets\ F\ {\isasymLongrightarrow}\ {\isacharparenleft}{\kern0pt}{\isasymintegral}\ x\ {\isasymin}\ A{\isachardot}{\kern0pt}\ f\ x\ {\isasympartial}M{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymintegral}\ x\ {\isasymin}\ A{\isachardot}{\kern0pt}\ g\ x\ {\isasympartial}M{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \ \ \ \ \ \ \ \ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\isanewline
 \ \ \ \ \ \ \ \ \ \ {\isachardoublequoteopen}integrable\ M\ g{\isachardoublequoteclose}\isanewline
@@ -183,6 +183,27 @@
 \endisadelimproof
 \isanewline
 \isacommand{lemma}\isamarkupfalse%
+\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}nested{\isacharunderscore}{\kern0pt}subalg{\isacharcolon}{\kern0pt}\isanewline
+\ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ {\isachardoublequoteopen}subalgebra\ G\ F{\isachardoublequoteclose}\ {\isachardoublequoteopen}has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ f\ h{\isachardoublequoteclose}\ {\isachardoublequoteopen}has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ G\ f\ h{\isacharprime}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{shows}\ {\isachardoublequoteopen}has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ h{\isacharprime}{\kern0pt}\ h{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+\ \ %
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}expI{\isacharprime}{\kern0pt}{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}metis\ assms\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}expD\ in{\isacharunderscore}{\kern0pt}mono\ subalgebra{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}{\isacharplus}{\kern0pt}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
 \ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ f\ g{\isachardoublequoteclose}\isanewline
@@ -255,6 +276,30 @@
 \endisadelimproof
 \isanewline
 \isacommand{lemma}\isamarkupfalse%
+\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact{\isacharcolon}{\kern0pt}\isanewline
+\ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ {\isachardoublequoteopen}{\isasymAnd}A{\isachardot}{\kern0pt}\ A\ {\isasymin}\ sets\ F\ {\isasymLongrightarrow}\ {\isacharparenleft}{\kern0pt}{\isasymintegral}\ x\ {\isasymin}\ A{\isachardot}{\kern0pt}\ f\ x\ {\isasympartial}M{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymintegral}\ x\ {\isasymin}\ A{\isachardot}{\kern0pt}\ g\ x\ {\isasympartial}M{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ \ \ \ \ \ \ \ \ \ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\isanewline
+\ \ \ \ \ \ \ \ \ \ {\isachardoublequoteopen}integrable\ M\ g{\isachardoublequoteclose}\isanewline
+\ \ \ \ \ \ \ \ \ \ {\isachardoublequoteopen}g\ {\isasymin}\ borel{\isacharunderscore}{\kern0pt}measurable\ F{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isakeyword{shows}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ f\ x\ {\isacharequal}{\kern0pt}\ g\ x{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+\ \ %
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}expI{\isacharprime}{\kern0pt}\ assms{\isacharparenright}{\kern0pt}\ auto%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
 \ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}F{\isacharunderscore}{\kern0pt}meas{\isacharbrackleft}{\kern0pt}intro{\isacharcomma}{\kern0pt}\ simp{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\isanewline
@@ -267,7 +312,7 @@
 %
 \isatagproof
 \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}rule\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharcomma}{\kern0pt}\ auto\ intro{\isacharcolon}{\kern0pt}\ assms{\isacharparenright}{\kern0pt}%
+\ {\isacharparenleft}{\kern0pt}rule\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact{\isacharcomma}{\kern0pt}\ auto\ intro{\isacharcolon}{\kern0pt}\ assms{\isacharparenright}{\kern0pt}%
 \endisatagproof
 {\isafoldproof}%
 %
@@ -466,7 +511,7 @@ Congruence%
 %
 \isatagproof
 \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}standard{\isacharcomma}{\kern0pt}\ auto\ intro{\isacharbang}{\kern0pt}{\isacharcolon}{\kern0pt}\ real{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}intA\ assms{\isacharparenright}{\kern0pt}%
+\ {\isacharparenleft}{\kern0pt}intro\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}expI{\isacharprime}{\kern0pt}{\isacharcomma}{\kern0pt}\ auto\ intro{\isacharbang}{\kern0pt}{\isacharcolon}{\kern0pt}\ real{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}intA\ assms{\isacharparenright}{\kern0pt}%
 \endisatagproof
 {\isafoldproof}%
 %
@@ -809,7 +854,7 @@ Addition%
 %
 \endisadelimproof
 \isanewline
-\isacommand{lemma}\isamarkupfalse%
+\isacommand{corollary}\isamarkupfalse%
 \ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}simple{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}banach{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}simple{\isacharunderscore}{\kern0pt}function\ M\ f{\isachardoublequoteclose}\ {\isachardoublequoteopen}emeasure\ M\ {\isacharbraceleft}{\kern0pt}y\ {\isasymin}\ space\ M{\isachardot}{\kern0pt}\ f\ y\ {\isasymnoteq}\ {\isadigit{0}}{\isacharbraceright}{\kern0pt}\ {\isasymnoteq}\ {\isasyminfinity}{\isachardoublequoteclose}\isanewline
@@ -823,7 +868,7 @@ Addition%
 \isacommand{using}\isamarkupfalse%
 \ assms\isanewline
 \isacommand{proof}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}induction\ rule{\isacharcolon}{\kern0pt}\ simple{\isacharunderscore}{\kern0pt}integrable{\isacharunderscore}{\kern0pt}function{\isacharunderscore}{\kern0pt}induct{\isacharparenright}{\kern0pt}\isanewline
+\ {\isacharparenleft}{\kern0pt}induction\ rule{\isacharcolon}{\kern0pt}\ integrable{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}function{\isacharunderscore}{\kern0pt}induct{\isacharparenright}{\kern0pt}\isanewline
 \ \ \isacommand{case}\isamarkupfalse%
 \ {\isacharparenleft}{\kern0pt}cong\ f\ g{\isacharparenright}{\kern0pt}\isanewline
 \ \ \isacommand{then}\isamarkupfalse%
@@ -916,7 +961,7 @@ Addition%
 \ \isacommand{have}\isamarkupfalse%
 \ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ nn{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ ennreal\ {\isasymbar}f\ x{\isasymbar}{\isacharparenright}{\kern0pt}\ x\ {\isacharequal}{\kern0pt}\ real{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}f\ x{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ x{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
 \ {\isacharparenleft}{\kern0pt}intro\ nn{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact{\isacharbrackleft}{\kern0pt}THEN\ AE{\isacharunderscore}{\kern0pt}symmetric{\isacharbrackright}{\kern0pt}{\isacharcomma}{\kern0pt}\ auto{\isacharparenright}{\kern0pt}\isanewline
-\ \ \ \ \isacommand{hence}\isamarkupfalse%
+\ \ \isacommand{hence}\isamarkupfalse%
 \ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ nn{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ ennreal\ {\isasymbar}f\ x{\isasymbar}{\isacharparenright}{\kern0pt}\ x\ {\isasymle}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}f\ x{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ x{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
 \ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}real{\isacharbrackleft}{\kern0pt}OF\ int{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
 \ force\isanewline
@@ -963,7 +1008,7 @@ Addition%
 \isacommand{using}\isamarkupfalse%
 \ assms\isanewline
 \isacommand{proof}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}induction\ rule{\isacharcolon}{\kern0pt}\ simple{\isacharunderscore}{\kern0pt}integrable{\isacharunderscore}{\kern0pt}function{\isacharunderscore}{\kern0pt}induct{\isacharparenright}{\kern0pt}\isanewline
+\ {\isacharparenleft}{\kern0pt}induction\ rule{\isacharcolon}{\kern0pt}\ integrable{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}function{\isacharunderscore}{\kern0pt}induct{\isacharparenright}{\kern0pt}\isanewline
 \ \ \isacommand{case}\isamarkupfalse%
 \ {\isacharparenleft}{\kern0pt}cong\ f\ g{\isacharparenright}{\kern0pt}\isanewline
 \ \ \isacommand{hence}\isamarkupfalse%
@@ -1064,7 +1109,7 @@ Addition%
 \endisadelimproof
 \isanewline
 \isacommand{lemma}\isamarkupfalse%
-\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}lim{\isacharcolon}{\kern0pt}\isanewline
+\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}lim{\isacharcolon}{\kern0pt}\isanewline
 \ \ \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ integrable{\isacharbrackleft}{\kern0pt}measurable{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\isanewline
 \ \ \ \ \ \ \isakeyword{and}\ {\isachardoublequoteopen}{\isasymAnd}i{\isachardot}{\kern0pt}\ simple{\isacharunderscore}{\kern0pt}function\ M\ {\isacharparenleft}{\kern0pt}s\ i{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
@@ -1186,7 +1231,7 @@ Addition%
 \ presburger\isanewline
 \isanewline
 \ \ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}{\isasymexists}N{\isachardot}{\kern0pt}\ {\isasymforall}i{\isasymge}N{\isachardot}{\kern0pt}\ {\isasymforall}j{\isasymge}N{\isachardot}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ dist\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ i{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ j{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}\ {\isacharless}{\kern0pt}\ e{\isachardoublequoteclose}\ \isakeyword{if}\ e{\isacharunderscore}{\kern0pt}pos{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}e\ {\isachargreater}{\kern0pt}\ {\isadigit{0}}{\isachardoublequoteclose}\ \isakeyword{for}\ e\isanewline
+\ {\isachardoublequoteopen}{\isasymexists}N{\isachardot}{\kern0pt}\ {\isasymforall}i{\isasymge}N{\isachardot}{\kern0pt}\ {\isasymforall}j{\isasymge}N{\isachardot}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ i{\isacharparenright}{\kern0pt}\ x\ {\isacharminus}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ j{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}\ {\isacharless}{\kern0pt}\ e{\isachardoublequoteclose}\ \isakeyword{if}\ e{\isacharunderscore}{\kern0pt}pos{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}e\ {\isachargreater}{\kern0pt}\ {\isadigit{0}}{\isachardoublequoteclose}\ \isakeyword{for}\ e\isanewline
 \ \ \isacommand{proof}\isamarkupfalse%
 \ {\isacharminus}{\kern0pt}\isanewline
 \ \ \ \ \isacommand{obtain}\isamarkupfalse%
@@ -1222,11 +1267,11 @@ Addition%
 \ {\isacharparenleft}{\kern0pt}intro\ integral{\isacharunderscore}{\kern0pt}mono{\isacharbrackleft}{\kern0pt}OF\ dist{\isacharunderscore}{\kern0pt}integrable\ diameter{\isacharunderscore}{\kern0pt}integrable{\isacharcomma}{\kern0pt}\ THEN\ order{\isachardot}{\kern0pt}strict{\isacharunderscore}{\kern0pt}trans{\isadigit{1}}{\isacharbrackright}{\kern0pt}{\isacharcomma}{\kern0pt}\ blast{\isacharplus}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
 \ \ \ \ \isacommand{moreover}\isamarkupfalse%
 \ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ dist\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ i{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ j{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}\ {\isasymle}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ dist\ {\isacharparenleft}{\kern0pt}s\ i\ x{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}s\ j\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isakeyword{for}\ i\ j\isanewline
+\ {\isachardoublequoteopen}LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ i{\isacharparenright}{\kern0pt}\ x\ {\isacharminus}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ j{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}\ {\isasymle}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ dist\ {\isacharparenleft}{\kern0pt}s\ i\ x{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}s\ j\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isakeyword{for}\ i\ j\isanewline
 \ \ \ \ \isacommand{proof}\isamarkupfalse%
-{\isacharminus}{\kern0pt}\isanewline
+\ {\isacharminus}{\kern0pt}\isanewline
 \ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ dist\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ i{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ j{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ i{\isacharparenright}{\kern0pt}\ x\ {\isacharplus}{\kern0pt}\ {\isacharminus}{\kern0pt}\ {\isadigit{1}}\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ j{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{unfolding}\isamarkupfalse%
+\ {\isachardoublequoteopen}LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ i{\isacharparenright}{\kern0pt}\ x\ {\isacharminus}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ j{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ i{\isacharparenright}{\kern0pt}\ x\ {\isacharplus}{\kern0pt}\ {\isacharminus}{\kern0pt}\ {\isadigit{1}}\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ j{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{unfolding}\isamarkupfalse%
 \ dist{\isacharunderscore}{\kern0pt}norm\ \isacommand{by}\isamarkupfalse%
 \ simp\isanewline
 \ \ \ \ \ \ \isacommand{also}\isamarkupfalse%
@@ -1380,7 +1425,7 @@ Addition%
 \endisadelimproof
 \isanewline
 \isacommand{lemma}\isamarkupfalse%
-\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}lim{\isacharcolon}{\kern0pt}\isanewline
+\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}lim{\isacharcolon}{\kern0pt}\isanewline
 \ \ \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isacharbrackleft}{\kern0pt}measurable{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}{\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\isanewline
 \ \ \ \ \ \ \isakeyword{and}\ {\isachardoublequoteopen}{\isasymAnd}i{\isachardot}{\kern0pt}\ simple{\isacharunderscore}{\kern0pt}function\ M\ {\isacharparenleft}{\kern0pt}s\ i{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
@@ -1399,7 +1444,7 @@ Addition%
 \ \ \isacommand{obtain}\isamarkupfalse%
 \ r\ \isakeyword{where}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ f\ x\ {\isacharequal}{\kern0pt}\ lim\ {\isacharparenleft}{\kern0pt}{\isasymlambda}i{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ {\isacharparenleft}{\kern0pt}r\ i{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ convergent\ {\isacharparenleft}{\kern0pt}{\isasymlambda}i{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ {\isacharparenleft}{\kern0pt}r\ i{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ {\isachardoublequoteopen}strict{\isacharunderscore}{\kern0pt}mono\ r{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
 \ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}auto\ intro{\isacharcolon}{\kern0pt}\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}lim{\isacharbrackleft}{\kern0pt}OF\ assms{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
+\ {\isacharparenleft}{\kern0pt}auto\ intro{\isacharcolon}{\kern0pt}\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}lim{\isacharbrackleft}{\kern0pt}OF\ assms{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
 \ \ \isacommand{thus}\isamarkupfalse%
 \ {\isacharquery}{\kern0pt}thesis\ \isacommand{by}\isamarkupfalse%
 \ {\isacharparenleft}{\kern0pt}auto\ intro{\isacharbang}{\kern0pt}{\isacharcolon}{\kern0pt}\ that{\isacharbrackleft}{\kern0pt}of\ r{\isacharbrackright}{\kern0pt}\ simp{\isacharcolon}{\kern0pt}\ convergent{\isacharunderscore}{\kern0pt}LIMSEQ{\isacharunderscore}{\kern0pt}iff{\isacharparenright}{\kern0pt}\isanewline
@@ -1412,44 +1457,28 @@ Addition%
 \isanewline
 %
 \endisadelimproof
-\ \ \isanewline
-\isacommand{lemma}\isamarkupfalse%
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
 \ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}expI{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}banach{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{shows}\ {\isachardoublequoteopen}has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ f\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ f{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 %
 \isadelimproof
-\ \ %
+%
 \endisadelimproof
 %
 \isatagproof
-\isacommand{using}\isamarkupfalse%
-\ assms\isanewline
 \isacommand{proof}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}induction\ rule{\isacharcolon}{\kern0pt}\ integrable{\isacharunderscore}{\kern0pt}induct{\isacharprime}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
-\ \ \isacommand{case}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}base\ A\ c{\isacharparenright}{\kern0pt}\isanewline
-\ \ \isacommand{show}\isamarkupfalse%
-\ {\isacharquery}{\kern0pt}case\ \isacommand{using}\isamarkupfalse%
-\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}indicator{\isacharbrackleft}{\kern0pt}OF\ base{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharcomma}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharminus}{\kern0pt}\isanewline
+\ \ \isacommand{obtain}\isamarkupfalse%
+\ s\ \isakeyword{where}\ s{\isacharunderscore}{\kern0pt}is{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isasymAnd}i{\isachardot}{\kern0pt}\ simple{\isacharunderscore}{\kern0pt}function\ M\ {\isacharparenleft}{\kern0pt}s\ i{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ {\isachardoublequoteopen}{\isasymAnd}i{\isachardot}{\kern0pt}\ emeasure\ M\ {\isacharbraceleft}{\kern0pt}y\ {\isasymin}\ space\ M{\isachardot}{\kern0pt}\ s\ i\ y\ {\isasymnoteq}\ {\isadigit{0}}{\isacharbraceright}{\kern0pt}\ {\isasymnoteq}\ {\isasyminfinity}{\isachardoublequoteclose}\ {\isachardoublequoteopen}{\isasymAnd}x{\isachardot}{\kern0pt}\ x\ {\isasymin}\ space\ M\ {\isasymLongrightarrow}\ {\isacharparenleft}{\kern0pt}{\isasymlambda}i{\isachardot}{\kern0pt}\ s\ i\ x{\isacharparenright}{\kern0pt}\ {\isasymlonglonglongrightarrow}\ f\ x{\isachardoublequoteclose}\ {\isachardoublequoteopen}{\isasymAnd}x\ i{\isachardot}{\kern0pt}\ x\ {\isasymin}\ space\ M\ {\isasymLongrightarrow}\ norm\ {\isacharparenleft}{\kern0pt}s\ i\ x{\isacharparenright}{\kern0pt}\ {\isasymle}\ {\isadigit{2}}\ {\isacharasterisk}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}f\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ integrable{\isacharunderscore}{\kern0pt}implies{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}function{\isacharunderscore}{\kern0pt}sequence{\isacharbrackleft}{\kern0pt}OF\ assms{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
 \ blast\isanewline
-\isacommand{next}\isamarkupfalse%
-\isanewline
-\ \ \isacommand{case}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}add\ u\ v{\isacharparenright}{\kern0pt}\isanewline
 \ \ \isacommand{show}\isamarkupfalse%
-\ {\isacharquery}{\kern0pt}case\ \isacommand{using}\isamarkupfalse%
-\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}add{\isacharbrackleft}{\kern0pt}OF\ add{\isacharparenleft}{\kern0pt}{\isadigit{3}}{\isacharcomma}{\kern0pt}{\isadigit{4}}{\isacharparenright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
-\ blast\isanewline
-\isacommand{next}\isamarkupfalse%
-\isanewline
-\ \ \isacommand{case}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}lim\ f\ s{\isacharparenright}{\kern0pt}\isanewline
-\ \ \isacommand{show}\isamarkupfalse%
-\ {\isacharquery}{\kern0pt}case\ \isacommand{using}\isamarkupfalse%
-\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}lim{\isacharbrackleft}{\kern0pt}OF\ lim{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharcomma}{\kern0pt}{\isadigit{3}}{\isacharcomma}{\kern0pt}{\isadigit{4}}{\isacharcomma}{\kern0pt}{\isadigit{5}}{\isacharcomma}{\kern0pt}{\isadigit{6}}{\isacharparenright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
-\ meson\isanewline
+\ {\isacharquery}{\kern0pt}thesis\ \isacommand{using}\isamarkupfalse%
+\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}lim{\isacharbrackleft}{\kern0pt}OF\ assms\ s{\isacharunderscore}{\kern0pt}is{\isacharbrackright}{\kern0pt}\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ metis\isanewline
 \isacommand{qed}\isamarkupfalse%
 %
 \endisatagproof
@@ -1460,26 +1489,7 @@ Addition%
 %
 \endisadelimproof
 \isanewline
-\isacommand{lemma}\isamarkupfalse%
-\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}nested{\isacharunderscore}{\kern0pt}subalg{\isacharcolon}{\kern0pt}\isanewline
-\ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
-\ \ \isakeyword{assumes}\ {\isachardoublequoteopen}subalgebra\ G\ F{\isachardoublequoteclose}\ {\isachardoublequoteopen}has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ f\ h{\isachardoublequoteclose}\ {\isachardoublequoteopen}has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ G\ f\ h{\isacharprime}{\kern0pt}{\isachardoublequoteclose}\isanewline
-\ \ \isakeyword{shows}\ {\isachardoublequoteopen}has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ h{\isacharprime}{\kern0pt}\ h{\isachardoublequoteclose}\isanewline
-%
-\isadelimproof
-\ \ %
-\endisadelimproof
-%
-\isatagproof
-\isacommand{by}\isamarkupfalse%
-\ standard\ {\isacharparenleft}{\kern0pt}metis\ assms\ has{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}expD\ in{\isacharunderscore}{\kern0pt}mono\ subalgebra{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}{\isacharplus}{\kern0pt}%
-\endisatagproof
-{\isafoldproof}%
-%
-\isadelimproof
 \isanewline
-%
-\endisadelimproof
 \isanewline
 \isacommand{lemma}\isamarkupfalse%
 \ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}nested{\isacharunderscore}{\kern0pt}subalg{\isacharcolon}{\kern0pt}\isanewline
@@ -1593,6 +1603,33 @@ Addition%
 \endisadelimproof
 \isanewline
 \isacommand{lemma}\isamarkupfalse%
+\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}left{\isacharcolon}{\kern0pt}\isanewline
+\ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ real{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{shows}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ c{\isacharparenright}{\kern0pt}\ x\ {\isacharequal}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ f\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ c{\isachardoublequoteclose}\ \isanewline
+%
+\isadelimproof
+\ \ %
+\endisadelimproof
+%
+\isatagproof
+\isacommand{using}\isamarkupfalse%
+\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}set{\isacharunderscore}{\kern0pt}integral{\isacharbrackleft}{\kern0pt}OF\ assms{\isacharbrackright}{\kern0pt}\ subalg\ assms\ \isacommand{unfolding}\isamarkupfalse%
+\ subalgebra{\isacharunderscore}{\kern0pt}def\isanewline
+\ \ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact{\isacharcomma}{\kern0pt}\isanewline
+\ \ \ \ \ \ subst\ set{\isacharunderscore}{\kern0pt}integral{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}left{\isacharcomma}{\kern0pt}\ blast{\isacharcomma}{\kern0pt}\ intro\ assms{\isacharcomma}{\kern0pt}\ \isanewline
+\ \ \ \ \ \ subst\ set{\isacharunderscore}{\kern0pt}integral{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}left{\isacharcomma}{\kern0pt}\ blast{\isacharcomma}{\kern0pt}\ intro\ integrable{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \ \ auto%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
 \ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}contraction{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}{\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\isanewline
@@ -1612,7 +1649,7 @@ Addition%
 \isanewline
 \ \ \isacommand{obtain}\isamarkupfalse%
 \ r\ \isakeyword{where}\ r{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymlambda}i{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}s\ {\isacharparenleft}{\kern0pt}r\ i{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}\ {\isasymlonglonglongrightarrow}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ f\ x{\isachardoublequoteclose}\ {\isachardoublequoteopen}strict{\isacharunderscore}{\kern0pt}mono\ r{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
-\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}lim{\isacharbrackleft}{\kern0pt}OF\ assms\ s{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}lim{\isacharbrackleft}{\kern0pt}OF\ assms\ s{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
 \ blast\isanewline
 \isanewline
 \ \ \isacommand{have}\isamarkupfalse%
@@ -1623,7 +1660,7 @@ Addition%
 \ \ \isanewline
 \ \ \isacommand{obtain}\isamarkupfalse%
 \ r{\isacharprime}{\kern0pt}\ \isakeyword{where}\ r{\isacharprime}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymlambda}i{\isachardot}{\kern0pt}\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}s\ {\isacharparenleft}{\kern0pt}r\ {\isacharparenleft}{\kern0pt}r{\isacharprime}{\kern0pt}\ i{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ x{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ {\isasymlonglonglongrightarrow}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}f\ x{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ x{\isachardoublequoteclose}\ {\isachardoublequoteopen}strict{\isacharunderscore}{\kern0pt}mono\ r{\isacharprime}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
-\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}lim{\isacharbrackleft}{\kern0pt}OF\ integrable{\isacharunderscore}{\kern0pt}norm\ norm{\isacharunderscore}{\kern0pt}s{\isacharunderscore}{\kern0pt}r{\isacharcomma}{\kern0pt}\ OF\ assms{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}lim{\isacharbrackleft}{\kern0pt}OF\ integrable{\isacharunderscore}{\kern0pt}norm\ norm{\isacharunderscore}{\kern0pt}s{\isacharunderscore}{\kern0pt}r{\isacharcomma}{\kern0pt}\ OF\ assms{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
 \ blast\isanewline
 \isanewline
 \ \ \isacommand{have}\isamarkupfalse%
@@ -1640,6 +1677,284 @@ Addition%
 \ {\isacharquery}{\kern0pt}thesis\ \isacommand{using}\isamarkupfalse%
 \ LIMSEQ{\isacharunderscore}{\kern0pt}le\ r{\isacharprime}{\kern0pt}{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
 \ fast\isanewline
+\isacommand{qed}\isamarkupfalse%
+%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isanewline
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
+\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}mult{\isacharcolon}{\kern0pt}\isanewline
+\ \ \isakeyword{fixes}\ f\ g\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ real{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ {\isacharbrackleft}{\kern0pt}measurable{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}integrable\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ {\isachardoublequoteopen}integrable\ M\ g{\isachardoublequoteclose}\ {\isachardoublequoteopen}f\ {\isasymin}\ borel{\isacharunderscore}{\kern0pt}measurable\ F{\isachardoublequoteclose}\ \isanewline
+\ \ \isakeyword{shows}\ {\isachardoublequoteopen}integrable\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ \ \ \ \ \ \ \ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ g\ x{\isacharparenright}{\kern0pt}\ x\ {\isacharequal}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{proof}\isamarkupfalse%
+{\isacharminus}{\kern0pt}\isanewline
+\ \ \isacommand{show}\isamarkupfalse%
+\ integrable{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}integrable\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}real{\isacharbrackleft}{\kern0pt}OF\ assms{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ integrable{\isacharunderscore}{\kern0pt}cong{\isacharunderscore}{\kern0pt}AE{\isacharunderscore}{\kern0pt}imp{\isacharbrackleft}{\kern0pt}OF\ real{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}intg{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}{\isacharcomma}{\kern0pt}\ OF\ assms{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharcomma}{\kern0pt}{\isadigit{3}}{\isacharparenright}{\kern0pt}\ assms{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharbrackleft}{\kern0pt}THEN\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}integrable{\isacharbrackright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ measurable{\isacharunderscore}{\kern0pt}from{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\ auto\isanewline
+\ \ \isacommand{interpret}\isamarkupfalse%
+\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure\ {\isachardoublequoteopen}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ M\ F{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}rule\ sigma{\isacharunderscore}{\kern0pt}fin{\isacharunderscore}{\kern0pt}subalg{\isacharparenright}{\kern0pt}\isanewline
+\ \ \isacommand{{\isacharbraceleft}{\kern0pt}}\isamarkupfalse%
+\isanewline
+\ \ \ \ \isacommand{fix}\isamarkupfalse%
+\ A\ \isacommand{assume}\isamarkupfalse%
+\ asm{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}A\ {\isasymin}\ sets\ F{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isacommand{hence}\isamarkupfalse%
+\ asm{\isacharprime}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}A\ {\isasymin}\ sets\ M{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ subalg\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}fastforce\ simp\ add{\isacharcolon}{\kern0pt}\ subalgebra{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral\ M\ A\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ g\ x{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral\ M\ A\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}simp\ add{\isacharcolon}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}set{\isacharunderscore}{\kern0pt}integral{\isacharbrackleft}{\kern0pt}OF\ assms{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}\ asm{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \isacommand{also}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}\ {\isacharequal}{\kern0pt}\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral\ M\ A\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ real{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}times{\isacharbrackleft}{\kern0pt}OF\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}indicator{\isacharbrackleft}{\kern0pt}OF\ asm{\isacharbrackright}{\kern0pt}\ assms{\isacharparenleft}{\kern0pt}{\isadigit{3}}{\isacharparenright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}integrable{\isacharbrackleft}{\kern0pt}OF\ assms{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ integrable{\isacharunderscore}{\kern0pt}mult{\isacharunderscore}{\kern0pt}indicator{\isacharbrackleft}{\kern0pt}OF\ asm{\isacharprime}{\kern0pt}\ assms{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}fastforce\ simp\ add{\isacharcolon}{\kern0pt}\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral{\isacharunderscore}{\kern0pt}def\ mult{\isachardot}{\kern0pt}assoc{\isacharbrackleft}{\kern0pt}symmetric{\isacharbrackright}{\kern0pt}\ intro{\isacharcolon}{\kern0pt}\ real{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}intg{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharbrackleft}{\kern0pt}symmetric{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \isacommand{also}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}\ {\isacharequal}{\kern0pt}\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral\ M\ A\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}real{\isacharbrackleft}{\kern0pt}OF\ assms{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ asm{\isacharprime}{\kern0pt}\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharprime}{\kern0pt}\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isadigit{2}}\ measurable{\isacharunderscore}{\kern0pt}from{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalg\ assms{\isacharparenleft}{\kern0pt}{\isadigit{3}}{\isacharparenright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}auto\ simp\ add{\isacharcolon}{\kern0pt}\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral{\isacharunderscore}{\kern0pt}def\ intro{\isacharcolon}{\kern0pt}\ integral{\isacharunderscore}{\kern0pt}cong{\isacharunderscore}{\kern0pt}AE{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \isacommand{finally}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral\ M\ A\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ g\ x{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ {\isasymintegral}x{\isasymin}A{\isachardot}{\kern0pt}\ {\isacharparenleft}{\kern0pt}f\ x\ {\isacharasterisk}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isasympartial}M{\isachardoublequoteclose}\ \isacommand{{\isachardot}{\kern0pt}}\isamarkupfalse%
+\isanewline
+\ \ \isacommand{{\isacharbraceright}{\kern0pt}}\isamarkupfalse%
+\isanewline
+\ \ \isacommand{hence}\isamarkupfalse%
+\ {\isachardoublequoteopen}AE\ x\ in\ restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ M\ F{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ g\ x{\isacharparenright}{\kern0pt}\ x\ {\isacharequal}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ density{\isacharunderscore}{\kern0pt}unique\ integrable{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ integrable\ integrable{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}subalg\ subalg{\isacharcomma}{\kern0pt}\ measurable{\isacharcomma}{\kern0pt}\ simp\ add{\isacharcolon}{\kern0pt}\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral{\isacharunderscore}{\kern0pt}def\ integral{\isacharunderscore}{\kern0pt}subalgebra{\isadigit{2}}{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}\ sets{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
+\ \ \isacommand{thus}\isamarkupfalse%
+\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ g\ x{\isacharparenright}{\kern0pt}\ x\ {\isacharequal}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}rule\ AE{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
+\isacommand{qed}\isamarkupfalse%
+%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
+\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}scaleR{\isacharcolon}{\kern0pt}\isanewline
+\ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ real{\isachardoublequoteclose}\ \isakeyword{and}\ g\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ {\isacharbrackleft}{\kern0pt}measurable{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}integrable\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ {\isachardoublequoteopen}integrable\ M\ g{\isachardoublequoteclose}\ {\isachardoublequoteopen}f\ {\isasymin}\ borel{\isacharunderscore}{\kern0pt}measurable\ F{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{shows}\ {\isachardoublequoteopen}integrable\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ \ \ \ \ \ \ \ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}\ x\ {\isacharequal}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{proof}\isamarkupfalse%
+\ {\isacharminus}{\kern0pt}\isanewline
+\ \ \isacommand{let}\isamarkupfalse%
+\ {\isacharquery}{\kern0pt}F\ {\isacharequal}{\kern0pt}\ {\isachardoublequoteopen}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ M\ F{\isachardoublequoteclose}\isanewline
+\ \ \isacommand{have}\isamarkupfalse%
+\ subalg{\isacharprime}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}subalgebra\ M\ {\isacharparenleft}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ M\ F{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}metis\ sets{\isacharunderscore}{\kern0pt}eq{\isacharunderscore}{\kern0pt}imp{\isacharunderscore}{\kern0pt}space{\isacharunderscore}{\kern0pt}eq\ sets{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ subalg\ subalgebra{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}\isanewline
+\ \ \isacommand{{\isacharbraceleft}{\kern0pt}}\isamarkupfalse%
+\isanewline
+\ \ \ \ \isacommand{fix}\isamarkupfalse%
+\ z\ \isacommand{assume}\isamarkupfalse%
+\ asm{\isacharbrackleft}{\kern0pt}measurable{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}integrable\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ {\isachardoublequoteopen}z\ {\isasymin}\ borel{\isacharunderscore}{\kern0pt}measurable\ {\isacharquery}{\kern0pt}F{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isacommand{hence}\isamarkupfalse%
+\ asm{\isacharprime}{\kern0pt}{\isacharbrackleft}{\kern0pt}measurable{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}z\ {\isasymin}\ borel{\isacharunderscore}{\kern0pt}measurable\ F{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ measurable{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}subalg{\isacharprime}{\kern0pt}\ subalg\ \isacommand{by}\isamarkupfalse%
+\ blast\isanewline
+\ \ \ \ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}integrable\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ {\isachardoublequoteopen}LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x\ {\isacharequal}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isacommand{proof}\isamarkupfalse%
+\ {\isacharminus}{\kern0pt}\isanewline
+\ \ \ \ \ \ \isacommand{obtain}\isamarkupfalse%
+\ s\ \isakeyword{where}\ s{\isacharunderscore}{\kern0pt}is{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isasymAnd}i{\isachardot}{\kern0pt}\ simple{\isacharunderscore}{\kern0pt}function\ {\isacharquery}{\kern0pt}F\ {\isacharparenleft}{\kern0pt}s\ i{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ {\isachardoublequoteopen}{\isasymAnd}x{\isachardot}{\kern0pt}\ x\ {\isasymin}\ space\ {\isacharquery}{\kern0pt}F\ {\isasymLongrightarrow}\ {\isacharparenleft}{\kern0pt}{\isasymlambda}i{\isachardot}{\kern0pt}\ s\ i\ x{\isacharparenright}{\kern0pt}\ {\isasymlonglonglongrightarrow}\ z\ x{\isachardoublequoteclose}\ {\isachardoublequoteopen}{\isasymAnd}i\ x{\isachardot}{\kern0pt}\ x\ {\isasymin}\ space\ {\isacharquery}{\kern0pt}F\ {\isasymLongrightarrow}\ norm\ {\isacharparenleft}{\kern0pt}s\ i\ x{\isacharparenright}{\kern0pt}\ {\isasymle}\ {\isadigit{2}}\ {\isacharasterisk}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}z\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}implies{\isacharunderscore}{\kern0pt}sequence{\isacharunderscore}{\kern0pt}metric{\isacharbrackleft}{\kern0pt}OF\ asm{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharcomma}{\kern0pt}\ of\ {\isadigit{0}}{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ force\isanewline
+\isanewline
+\ \ \ \ \ \ \isanewline
+\isanewline
+\ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}tendsto{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymlambda}i{\isachardot}{\kern0pt}\ s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}\ {\isasymlonglonglongrightarrow}\ z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}is{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}simp\ add{\isacharcolon}{\kern0pt}\ space{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ tendsto{\isacharunderscore}{\kern0pt}scaleR{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}tendsto{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}AE\ x\ in\ {\isacharquery}{\kern0pt}F{\isachardot}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymlambda}i{\isachardot}{\kern0pt}\ s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}\ {\isasymlonglonglongrightarrow}\ z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}is{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}simp\ add{\isacharcolon}{\kern0pt}\ tendsto{\isacharunderscore}{\kern0pt}scaleR{\isacharparenright}{\kern0pt}\isanewline
+\isanewline
+\ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}meas{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}\ {\isasymin}\ borel{\isacharunderscore}{\kern0pt}measurable\ M{\isachardoublequoteclose}\ \isakeyword{for}\ i\ \isacommand{using}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}is{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}{\isacharbrackleft}{\kern0pt}THEN\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}function{\isacharcomma}{\kern0pt}\ THEN\ subalg{\isacharprime}{\kern0pt}{\isacharbrackleft}{\kern0pt}THEN\ measurable{\isacharunderscore}{\kern0pt}from{\isacharunderscore}{\kern0pt}subalg{\isacharbrackright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ simp\isanewline
+\ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}meas{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}\ {\isasymin}\ borel{\isacharunderscore}{\kern0pt}measurable\ {\isacharquery}{\kern0pt}F{\isachardoublequoteclose}\ \isakeyword{for}\ i\ \isacommand{using}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}is{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}{\isacharbrackleft}{\kern0pt}THEN\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}function{\isacharbrackright}{\kern0pt}\ measurable{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalg\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}fastforce\ intro{\isacharcolon}{\kern0pt}\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}scaleR{\isacharparenright}{\kern0pt}\isanewline
+\isanewline
+\ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}AE{\isacharunderscore}{\kern0pt}bdd{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}\ {\isasymle}\ {\isadigit{2}}\ {\isacharasterisk}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isakeyword{for}\ i\ \isacommand{using}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}is{\isacharparenleft}{\kern0pt}{\isadigit{3}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}fastforce\ simp\ add{\isacharcolon}{\kern0pt}\ space{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ mult{\isachardot}{\kern0pt}assoc{\isacharbrackleft}{\kern0pt}symmetric{\isacharbrackright}{\kern0pt}\ mult{\isacharunderscore}{\kern0pt}right{\isacharunderscore}{\kern0pt}mono{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \ \ \isacommand{{\isacharbraceleft}{\kern0pt}}\isamarkupfalse%
+\isanewline
+\ \ \ \ \ \ \ \ \isacommand{fix}\isamarkupfalse%
+\ i\isanewline
+\ \ \ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
+\ asm{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}integrable\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}z\ x{\isacharparenright}{\kern0pt}\ {\isacharasterisk}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}g\ x{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ asm{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}{\isacharbrackleft}{\kern0pt}THEN\ integrable{\isacharunderscore}{\kern0pt}norm{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ simp\isanewline
+\ \ \ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}AE\ x\ in\ {\isacharquery}{\kern0pt}F{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}\ {\isasymle}\ {\isadigit{2}}\ {\isacharasterisk}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}z\ x{\isacharparenright}{\kern0pt}\ {\isacharasterisk}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}is{\isacharparenleft}{\kern0pt}{\isadigit{3}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}fastforce\ simp\ add{\isacharcolon}{\kern0pt}\ mult{\isacharunderscore}{\kern0pt}mono{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \ \ \ \ \isacommand{moreover}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}AE\ x\ in\ {\isacharquery}{\kern0pt}F{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}z\ x{\isacharparenright}{\kern0pt}\ {\isacharasterisk}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}g\ x{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ x\ {\isacharequal}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}z\ x{\isacharparenright}{\kern0pt}\ {\isacharasterisk}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}g\ x{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ x{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}rule\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}mult{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharbrackleft}{\kern0pt}THEN\ AE{\isacharunderscore}{\kern0pt}symmetric{\isacharcomma}{\kern0pt}\ OF\ asm\ integrable{\isacharunderscore}{\kern0pt}norm{\isacharcomma}{\kern0pt}\ OF\ assms{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharcomma}{\kern0pt}\ THEN\ AE{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg{\isadigit{2}}{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}{\isacharbrackright}{\kern0pt}{\isacharcomma}{\kern0pt}\ auto{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \ \ \ \ \isacommand{ultimately}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}AE\ x\ in\ {\isacharquery}{\kern0pt}F{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}\ {\isasymle}\ {\isadigit{2}}\ {\isacharasterisk}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ norm\ {\isacharparenleft}{\kern0pt}z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ x{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}contraction{\isacharbrackleft}{\kern0pt}OF\ assms{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharcomma}{\kern0pt}\ THEN\ AE{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg{\isadigit{2}}{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ order{\isacharunderscore}{\kern0pt}trans{\isacharbrackleft}{\kern0pt}OF\ {\isacharunderscore}{\kern0pt}\ mult{\isacharunderscore}{\kern0pt}mono{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ fastforce\isanewline
+\ \ \ \ \ \ \isacommand{{\isacharbraceright}{\kern0pt}}\isamarkupfalse%
+\isanewline
+\ \ \ \ \ \ \isacommand{note}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}AE{\isacharunderscore}{\kern0pt}bdd\ {\isacharequal}{\kern0pt}\ this\isanewline
+\isanewline
+\ \ \ \ \ \ \isanewline
+\isanewline
+\ \ \ \ \ \ \isacommand{{\isacharbraceleft}{\kern0pt}}\isamarkupfalse%
+\isanewline
+\ \ \ \ \ \ \ \ \isacommand{fix}\isamarkupfalse%
+\ i\isanewline
+\ \ \ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}meas{\isacharunderscore}{\kern0pt}M{\isacharbrackleft}{\kern0pt}measurable{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}s\ i\ {\isasymin}\ borel{\isacharunderscore}{\kern0pt}measurable\ M{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}meson\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}function\ measurable{\isacharunderscore}{\kern0pt}from{\isacharunderscore}{\kern0pt}subalg\ s{\isacharunderscore}{\kern0pt}is{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}\ subalg{\isacharprime}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}meas{\isacharunderscore}{\kern0pt}F{\isacharbrackleft}{\kern0pt}measurable{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}s\ i\ {\isasymin}\ borel{\isacharunderscore}{\kern0pt}measurable\ F{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}meson\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}simple{\isacharunderscore}{\kern0pt}function\ measurable{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}subalg{\isacharprime}{\kern0pt}\ s{\isacharunderscore}{\kern0pt}is{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}\ subalg{\isacharparenright}{\kern0pt}\isanewline
+\isanewline
+\ \ \ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}eq{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ h\ x\ {\isacharequal}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymSum}y{\isasymin}s\ i\ {\isacharbackquote}{\kern0pt}\ space\ M{\isachardot}{\kern0pt}\ {\isacharparenleft}{\kern0pt}indicator\ {\isacharparenleft}{\kern0pt}s\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}y{\isacharbraceright}{\kern0pt}\ {\isasyminter}\ space\ M{\isacharparenright}{\kern0pt}\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ y{\isacharparenright}{\kern0pt}\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ h\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isakeyword{if}\ {\isachardoublequoteopen}x\ {\isasymin}\ space\ M{\isachardoublequoteclose}\ \isakeyword{for}\ x\ \isakeyword{and}\ h\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ simple{\isacharunderscore}{\kern0pt}function{\isacharunderscore}{\kern0pt}indicator{\isacharunderscore}{\kern0pt}representation{\isacharbrackleft}{\kern0pt}OF\ s{\isacharunderscore}{\kern0pt}is{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}{\isacharcomma}{\kern0pt}\ of\ x\ i{\isacharbrackright}{\kern0pt}\ that\ \isacommand{unfolding}\isamarkupfalse%
+\ space{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ scaleR{\isacharunderscore}{\kern0pt}left{\isachardot}{\kern0pt}sum{\isacharbrackleft}{\kern0pt}of\ {\isacharunderscore}{\kern0pt}\ {\isacharunderscore}{\kern0pt}\ {\isachardoublequoteopen}h\ x{\isachardoublequoteclose}{\isacharcomma}{\kern0pt}\ symmetric{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ presburger\isanewline
+\ \ \ \ \ \ \ \ \isanewline
+\ \ \ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x\ {\isacharequal}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymSum}y{\isasymin}s\ i\ {\isacharbackquote}{\kern0pt}\ space\ M{\isachardot}{\kern0pt}\ indicator\ {\isacharparenleft}{\kern0pt}s\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}y{\isacharbraceright}{\kern0pt}\ {\isasyminter}\ space\ M{\isacharparenright}{\kern0pt}\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ y\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}eq\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ Bochner{\isacharunderscore}{\kern0pt}Integration{\isachardot}{\kern0pt}integral{\isacharunderscore}{\kern0pt}cong{\isacharparenright}{\kern0pt}\ auto\isanewline
+\ \ \ \ \ \ \ \ \isacommand{also}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}\ {\isacharequal}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymSum}y{\isasymin}s\ i\ {\isacharbackquote}{\kern0pt}\ space\ M{\isachardot}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ indicator\ {\isacharparenleft}{\kern0pt}s\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}y{\isacharbraceright}{\kern0pt}\ {\isasyminter}\ space\ M{\isacharparenright}{\kern0pt}\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ y\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ Bochner{\isacharunderscore}{\kern0pt}Integration{\isachardot}{\kern0pt}integral{\isacharunderscore}{\kern0pt}sum\ integrable{\isacharunderscore}{\kern0pt}mult{\isacharunderscore}{\kern0pt}indicator{\isacharbrackleft}{\kern0pt}OF\ {\isacharunderscore}{\kern0pt}\ integrable{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}right{\isacharbrackright}{\kern0pt}\ assms{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\ simp\isanewline
+\ \ \ \ \ \ \ \ \isacommand{also}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}\ {\isacharequal}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymSum}y{\isasymin}s\ i\ {\isacharbackquote}{\kern0pt}\ space\ M{\isachardot}{\kern0pt}\ \ y\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral\ M\ {\isacharparenleft}{\kern0pt}s\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}y{\isacharbraceright}{\kern0pt}\ {\isasyminter}\ space\ M{\isacharparenright}{\kern0pt}\ g{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}simp\ only{\isacharcolon}{\kern0pt}\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral{\isacharunderscore}{\kern0pt}def{\isacharbrackleft}{\kern0pt}symmetric{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\ simp\isanewline
+\ \ \ \ \ \ \ \ \isacommand{also}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}\ {\isacharequal}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymSum}y{\isasymin}s\ i\ {\isacharbackquote}{\kern0pt}\ space\ M{\isachardot}{\kern0pt}\ \ y\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral\ M\ {\isacharparenleft}{\kern0pt}s\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}y{\isacharbraceright}{\kern0pt}\ {\isasyminter}\ space\ M{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ assms{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}\ subalg\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}vimage{\isacharbrackleft}{\kern0pt}OF\ s{\isacharunderscore}{\kern0pt}meas{\isacharunderscore}{\kern0pt}F{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}subst\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}set{\isacharunderscore}{\kern0pt}integral{\isacharcomma}{\kern0pt}\ auto\ simp\ add{\isacharcolon}{\kern0pt}\ subalgebra{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}\ \isanewline
+\ \ \ \ \ \ \ \ \isacommand{also}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}\ {\isacharequal}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymSum}y{\isasymin}s\ i\ {\isacharbackquote}{\kern0pt}\ space\ M{\isachardot}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ indicator\ {\isacharparenleft}{\kern0pt}s\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}y{\isacharbraceright}{\kern0pt}\ {\isasyminter}\ space\ M{\isacharparenright}{\kern0pt}\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ y\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}simp\ only{\isacharcolon}{\kern0pt}\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral{\isacharunderscore}{\kern0pt}def{\isacharbrackleft}{\kern0pt}symmetric{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\ simp\isanewline
+\ \ \ \ \ \ \ \ \isacommand{also}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}\ {\isacharequal}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymSum}y{\isasymin}s\ i\ {\isacharbackquote}{\kern0pt}\ space\ M{\isachardot}{\kern0pt}\ indicator\ {\isacharparenleft}{\kern0pt}s\ i\ {\isacharminus}{\kern0pt}{\isacharbackquote}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}y{\isacharbraceright}{\kern0pt}\ {\isasyminter}\ space\ M{\isacharparenright}{\kern0pt}\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ y\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ Bochner{\isacharunderscore}{\kern0pt}Integration{\isachardot}{\kern0pt}integral{\isacharunderscore}{\kern0pt}sum{\isacharbrackleft}{\kern0pt}symmetric{\isacharbrackright}{\kern0pt}\ integrable{\isacharunderscore}{\kern0pt}mult{\isacharunderscore}{\kern0pt}indicator{\isacharbrackleft}{\kern0pt}OF\ {\isacharunderscore}{\kern0pt}\ integrable{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}right{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\ auto\isanewline
+\ \ \ \ \ \ \ \ \isacommand{also}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}\ {\isacharequal}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}eq\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ Bochner{\isacharunderscore}{\kern0pt}Integration{\isachardot}{\kern0pt}integral{\isacharunderscore}{\kern0pt}cong{\isacharparenright}{\kern0pt}\ auto\isanewline
+\ \ \ \ \ \ \ \ \isacommand{finally}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x\ {\isacharequal}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}{\isacharquery}{\kern0pt}F{\isachardot}{\kern0pt}\ s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}simp\ add{\isacharcolon}{\kern0pt}\ integral{\isacharunderscore}{\kern0pt}subalgebra{\isadigit{2}}{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \ \ \isacommand{{\isacharbraceright}{\kern0pt}}\isamarkupfalse%
+\isanewline
+\ \ \ \ \ \ \isacommand{note}\isamarkupfalse%
+\ integral{\isacharunderscore}{\kern0pt}s{\isacharunderscore}{\kern0pt}eq\ {\isacharequal}{\kern0pt}\ this\isanewline
+\isanewline
+\ \ \ \ \ \ \isanewline
+\isanewline
+\ \ \ \ \ \ \isacommand{show}\isamarkupfalse%
+\ {\isachardoublequoteopen}integrable\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}meas\ asm{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharprime}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ integrable{\isacharunderscore}{\kern0pt}from{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}\ integrable{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ integrable{\isacharunderscore}{\kern0pt}dominated{\isacharunderscore}{\kern0pt}convergence{\isacharbrackleft}{\kern0pt}OF\ {\isacharunderscore}{\kern0pt}\ {\isacharunderscore}{\kern0pt}\ {\isacharunderscore}{\kern0pt}\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}tendsto\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}AE{\isacharunderscore}{\kern0pt}bdd{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}auto\ intro{\isacharcolon}{\kern0pt}\ measurable{\isacharunderscore}{\kern0pt}from{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}\ integrable{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}subalg\ measurable{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}subalg\ subalg{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \ \ \ \ \ \isanewline
+\ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}{\isacharparenleft}{\kern0pt}{\isasymlambda}i{\isachardot}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}\ {\isasymlonglonglongrightarrow}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}meas\ asm{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}{\isacharbrackleft}{\kern0pt}THEN\ integrable{\isacharunderscore}{\kern0pt}norm{\isacharbrackright}{\kern0pt}\ asm{\isacharprime}{\kern0pt}\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharprime}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ integral{\isacharunderscore}{\kern0pt}dominated{\isacharunderscore}{\kern0pt}convergence{\isacharbrackleft}{\kern0pt}OF\ {\isacharunderscore}{\kern0pt}\ {\isacharunderscore}{\kern0pt}\ {\isacharunderscore}{\kern0pt}\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}tendsto\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}AE{\isacharunderscore}{\kern0pt}bdd{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}auto\ intro{\isacharcolon}{\kern0pt}\ measurable{\isacharunderscore}{\kern0pt}from{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \ \ \isacommand{moreover}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}{\isacharparenleft}{\kern0pt}{\isasymlambda}i{\isachardot}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}{\isacharquery}{\kern0pt}F{\isachardot}{\kern0pt}\ s\ i\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}\ {\isasymlonglonglongrightarrow}\ LINT\ x{\isacharbar}{\kern0pt}{\isacharquery}{\kern0pt}F{\isachardot}{\kern0pt}\ z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}meas\ asm{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharprime}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ integral{\isacharunderscore}{\kern0pt}dominated{\isacharunderscore}{\kern0pt}convergence{\isacharbrackleft}{\kern0pt}OF\ {\isacharunderscore}{\kern0pt}\ {\isacharunderscore}{\kern0pt}\ {\isacharunderscore}{\kern0pt}\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}tendsto\ s{\isacharunderscore}{\kern0pt}scaleR{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}g{\isacharunderscore}{\kern0pt}AE{\isacharunderscore}{\kern0pt}bdd{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}auto\ intro{\isacharcolon}{\kern0pt}\ measurable{\isacharunderscore}{\kern0pt}from{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}\ integrable{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}subalg\ measurable{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}subalg\ subalg{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \ \ \isacommand{ultimately}\isamarkupfalse%
+\ \isacommand{show}\isamarkupfalse%
+\ {\isachardoublequoteopen}LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x\ {\isacharequal}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ z\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ integral{\isacharunderscore}{\kern0pt}s{\isacharunderscore}{\kern0pt}eq\ \isacommand{using}\isamarkupfalse%
+\ subalg\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}simp\ add{\isacharcolon}{\kern0pt}\ LIMSEQ{\isacharunderscore}{\kern0pt}unique\ integral{\isacharunderscore}{\kern0pt}subalgebra{\isadigit{2}}{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \isacommand{qed}\isamarkupfalse%
+\isanewline
+\ \ \isacommand{{\isacharbraceright}{\kern0pt}}\isamarkupfalse%
+\isanewline
+\ \ \isacommand{note}\isamarkupfalse%
+\ {\isacharasterisk}{\kern0pt}\ {\isacharequal}{\kern0pt}\ this\isanewline
+\isanewline
+\ \ \isanewline
+\ \ \isanewline
+\ \ \isacommand{show}\isamarkupfalse%
+\ {\isachardoublequoteopen}integrable\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ {\isacharasterisk}{\kern0pt}\ assms\ measurable{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ blast\isanewline
+\isanewline
+\ \ \isacommand{{\isacharbraceleft}{\kern0pt}}\isamarkupfalse%
+\isanewline
+\ \ \ \ \isacommand{fix}\isamarkupfalse%
+\ A\ \isacommand{assume}\isamarkupfalse%
+\ asm{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}A\ {\isasymin}\ F{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isacommand{hence}\isamarkupfalse%
+\ {\isachardoublequoteopen}integrable\ M\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ indicat{\isacharunderscore}{\kern0pt}real\ A\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ f\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ subalg\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}fastforce\ simp\ add{\isacharcolon}{\kern0pt}\ subalgebra{\isacharunderscore}{\kern0pt}def\ intro{\isacharbang}{\kern0pt}{\isacharcolon}{\kern0pt}\ integrable{\isacharunderscore}{\kern0pt}mult{\isacharunderscore}{\kern0pt}indicator\ assms{\isacharparenleft}{\kern0pt}{\isadigit{1}}{\isacharparenright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
+\ \ \ \ \isacommand{hence}\isamarkupfalse%
+\ {\isachardoublequoteopen}set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral\ M\ A\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral\ M\ A\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{unfolding}\isamarkupfalse%
+\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral{\isacharunderscore}{\kern0pt}def\ \isacommand{using}\isamarkupfalse%
+\ asm\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}auto\ intro{\isacharbang}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharasterisk}{\kern0pt}\ measurable{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
+\ \ \isacommand{{\isacharbraceright}{\kern0pt}}\isamarkupfalse%
+\isanewline
+\ \ \isacommand{thus}\isamarkupfalse%
+\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ g\ x{\isacharparenright}{\kern0pt}\ x\ {\isacharequal}{\kern0pt}\ f\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ g\ x{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ borel{\isacharunderscore}{\kern0pt}measurable{\isacharunderscore}{\kern0pt}cond{\isacharunderscore}{\kern0pt}exp\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}intro\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}charact{\isacharcomma}{\kern0pt}\ auto\ intro{\isacharbang}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharasterisk}{\kern0pt}\ assms\ measurable{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}subalg{\isacharbrackleft}{\kern0pt}OF\ subalg{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
 \isacommand{qed}\isamarkupfalse%
 %
 \endisatagproof
@@ -1714,7 +2029,7 @@ Addition%
 %
 \isatagdocument
 %
-\isamarkupsubsection{Ordered Real Vectors%
+\isamarkupsubsection{Ordered Banach Spaces%
 }
 \isamarkuptrue%
 %
@@ -1771,7 +2086,7 @@ Addition%
 \ subalg\ sets{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ \isacommand{by}\isamarkupfalse%
 \ blast\isanewline
 \ \ \ \ \isacommand{hence}\isamarkupfalse%
-\ {\isacharbrackleft}{\kern0pt}simp{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}A\ {\isasymin}\ sets\ M{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ A{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}sets{\isacharunderscore}{\kern0pt}M{\isacharbrackleft}{\kern0pt}simp{\isacharbrackright}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}A\ {\isasymin}\ sets\ M{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
 \ sets{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ subalg\ subalgebra{\isacharunderscore}{\kern0pt}def\ \isacommand{by}\isamarkupfalse%
 \ blast\isanewline
 \ \ \ \ \isacommand{have}\isamarkupfalse%
@@ -1796,7 +2111,7 @@ Addition%
 \ {\isacharparenleft}{\kern0pt}intro\ set{\isacharunderscore}{\kern0pt}integral{\isacharunderscore}{\kern0pt}mono{\isacharunderscore}{\kern0pt}AE{\isacharunderscore}{\kern0pt}banach{\isacharparenright}{\kern0pt}\ auto\isanewline
 \ \ \ \ \ \ \ \ \isacommand{have}\isamarkupfalse%
 \ {\isachardoublequoteopen}{\isacharparenleft}{\kern0pt}{\isasymintegral}x{\isasymin}A{\isachardot}{\kern0pt}\ f\ x\ {\isasympartial}M{\isacharparenright}{\kern0pt}\ {\isacharequal}{\kern0pt}\ {\isacharparenleft}{\kern0pt}{\isasymintegral}x{\isasymin}A{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ f\ x\ {\isasympartial}M{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}rule\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}set{\isacharunderscore}{\kern0pt}integral{\isacharcomma}{\kern0pt}\ auto\ simp\ add{\isacharcolon}{\kern0pt}\ {\isacartoucheopen}integrable\ M\ f{\isacartoucheclose}{\isacharparenright}{\kern0pt}\isanewline
+\ {\isacharparenleft}{\kern0pt}rule\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}set{\isacharunderscore}{\kern0pt}integral{\isacharcomma}{\kern0pt}\ auto\ simp\ add{\isacharcolon}{\kern0pt}\ assms{\isacharparenright}{\kern0pt}\isanewline
 \ \ \ \ \ \ \ \ \isacommand{also}\isamarkupfalse%
 \ \isacommand{have}\isamarkupfalse%
 \ {\isachardoublequoteopen}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}{\isachardot}{\kern0pt}\ {\isasymle}\ {\isacharparenleft}{\kern0pt}{\isasymintegral}x{\isasymin}A{\isachardot}{\kern0pt}\ c\ {\isasympartial}M{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
@@ -1808,39 +2123,30 @@ Addition%
 \ simp\isanewline
 \ \ \ \ \ \ \isacommand{qed}\isamarkupfalse%
 \isanewline
-\ \ \ \ \ \ \isacommand{then}\isamarkupfalse%
-\ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}measure\ M\ A\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ c\ {\isacharequal}{\kern0pt}\ LINT\ x{\isacharbar}{\kern0pt}M{\isachardot}{\kern0pt}\ indicator\ A\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ f\ x{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
-\ A\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}auto\ simp{\isacharcolon}{\kern0pt}\ set{\isacharunderscore}{\kern0pt}lebesgue{\isacharunderscore}{\kern0pt}integral{\isacharunderscore}{\kern0pt}def\ emeasure{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ subalg{\isacharparenright}{\kern0pt}\isanewline
 \ \ \ \ \ \ \isacommand{show}\isamarkupfalse%
 \ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ indicator\ A\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ c\ {\isasymle}\ indicator\ A\ x\ {\isacharasterisk}{\kern0pt}\isactrlsub R\ f\ x{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
 \ assms\ \isacommand{by}\isamarkupfalse%
 \ {\isacharparenleft}{\kern0pt}auto\ simp\ add{\isacharcolon}{\kern0pt}\ X{\isacharunderscore}{\kern0pt}def\ indicator{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}\isanewline
 \ \ \ \ \isacommand{qed}\isamarkupfalse%
 \ {\isacharparenleft}{\kern0pt}auto\ simp\ add{\isacharcolon}{\kern0pt}\ set{\isacharunderscore}{\kern0pt}integrable{\isacharunderscore}{\kern0pt}def{\isacharbrackleft}{\kern0pt}symmetric{\isacharbrackright}{\kern0pt}{\isacharparenright}{\kern0pt}\isanewline
-\ \ \ \ \isacommand{then}\isamarkupfalse%
-\ \isacommand{have}\isamarkupfalse%
+\ \ \ \ \isacommand{hence}\isamarkupfalse%
 \ {\isachardoublequoteopen}AE\ x{\isasymin}A\ in\ M{\isachardot}{\kern0pt}\ c\ {\isacharequal}{\kern0pt}\ f\ x{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
 \ auto\isanewline
-\ \ \ \ \isacommand{then}\isamarkupfalse%
-\ \isacommand{have}\isamarkupfalse%
+\ \ \ \ \isacommand{hence}\isamarkupfalse%
 \ {\isachardoublequoteopen}AE\ x{\isasymin}A\ in\ M{\isachardot}{\kern0pt}\ False{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
 \ assms{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
 \ auto\isanewline
-\ \ \ \ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}A\ {\isasymin}\ null{\isacharunderscore}{\kern0pt}sets\ M{\isachardoublequoteclose}\ \isacommand{unfolding}\isamarkupfalse%
-\ ae{\isacharunderscore}{\kern0pt}filter{\isacharunderscore}{\kern0pt}def\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}meson\ AE{\isacharunderscore}{\kern0pt}iff{\isacharunderscore}{\kern0pt}null{\isacharunderscore}{\kern0pt}sets\ {\isacartoucheopen}A\ {\isasymin}\ sets\ M{\isacartoucheclose}\ {\isacartoucheopen}AE\ x{\isasymin}A\ in\ M{\isachardot}{\kern0pt}\ False{\isacartoucheclose}{\isacharparenright}{\kern0pt}\isanewline
-\ \ \ \ \isacommand{then}\isamarkupfalse%
-\ \isacommand{show}\isamarkupfalse%
+\ \ \ \ \isacommand{hence}\isamarkupfalse%
+\ {\isachardoublequoteopen}A\ {\isasymin}\ null{\isacharunderscore}{\kern0pt}sets\ M{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ AE{\isacharunderscore}{\kern0pt}iff{\isacharunderscore}{\kern0pt}null{\isacharunderscore}{\kern0pt}sets\ A{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}sets{\isacharunderscore}{\kern0pt}M\ \isacommand{by}\isamarkupfalse%
+\ metis\isanewline
+\ \ \ \ \isacommand{thus}\isamarkupfalse%
 \ False\ \isacommand{using}\isamarkupfalse%
-\ A{\isacharparenleft}{\kern0pt}{\isadigit{3}}{\isacharparenright}{\kern0pt}\isacommand{by}\isamarkupfalse%
+\ A{\isacharparenleft}{\kern0pt}{\isadigit{3}}{\isacharparenright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
 \ {\isacharparenleft}{\kern0pt}simp\ add{\isacharcolon}{\kern0pt}\ emeasure{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ null{\isacharunderscore}{\kern0pt}setsD{\isadigit{1}}\ subalg{\isacharparenright}{\kern0pt}\isanewline
 \ \ \isacommand{qed}\isamarkupfalse%
 \isanewline
-\ \ \isacommand{then}\isamarkupfalse%
-\ \isacommand{show}\isamarkupfalse%
+\ \ \isacommand{thus}\isamarkupfalse%
 \ {\isacharquery}{\kern0pt}thesis\ \isacommand{using}\isamarkupfalse%
 \ AE{\isacharunderscore}{\kern0pt}iff{\isacharunderscore}{\kern0pt}null{\isacharunderscore}{\kern0pt}sets{\isacharbrackleft}{\kern0pt}OF\ X{\isacharunderscore}{\kern0pt}in{\isacharunderscore}{\kern0pt}M{\isacharbrackright}{\kern0pt}\ \isacommand{unfolding}\isamarkupfalse%
 \ X{\isacharunderscore}{\kern0pt}def\ \isacommand{by}\isamarkupfalse%
@@ -1855,7 +2161,7 @@ Addition%
 %
 \endisadelimproof
 \isanewline
-\isacommand{lemma}\isamarkupfalse%
+\isacommand{corollary}\isamarkupfalse%
 \ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}less{\isacharunderscore}{\kern0pt}c{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ ordered{\isacharunderscore}{\kern0pt}real{\isacharunderscore}{\kern0pt}vector{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ f\ x\ {\isacharless}{\kern0pt}\ c{\isachardoublequoteclose}\isanewline
@@ -1874,7 +2180,7 @@ Addition%
 \ auto\isanewline
 \ \ \isacommand{moreover}\isamarkupfalse%
 \ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ {\isacharminus}{\kern0pt}f\ x{\isacharparenright}{\kern0pt}\ x\ {\isachargreater}{\kern0pt}\ {\isacharminus}{\kern0pt}c{\isachardoublequoteclose}\ \ \isacommand{using}\isamarkupfalse%
+\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ cond{\isacharunderscore}{\kern0pt}exp\ M\ F\ {\isacharparenleft}{\kern0pt}{\isasymlambda}x{\isachardot}{\kern0pt}\ {\isacharminus}{\kern0pt}\ f\ x{\isacharparenright}{\kern0pt}\ x\ {\isachargreater}{\kern0pt}\ {\isacharminus}{\kern0pt}\ c{\isachardoublequoteclose}\ \ \isacommand{using}\isamarkupfalse%
 \ assms\ \isacommand{by}\isamarkupfalse%
 \ {\isacharparenleft}{\kern0pt}intro\ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}gr{\isacharunderscore}{\kern0pt}c{\isacharparenright}{\kern0pt}\ auto\isanewline
 \ \ \isacommand{ultimately}\isamarkupfalse%
@@ -1987,7 +2293,7 @@ Addition%
 %
 \endisadelimproof
 \isanewline
-\isacommand{lemma}\isamarkupfalse%
+\isacommand{corollary}\isamarkupfalse%
 \ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}le{\isacharunderscore}{\kern0pt}c{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ ordered{\isacharunderscore}{\kern0pt}real{\isacharunderscore}{\kern0pt}vector{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\isanewline
@@ -2024,7 +2330,7 @@ Addition%
 %
 \endisadelimproof
 \isanewline
-\isacommand{lemma}\isamarkupfalse%
+\isacommand{corollary}\isamarkupfalse%
 \ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}mono{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ ordered{\isacharunderscore}{\kern0pt}real{\isacharunderscore}{\kern0pt}vector{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\ {\isachardoublequoteopen}integrable\ M\ g{\isachardoublequoteclose}\ {\isachardoublequoteopen}AE\ x\ in\ M{\isachardot}{\kern0pt}\ f\ x\ {\isasymle}\ g\ x{\isachardoublequoteclose}\isanewline
@@ -2047,7 +2353,7 @@ Addition%
 %
 \endisadelimproof
 \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \isanewline
-\isacommand{lemma}\isamarkupfalse%
+\isacommand{corollary}\isamarkupfalse%
 \ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}min{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ ordered{\isacharunderscore}{\kern0pt}real{\isacharunderscore}{\kern0pt}vector{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\ {\isachardoublequoteopen}integrable\ M\ g{\isachardoublequoteclose}\isanewline
@@ -2081,7 +2387,7 @@ Addition%
 %
 \endisadelimproof
 \isanewline
-\isacommand{lemma}\isamarkupfalse%
+\isacommand{corollary}\isamarkupfalse%
 \ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}max{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ ordered{\isacharunderscore}{\kern0pt}real{\isacharunderscore}{\kern0pt}vector{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\ {\isachardoublequoteopen}integrable\ M\ g{\isachardoublequoteclose}\isanewline
@@ -2115,7 +2421,7 @@ Addition%
 %
 \endisadelimproof
 \isanewline
-\isacommand{lemma}\isamarkupfalse%
+\isacommand{corollary}\isamarkupfalse%
 \ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}inf{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ ordered{\isacharunderscore}{\kern0pt}real{\isacharunderscore}{\kern0pt}vector{\isacharcomma}{\kern0pt}\ lattice{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\ {\isachardoublequoteopen}integrable\ M\ g{\isachardoublequoteclose}\isanewline
@@ -2138,7 +2444,7 @@ Addition%
 %
 \endisadelimproof
 \isanewline
-\isacommand{lemma}\isamarkupfalse%
+\isacommand{corollary}\isamarkupfalse%
 \ cond{\isacharunderscore}{\kern0pt}exp{\isacharunderscore}{\kern0pt}sup{\isacharcolon}{\kern0pt}\isanewline
 \ \ \isakeyword{fixes}\ f\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}a\ {\isasymRightarrow}\ {\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ banach{\isacharcomma}{\kern0pt}\ linorder{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ ordered{\isacharunderscore}{\kern0pt}real{\isacharunderscore}{\kern0pt}vector{\isacharcomma}{\kern0pt}\ lattice{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ {\isachardoublequoteopen}integrable\ M\ f{\isachardoublequoteclose}\ {\isachardoublequoteopen}integrable\ M\ g{\isachardoublequoteclose}\isanewline
@@ -2278,725 +2584,703 @@ Addition%
 %:%187=56%:%
 %:%188=57%:%
 %:%189=58%:%
-%:%190=59%:%
-%:%197=60%:%
-%:%198=60%:%
-%:%199=61%:%
-%:%200=61%:%
-%:%201=61%:%
-%:%202=61%:%
-%:%203=62%:%
-%:%204=62%:%
-%:%205=63%:%
-%:%206=63%:%
-%:%207=63%:%
-%:%208=64%:%
-%:%209=64%:%
-%:%210=65%:%
+%:%192=59%:%
+%:%196=59%:%
+%:%197=59%:%
+%:%202=59%:%
+%:%205=60%:%
+%:%206=61%:%
+%:%207=61%:%
+%:%208=62%:%
+%:%209=63%:%
+%:%210=64%:%
 %:%211=65%:%
-%:%212=65%:%
-%:%213=66%:%
-%:%214=66%:%
-%:%215=66%:%
-%:%216=66%:%
-%:%217=66%:%
-%:%218=67%:%
-%:%219=67%:%
+%:%218=66%:%
+%:%219=66%:%
 %:%220=67%:%
 %:%221=67%:%
-%:%222=68%:%
-%:%223=68%:%
+%:%222=67%:%
+%:%223=67%:%
 %:%224=68%:%
 %:%225=68%:%
-%:%226=68%:%
+%:%226=69%:%
 %:%227=69%:%
 %:%228=69%:%
-%:%229=69%:%
-%:%230=69%:%
-%:%231=69%:%
-%:%232=70%:%
-%:%233=70%:%
-%:%234=70%:%
-%:%235=70%:%
-%:%236=71%:%
-%:%237=71%:%
+%:%229=70%:%
+%:%230=70%:%
+%:%231=71%:%
+%:%232=71%:%
+%:%233=71%:%
+%:%234=72%:%
+%:%235=72%:%
+%:%236=72%:%
+%:%237=72%:%
 %:%238=72%:%
-%:%239=72%:%
-%:%240=72%:%
-%:%241=72%:%
+%:%239=73%:%
+%:%240=73%:%
+%:%241=73%:%
 %:%242=73%:%
-%:%243=73%:%
-%:%244=73%:%
-%:%245=73%:%
-%:%246=73%:%
+%:%243=74%:%
+%:%244=74%:%
+%:%245=74%:%
+%:%246=74%:%
 %:%247=74%:%
-%:%253=74%:%
-%:%256=75%:%
-%:%257=76%:%
-%:%258=76%:%
-%:%259=77%:%
+%:%248=75%:%
+%:%249=75%:%
+%:%250=75%:%
+%:%251=75%:%
+%:%252=75%:%
+%:%253=76%:%
+%:%254=76%:%
+%:%255=76%:%
+%:%256=76%:%
+%:%257=77%:%
+%:%258=77%:%
+%:%259=78%:%
 %:%260=78%:%
-%:%261=79%:%
-%:%262=80%:%
-%:%265=81%:%
-%:%269=81%:%
-%:%270=81%:%
-%:%279=83%:%
-%:%281=85%:%
+%:%261=78%:%
+%:%262=78%:%
+%:%263=79%:%
+%:%264=79%:%
+%:%265=79%:%
+%:%266=79%:%
+%:%267=79%:%
+%:%268=80%:%
+%:%274=80%:%
+%:%277=81%:%
+%:%278=82%:%
+%:%279=82%:%
+%:%280=83%:%
+%:%281=84%:%
 %:%282=85%:%
 %:%283=86%:%
 %:%284=87%:%
-%:%291=88%:%
-%:%292=88%:%
+%:%285=88%:%
+%:%288=89%:%
+%:%292=89%:%
 %:%293=89%:%
-%:%294=89%:%
-%:%295=90%:%
-%:%296=90%:%
-%:%297=90%:%
-%:%298=91%:%
-%:%299=91%:%
-%:%300=91%:%
-%:%301=91%:%
+%:%298=89%:%
+%:%301=90%:%
 %:%302=91%:%
-%:%303=92%:%
+%:%303=91%:%
 %:%304=92%:%
-%:%309=92%:%
-%:%312=93%:%
-%:%313=94%:%
-%:%314=94%:%
-%:%315=95%:%
-%:%316=96%:%
-%:%317=97%:%
+%:%305=93%:%
+%:%306=94%:%
+%:%307=95%:%
+%:%310=96%:%
+%:%314=96%:%
+%:%315=96%:%
 %:%324=98%:%
-%:%325=98%:%
-%:%326=99%:%
-%:%327=99%:%
-%:%328=100%:%
-%:%329=100%:%
-%:%330=100%:%
-%:%331=100%:%
-%:%332=100%:%
-%:%333=101%:%
-%:%334=101%:%
-%:%335=101%:%
-%:%336=101%:%
-%:%337=102%:%
-%:%338=102%:%
-%:%339=103%:%
-%:%340=103%:%
-%:%341=104%:%
-%:%342=104%:%
-%:%343=104%:%
-%:%344=104%:%
-%:%345=104%:%
-%:%346=105%:%
-%:%347=105%:%
-%:%348=105%:%
-%:%349=105%:%
-%:%350=105%:%
-%:%351=106%:%
-%:%357=106%:%
-%:%360=107%:%
-%:%361=108%:%
-%:%362=108%:%
-%:%363=109%:%
-%:%364=110%:%
-%:%367=111%:%
-%:%371=111%:%
-%:%372=111%:%
-%:%373=112%:%
-%:%374=112%:%
-%:%375=113%:%
-%:%380=113%:%
-%:%383=114%:%
-%:%384=115%:%
-%:%385=115%:%
-%:%386=116%:%
-%:%387=117%:%
-%:%390=118%:%
-%:%394=118%:%
-%:%395=118%:%
-%:%396=119%:%
-%:%397=119%:%
-%:%398=120%:%
-%:%399=120%:%
-%:%400=121%:%
-%:%405=121%:%
-%:%408=122%:%
-%:%409=123%:%
-%:%410=123%:%
-%:%411=124%:%
-%:%412=125%:%
-%:%413=126%:%
-%:%420=127%:%
-%:%421=127%:%
-%:%422=128%:%
-%:%423=128%:%
-%:%424=129%:%
-%:%425=129%:%
-%:%426=129%:%
-%:%427=129%:%
+%:%326=100%:%
+%:%327=100%:%
+%:%328=101%:%
+%:%329=102%:%
+%:%336=103%:%
+%:%337=103%:%
+%:%338=104%:%
+%:%339=104%:%
+%:%340=105%:%
+%:%341=105%:%
+%:%342=105%:%
+%:%343=106%:%
+%:%344=106%:%
+%:%345=106%:%
+%:%346=106%:%
+%:%347=106%:%
+%:%348=107%:%
+%:%349=107%:%
+%:%354=107%:%
+%:%357=108%:%
+%:%358=109%:%
+%:%359=109%:%
+%:%360=110%:%
+%:%361=111%:%
+%:%362=112%:%
+%:%369=113%:%
+%:%370=113%:%
+%:%371=114%:%
+%:%372=114%:%
+%:%373=115%:%
+%:%374=115%:%
+%:%375=115%:%
+%:%376=115%:%
+%:%377=115%:%
+%:%378=116%:%
+%:%379=116%:%
+%:%380=116%:%
+%:%381=116%:%
+%:%382=117%:%
+%:%383=117%:%
+%:%384=118%:%
+%:%385=118%:%
+%:%386=119%:%
+%:%387=119%:%
+%:%388=119%:%
+%:%389=119%:%
+%:%390=119%:%
+%:%391=120%:%
+%:%392=120%:%
+%:%393=120%:%
+%:%394=120%:%
+%:%395=120%:%
+%:%396=121%:%
+%:%402=121%:%
+%:%405=122%:%
+%:%406=123%:%
+%:%407=123%:%
+%:%408=124%:%
+%:%409=125%:%
+%:%412=126%:%
+%:%416=126%:%
+%:%417=126%:%
+%:%418=127%:%
+%:%419=127%:%
+%:%420=128%:%
+%:%425=128%:%
 %:%428=129%:%
 %:%429=130%:%
 %:%430=130%:%
-%:%431=130%:%
-%:%432=130%:%
-%:%433=131%:%
-%:%434=131%:%
-%:%435=132%:%
-%:%436=132%:%
-%:%437=133%:%
-%:%438=133%:%
+%:%431=131%:%
+%:%432=132%:%
+%:%435=133%:%
 %:%439=133%:%
 %:%440=133%:%
-%:%441=133%:%
+%:%441=134%:%
 %:%442=134%:%
-%:%443=134%:%
-%:%444=134%:%
-%:%445=134%:%
-%:%446=134%:%
-%:%447=135%:%
-%:%453=135%:%
-%:%456=136%:%
-%:%457=137%:%
-%:%458=137%:%
-%:%459=138%:%
-%:%460=139%:%
-%:%461=140%:%
-%:%464=141%:%
-%:%468=141%:%
-%:%469=141%:%
-%:%474=141%:%
-%:%477=142%:%
-%:%478=143%:%
-%:%479=143%:%
-%:%480=144%:%
-%:%481=145%:%
-%:%482=146%:%
-%:%485=147%:%
-%:%489=147%:%
-%:%490=147%:%
-%:%491=147%:%
-%:%496=147%:%
-%:%499=148%:%
-%:%500=149%:%
-%:%501=149%:%
-%:%502=150%:%
-%:%503=151%:%
-%:%504=152%:%
-%:%507=153%:%
-%:%511=153%:%
-%:%512=153%:%
-%:%513=153%:%
-%:%522=155%:%
-%:%524=157%:%
-%:%525=157%:%
-%:%526=158%:%
-%:%527=159%:%
-%:%534=160%:%
-%:%535=160%:%
-%:%536=161%:%
-%:%537=161%:%
-%:%538=162%:%
-%:%539=162%:%
-%:%540=162%:%
+%:%443=135%:%
+%:%444=135%:%
+%:%445=136%:%
+%:%450=136%:%
+%:%453=137%:%
+%:%454=138%:%
+%:%455=138%:%
+%:%456=139%:%
+%:%457=140%:%
+%:%458=141%:%
+%:%465=142%:%
+%:%466=142%:%
+%:%467=143%:%
+%:%468=143%:%
+%:%469=144%:%
+%:%470=144%:%
+%:%471=144%:%
+%:%472=144%:%
+%:%473=144%:%
+%:%474=145%:%
+%:%475=145%:%
+%:%476=145%:%
+%:%477=145%:%
+%:%478=146%:%
+%:%479=146%:%
+%:%480=147%:%
+%:%481=147%:%
+%:%482=148%:%
+%:%483=148%:%
+%:%484=148%:%
+%:%485=148%:%
+%:%486=148%:%
+%:%487=149%:%
+%:%488=149%:%
+%:%489=149%:%
+%:%490=149%:%
+%:%491=149%:%
+%:%492=150%:%
+%:%498=150%:%
+%:%501=151%:%
+%:%502=152%:%
+%:%503=152%:%
+%:%504=153%:%
+%:%505=154%:%
+%:%506=155%:%
+%:%509=156%:%
+%:%513=156%:%
+%:%514=156%:%
+%:%519=156%:%
+%:%522=157%:%
+%:%523=158%:%
+%:%524=158%:%
+%:%525=159%:%
+%:%526=160%:%
+%:%527=161%:%
+%:%530=162%:%
+%:%534=162%:%
+%:%535=162%:%
+%:%536=162%:%
 %:%541=162%:%
-%:%542=163%:%
-%:%543=163%:%
 %:%544=163%:%
-%:%545=163%:%
-%:%546=163%:%
-%:%547=164%:%
-%:%548=164%:%
-%:%549=164%:%
-%:%550=164%:%
-%:%551=164%:%
-%:%552=165%:%
-%:%553=165%:%
-%:%554=165%:%
-%:%555=165%:%
-%:%556=166%:%
-%:%557=166%:%
-%:%558=167%:%
-%:%559=167%:%
-%:%560=168%:%
-%:%561=168%:%
-%:%562=168%:%
-%:%563=168%:%
-%:%564=168%:%
-%:%565=169%:%
-%:%566=169%:%
+%:%545=164%:%
+%:%546=164%:%
+%:%547=165%:%
+%:%548=166%:%
+%:%549=167%:%
+%:%552=168%:%
+%:%556=168%:%
+%:%557=168%:%
+%:%558=168%:%
 %:%567=170%:%
-%:%568=170%:%
-%:%569=171%:%
-%:%570=171%:%
-%:%571=171%:%
-%:%572=171%:%
-%:%573=172%:%
-%:%574=172%:%
-%:%575=173%:%
-%:%576=173%:%
-%:%577=174%:%
-%:%578=174%:%
-%:%579=174%:%
-%:%580=174%:%
-%:%581=175%:%
-%:%587=175%:%
-%:%590=176%:%
-%:%591=177%:%
-%:%592=177%:%
-%:%593=178%:%
+%:%569=172%:%
+%:%570=172%:%
+%:%571=173%:%
+%:%572=174%:%
+%:%579=175%:%
+%:%580=175%:%
+%:%581=176%:%
+%:%582=176%:%
+%:%583=177%:%
+%:%584=177%:%
+%:%585=177%:%
+%:%586=177%:%
+%:%587=178%:%
+%:%588=178%:%
+%:%589=178%:%
+%:%590=178%:%
+%:%591=178%:%
+%:%592=179%:%
+%:%593=179%:%
 %:%594=179%:%
-%:%595=180%:%
+%:%595=179%:%
+%:%596=179%:%
+%:%597=180%:%
+%:%598=180%:%
+%:%599=180%:%
+%:%600=180%:%
+%:%601=181%:%
 %:%602=181%:%
-%:%603=181%:%
+%:%603=182%:%
 %:%604=182%:%
-%:%605=182%:%
-%:%606=182%:%
-%:%607=182%:%
+%:%605=183%:%
+%:%606=183%:%
+%:%607=183%:%
 %:%608=183%:%
 %:%609=183%:%
-%:%610=183%:%
-%:%611=183%:%
-%:%612=184%:%
-%:%622=186%:%
-%:%624=188%:%
-%:%625=188%:%
-%:%626=189%:%
-%:%627=190%:%
-%:%628=191%:%
-%:%635=192%:%
+%:%610=184%:%
+%:%611=184%:%
+%:%612=185%:%
+%:%613=185%:%
+%:%614=186%:%
+%:%615=186%:%
+%:%616=186%:%
+%:%617=186%:%
+%:%618=187%:%
+%:%619=187%:%
+%:%620=188%:%
+%:%621=188%:%
+%:%622=189%:%
+%:%623=189%:%
+%:%624=189%:%
+%:%625=189%:%
+%:%626=190%:%
+%:%632=190%:%
+%:%635=191%:%
 %:%636=192%:%
-%:%637=193%:%
+%:%637=192%:%
 %:%638=193%:%
 %:%639=194%:%
-%:%640=194%:%
-%:%641=194%:%
-%:%642=194%:%
-%:%643=195%:%
-%:%644=195%:%
-%:%645=195%:%
-%:%646=195%:%
-%:%647=195%:%
+%:%640=195%:%
+%:%647=196%:%
 %:%648=196%:%
-%:%649=196%:%
-%:%650=196%:%
-%:%651=196%:%
-%:%652=196%:%
-%:%653=197%:%
-%:%654=197%:%
-%:%655=197%:%
-%:%656=197%:%
-%:%657=198%:%
-%:%658=198%:%
-%:%659=199%:%
-%:%660=199%:%
-%:%661=200%:%
-%:%662=200%:%
-%:%663=200%:%
-%:%664=200%:%
-%:%665=201%:%
-%:%666=201%:%
-%:%667=202%:%
-%:%668=202%:%
+%:%649=197%:%
+%:%650=197%:%
+%:%651=197%:%
+%:%652=197%:%
+%:%653=198%:%
+%:%654=198%:%
+%:%655=198%:%
+%:%656=198%:%
+%:%657=199%:%
+%:%667=201%:%
 %:%669=203%:%
 %:%670=203%:%
-%:%671=203%:%
-%:%672=203%:%
-%:%673=204%:%
-%:%674=204%:%
-%:%675=205%:%
-%:%676=205%:%
-%:%677=206%:%
-%:%678=206%:%
-%:%679=206%:%
-%:%680=206%:%
-%:%681=206%:%
-%:%682=207%:%
-%:%688=207%:%
-%:%691=208%:%
-%:%692=209%:%
-%:%693=209%:%
-%:%694=210%:%
+%:%671=204%:%
+%:%672=205%:%
+%:%673=206%:%
+%:%680=207%:%
+%:%681=207%:%
+%:%682=208%:%
+%:%683=208%:%
+%:%684=209%:%
+%:%685=209%:%
+%:%686=209%:%
+%:%687=209%:%
+%:%688=210%:%
+%:%689=210%:%
+%:%690=210%:%
+%:%691=210%:%
+%:%692=210%:%
+%:%693=211%:%
+%:%694=211%:%
 %:%695=211%:%
-%:%696=212%:%
-%:%699=213%:%
+%:%696=211%:%
+%:%697=211%:%
+%:%698=212%:%
+%:%699=212%:%
+%:%700=212%:%
+%:%701=212%:%
+%:%702=213%:%
 %:%703=213%:%
-%:%704=213%:%
-%:%705=213%:%
-%:%710=213%:%
-%:%713=214%:%
-%:%714=215%:%
-%:%715=215%:%
-%:%716=216%:%
-%:%717=217%:%
-%:%718=218%:%
-%:%725=219%:%
-%:%726=219%:%
-%:%727=220%:%
-%:%728=220%:%
-%:%729=221%:%
-%:%730=221%:%
-%:%731=221%:%
-%:%732=221%:%
-%:%733=221%:%
-%:%734=222%:%
-%:%735=222%:%
+%:%704=214%:%
+%:%705=214%:%
+%:%706=215%:%
+%:%707=215%:%
+%:%708=215%:%
+%:%709=215%:%
+%:%710=216%:%
+%:%711=216%:%
+%:%712=217%:%
+%:%713=217%:%
+%:%714=218%:%
+%:%715=218%:%
+%:%716=218%:%
+%:%717=218%:%
+%:%718=219%:%
+%:%719=219%:%
+%:%720=220%:%
+%:%721=220%:%
+%:%722=221%:%
+%:%723=221%:%
+%:%724=221%:%
+%:%725=221%:%
+%:%726=221%:%
+%:%727=222%:%
+%:%733=222%:%
 %:%736=223%:%
-%:%737=223%:%
+%:%737=224%:%
 %:%738=224%:%
-%:%739=224%:%
-%:%740=225%:%
-%:%741=225%:%
-%:%742=226%:%
-%:%743=226%:%
-%:%744=227%:%
-%:%745=227%:%
-%:%746=227%:%
-%:%747=227%:%
+%:%739=225%:%
+%:%740=226%:%
+%:%741=227%:%
+%:%744=228%:%
 %:%748=228%:%
 %:%749=228%:%
-%:%750=229%:%
-%:%751=229%:%
-%:%752=230%:%
-%:%753=230%:%
-%:%754=231%:%
-%:%755=231%:%
-%:%756=232%:%
-%:%757=232%:%
-%:%758=233%:%
-%:%759=233%:%
-%:%760=233%:%
-%:%761=233%:%
-%:%762=234%:%
-%:%763=234%:%
-%:%764=234%:%
-%:%765=234%:%
-%:%766=235%:%
-%:%767=235%:%
-%:%768=235%:%
-%:%769=235%:%
-%:%770=235%:%
-%:%771=236%:%
-%:%772=236%:%
-%:%773=237%:%
-%:%774=237%:%
-%:%775=237%:%
-%:%776=237%:%
-%:%777=237%:%
-%:%778=238%:%
-%:%779=238%:%
-%:%780=239%:%
-%:%786=239%:%
-%:%789=240%:%
-%:%790=241%:%
-%:%791=241%:%
+%:%750=228%:%
+%:%755=228%:%
+%:%758=229%:%
+%:%759=230%:%
+%:%760=230%:%
+%:%761=231%:%
+%:%762=232%:%
+%:%763=233%:%
+%:%770=234%:%
+%:%771=234%:%
+%:%772=235%:%
+%:%773=235%:%
+%:%774=236%:%
+%:%775=236%:%
+%:%776=236%:%
+%:%777=236%:%
+%:%778=236%:%
+%:%779=237%:%
+%:%780=237%:%
+%:%781=238%:%
+%:%782=238%:%
+%:%783=239%:%
+%:%784=239%:%
+%:%785=240%:%
+%:%786=240%:%
+%:%787=241%:%
+%:%788=241%:%
+%:%789=242%:%
+%:%790=242%:%
+%:%791=242%:%
 %:%792=242%:%
 %:%793=243%:%
-%:%794=244%:%
+%:%794=243%:%
+%:%795=244%:%
+%:%796=244%:%
 %:%797=245%:%
-%:%801=245%:%
-%:%802=245%:%
-%:%803=245%:%
-%:%808=245%:%
-%:%811=246%:%
-%:%812=247%:%
-%:%813=247%:%
-%:%814=248%:%
-%:%815=249%:%
-%:%816=250%:%
-%:%819=251%:%
-%:%823=251%:%
-%:%824=251%:%
-%:%825=252%:%
-%:%826=252%:%
-%:%827=253%:%
-%:%828=253%:%
-%:%829=254%:%
-%:%830=254%:%
+%:%798=245%:%
+%:%799=246%:%
+%:%800=246%:%
+%:%801=247%:%
+%:%802=247%:%
+%:%803=248%:%
+%:%804=248%:%
+%:%805=248%:%
+%:%806=248%:%
+%:%807=249%:%
+%:%808=249%:%
+%:%809=249%:%
+%:%810=249%:%
+%:%811=250%:%
+%:%812=250%:%
+%:%813=250%:%
+%:%814=250%:%
+%:%815=250%:%
+%:%816=251%:%
+%:%817=251%:%
+%:%818=252%:%
+%:%819=252%:%
+%:%820=252%:%
+%:%821=252%:%
+%:%822=252%:%
+%:%823=253%:%
+%:%824=253%:%
+%:%825=254%:%
 %:%831=254%:%
-%:%832=254%:%
-%:%833=254%:%
 %:%834=255%:%
-%:%835=255%:%
+%:%835=256%:%
 %:%836=256%:%
-%:%837=256%:%
-%:%838=257%:%
-%:%839=257%:%
-%:%840=257%:%
-%:%841=257%:%
-%:%842=257%:%
-%:%843=258%:%
-%:%844=258%:%
-%:%845=259%:%
-%:%846=259%:%
+%:%837=257%:%
+%:%838=258%:%
+%:%839=259%:%
+%:%842=260%:%
+%:%846=260%:%
 %:%847=260%:%
 %:%848=260%:%
-%:%849=260%:%
-%:%850=260%:%
-%:%851=260%:%
-%:%852=261%:%
-%:%858=261%:%
-%:%861=262%:%
-%:%862=263%:%
-%:%863=263%:%
-%:%864=264%:%
-%:%865=265%:%
-%:%866=266%:%
-%:%873=267%:%
-%:%874=267%:%
-%:%875=268%:%
-%:%876=268%:%
-%:%877=268%:%
-%:%878=268%:%
-%:%879=269%:%
-%:%880=269%:%
-%:%881=269%:%
-%:%882=269%:%
-%:%883=270%:%
-%:%884=270%:%
-%:%885=270%:%
-%:%886=270%:%
-%:%887=270%:%
-%:%888=271%:%
-%:%889=272%:%
-%:%890=272%:%
-%:%891=272%:%
-%:%892=272%:%
-%:%893=273%:%
-%:%894=274%:%
-%:%895=274%:%
-%:%896=274%:%
-%:%897=274%:%
-%:%898=275%:%
-%:%899=275%:%
-%:%900=275%:%
-%:%901=275%:%
-%:%902=276%:%
-%:%903=277%:%
-%:%904=277%:%
-%:%905=277%:%
+%:%853=260%:%
+%:%856=261%:%
+%:%857=262%:%
+%:%858=262%:%
+%:%859=263%:%
+%:%860=264%:%
+%:%861=265%:%
+%:%864=266%:%
+%:%868=266%:%
+%:%869=266%:%
+%:%870=267%:%
+%:%871=267%:%
+%:%872=268%:%
+%:%873=268%:%
+%:%874=269%:%
+%:%875=269%:%
+%:%876=269%:%
+%:%877=269%:%
+%:%878=269%:%
+%:%879=270%:%
+%:%880=270%:%
+%:%881=271%:%
+%:%882=271%:%
+%:%883=272%:%
+%:%884=272%:%
+%:%885=272%:%
+%:%886=272%:%
+%:%887=272%:%
+%:%888=273%:%
+%:%889=273%:%
+%:%890=274%:%
+%:%891=274%:%
+%:%892=275%:%
+%:%893=275%:%
+%:%894=275%:%
+%:%895=275%:%
+%:%896=275%:%
+%:%897=276%:%
+%:%903=276%:%
 %:%906=277%:%
 %:%907=278%:%
 %:%908=278%:%
-%:%909=278%:%
-%:%910=278%:%
-%:%911=279%:%
-%:%912=279%:%
-%:%913=279%:%
-%:%914=279%:%
-%:%915=280%:%
-%:%916=280%:%
-%:%917=280%:%
-%:%918=280%:%
-%:%919=281%:%
-%:%920=281%:%
-%:%921=281%:%
-%:%922=281%:%
-%:%923=282%:%
-%:%924=282%:%
-%:%925=282%:%
-%:%926=282%:%
-%:%927=282%:%
-%:%928=282%:%
-%:%929=283%:%
-%:%930=283%:%
-%:%931=283%:%
-%:%932=283%:%
-%:%933=283%:%
-%:%934=284%:%
-%:%935=284%:%
-%:%936=284%:%
-%:%937=284%:%
-%:%938=285%:%
-%:%939=285%:%
-%:%940=285%:%
-%:%941=285%:%
-%:%942=286%:%
-%:%948=286%:%
-%:%951=287%:%
-%:%952=288%:%
-%:%953=288%:%
-%:%954=289%:%
-%:%955=290%:%
-%:%956=291%:%
-%:%959=292%:%
-%:%963=292%:%
-%:%964=292%:%
-%:%965=293%:%
-%:%966=293%:%
-%:%967=294%:%
-%:%968=294%:%
-%:%969=295%:%
-%:%970=295%:%
-%:%971=295%:%
-%:%972=296%:%
-%:%973=296%:%
-%:%974=296%:%
-%:%975=296%:%
-%:%976=297%:%
-%:%977=297%:%
-%:%978=297%:%
-%:%979=298%:%
-%:%980=298%:%
-%:%981=298%:%
-%:%982=298%:%
-%:%983=298%:%
-%:%984=299%:%
-%:%985=299%:%
-%:%986=299%:%
-%:%987=299%:%
-%:%988=299%:%
-%:%989=300%:%
-%:%990=300%:%
-%:%991=301%:%
-%:%992=301%:%
-%:%993=302%:%
-%:%994=302%:%
-%:%995=302%:%
-%:%996=303%:%
+%:%909=279%:%
+%:%910=280%:%
+%:%911=281%:%
+%:%918=282%:%
+%:%919=282%:%
+%:%920=283%:%
+%:%921=283%:%
+%:%922=283%:%
+%:%923=283%:%
+%:%924=284%:%
+%:%925=284%:%
+%:%926=284%:%
+%:%927=284%:%
+%:%928=285%:%
+%:%929=285%:%
+%:%930=285%:%
+%:%931=285%:%
+%:%932=285%:%
+%:%933=286%:%
+%:%934=287%:%
+%:%935=287%:%
+%:%936=287%:%
+%:%937=287%:%
+%:%938=288%:%
+%:%939=289%:%
+%:%940=289%:%
+%:%941=289%:%
+%:%942=289%:%
+%:%943=290%:%
+%:%944=290%:%
+%:%945=290%:%
+%:%946=290%:%
+%:%947=291%:%
+%:%948=292%:%
+%:%949=292%:%
+%:%950=292%:%
+%:%951=292%:%
+%:%952=293%:%
+%:%953=293%:%
+%:%954=293%:%
+%:%955=293%:%
+%:%956=294%:%
+%:%957=294%:%
+%:%958=294%:%
+%:%959=294%:%
+%:%960=295%:%
+%:%961=295%:%
+%:%962=295%:%
+%:%963=295%:%
+%:%964=296%:%
+%:%965=296%:%
+%:%966=296%:%
+%:%967=296%:%
+%:%968=297%:%
+%:%969=297%:%
+%:%970=297%:%
+%:%971=297%:%
+%:%972=297%:%
+%:%973=297%:%
+%:%974=298%:%
+%:%975=298%:%
+%:%976=298%:%
+%:%977=298%:%
+%:%978=298%:%
+%:%979=299%:%
+%:%980=299%:%
+%:%981=299%:%
+%:%982=299%:%
+%:%983=300%:%
+%:%984=300%:%
+%:%985=300%:%
+%:%986=300%:%
+%:%987=301%:%
+%:%993=301%:%
+%:%996=302%:%
 %:%997=303%:%
 %:%998=303%:%
-%:%999=303%:%
-%:%1000=304%:%
-%:%1001=305%:%
-%:%1002=305%:%
-%:%1003=305%:%
-%:%1004=305%:%
-%:%1005=306%:%
-%:%1006=306%:%
-%:%1007=306%:%
-%:%1008=306%:%
-%:%1009=306%:%
-%:%1010=307%:%
-%:%1011=307%:%
-%:%1012=307%:%
-%:%1013=307%:%
-%:%1014=307%:%
-%:%1015=308%:%
-%:%1016=308%:%
-%:%1017=308%:%
-%:%1018=308%:%
-%:%1019=309%:%
-%:%1020=309%:%
-%:%1021=309%:%
-%:%1022=309%:%
-%:%1023=309%:%
-%:%1024=310%:%
-%:%1025=310%:%
-%:%1026=311%:%
-%:%1027=311%:%
-%:%1028=312%:%
-%:%1029=312%:%
-%:%1030=312%:%
-%:%1031=312%:%
-%:%1032=313%:%
-%:%1033=313%:%
-%:%1034=313%:%
-%:%1035=313%:%
-%:%1036=313%:%
-%:%1037=314%:%
-%:%1038=314%:%
-%:%1039=314%:%
-%:%1040=314%:%
-%:%1041=314%:%
-%:%1042=315%:%
-%:%1043=315%:%
-%:%1044=315%:%
-%:%1045=315%:%
-%:%1046=315%:%
-%:%1047=316%:%
-%:%1048=316%:%
-%:%1049=316%:%
-%:%1050=316%:%
-%:%1051=316%:%
-%:%1052=317%:%
-%:%1053=317%:%
-%:%1054=317%:%
-%:%1055=317%:%
-%:%1056=318%:%
-%:%1062=318%:%
-%:%1065=319%:%
-%:%1066=320%:%
-%:%1067=320%:%
-%:%1068=321%:%
-%:%1069=322%:%
-%:%1070=323%:%
-%:%1071=324%:%
-%:%1072=325%:%
-%:%1073=326%:%
+%:%999=304%:%
+%:%1000=305%:%
+%:%1001=306%:%
+%:%1004=307%:%
+%:%1008=307%:%
+%:%1009=307%:%
+%:%1010=308%:%
+%:%1011=308%:%
+%:%1012=309%:%
+%:%1013=309%:%
+%:%1014=310%:%
+%:%1015=310%:%
+%:%1016=310%:%
+%:%1017=311%:%
+%:%1018=311%:%
+%:%1019=311%:%
+%:%1020=311%:%
+%:%1021=312%:%
+%:%1022=312%:%
+%:%1023=312%:%
+%:%1024=313%:%
+%:%1025=313%:%
+%:%1026=313%:%
+%:%1027=313%:%
+%:%1028=313%:%
+%:%1029=314%:%
+%:%1030=314%:%
+%:%1031=314%:%
+%:%1032=314%:%
+%:%1033=314%:%
+%:%1034=315%:%
+%:%1035=315%:%
+%:%1036=316%:%
+%:%1037=316%:%
+%:%1038=317%:%
+%:%1039=317%:%
+%:%1040=317%:%
+%:%1041=318%:%
+%:%1042=318%:%
+%:%1043=318%:%
+%:%1044=318%:%
+%:%1045=319%:%
+%:%1046=320%:%
+%:%1047=320%:%
+%:%1048=320%:%
+%:%1049=320%:%
+%:%1050=321%:%
+%:%1051=321%:%
+%:%1052=321%:%
+%:%1053=321%:%
+%:%1054=321%:%
+%:%1055=322%:%
+%:%1056=322%:%
+%:%1057=322%:%
+%:%1058=322%:%
+%:%1059=322%:%
+%:%1060=323%:%
+%:%1061=323%:%
+%:%1062=323%:%
+%:%1063=323%:%
+%:%1064=324%:%
+%:%1065=324%:%
+%:%1066=324%:%
+%:%1067=324%:%
+%:%1068=324%:%
+%:%1069=325%:%
+%:%1070=325%:%
+%:%1071=326%:%
+%:%1072=326%:%
+%:%1073=327%:%
 %:%1074=327%:%
-%:%1075=328%:%
-%:%1076=329%:%
-%:%1077=330%:%
-%:%1084=331%:%
-%:%1085=331%:%
-%:%1086=332%:%
-%:%1087=332%:%
-%:%1088=332%:%
-%:%1089=332%:%
-%:%1090=333%:%
-%:%1091=333%:%
-%:%1092=333%:%
-%:%1093=333%:%
-%:%1094=334%:%
-%:%1095=334%:%
-%:%1096=334%:%
-%:%1097=334%:%
-%:%1098=335%:%
-%:%1099=335%:%
-%:%1100=335%:%
-%:%1101=335%:%
-%:%1102=336%:%
-%:%1103=336%:%
-%:%1104=336%:%
-%:%1105=337%:%
-%:%1106=338%:%
-%:%1107=338%:%
-%:%1108=338%:%
-%:%1109=338%:%
-%:%1110=339%:%
-%:%1111=339%:%
-%:%1112=339%:%
-%:%1113=339%:%
-%:%1114=340%:%
-%:%1115=341%:%
-%:%1116=341%:%
-%:%1117=341%:%
+%:%1075=327%:%
+%:%1076=327%:%
+%:%1077=328%:%
+%:%1078=328%:%
+%:%1079=328%:%
+%:%1080=328%:%
+%:%1081=328%:%
+%:%1082=329%:%
+%:%1083=329%:%
+%:%1084=329%:%
+%:%1085=329%:%
+%:%1086=329%:%
+%:%1087=330%:%
+%:%1088=330%:%
+%:%1089=330%:%
+%:%1090=330%:%
+%:%1091=330%:%
+%:%1092=331%:%
+%:%1093=331%:%
+%:%1094=331%:%
+%:%1095=331%:%
+%:%1096=331%:%
+%:%1097=332%:%
+%:%1098=332%:%
+%:%1099=332%:%
+%:%1100=332%:%
+%:%1101=333%:%
+%:%1107=333%:%
+%:%1110=334%:%
+%:%1111=335%:%
+%:%1112=335%:%
+%:%1113=336%:%
+%:%1114=337%:%
+%:%1115=338%:%
+%:%1116=339%:%
+%:%1117=340%:%
 %:%1118=341%:%
 %:%1119=342%:%
-%:%1120=342%:%
-%:%1121=342%:%
-%:%1122=342%:%
-%:%1123=343%:%
-%:%1124=344%:%
-%:%1125=344%:%
-%:%1126=344%:%
-%:%1127=344%:%
-%:%1128=345%:%
-%:%1129=345%:%
-%:%1130=345%:%
-%:%1131=345%:%
-%:%1132=346%:%
+%:%1120=343%:%
+%:%1121=344%:%
+%:%1122=345%:%
+%:%1129=346%:%
+%:%1130=346%:%
+%:%1131=347%:%
+%:%1132=347%:%
 %:%1133=347%:%
 %:%1134=347%:%
-%:%1135=347%:%
-%:%1136=347%:%
+%:%1135=348%:%
+%:%1136=348%:%
 %:%1137=348%:%
 %:%1138=348%:%
-%:%1139=348%:%
-%:%1140=348%:%
-%:%1141=348%:%
+%:%1139=349%:%
+%:%1140=349%:%
+%:%1141=349%:%
 %:%1142=349%:%
-%:%1143=349%:%
-%:%1144=349%:%
+%:%1143=350%:%
+%:%1144=350%:%
 %:%1145=350%:%
 %:%1146=350%:%
 %:%1147=351%:%
 %:%1148=351%:%
-%:%1149=352%:%
+%:%1149=351%:%
 %:%1150=352%:%
-%:%1151=352%:%
+%:%1151=353%:%
 %:%1152=353%:%
 %:%1153=353%:%
 %:%1154=353%:%
@@ -3005,749 +3289,1028 @@ Addition%
 %:%1157=354%:%
 %:%1158=354%:%
 %:%1159=355%:%
-%:%1160=355%:%
+%:%1160=356%:%
 %:%1161=356%:%
 %:%1162=356%:%
 %:%1163=356%:%
 %:%1164=357%:%
 %:%1165=357%:%
-%:%1166=358%:%
-%:%1167=358%:%
+%:%1166=357%:%
+%:%1167=357%:%
 %:%1168=358%:%
-%:%1169=358%:%
+%:%1169=359%:%
 %:%1170=359%:%
-%:%1171=360%:%
-%:%1172=360%:%
+%:%1171=359%:%
+%:%1172=359%:%
 %:%1173=360%:%
 %:%1174=360%:%
-%:%1175=361%:%
-%:%1176=362%:%
-%:%1177=362%:%
-%:%1178=363%:%
-%:%1179=363%:%
-%:%1180=364%:%
-%:%1181=364%:%
-%:%1182=365%:%
-%:%1183=366%:%
-%:%1184=366%:%
-%:%1185=366%:%
-%:%1186=366%:%
-%:%1187=367%:%
-%:%1188=368%:%
-%:%1189=368%:%
-%:%1190=369%:%
-%:%1191=369%:%
-%:%1192=370%:%
-%:%1193=370%:%
-%:%1194=370%:%
-%:%1195=370%:%
-%:%1196=371%:%
-%:%1197=371%:%
-%:%1198=372%:%
-%:%1199=372%:%
-%:%1200=372%:%
-%:%1201=373%:%
-%:%1202=373%:%
-%:%1203=373%:%
-%:%1204=374%:%
-%:%1205=374%:%
-%:%1206=374%:%
-%:%1207=374%:%
-%:%1208=375%:%
-%:%1209=375%:%
-%:%1210=375%:%
-%:%1211=375%:%
-%:%1212=375%:%
-%:%1213=376%:%
-%:%1214=376%:%
-%:%1215=376%:%
-%:%1216=376%:%
-%:%1217=377%:%
-%:%1218=377%:%
-%:%1219=378%:%
-%:%1220=378%:%
-%:%1221=378%:%
-%:%1222=378%:%
-%:%1223=379%:%
-%:%1224=379%:%
+%:%1175=360%:%
+%:%1176=360%:%
+%:%1177=361%:%
+%:%1178=362%:%
+%:%1179=362%:%
+%:%1180=362%:%
+%:%1181=362%:%
+%:%1182=363%:%
+%:%1183=363%:%
+%:%1184=363%:%
+%:%1185=363%:%
+%:%1186=363%:%
+%:%1187=364%:%
+%:%1188=364%:%
+%:%1189=364%:%
+%:%1190=365%:%
+%:%1191=365%:%
+%:%1192=366%:%
+%:%1193=366%:%
+%:%1194=367%:%
+%:%1195=367%:%
+%:%1196=367%:%
+%:%1197=368%:%
+%:%1198=368%:%
+%:%1199=368%:%
+%:%1200=369%:%
+%:%1201=369%:%
+%:%1202=369%:%
+%:%1203=369%:%
+%:%1204=370%:%
+%:%1205=370%:%
+%:%1206=371%:%
+%:%1207=371%:%
+%:%1208=371%:%
+%:%1209=372%:%
+%:%1210=372%:%
+%:%1211=373%:%
+%:%1212=373%:%
+%:%1213=373%:%
+%:%1214=373%:%
+%:%1215=374%:%
+%:%1216=375%:%
+%:%1217=375%:%
+%:%1218=375%:%
+%:%1219=375%:%
+%:%1220=376%:%
+%:%1221=377%:%
+%:%1222=377%:%
+%:%1223=378%:%
+%:%1224=378%:%
 %:%1225=379%:%
-%:%1226=380%:%
+%:%1226=379%:%
 %:%1227=380%:%
 %:%1228=381%:%
 %:%1229=381%:%
 %:%1230=381%:%
 %:%1231=381%:%
 %:%1232=382%:%
-%:%1233=382%:%
-%:%1234=382%:%
-%:%1235=382%:%
-%:%1236=382%:%
-%:%1237=383%:%
-%:%1238=383%:%
-%:%1239=383%:%
-%:%1240=383%:%
-%:%1241=383%:%
-%:%1242=384%:%
-%:%1243=384%:%
-%:%1244=384%:%
-%:%1245=384%:%
-%:%1246=384%:%
-%:%1247=385%:%
-%:%1248=385%:%
-%:%1249=385%:%
-%:%1250=385%:%
-%:%1251=385%:%
-%:%1252=386%:%
-%:%1253=386%:%
-%:%1254=387%:%
-%:%1255=387%:%
-%:%1256=387%:%
-%:%1257=387%:%
-%:%1258=387%:%
-%:%1259=388%:%
-%:%1260=388%:%
-%:%1261=389%:%
-%:%1262=389%:%
-%:%1263=389%:%
-%:%1264=389%:%
-%:%1265=390%:%
-%:%1266=390%:%
-%:%1267=390%:%
-%:%1268=390%:%
-%:%1269=391%:%
-%:%1270=392%:%
-%:%1271=392%:%
-%:%1272=393%:%
-%:%1273=393%:%
-%:%1274=394%:%
-%:%1275=394%:%
-%:%1276=394%:%
-%:%1277=395%:%
-%:%1278=395%:%
-%:%1279=395%:%
-%:%1280=395%:%
-%:%1281=395%:%
-%:%1282=396%:%
-%:%1283=396%:%
-%:%1284=396%:%
-%:%1285=396%:%
-%:%1286=396%:%
-%:%1287=397%:%
-%:%1288=397%:%
-%:%1289=398%:%
-%:%1290=398%:%
-%:%1291=398%:%
-%:%1292=399%:%
+%:%1233=383%:%
+%:%1234=383%:%
+%:%1235=384%:%
+%:%1236=384%:%
+%:%1237=385%:%
+%:%1238=385%:%
+%:%1239=385%:%
+%:%1240=385%:%
+%:%1241=386%:%
+%:%1242=386%:%
+%:%1243=387%:%
+%:%1244=387%:%
+%:%1245=387%:%
+%:%1246=388%:%
+%:%1247=388%:%
+%:%1248=388%:%
+%:%1249=389%:%
+%:%1250=389%:%
+%:%1251=389%:%
+%:%1252=389%:%
+%:%1253=390%:%
+%:%1254=390%:%
+%:%1255=390%:%
+%:%1256=390%:%
+%:%1257=390%:%
+%:%1258=391%:%
+%:%1259=391%:%
+%:%1260=391%:%
+%:%1261=391%:%
+%:%1262=392%:%
+%:%1263=392%:%
+%:%1264=393%:%
+%:%1265=393%:%
+%:%1266=393%:%
+%:%1267=393%:%
+%:%1268=394%:%
+%:%1269=394%:%
+%:%1270=394%:%
+%:%1271=395%:%
+%:%1272=395%:%
+%:%1273=396%:%
+%:%1274=396%:%
+%:%1275=396%:%
+%:%1276=396%:%
+%:%1277=397%:%
+%:%1278=397%:%
+%:%1279=397%:%
+%:%1280=397%:%
+%:%1281=397%:%
+%:%1282=398%:%
+%:%1283=398%:%
+%:%1284=398%:%
+%:%1285=398%:%
+%:%1286=398%:%
+%:%1287=399%:%
+%:%1288=399%:%
+%:%1289=399%:%
+%:%1290=399%:%
+%:%1291=399%:%
+%:%1292=400%:%
 %:%1293=400%:%
 %:%1294=400%:%
-%:%1295=401%:%
-%:%1296=401%:%
+%:%1295=400%:%
+%:%1296=400%:%
 %:%1297=401%:%
-%:%1298=402%:%
+%:%1298=401%:%
 %:%1299=402%:%
-%:%1300=403%:%
-%:%1301=403%:%
-%:%1302=404%:%
-%:%1303=404%:%
-%:%1304=404%:%
-%:%1305=404%:%
-%:%1306=405%:%
-%:%1307=405%:%
-%:%1308=405%:%
-%:%1309=405%:%
-%:%1310=406%:%
-%:%1311=406%:%
-%:%1312=407%:%
-%:%1313=407%:%
-%:%1314=408%:%
-%:%1315=408%:%
-%:%1316=409%:%
-%:%1317=409%:%
-%:%1318=410%:%
-%:%1319=410%:%
-%:%1320=411%:%
-%:%1321=412%:%
-%:%1322=412%:%
-%:%1323=413%:%
-%:%1324=413%:%
-%:%1325=414%:%
-%:%1326=414%:%
-%:%1327=414%:%
-%:%1328=414%:%
-%:%1329=415%:%
-%:%1330=415%:%
-%:%1331=415%:%
-%:%1332=415%:%
-%:%1333=416%:%
-%:%1334=416%:%
-%:%1335=417%:%
-%:%1336=417%:%
-%:%1337=418%:%
-%:%1338=418%:%
-%:%1339=419%:%
-%:%1340=419%:%
-%:%1341=420%:%
-%:%1342=420%:%
-%:%1343=421%:%
-%:%1344=422%:%
-%:%1345=422%:%
-%:%1346=422%:%
-%:%1347=422%:%
-%:%1348=423%:%
-%:%1349=423%:%
-%:%1350=423%:%
-%:%1351=423%:%
-%:%1352=423%:%
-%:%1353=424%:%
-%:%1354=424%:%
-%:%1355=424%:%
-%:%1356=424%:%
-%:%1357=424%:%
-%:%1358=425%:%
-%:%1359=425%:%
-%:%1360=425%:%
-%:%1361=425%:%
-%:%1362=426%:%
-%:%1363=426%:%
-%:%1364=427%:%
-%:%1365=427%:%
+%:%1300=402%:%
+%:%1301=402%:%
+%:%1302=402%:%
+%:%1303=402%:%
+%:%1304=403%:%
+%:%1305=403%:%
+%:%1306=404%:%
+%:%1307=404%:%
+%:%1308=404%:%
+%:%1309=404%:%
+%:%1310=405%:%
+%:%1311=405%:%
+%:%1312=405%:%
+%:%1313=405%:%
+%:%1314=406%:%
+%:%1315=407%:%
+%:%1316=407%:%
+%:%1317=408%:%
+%:%1318=408%:%
+%:%1319=409%:%
+%:%1320=409%:%
+%:%1321=409%:%
+%:%1322=410%:%
+%:%1323=410%:%
+%:%1324=410%:%
+%:%1325=410%:%
+%:%1326=410%:%
+%:%1327=411%:%
+%:%1328=411%:%
+%:%1329=411%:%
+%:%1330=411%:%
+%:%1331=411%:%
+%:%1332=412%:%
+%:%1333=412%:%
+%:%1334=413%:%
+%:%1335=413%:%
+%:%1336=413%:%
+%:%1337=414%:%
+%:%1338=415%:%
+%:%1339=415%:%
+%:%1340=416%:%
+%:%1341=416%:%
+%:%1342=416%:%
+%:%1343=417%:%
+%:%1344=417%:%
+%:%1345=418%:%
+%:%1346=418%:%
+%:%1347=419%:%
+%:%1348=419%:%
+%:%1349=419%:%
+%:%1350=419%:%
+%:%1351=420%:%
+%:%1352=420%:%
+%:%1353=420%:%
+%:%1354=420%:%
+%:%1355=421%:%
+%:%1356=421%:%
+%:%1357=422%:%
+%:%1358=422%:%
+%:%1359=423%:%
+%:%1360=423%:%
+%:%1361=424%:%
+%:%1362=424%:%
+%:%1363=425%:%
+%:%1364=425%:%
+%:%1365=426%:%
 %:%1366=427%:%
 %:%1367=427%:%
 %:%1368=428%:%
 %:%1369=428%:%
-%:%1370=428%:%
-%:%1371=428%:%
+%:%1370=429%:%
+%:%1371=429%:%
 %:%1372=429%:%
-%:%1378=429%:%
-%:%1381=430%:%
-%:%1382=431%:%
-%:%1383=431%:%
-%:%1384=432%:%
-%:%1385=433%:%
-%:%1386=434%:%
+%:%1373=429%:%
+%:%1374=430%:%
+%:%1375=430%:%
+%:%1376=430%:%
+%:%1377=430%:%
+%:%1378=431%:%
+%:%1379=431%:%
+%:%1380=432%:%
+%:%1381=432%:%
+%:%1382=433%:%
+%:%1383=433%:%
+%:%1384=434%:%
+%:%1385=434%:%
+%:%1386=435%:%
 %:%1387=435%:%
 %:%1388=436%:%
 %:%1389=437%:%
-%:%1390=438%:%
-%:%1397=439%:%
+%:%1390=437%:%
+%:%1391=437%:%
+%:%1392=437%:%
+%:%1393=438%:%
+%:%1394=438%:%
+%:%1395=438%:%
+%:%1396=438%:%
+%:%1397=438%:%
 %:%1398=439%:%
-%:%1399=440%:%
-%:%1400=440%:%
-%:%1401=440%:%
-%:%1402=440%:%
-%:%1403=441%:%
-%:%1404=441%:%
-%:%1405=441%:%
-%:%1406=442%:%
+%:%1399=439%:%
+%:%1400=439%:%
+%:%1401=439%:%
+%:%1402=439%:%
+%:%1403=440%:%
+%:%1404=440%:%
+%:%1405=440%:%
+%:%1406=440%:%
+%:%1407=441%:%
+%:%1408=441%:%
+%:%1409=442%:%
+%:%1410=442%:%
+%:%1411=442%:%
 %:%1412=442%:%
+%:%1413=443%:%
+%:%1414=443%:%
 %:%1415=443%:%
-%:%1416=444%:%
+%:%1416=443%:%
 %:%1417=444%:%
-%:%1418=445%:%
-%:%1419=446%:%
-%:%1420=447%:%
-%:%1423=448%:%
-%:%1427=448%:%
-%:%1428=448%:%
-%:%1429=449%:%
-%:%1430=449%:%
-%:%1431=450%:%
+%:%1423=444%:%
+%:%1426=445%:%
+%:%1427=446%:%
+%:%1428=446%:%
+%:%1429=447%:%
+%:%1430=448%:%
+%:%1431=449%:%
 %:%1432=450%:%
 %:%1433=451%:%
-%:%1434=451%:%
-%:%1435=451%:%
-%:%1436=451%:%
-%:%1437=452%:%
-%:%1438=452%:%
-%:%1439=453%:%
-%:%1440=453%:%
-%:%1441=454%:%
+%:%1434=452%:%
+%:%1435=453%:%
 %:%1442=454%:%
 %:%1443=454%:%
-%:%1444=454%:%
+%:%1444=455%:%
 %:%1445=455%:%
 %:%1446=455%:%
-%:%1447=456%:%
+%:%1447=455%:%
 %:%1448=456%:%
-%:%1449=457%:%
-%:%1450=457%:%
+%:%1449=456%:%
+%:%1450=456%:%
 %:%1451=457%:%
-%:%1452=457%:%
-%:%1453=458%:%
-%:%1459=458%:%
+%:%1457=457%:%
+%:%1460=458%:%
+%:%1461=459%:%
 %:%1462=459%:%
 %:%1463=460%:%
-%:%1464=460%:%
-%:%1465=461%:%
-%:%1466=462%:%
-%:%1467=463%:%
-%:%1470=464%:%
+%:%1464=461%:%
+%:%1465=462%:%
+%:%1472=463%:%
+%:%1473=463%:%
 %:%1474=464%:%
 %:%1475=464%:%
-%:%1480=464%:%
-%:%1483=465%:%
-%:%1484=466%:%
-%:%1485=466%:%
-%:%1486=467%:%
-%:%1487=468%:%
-%:%1488=469%:%
-%:%1491=470%:%
-%:%1495=470%:%
-%:%1496=470%:%
-%:%1497=470%:%
-%:%1502=470%:%
-%:%1505=471%:%
-%:%1506=472%:%
-%:%1507=472%:%
-%:%1508=473%:%
-%:%1509=474%:%
-%:%1510=475%:%
-%:%1513=476%:%
-%:%1517=476%:%
-%:%1518=476%:%
-%:%1519=476%:%
-%:%1524=476%:%
-%:%1527=477%:%
-%:%1528=478%:%
-%:%1529=478%:%
-%:%1530=479%:%
-%:%1531=480%:%
-%:%1532=481%:%
-%:%1535=482%:%
-%:%1539=482%:%
-%:%1540=482%:%
-%:%1546=482%:%
-%:%1549=483%:%
-%:%1550=484%:%
-%:%1551=484%:%
-%:%1552=485%:%
-%:%1553=486%:%
-%:%1554=487%:%
-%:%1557=488%:%
-%:%1561=488%:%
-%:%1562=488%:%
-%:%1563=488%:%
-%:%1568=488%:%
-%:%1571=489%:%
-%:%1572=490%:%
-%:%1573=490%:%
-%:%1574=491%:%
-%:%1575=492%:%
-%:%1576=493%:%
-%:%1579=494%:%
-%:%1583=494%:%
-%:%1584=494%:%
-%:%1585=494%:%
-%:%1586=494%:%
-%:%1591=494%:%
-%:%1594=495%:%
-%:%1595=496%:%
-%:%1596=496%:%
-%:%1597=497%:%
-%:%1598=498%:%
-%:%1599=499%:%
-%:%1606=500%:%
-%:%1607=500%:%
-%:%1608=501%:%
-%:%1609=501%:%
-%:%1610=502%:%
-%:%1611=502%:%
-%:%1612=503%:%
-%:%1613=504%:%
-%:%1614=504%:%
-%:%1615=504%:%
-%:%1616=504%:%
+%:%1476=464%:%
+%:%1477=464%:%
+%:%1478=465%:%
+%:%1479=465%:%
+%:%1480=465%:%
+%:%1481=465%:%
+%:%1482=466%:%
+%:%1488=466%:%
+%:%1491=467%:%
+%:%1492=469%:%
+%:%1493=470%:%
+%:%1494=471%:%
+%:%1495=471%:%
+%:%1496=472%:%
+%:%1497=473%:%
+%:%1498=474%:%
+%:%1501=475%:%
+%:%1505=475%:%
+%:%1506=475%:%
+%:%1507=475%:%
+%:%1512=475%:%
+%:%1515=476%:%
+%:%1516=477%:%
+%:%1517=477%:%
+%:%1518=478%:%
+%:%1519=479%:%
+%:%1520=480%:%
+%:%1523=481%:%
+%:%1527=481%:%
+%:%1528=481%:%
+%:%1529=481%:%
+%:%1534=481%:%
+%:%1537=482%:%
+%:%1538=483%:%
+%:%1539=483%:%
+%:%1540=484%:%
+%:%1541=485%:%
+%:%1542=486%:%
+%:%1545=487%:%
+%:%1549=487%:%
+%:%1550=487%:%
+%:%1556=487%:%
+%:%1559=488%:%
+%:%1560=489%:%
+%:%1561=489%:%
+%:%1562=490%:%
+%:%1563=491%:%
+%:%1564=492%:%
+%:%1567=493%:%
+%:%1571=493%:%
+%:%1572=493%:%
+%:%1573=493%:%
+%:%1578=493%:%
+%:%1581=494%:%
+%:%1582=495%:%
+%:%1583=495%:%
+%:%1584=496%:%
+%:%1585=497%:%
+%:%1586=498%:%
+%:%1589=499%:%
+%:%1593=499%:%
+%:%1594=499%:%
+%:%1595=499%:%
+%:%1596=499%:%
+%:%1601=499%:%
+%:%1604=500%:%
+%:%1605=501%:%
+%:%1606=501%:%
+%:%1607=502%:%
+%:%1608=503%:%
+%:%1609=504%:%
+%:%1612=505%:%
+%:%1616=505%:%
 %:%1617=505%:%
-%:%1618=506%:%
+%:%1618=505%:%
 %:%1619=506%:%
-%:%1620=507%:%
+%:%1620=506%:%
 %:%1621=507%:%
-%:%1622=507%:%
-%:%1623=508%:%
-%:%1624=509%:%
-%:%1625=509%:%
-%:%1626=509%:%
-%:%1627=509%:%
-%:%1628=510%:%
-%:%1629=511%:%
-%:%1630=511%:%
-%:%1631=511%:%
+%:%1622=508%:%
+%:%1623=509%:%
+%:%1628=509%:%
+%:%1631=510%:%
 %:%1632=511%:%
-%:%1633=512%:%
+%:%1633=511%:%
 %:%1634=512%:%
-%:%1635=512%:%
-%:%1636=512%:%
-%:%1637=512%:%
-%:%1638=513%:%
-%:%1639=513%:%
-%:%1640=513%:%
-%:%1641=513%:%
-%:%1642=513%:%
-%:%1643=514%:%
-%:%1649=514%:%
-%:%1652=515%:%
-%:%1653=516%:%
-%:%1654=516%:%
-%:%1655=517%:%
-%:%1656=518%:%
-%:%1657=519%:%
-%:%1664=520%:%
-%:%1665=520%:%
-%:%1666=521%:%
-%:%1667=521%:%
-%:%1668=521%:%
-%:%1669=522%:%
-%:%1670=522%:%
-%:%1671=522%:%
-%:%1672=522%:%
-%:%1673=523%:%
-%:%1674=524%:%
-%:%1675=524%:%
-%:%1676=524%:%
-%:%1677=524%:%
-%:%1678=525%:%
-%:%1679=525%:%
-%:%1680=525%:%
-%:%1681=525%:%
-%:%1682=525%:%
-%:%1683=526%:%
-%:%1684=526%:%
-%:%1685=526%:%
-%:%1686=526%:%
-%:%1687=526%:%
-%:%1688=527%:%
-%:%1689=527%:%
-%:%1690=527%:%
-%:%1691=527%:%
-%:%1692=527%:%
-%:%1693=528%:%
-%:%1694=528%:%
-%:%1695=528%:%
-%:%1696=528%:%
-%:%1697=528%:%
-%:%1698=529%:%
-%:%1699=529%:%
-%:%1700=529%:%
-%:%1701=529%:%
-%:%1702=530%:%
-%:%1703=530%:%
-%:%1717=532%:%
-%:%1727=534%:%
-%:%1728=534%:%
-%:%1729=535%:%
-%:%1730=536%:%
-%:%1731=537%:%
-%:%1738=538%:%
-%:%1739=538%:%
-%:%1740=539%:%
-%:%1741=539%:%
-%:%1742=540%:%
-%:%1743=540%:%
-%:%1744=540%:%
-%:%1745=540%:%
-%:%1746=541%:%
-%:%1747=541%:%
-%:%1748=541%:%
-%:%1749=541%:%
-%:%1750=542%:%
-%:%1751=542%:%
-%:%1752=543%:%
-%:%1753=543%:%
-%:%1754=544%:%
-%:%1755=544%:%
-%:%1756=545%:%
-%:%1757=545%:%
-%:%1758=545%:%
-%:%1759=546%:%
-%:%1760=546%:%
-%:%1761=546%:%
-%:%1762=546%:%
-%:%1763=547%:%
-%:%1764=547%:%
-%:%1765=547%:%
-%:%1766=548%:%
-%:%1767=548%:%
-%:%1768=548%:%
-%:%1769=549%:%
-%:%1770=549%:%
-%:%1771=549%:%
-%:%1772=549%:%
-%:%1773=550%:%
-%:%1774=550%:%
-%:%1775=550%:%
-%:%1776=550%:%
-%:%1777=551%:%
-%:%1778=551%:%
-%:%1779=551%:%
-%:%1780=551%:%
-%:%1781=552%:%
-%:%1782=552%:%
-%:%1783=552%:%
-%:%1784=552%:%
-%:%1785=553%:%
-%:%1786=553%:%
-%:%1787=554%:%
-%:%1788=554%:%
-%:%1789=555%:%
-%:%1790=555%:%
-%:%1791=556%:%
-%:%1792=556%:%
-%:%1793=557%:%
-%:%1794=557%:%
-%:%1795=557%:%
-%:%1796=557%:%
-%:%1797=558%:%
-%:%1798=558%:%
-%:%1799=558%:%
-%:%1800=559%:%
-%:%1801=559%:%
-%:%1802=559%:%
-%:%1803=559%:%
-%:%1804=559%:%
-%:%1805=560%:%
-%:%1806=560%:%
-%:%1807=560%:%
-%:%1808=560%:%
-%:%1809=561%:%
-%:%1810=561%:%
-%:%1811=562%:%
-%:%1812=562%:%
-%:%1813=562%:%
-%:%1814=562%:%
-%:%1815=562%:%
-%:%1816=563%:%
-%:%1817=563%:%
-%:%1818=563%:%
-%:%1819=563%:%
-%:%1820=564%:%
-%:%1821=564%:%
-%:%1822=565%:%
-%:%1823=565%:%
-%:%1824=565%:%
-%:%1825=565%:%
-%:%1826=566%:%
-%:%1827=566%:%
-%:%1828=566%:%
-%:%1829=566%:%
-%:%1830=566%:%
-%:%1831=567%:%
-%:%1832=567%:%
-%:%1833=567%:%
-%:%1834=567%:%
-%:%1835=568%:%
-%:%1836=568%:%
-%:%1837=568%:%
-%:%1838=568%:%
-%:%1839=568%:%
-%:%1840=569%:%
-%:%1841=569%:%
-%:%1842=570%:%
-%:%1843=570%:%
-%:%1844=570%:%
-%:%1845=570%:%
-%:%1846=570%:%
-%:%1847=570%:%
-%:%1848=571%:%
-%:%1854=571%:%
-%:%1857=572%:%
-%:%1858=573%:%
-%:%1859=573%:%
-%:%1860=574%:%
-%:%1861=575%:%
-%:%1862=576%:%
-%:%1869=577%:%
-%:%1870=577%:%
-%:%1871=578%:%
-%:%1872=578%:%
-%:%1873=578%:%
-%:%1874=578%:%
-%:%1875=579%:%
-%:%1876=579%:%
-%:%1877=579%:%
-%:%1878=579%:%
-%:%1879=579%:%
-%:%1880=580%:%
-%:%1881=580%:%
-%:%1882=580%:%
-%:%1883=580%:%
-%:%1884=581%:%
-%:%1890=581%:%
-%:%1893=582%:%
-%:%1894=583%:%
-%:%1895=583%:%
-%:%1896=584%:%
-%:%1897=585%:%
-%:%1898=586%:%
-%:%1901=587%:%
-%:%1905=587%:%
-%:%1906=587%:%
-%:%1907=588%:%
-%:%1908=588%:%
-%:%1913=588%:%
-%:%1916=589%:%
-%:%1917=590%:%
-%:%1918=590%:%
-%:%1919=591%:%
-%:%1920=592%:%
-%:%1921=593%:%
-%:%1922=594%:%
-%:%1929=595%:%
-%:%1930=595%:%
-%:%1931=596%:%
-%:%1932=596%:%
-%:%1933=597%:%
-%:%1934=597%:%
-%:%1935=597%:%
-%:%1936=597%:%
-%:%1937=598%:%
-%:%1938=598%:%
-%:%1939=599%:%
-%:%1940=599%:%
-%:%1941=599%:%
-%:%1942=600%:%
-%:%1943=600%:%
-%:%1944=600%:%
-%:%1945=600%:%
-%:%1946=601%:%
-%:%1947=601%:%
-%:%1948=601%:%
-%:%1949=601%:%
-%:%1950=602%:%
-%:%1951=602%:%
-%:%1952=602%:%
-%:%1953=602%:%
-%:%1954=603%:%
-%:%1955=603%:%
-%:%1956=603%:%
-%:%1957=603%:%
-%:%1958=604%:%
-%:%1959=604%:%
-%:%1960=604%:%
-%:%1961=604%:%
-%:%1962=604%:%
-%:%1963=605%:%
-%:%1964=605%:%
-%:%1965=605%:%
-%:%1966=605%:%
-%:%1967=605%:%
-%:%1968=605%:%
-%:%1969=606%:%
-%:%1970=606%:%
-%:%1971=606%:%
-%:%1972=606%:%
-%:%1973=606%:%
-%:%1974=607%:%
-%:%1975=607%:%
-%:%1976=608%:%
-%:%1977=608%:%
-%:%1978=608%:%
-%:%1979=608%:%
-%:%1980=609%:%
-%:%1986=609%:%
-%:%1989=610%:%
-%:%1990=611%:%
-%:%1991=611%:%
-%:%1992=612%:%
-%:%1993=613%:%
-%:%1994=614%:%
-%:%1995=615%:%
-%:%2002=616%:%
-%:%2003=616%:%
-%:%2004=617%:%
-%:%2005=617%:%
-%:%2006=617%:%
-%:%2007=617%:%
-%:%2008=618%:%
-%:%2009=618%:%
-%:%2010=618%:%
-%:%2011=618%:%
-%:%2012=618%:%
-%:%2013=619%:%
-%:%2014=619%:%
-%:%2015=619%:%
-%:%2016=619%:%
-%:%2017=620%:%
-%:%2023=620%:%
-%:%2026=621%:%
-%:%2027=622%:%
-%:%2028=622%:%
-%:%2029=623%:%
-%:%2030=624%:%
-%:%2031=625%:%
-%:%2034=626%:%
-%:%2038=626%:%
-%:%2039=626%:%
-%:%2040=627%:%
-%:%2041=627%:%
-%:%2046=627%:%
-%:%2049=628%:%
-%:%2050=629%:%
-%:%2051=629%:%
-%:%2052=630%:%
-%:%2053=631%:%
-%:%2054=632%:%
-%:%2061=633%:%
-%:%2062=633%:%
-%:%2063=634%:%
-%:%2064=634%:%
-%:%2065=634%:%
-%:%2066=635%:%
-%:%2067=635%:%
-%:%2068=635%:%
-%:%2069=635%:%
-%:%2070=636%:%
-%:%2071=636%:%
-%:%2072=636%:%
-%:%2073=636%:%
-%:%2074=637%:%
-%:%2080=637%:%
-%:%2083=638%:%
-%:%2084=639%:%
-%:%2085=639%:%
-%:%2086=640%:%
-%:%2087=641%:%
-%:%2088=642%:%
-%:%2095=643%:%
-%:%2096=643%:%
-%:%2097=644%:%
-%:%2098=644%:%
-%:%2099=644%:%
-%:%2100=645%:%
-%:%2101=645%:%
-%:%2102=645%:%
-%:%2103=645%:%
-%:%2104=646%:%
-%:%2105=646%:%
-%:%2106=646%:%
-%:%2107=646%:%
-%:%2108=647%:%
-%:%2114=647%:%
-%:%2117=648%:%
-%:%2118=649%:%
-%:%2119=649%:%
-%:%2120=650%:%
-%:%2121=651%:%
-%:%2122=652%:%
-%:%2125=653%:%
-%:%2129=653%:%
-%:%2130=653%:%
-%:%2131=653%:%
-%:%2132=653%:%
-%:%2137=653%:%
-%:%2140=654%:%
-%:%2141=655%:%
-%:%2142=655%:%
-%:%2143=656%:%
-%:%2144=657%:%
-%:%2145=658%:%
-%:%2148=659%:%
-%:%2152=659%:%
-%:%2153=659%:%
-%:%2154=659%:%
-%:%2155=659%:%
-%:%2160=659%:%
-%:%2163=660%:%
-%:%2164=661%:%
-%:%2165=661%:%
-%:%2168=662%:%
-%:%2173=663%:%
+%:%1635=513%:%
+%:%1636=514%:%
+%:%1643=515%:%
+%:%1644=515%:%
+%:%1645=516%:%
+%:%1646=516%:%
+%:%1647=517%:%
+%:%1648=517%:%
+%:%1649=518%:%
+%:%1650=519%:%
+%:%1651=519%:%
+%:%1652=519%:%
+%:%1653=519%:%
+%:%1654=520%:%
+%:%1655=521%:%
+%:%1656=521%:%
+%:%1657=522%:%
+%:%1658=522%:%
+%:%1659=522%:%
+%:%1660=523%:%
+%:%1661=524%:%
+%:%1662=524%:%
+%:%1663=524%:%
+%:%1664=524%:%
+%:%1665=525%:%
+%:%1666=526%:%
+%:%1667=526%:%
+%:%1668=526%:%
+%:%1669=526%:%
+%:%1670=527%:%
+%:%1671=527%:%
+%:%1672=527%:%
+%:%1673=527%:%
+%:%1674=527%:%
+%:%1675=528%:%
+%:%1676=528%:%
+%:%1677=528%:%
+%:%1678=528%:%
+%:%1679=528%:%
+%:%1680=529%:%
+%:%1686=529%:%
+%:%1689=530%:%
+%:%1690=531%:%
+%:%1691=532%:%
+%:%1692=533%:%
+%:%1693=533%:%
+%:%1694=534%:%
+%:%1695=535%:%
+%:%1696=536%:%
+%:%1697=537%:%
+%:%1704=538%:%
+%:%1705=538%:%
+%:%1706=539%:%
+%:%1707=539%:%
+%:%1708=539%:%
+%:%1709=539%:%
+%:%1710=540%:%
+%:%1711=540%:%
+%:%1712=540%:%
+%:%1713=541%:%
+%:%1714=541%:%
+%:%1715=542%:%
+%:%1716=542%:%
+%:%1717=542%:%
+%:%1718=543%:%
+%:%1719=543%:%
+%:%1720=543%:%
+%:%1721=543%:%
+%:%1722=544%:%
+%:%1723=544%:%
+%:%1724=544%:%
+%:%1725=545%:%
+%:%1726=545%:%
+%:%1727=545%:%
+%:%1728=545%:%
+%:%1729=545%:%
+%:%1730=546%:%
+%:%1731=546%:%
+%:%1732=546%:%
+%:%1733=546%:%
+%:%1734=546%:%
+%:%1735=547%:%
+%:%1736=547%:%
+%:%1737=547%:%
+%:%1738=547%:%
+%:%1739=548%:%
+%:%1740=548%:%
+%:%1741=549%:%
+%:%1742=549%:%
+%:%1743=549%:%
+%:%1744=550%:%
+%:%1745=550%:%
+%:%1746=550%:%
+%:%1747=551%:%
+%:%1753=551%:%
+%:%1756=552%:%
+%:%1757=553%:%
+%:%1758=553%:%
+%:%1759=554%:%
+%:%1760=555%:%
+%:%1761=556%:%
+%:%1762=557%:%
+%:%1769=558%:%
+%:%1770=558%:%
+%:%1771=559%:%
+%:%1772=559%:%
+%:%1773=560%:%
+%:%1774=560%:%
+%:%1775=560%:%
+%:%1776=561%:%
+%:%1777=561%:%
+%:%1778=562%:%
+%:%1779=562%:%
+%:%1780=562%:%
+%:%1781=563%:%
+%:%1782=563%:%
+%:%1783=563%:%
+%:%1784=563%:%
+%:%1785=564%:%
+%:%1786=564%:%
+%:%1787=565%:%
+%:%1788=565%:%
+%:%1789=566%:%
+%:%1790=566%:%
+%:%1791=566%:%
+%:%1792=566%:%
+%:%1793=567%:%
+%:%1794=568%:%
+%:%1795=569%:%
+%:%1796=570%:%
+%:%1797=570%:%
+%:%1798=570%:%
+%:%1799=570%:%
+%:%1800=571%:%
+%:%1801=571%:%
+%:%1802=571%:%
+%:%1803=571%:%
+%:%1804=572%:%
+%:%1805=573%:%
+%:%1806=573%:%
+%:%1807=573%:%
+%:%1808=573%:%
+%:%1809=574%:%
+%:%1810=574%:%
+%:%1811=574%:%
+%:%1812=574%:%
+%:%1813=575%:%
+%:%1814=576%:%
+%:%1815=576%:%
+%:%1816=576%:%
+%:%1817=576%:%
+%:%1818=577%:%
+%:%1819=577%:%
+%:%1820=578%:%
+%:%1821=578%:%
+%:%1822=579%:%
+%:%1823=579%:%
+%:%1824=579%:%
+%:%1825=579%:%
+%:%1826=580%:%
+%:%1827=580%:%
+%:%1828=580%:%
+%:%1829=580%:%
+%:%1830=581%:%
+%:%1831=581%:%
+%:%1832=581%:%
+%:%1833=581%:%
+%:%1834=582%:%
+%:%1835=582%:%
+%:%1836=582%:%
+%:%1837=582%:%
+%:%1838=582%:%
+%:%1839=583%:%
+%:%1840=583%:%
+%:%1841=584%:%
+%:%1842=584%:%
+%:%1843=585%:%
+%:%1844=586%:%
+%:%1845=587%:%
+%:%1846=588%:%
+%:%1847=588%:%
+%:%1848=589%:%
+%:%1849=589%:%
+%:%1850=590%:%
+%:%1851=590%:%
+%:%1852=590%:%
+%:%1853=591%:%
+%:%1854=591%:%
+%:%1855=591%:%
+%:%1856=592%:%
+%:%1857=593%:%
+%:%1858=593%:%
+%:%1859=593%:%
+%:%1860=593%:%
+%:%1861=593%:%
+%:%1862=594%:%
+%:%1863=595%:%
+%:%1864=595%:%
+%:%1865=595%:%
+%:%1866=595%:%
+%:%1867=596%:%
+%:%1868=596%:%
+%:%1869=596%:%
+%:%1870=596%:%
+%:%1871=597%:%
+%:%1872=597%:%
+%:%1873=597%:%
+%:%1874=597%:%
+%:%1875=598%:%
+%:%1876=598%:%
+%:%1877=598%:%
+%:%1878=598%:%
+%:%1879=598%:%
+%:%1880=599%:%
+%:%1881=599%:%
+%:%1882=599%:%
+%:%1883=599%:%
+%:%1884=600%:%
+%:%1885=600%:%
+%:%1886=600%:%
+%:%1887=600%:%
+%:%1888=601%:%
+%:%1889=601%:%
+%:%1890=601%:%
+%:%1891=601%:%
+%:%1892=601%:%
+%:%1893=602%:%
+%:%1894=602%:%
+%:%1895=602%:%
+%:%1896=602%:%
+%:%1897=603%:%
+%:%1898=603%:%
+%:%1899=604%:%
+%:%1900=604%:%
+%:%1901=605%:%
+%:%1902=606%:%
+%:%1903=607%:%
+%:%1904=608%:%
+%:%1905=608%:%
+%:%1906=608%:%
+%:%1907=608%:%
+%:%1908=609%:%
+%:%1909=610%:%
+%:%1910=610%:%
+%:%1911=610%:%
+%:%1912=610%:%
+%:%1913=611%:%
+%:%1914=611%:%
+%:%1915=611%:%
+%:%1916=611%:%
+%:%1917=611%:%
+%:%1918=612%:%
+%:%1919=612%:%
+%:%1920=612%:%
+%:%1921=612%:%
+%:%1922=612%:%
+%:%1923=612%:%
+%:%1924=613%:%
+%:%1925=613%:%
+%:%1926=614%:%
+%:%1927=614%:%
+%:%1928=615%:%
+%:%1929=615%:%
+%:%1930=616%:%
+%:%1931=617%:%
+%:%1932=618%:%
+%:%1933=619%:%
+%:%1934=619%:%
+%:%1935=619%:%
+%:%1936=619%:%
+%:%1937=620%:%
+%:%1938=621%:%
+%:%1939=621%:%
+%:%1940=622%:%
+%:%1941=622%:%
+%:%1942=622%:%
+%:%1943=623%:%
+%:%1944=623%:%
+%:%1945=623%:%
+%:%1946=623%:%
+%:%1947=624%:%
+%:%1948=624%:%
+%:%1949=624%:%
+%:%1950=624%:%
+%:%1951=624%:%
+%:%1952=625%:%
+%:%1953=625%:%
+%:%1954=626%:%
+%:%1955=626%:%
+%:%1956=626%:%
+%:%1957=626%:%
+%:%1958=627%:%
+%:%1964=627%:%
+%:%1967=628%:%
+%:%1968=629%:%
+%:%1969=629%:%
+%:%1970=630%:%
+%:%1971=631%:%
+%:%1972=632%:%
+%:%1979=633%:%
+%:%1980=633%:%
+%:%1981=634%:%
+%:%1982=634%:%
+%:%1983=634%:%
+%:%1984=635%:%
+%:%1985=635%:%
+%:%1986=635%:%
+%:%1987=635%:%
+%:%1988=636%:%
+%:%1989=637%:%
+%:%1990=637%:%
+%:%1991=637%:%
+%:%1992=637%:%
+%:%1993=638%:%
+%:%1994=638%:%
+%:%1995=638%:%
+%:%1996=638%:%
+%:%1997=638%:%
+%:%1998=639%:%
+%:%1999=639%:%
+%:%2000=639%:%
+%:%2001=639%:%
+%:%2002=639%:%
+%:%2003=640%:%
+%:%2004=640%:%
+%:%2005=640%:%
+%:%2006=640%:%
+%:%2007=640%:%
+%:%2008=641%:%
+%:%2009=641%:%
+%:%2010=641%:%
+%:%2011=641%:%
+%:%2012=641%:%
+%:%2013=642%:%
+%:%2014=642%:%
+%:%2015=642%:%
+%:%2016=642%:%
+%:%2017=643%:%
+%:%2018=643%:%
+%:%2032=645%:%
+%:%2042=647%:%
+%:%2043=647%:%
+%:%2044=648%:%
+%:%2045=649%:%
+%:%2046=650%:%
+%:%2053=651%:%
+%:%2054=651%:%
+%:%2055=652%:%
+%:%2056=652%:%
+%:%2057=653%:%
+%:%2058=653%:%
+%:%2059=653%:%
+%:%2060=653%:%
+%:%2061=654%:%
+%:%2062=654%:%
+%:%2063=654%:%
+%:%2064=654%:%
+%:%2065=655%:%
+%:%2066=655%:%
+%:%2067=656%:%
+%:%2068=656%:%
+%:%2069=657%:%
+%:%2070=657%:%
+%:%2071=658%:%
+%:%2072=658%:%
+%:%2073=658%:%
+%:%2074=659%:%
+%:%2075=659%:%
+%:%2076=659%:%
+%:%2077=659%:%
+%:%2078=660%:%
+%:%2079=660%:%
+%:%2080=660%:%
+%:%2081=661%:%
+%:%2082=661%:%
+%:%2083=661%:%
+%:%2084=662%:%
+%:%2085=662%:%
+%:%2086=662%:%
+%:%2087=662%:%
+%:%2088=663%:%
+%:%2089=663%:%
+%:%2090=663%:%
+%:%2091=663%:%
+%:%2092=664%:%
+%:%2093=664%:%
+%:%2094=664%:%
+%:%2095=664%:%
+%:%2096=665%:%
+%:%2097=665%:%
+%:%2098=665%:%
+%:%2099=665%:%
+%:%2100=666%:%
+%:%2101=666%:%
+%:%2102=667%:%
+%:%2103=667%:%
+%:%2104=668%:%
+%:%2105=668%:%
+%:%2106=669%:%
+%:%2107=669%:%
+%:%2108=670%:%
+%:%2109=670%:%
+%:%2110=670%:%
+%:%2111=670%:%
+%:%2112=671%:%
+%:%2113=671%:%
+%:%2114=671%:%
+%:%2115=672%:%
+%:%2116=672%:%
+%:%2117=672%:%
+%:%2118=672%:%
+%:%2119=672%:%
+%:%2120=673%:%
+%:%2121=673%:%
+%:%2122=673%:%
+%:%2123=673%:%
+%:%2124=674%:%
+%:%2125=674%:%
+%:%2126=675%:%
+%:%2127=675%:%
+%:%2128=675%:%
+%:%2129=675%:%
+%:%2130=676%:%
+%:%2131=676%:%
+%:%2132=677%:%
+%:%2133=677%:%
+%:%2134=677%:%
+%:%2135=678%:%
+%:%2136=678%:%
+%:%2137=678%:%
+%:%2138=678%:%
+%:%2139=679%:%
+%:%2140=679%:%
+%:%2141=679%:%
+%:%2142=679%:%
+%:%2143=680%:%
+%:%2144=680%:%
+%:%2145=680%:%
+%:%2146=680%:%
+%:%2147=681%:%
+%:%2148=681%:%
+%:%2149=682%:%
+%:%2150=682%:%
+%:%2151=682%:%
+%:%2152=682%:%
+%:%2153=682%:%
+%:%2154=683%:%
+%:%2160=683%:%
+%:%2163=684%:%
+%:%2164=685%:%
+%:%2165=685%:%
+%:%2166=686%:%
+%:%2167=687%:%
+%:%2168=688%:%
+%:%2175=689%:%
+%:%2176=689%:%
+%:%2177=690%:%
+%:%2178=690%:%
+%:%2179=690%:%
+%:%2180=690%:%
+%:%2181=691%:%
+%:%2182=691%:%
+%:%2183=691%:%
+%:%2184=691%:%
+%:%2185=691%:%
+%:%2186=692%:%
+%:%2187=692%:%
+%:%2188=692%:%
+%:%2189=692%:%
+%:%2190=693%:%
+%:%2196=693%:%
+%:%2199=694%:%
+%:%2200=695%:%
+%:%2201=695%:%
+%:%2202=696%:%
+%:%2203=697%:%
+%:%2204=698%:%
+%:%2207=699%:%
+%:%2211=699%:%
+%:%2212=699%:%
+%:%2213=700%:%
+%:%2214=700%:%
+%:%2219=700%:%
+%:%2222=701%:%
+%:%2223=702%:%
+%:%2224=702%:%
+%:%2225=703%:%
+%:%2226=704%:%
+%:%2227=705%:%
+%:%2228=706%:%
+%:%2235=707%:%
+%:%2236=707%:%
+%:%2237=708%:%
+%:%2238=708%:%
+%:%2239=709%:%
+%:%2240=709%:%
+%:%2241=709%:%
+%:%2242=709%:%
+%:%2243=710%:%
+%:%2244=710%:%
+%:%2245=711%:%
+%:%2246=711%:%
+%:%2247=711%:%
+%:%2248=712%:%
+%:%2249=712%:%
+%:%2250=712%:%
+%:%2251=712%:%
+%:%2252=713%:%
+%:%2253=713%:%
+%:%2254=713%:%
+%:%2255=713%:%
+%:%2256=714%:%
+%:%2257=714%:%
+%:%2258=714%:%
+%:%2259=714%:%
+%:%2260=715%:%
+%:%2261=715%:%
+%:%2262=715%:%
+%:%2263=715%:%
+%:%2264=716%:%
+%:%2265=716%:%
+%:%2266=716%:%
+%:%2267=716%:%
+%:%2268=716%:%
+%:%2269=717%:%
+%:%2270=717%:%
+%:%2271=717%:%
+%:%2272=717%:%
+%:%2273=717%:%
+%:%2274=717%:%
+%:%2275=718%:%
+%:%2276=718%:%
+%:%2277=718%:%
+%:%2278=718%:%
+%:%2279=718%:%
+%:%2280=719%:%
+%:%2281=719%:%
+%:%2282=720%:%
+%:%2283=720%:%
+%:%2284=720%:%
+%:%2285=720%:%
+%:%2286=721%:%
+%:%2292=721%:%
+%:%2295=722%:%
+%:%2296=723%:%
+%:%2297=723%:%
+%:%2298=724%:%
+%:%2299=725%:%
+%:%2300=726%:%
+%:%2301=727%:%
+%:%2308=728%:%
+%:%2309=728%:%
+%:%2310=729%:%
+%:%2311=729%:%
+%:%2312=729%:%
+%:%2313=729%:%
+%:%2314=730%:%
+%:%2315=730%:%
+%:%2316=730%:%
+%:%2317=730%:%
+%:%2318=730%:%
+%:%2319=731%:%
+%:%2320=731%:%
+%:%2321=731%:%
+%:%2322=731%:%
+%:%2323=732%:%
+%:%2329=732%:%
+%:%2332=733%:%
+%:%2333=734%:%
+%:%2334=734%:%
+%:%2335=735%:%
+%:%2336=736%:%
+%:%2337=737%:%
+%:%2340=738%:%
+%:%2344=738%:%
+%:%2345=738%:%
+%:%2346=739%:%
+%:%2347=739%:%
+%:%2352=739%:%
+%:%2355=740%:%
+%:%2356=741%:%
+%:%2357=741%:%
+%:%2358=742%:%
+%:%2359=743%:%
+%:%2360=744%:%
+%:%2367=745%:%
+%:%2368=745%:%
+%:%2369=746%:%
+%:%2370=746%:%
+%:%2371=746%:%
+%:%2372=747%:%
+%:%2373=747%:%
+%:%2374=747%:%
+%:%2375=747%:%
+%:%2376=748%:%
+%:%2377=748%:%
+%:%2378=748%:%
+%:%2379=748%:%
+%:%2380=749%:%
+%:%2386=749%:%
+%:%2389=750%:%
+%:%2390=751%:%
+%:%2391=751%:%
+%:%2392=752%:%
+%:%2393=753%:%
+%:%2394=754%:%
+%:%2401=755%:%
+%:%2402=755%:%
+%:%2403=756%:%
+%:%2404=756%:%
+%:%2405=756%:%
+%:%2406=757%:%
+%:%2407=757%:%
+%:%2408=757%:%
+%:%2409=757%:%
+%:%2410=758%:%
+%:%2411=758%:%
+%:%2412=758%:%
+%:%2413=758%:%
+%:%2414=759%:%
+%:%2420=759%:%
+%:%2423=760%:%
+%:%2424=761%:%
+%:%2425=761%:%
+%:%2426=762%:%
+%:%2427=763%:%
+%:%2428=764%:%
+%:%2431=765%:%
+%:%2435=765%:%
+%:%2436=765%:%
+%:%2437=765%:%
+%:%2438=765%:%
+%:%2443=765%:%
+%:%2446=766%:%
+%:%2447=767%:%
+%:%2448=767%:%
+%:%2449=768%:%
+%:%2450=769%:%
+%:%2451=770%:%
+%:%2454=771%:%
+%:%2458=771%:%
+%:%2459=771%:%
+%:%2460=771%:%
+%:%2461=771%:%
+%:%2466=771%:%
+%:%2469=772%:%
+%:%2470=773%:%
+%:%2471=773%:%
+%:%2474=774%:%
+%:%2479=775%:%

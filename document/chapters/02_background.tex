@@ -3,7 +3,7 @@
 
 \chapter{Background and Related Work}\label{chapter:background}
 
-In the following section, we explore existing formalizations of martingales within the mathematical proof repositories \textsf{mathlib} and \textsf{\ac{AFP}}. Additionally, we will provide a concise introduction to the integration theory in Banach spaces, establishing the mathematical foundation that underpins our formalization efforts.
+In the following section, we explore existing formalizations of martingales within the mathematical proof repositories \textsf{mathlib} and \textsf{\ac{AFP}}. Additionally, we will provide a concise introduction to the theory of integration in Banach spaces, establishing the mathematical foundation that underpins our formalization efforts.
 
 \section{Existing Formalizations}
 
@@ -11,7 +11,7 @@ In the following section, we explore existing formalizations of martingales with
 
 Our main motivation for formalizing a theory of martingales in Isabelle/HOL comes from the existing in-depth formalization of the same subject in \textsf{mathlib}. As stated on their online platform, ``The Lean mathematical library, \textsf{mathlib}, is a community-driven effort to build a unified library of mathematics formalized in the Lean proof assistant.'' The Lean-formalization of martingales consists of six documents. In the introductory Lean document \texttt{basic.lean}, fundamentals of the theory of martingales are formalized. The aim of this bachelor's thesis is to reproduce the results contained within this file in Isabelle/HOL. As will become clear in a moment, this is not a straightforward task, since there are a lot of dependencies missing in the Isabelle/HOL libraries.
 
-The file \texttt{basic.lean} contains definitions for martingales, submartingales and supermartingales \cite{Degenne_Ying_2022}. Also stated on the official documentation on \textsf{mathlib}, the main results of this document are
+The file \texttt{basic.lean} contains definitions for martingales, submartingales and supermartingales \cite{Degenne_Ying_2022}. The main results of this document are
 \vspace{0.3cm}
 \begin{itemize}
 \item[$\rightarrow$]\lstinline[mathescape]{measure_theory.martingale $f$ $\mathcal{F}$ $\mu$:}
@@ -41,7 +41,7 @@ Another important point to consider is the restrictions placed on the types in q
 \item $E$ is a normed, complete space with an addition operation.
 \end{itemize}
 
-These restrictions are easily replicated in our formalization using type classes and the type $'a \;\texttt{measure}$. We simply restrict ourselves to functions $f : \; 't \;\rightarrow \; 'a \;\texttt{measure} \;\rightarrow\; 'b$, where the type $'t$ is an instance of the class \texttt{linorder\_topology} and the type $'b$ is an instance of the class \texttt{banach}. Furthermore, we fix an element $t_0$ of type $'t$ which represents the smallest element for which the function should be integrable. With this approach, we can restrict ourselves to the index set $\{i \;\vert\; t_0 \le i\}$. The fact that we only need to consider this index set, which is bounded from below, will prove to be cruicial in certain steps in our development. It will also provide us with the ability to use the reals as an index set. With this specification, our approach mirrors the \textsf{mathlib} formalization, since $\sigma$-algebras are encoded as measures in Isabelle/HOL. The additional requirement that $'t$ (equivalently $\iota$ in the \textsf{mathlib} case) be linearly ordered is easily justified as well, since in most contexts the index set represents a temporal dimension, which can obviously be linearly ordered. Apart from this, the topology induced must also come from the ordering on $'t$, since otherwise we can't have a useful definition of predictability in the general sense.
+These restrictions are easily replicated in our formalization using type classes and the type $'a \;\texttt{measure}$. We simply restrict ourselves to functions $f : \; 't \;\rightarrow \; 'a \;\texttt{measure} \;\rightarrow\; 'b$, where the type $'t$ is an instance of the type class \texttt{linorder\_topology} and the type $'b$ is an instance of the type class \texttt{banach}. With this specification, our approach mirrors the \textsf{mathlib} formalization, since measure spaces, measurable spaces and $\sigma$-algebras are all represented using the type \texttt{measure} in Isabelle/HOL. The additional requirement that $'t$ (equivalently $\iota$ in the \textsf{mathlib} case) be linearly ordered is easily justified as well, since in most contexts the index set represents a temporal dimension, which can obviously be linearly ordered. Apart from this, the topology induced must also come from the ordering on $'t$, since otherwise we can't have a useful definition of predictability in the general sense.
 
 The main purpose of the \textsf{mathlib} formalization on martingales is to prove Doob's martingale convergence theorems, which concern discrete time and continuous time martingales (i.e. the naturals or the reals as indices). This justifies their focus on discrete time processes and the formulation of predictability only in the discrete case. More information on the specifics and the development of Doob's martingale convergence theorems is available in \cite{ying2022formalization}.
 
@@ -59,7 +59,11 @@ Apart from this entry, no other development on the theory of martingales is pres
 
 The main focus of our project is to formalize martingales in as general of a setting as possible. In this vein, we will study martingales defined on arbitrary Banach spaces, as opposed to the reals only. The main obstacle we will face is the development of conditional expectation in arbitrary Banach spaces. A great resource on this subject is the book \textit{Analysis in Banach Spaces} by Hytönen et al \cite{Hytoenen_2016}. As a primer for the upcoming chapter, we will quickly cover the basics of integration on Banach spaces. The following information can also be found in the aforementioned book.
 
-Integration on Banach spaces is usually done using the Bochner integral, which is defined similarly to the Lebesgue integral. For $(\Omega, \Sigma, \mu)$ a measure space and $E$ a Banach space, we define the Bochner integral as follows
+\begin{remark}
+	For the remainder of this document, unless stated otherwise explicitly, we fix a measure space $M = (\Omega, \Sigma, \mu)$ and a Banach space $(E, \lVert \cdot \rVert)$.
+\end{remark}
+
+Integration on Banach spaces is usually done using the Bochner integral, which is defined similarly to the Lebesgue integral. For $M$ a measure space and $E$ a Banach space, we define the Bochner integral as follows
 
 \leftskip0.5cm\relax
 \rightskip0.5cm\relax

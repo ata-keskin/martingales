@@ -348,7 +348,7 @@ lemma integral_nonneg_AE_banach:
   assumes "$f \in \texttt{borel\_measurable} \; M$" and "AE$ \; x \; $in$ \; M. \; 0 \le f \; x$"
   shows "$0 \le \texttt{integral}^L \; M \; f$"
 proof (cases "integrable $M \; f$") 
-$\dots$
+  $\dots$
 qed
 \end{lstlisting}
 }
@@ -416,7 +416,7 @@ This predicate precisely characterizes what it means for a function $f$ to have 
 {\small
 	\begin{lstlisting}[style=isabelle]
 		definition cond_exp :: "$'a \; \texttt{measure} \; \Rightarrow \; 'a \; \texttt{measure} \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \Rightarrow \texttt{bool}$" where 
-		  "cond_exp $M \; F \; f \; = ($if$ \; \exists g. \; \texttt{has\_cond\_exp} \; M \; F \; f \; g \; $then$ \; ($SOME$ \; g. \; \texttt{has\_cond\_exp} \; M \; F \; f \; g) \; $else$ \; (\lambda \_. 0))$"
+		  "cond_exp $M \; F \; f \; = ($if$ \; \exists g. \; \texttt{has\_cond\_exp} \; M \; F \; f \; g \; $then$ \; ($SOME$ \; g. \; \texttt{has\_cond\_exp} \; M \; F \; f \; g) \; $else$ \; (\lambda \_. \; 0))$"
 	\end{lstlisting}
 }
 \end{isadefinition}
@@ -583,7 +583,7 @@ The following lemma is the most involved result of our formalization.
 	\]
 \end{lemma}
 \begin{proof}
-	The sequence $(s_n)_{n \in \mathbb{N}}$ is Cauchy $\mu$a.e. Hence $\lim_{n \to \infty} \textrm{diam}(S_n(x)) = 0$, with $S_n(x) := \{s_i(x) \; \vert \; i \ge n \}$ by the diameter lemma. Furthermore
+	The sequence $(s_n)_{n \in \mathbb{N}}$ is Cauchy $\mu$-a.e. Hence $\lim_{n \to \infty} \textrm{diam}(S_n(x)) = 0$, with $S_n(x) := \{s_i(x) \; \vert \; i \ge n \}$ by the diameter lemma. Furthermore
 	\[
 		\lVert\textrm{diam}(S_n(x))\rVert \le 4 \cdot \lVert f(x) \rVert \; \mu\textrm{-a.e.}
 	\]
@@ -688,7 +688,7 @@ If an integrable function $f$ is already $F$-measurable, then $\texttt{cond\_exp
 The following property is called the \textit{tower property} of the conditional expectation.
 
 \begin{lemma}
-	Let $F$ and $G$ be nested sub-$\sigma$-algebras, i.e. $F \subseteq G \subseteq M$. Then, for any $f \in L^1(E)$, we have
+	Let $F$ and $G$ be nested sub-$\sigma$-algebras, i.e. $F \subseteq G \subseteq \Sigma$. Then, for any $f \in L^1(E)$, we have
 	\[
 		\normalfont \texttt{cond\_exp} \; M \; F \; (\texttt{cond\_exp} \; M \; G \; f) = \texttt{cond\_exp} \; M \; F \; f \; \mu\textrm{-a.e.}
 	\]
