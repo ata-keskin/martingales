@@ -470,8 +470,16 @@ Now comes the most challenging portion of this chapter.
 Before defining predictable processes in full generality, we will discuss them in the discrete setting, where the definition is easier to grasp.
 
 \begin{definition}
-	A discrete-time stochastic process $(X_i)_{i\in\mathbb{N}}$ is called predictable with respect to a filtration $(F_i)_{i\in\mathbb{N}}$, if $X_{i + 1}$ is $F_i$-measurable for all $i \in \mathbb{N}$.
+	A discrete-time stochastic process $(X_i)_{i\in\mathbb{N}}$ is called \textit{predictable} with respect to a filtration $(F_i)_{i\in\mathbb{N}}$, if $X_{i + 1}$ is $F_i$-measurable for all $i \in \mathbb{N}$.
 \end{definition}
 
+This means that the value of the process in the future, $X_{i+1}$, can be ``predicted'' using the information available up to time $i$. This definition is a special case of the following more general definition for arbitrary index sets.
 
+\begin{definition}
+	Let $(X_t)_{t\in[t_0, \infty)}$ be a stochastic process and $(F_t)_{t\in[t_0, \infty)}$ a filtration of the measure space $M$. We define the \textit{predictable $\sigma$-algebra} as follows.
+	\[
+		\Sigma_P = \sigma(\{(s,t] \times A \;\vert\; A \in F_s \;\wedge\; t_0 \le s \;\wedge\; s < t \} \cup \{\{t_0\} \times A \;\vert\; A \in F_{t_0}\})
+	\]
+	We call $(X_t)_{t\in[t_0, \infty)}$ \textit{predictable} if the map $(t,x) \mapsto X_t(x)$ is measurable with respect to this $\sigma$-algebra
+\end{definition}
 
