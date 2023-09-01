@@ -390,12 +390,10 @@ The formalized version is as follows.
 locale progressive_process = filtered_measure $M$ $F$ $t_0$ for $M$ $F$ $t_0$
 	and $X$ :: "$\_ \; \Rightarrow \; \_ \; \Rightarrow \; \_ :: \; \{$second_countable_topology, banach$\}$" $+$
   assumes progressive[measurable]: "$\bigwedge t. \; t_0 \le t$
-	$\implies (\lambda (i, x). \; X \; (\min \; t \; i) \; x) \in \texttt{borel\_measurable} \; (\texttt{restrict\_space} \; \texttt{borel} \; \{t_0..t\} \otimes_M (F \; t))$"
+	$\implies (\lambda (i, x). \; X \; i \; x) \in \texttt{borel\_measurable} \; (\texttt{restrict\_space} \; \texttt{borel} \; \{t_0..t\} \otimes_M (F \; t))$"
 \end{lstlisting}
 }
 \end{isadefinition}
-
-Formalizing this concept also demonstrates its intricacies. In order to constrain the domain of the map $(i, w) \mapsto X_i(w)$ to the index set $[t_0, t]$, we compose it with the function $\min(t, \cdot)$. This makes sure that the first argument of the map always lies in the set $[t_0, t]$, effectively making it a map $[t_0, t] \times \Omega \rightarrow E$. 
 
 Notice that the measurability assumption we make here is on the entire map $(i, w) \mapsto X_i(w)$ instead of being ``pointwise'' as in the previous two sections. As a side effect, the stochastic process defined by $X_i = c(i)$ for some $c : [t_0, \infty) \rightarrow E$ is progressively measurable, only if the function $c$ is Borel measurable. Previously, this assumption was not required.
 

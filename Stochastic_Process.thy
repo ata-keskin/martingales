@@ -255,12 +255,12 @@ sublocale stochastic_process \<subseteq> adapted_natural: adapted_process M "nat
 subsection "Progressively Measurable Process"
 
 locale progressive_process = filtered_measure M F t\<^sub>0 for M F t\<^sub>0 and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {second_countable_topology, banach}" +
-  assumes progressive[measurable]: "\<And>t. t\<^sub>0 \<le> t \<Longrightarrow> (\<lambda>(i, x). X (min t i) x) \<in> borel_measurable (restrict_space borel {t\<^sub>0..t} \<Otimes>\<^sub>M F t)"
+  assumes progressive[measurable]: "\<And>t. t\<^sub>0 \<le> t \<Longrightarrow> (\<lambda>(i, x). X i x) \<in> borel_measurable (restrict_space borel {t\<^sub>0..t} \<Otimes>\<^sub>M F t)"
 begin
 
 lemma progressiveD:
   assumes "S \<in> borel"
-  shows "(\<lambda>(j, \<xi>). X (min i j) \<xi>) -` S \<inter> ({t\<^sub>0..i} \<times> space M) \<in> (restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i)" 
+  shows "(\<lambda>(j, \<xi>). X j \<xi>) -` S \<inter> ({t\<^sub>0..i} \<times> space M) \<in> (restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i)" 
   using measurable_sets[OF progressive, OF _ assms, of i]
   by (cases "t\<^sub>0 \<le> i") (auto simp add: space_F space_restrict_space sets_pair_measure space_pair_measure)
 
@@ -291,10 +291,11 @@ lemma compose:
   shows "progressive_process M F t\<^sub>0 (\<lambda>i \<xi>. (f i) (X i \<xi>))"
 proof
   fix i assume asm: "t\<^sub>0 \<le> i"
-  have "(\<lambda>(j :: 'b, \<xi> :: 'a). (j, X (min i j) \<xi>)) \<in> (restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i) \<rightarrow>\<^sub>M borel \<Otimes>\<^sub>M borel" using progressive[OF asm] measurable_fst''[OF measurable_restrict_space1, OF measurable_id] by (auto simp add: measurable_pair_iff space_pair_measure sets_pair_measure sets_restrict_space measurable_split_conv)
-  moreover have "(\<lambda>(j :: 'b, y :: 'c). ((min i j), y)) \<in> borel \<Otimes>\<^sub>M borel \<rightarrow>\<^sub>M borel \<Otimes>\<^sub>M borel" by simp
-  moreover have "(\<lambda>(j, \<xi>). f (min i j) (X (min i j) \<xi>)) = case_prod f o ((\<lambda>(j, y). ((min i j), y)) o (\<lambda>(j, \<xi>). (j, X (min i j) \<xi>)))" by fastforce
-  ultimately show "(\<lambda>(j :: 'b, \<xi> :: 'a). f (min i j) (X (min i j) \<xi>)) \<in> borel_measurable (restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i)" unfolding borel_prod using assms measurable_comp[OF measurable_comp] by simp
+  have "(\<lambda>(j, \<xi>). (j, X j \<xi>)) \<in> (restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i) \<rightarrow>\<^sub>M borel \<Otimes>\<^sub>M borel" 
+    using progressive[OF asm] measurable_fst''[OF measurable_restrict_space1, OF measurable_id] 
+    by (auto simp add: measurable_pair_iff measurable_split_conv)
+  moreover have "(\<lambda>(j, \<xi>). f j (X j \<xi>)) = case_prod f o ((\<lambda>(j, y). (j, y)) o (\<lambda>(j, \<xi>). (j, X j \<xi>)))" by fastforce
+  ultimately show "(\<lambda>(j, \<xi>). (f j) (X j \<xi>)) \<in> borel_measurable (restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i)" using assms by (simp add: borel_prod)
 qed
 
 lemma norm: "progressive_process M F t\<^sub>0 (\<lambda>i \<xi>. norm (X i \<xi>))" using measurable_compose[OF progressive borel_measurable_norm] by (unfold_locales) simp
@@ -338,28 +339,20 @@ sublocale real_progressive_process \<subseteq> real_adapted_process ..
 text \<open>In the discrete setting, adaptedness is equivalent to progressive measurability.\<close>
 
 sublocale nat_adapted_process \<subseteq> nat_progressive_process
-proof (unfold_locales)
-  fix i :: nat
-  have "(\<lambda>(j, y). min i j) -` S \<inter> {0..i} \<times> space (F i) = S \<times> space (F i)" if "S \<in> restrict_space borel {0..i}" for S using sets.sets_into_space[OF that] by auto
-  hence "(\<lambda>(j, y). min i j) \<in> restrict_space borel {0..i} \<Otimes>\<^sub>M F i \<rightarrow>\<^sub>M restrict_space borel {0..i}" by (intro measurableI) (auto simp add: space_pair_measure sets_pair_measure)
-  hence "(\<lambda>(j, x). (min i j, x)) \<in> restrict_space borel {0..i} \<Otimes>\<^sub>M F i \<rightarrow>\<^sub>M restrict_space borel {0..i} \<Otimes>\<^sub>M F i" by (intro measurable_pair) simp+
-  moreover have "case_prod X \<in> borel_measurable (restrict_space borel {0..i} \<Otimes>\<^sub>M F i)"
-  proof (intro borel_measurableI)
-    fix S :: "'b set" assume open_S: "open S"
-    {
-      fix j assume asm: "j \<le> i"
-      hence "X j -` S \<inter> space M \<in> F i" using adaptedD[of j, THEN measurable_sets] space_F open_S by fastforce
-      moreover have "case_prod X -` S \<inter> {j} \<times> space M = {j} \<times> (X j -` S \<inter> space M)" for j by fast
-      moreover have "{j :: nat} \<in> restrict_space borel {0..i}" using asm by (simp add: sets_restrict_space_iff)
-      ultimately have "case_prod X -` S \<inter> {j} \<times> space M \<in> restrict_space borel {0..i} \<Otimes>\<^sub>M F i" by simp
-    }
-    hence "(\<lambda>j. (\<lambda>(x, y). X x y) -` S \<inter> {j} \<times> space M) ` {..i} \<subseteq> restrict_space borel {0..i} \<Otimes>\<^sub>M F i" by blast
-    moreover have "case_prod X -` S \<inter> space (restrict_space borel {0..i} \<Otimes>\<^sub>M F i) = (\<Union>j\<le>i. case_prod X -` S \<inter> {j} \<times> space M)" unfolding space_pair_measure space_restrict_space space_F by force  
-    ultimately show "case_prod X -` S \<inter> space (restrict_space borel {0..i} \<Otimes>\<^sub>M F i) \<in> restrict_space borel {0..i} \<Otimes>\<^sub>M F i" by (metis sets.countable_UN)
-  qed
-  moreover have "(\<lambda>(x, y). X x y) o (\<lambda>(j, x). (min i j, x)) = (\<lambda>(j, x). X (min i j) x)" by fastforce
-  ultimately show "(\<lambda>(j, x). X (min i j) x) \<in> borel_measurable (restrict_space borel {0..i} \<Otimes>\<^sub>M F i)" by (metis measurable_comp)
+proof (unfold_locales, intro borel_measurableI)
+  fix S :: "'b set" and i :: nat assume open_S: "open S"
+  {
+    fix j assume asm: "j \<le> i"
+    hence "X j -` S \<inter> space M \<in> F i" using adaptedD[of j, THEN measurable_sets] space_F open_S by fastforce
+    moreover have "case_prod X -` S \<inter> {j} \<times> space M = {j} \<times> (X j -` S \<inter> space M)" for j by fast
+    moreover have "{j :: nat} \<in> restrict_space borel {0..i}" using asm by (simp add: sets_restrict_space_iff)
+    ultimately have "case_prod X -` S \<inter> {j} \<times> space M \<in> restrict_space borel {0..i} \<Otimes>\<^sub>M F i" by simp
+  }
+  hence "(\<lambda>j. (\<lambda>(x, y). X x y) -` S \<inter> {j} \<times> space M) ` {..i} \<subseteq> restrict_space borel {0..i} \<Otimes>\<^sub>M F i" by blast
+  moreover have "case_prod X -` S \<inter> space (restrict_space borel {0..i} \<Otimes>\<^sub>M F i) = (\<Union>j\<le>i. case_prod X -` S \<inter> {j} \<times> space M)" unfolding space_pair_measure space_restrict_space space_F by force  
+  ultimately show "case_prod X -` S \<inter> space (restrict_space borel {0..i} \<Otimes>\<^sub>M F i) \<in> restrict_space borel {0..i} \<Otimes>\<^sub>M F i" by (metis sets.countable_UN)
 qed
+
 
 subsection "Predictable Process"
 
@@ -580,27 +573,25 @@ text \<open>Every predictable process is also progressively measurable.\<close>
 sublocale predictable_process \<subseteq> progressive_process
 proof (unfold_locales)
   fix i :: 'b assume asm: "t\<^sub>0 \<le> i"
-  let ?min = "(\<lambda>(j, x). (min i j, x))"
   {
     fix S :: "('b \<times> 'a) set" assume "S \<in> {{s<..t} \<times> A | A s t. A \<in> F s \<and> t\<^sub>0 \<le> s \<and> s < t} \<union> {{t\<^sub>0} \<times> A | A. A \<in> F t\<^sub>0}"
-    hence "?min -` S \<inter> ({t\<^sub>0..i} \<times> space M) \<in> restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i"
+    hence "(\<lambda>x. x) -` S \<inter> ({t\<^sub>0..i} \<times> space M) \<in> restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i"
     proof
       assume "S \<in> {{s<..t} \<times> A | A s t. A \<in> F s \<and> t\<^sub>0 \<le> s \<and> s < t}"
       then obtain s t A where S_is: "S = {s<..t} \<times> A" "t\<^sub>0 \<le> s" "s < t" "A \<in> F s" by blast
-      hence "?min -` S \<inter> ({t\<^sub>0..i} \<times> space M) = {s<..min i t} \<times> A" using sets.sets_into_space[OF S_is(4)] by (auto simp add: space_F)
+      hence "(\<lambda>x. x) -` S \<inter> ({t\<^sub>0..i} \<times> space M) = {s<..min i t} \<times> A" using sets.sets_into_space[OF S_is(4)] by (auto simp add: space_F)
       then show ?thesis using S_is sets_F_mono[of s i] by (cases "s \<le> i") (fastforce simp add: sets_restrict_space_iff)+
     next
       assume "S \<in> {{t\<^sub>0} \<times> A | A. A \<in> F t\<^sub>0}"
       then obtain A where S_is: "S = {t\<^sub>0} \<times> A" "A \<in> F t\<^sub>0" by blast
-      hence "?min -` S \<inter> ({t\<^sub>0..i} \<times> space M) = {t\<^sub>0} \<times> A" using asm sets.sets_into_space[OF S_is(2)] by (auto simp add: space_F)
+      hence "(\<lambda>x. x) -` S \<inter> ({t\<^sub>0..i} \<times> space M) = {t\<^sub>0} \<times> A" using asm sets.sets_into_space[OF S_is(2)] by (auto simp add: space_F)
       thus ?thesis using S_is(2) sets_F_mono[OF order_refl asm] asm by (fastforce simp add: sets_restrict_space_iff)
     qed
-    hence "?min -` S \<inter> space (restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i) \<in> restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i" by (simp add: space_pair_measure space_F[OF asm])
+    hence "(\<lambda>x. x) -` S \<inter> space (restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i) \<in> restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i" by (simp add: space_pair_measure space_F[OF asm])
   }
   moreover have "{{s<..t} \<times> A |A s t. A \<in> sets (F s) \<and> t\<^sub>0 \<le> s \<and> s < t} \<union> {{t\<^sub>0} \<times> A |A. A \<in> sets (F t\<^sub>0)} \<subseteq> Pow ({t\<^sub>0..} \<times> space M)" using sets.sets_into_space by (fastforce simp add: space_F)
-  ultimately have "?min \<in> restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i \<rightarrow>\<^sub>M \<Sigma>\<^sub>P" using space_F[OF asm] by (intro measurable_sigma_sets[OF sets_predictable_sigma]) (fast, force simp add: space_pair_measure)
-  moreover have "case_prod X o ?min = (\<lambda>(j, x). X (min i j) x)" by fastforce
-  ultimately show "case_prod (\<lambda>j. X (min i j)) \<in> borel_measurable (restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i)" by (metis measurable_comp predictable)
+  ultimately have "(\<lambda>x. x) \<in> restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i \<rightarrow>\<^sub>M \<Sigma>\<^sub>P" using space_F[OF asm] by (intro measurable_sigma_sets[OF sets_predictable_sigma]) (fast, force simp add: space_pair_measure)
+  thus "case_prod X \<in> borel_measurable (restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i)" using predictable by simp
 qed
 
 sublocale nat_predictable_process \<subseteq> nat_progressive_process ..
