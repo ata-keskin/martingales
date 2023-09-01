@@ -18,7 +18,7 @@ We start with the following locale definition.
 \begin{lstlisting}[style=isabelle]
 locale stochastic_process =
   fixes $M \; t_0$ 
-	and $X$ :: "$'b \; :: \; \{$second_countable_topology, linorder_topology$\} \Rightarrow \; 'a \; \Rightarrow \; 'c$"
+    and $X$ :: "$'b \; :: \; \{$second_countable_topology, linorder_topology$\} \Rightarrow \; 'a \; \Rightarrow \; 'c$"
   assumes random_variable[measurable]: "$\bigwedge i. \; t_0 \le i \implies X \; i \in \texttt{borel\_measurable} \; M$"
 \end{lstlisting}
 }
@@ -34,11 +34,11 @@ We have the following lemmas to introduce ``constant'' stochastic processes.
 lemma stochastic_process_const_fun:
   assumes "$f \in \texttt{borel\_measurable} \; M$"
   shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda \_. \; f)$"
-    using assms by (unfold_locales)
+  using assms by (unfold_locales)
 
 lemma stochastic_process_const:
   shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda i \; \_. \; c \; i)$" 
-    by (unfold_locales) simp
+  by (unfold_locales) simp
 
 \end{lstlisting}
 }
@@ -124,7 +124,7 @@ lemma uminus: "$\texttt{stochastic\_process} \; M \; t_0 \; (-X)$" using scaleR_
 \begin{isalemma}
 {\small
 \begin{lstlisting}[style=isabelle]
-lemma partial_sum: "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda n \; x. \; \sum{i\in\{t_0..<n\}}. \; X \; i \; x)$" 
+lemma partial_sum: "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda n \; x. \; \sum{i\in\{t_0..\texttt{<}n\}}. \; X \; i \; x)$" 
 	by (unfold_locales) simp
 
 lemma partial_sum': "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda n \; x. \; \sum{i\in\{t_0..n\}}. \; X \; i \; x)$" 
@@ -140,7 +140,7 @@ lemma partial_sum': "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda n \; 
 lemma stochastic_process_sum:
   assumes "$\bigwedge i. \; i \in I \implies \texttt{stochastic\_process} \; M \; t_0 \; (X \; i)$"
   shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda k x. \; \sum i \in I. \; X \; i \; k \; x)$" 
-    using assms[THEN stochastic_process.random_variable] by (unfold_locales, auto)
+  using assms[THEN stochastic_process.random_variable] by (unfold_locales, auto)
 
 \end{lstlisting}
 }
@@ -241,9 +241,9 @@ Preparing for our next example, we introduce a formalization for the notion of a
 \begin{isadefinition}
 {\small
 \begin{lstlisting}[style=isabelle]
-	definition sigma_gen :: "$'a \; \texttt{set} \; \Rightarrow \; 'b \; \texttt{measure} \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \texttt{set} \; \Rightarrow \; 'a \;\texttt{measure}$" where
-	  "$\texttt{sigma\_gen} \; \Omega \; N \; S \equiv \texttt{sigma} \; \Omega \; (\bigcup f \in S. \; \{(f \;\text{-\textasciigrave} \; A) \; \cap \; \Omega \;\vert\; A. \; A \in N\})$"
-  \end{lstlisting}
+definition sigma_gen :: "$'a \; \texttt{set} \; \Rightarrow \; 'b \; \texttt{measure} \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \texttt{set} \; \Rightarrow \; 'a \;\texttt{measure}$" where
+  "$\texttt{sigma\_gen} \; \Omega \; N \; S \equiv \texttt{sigma} \; \Omega \; (\bigcup f \in S. \; \{(f \;\text{-\textasciigrave} \; A) \; \cap \; \Omega \;\vert\; A. \; A \in N\})$"
+\end{lstlisting}
 }
 \end{isadefinition}
 
@@ -254,6 +254,7 @@ Given two measure spaces $(V, \mathcal{A})$ and $(W, \mathcal{B})$, it is a well
 \begin{lstlisting}[style=isabelle]
 lemma measurable_family_iff_contains_sigma_gen:
   shows "$(S \subseteq M \rightarrow_M N) \longleftrightarrow S \subseteq (\texttt{space}\; M \rightarrow \;\texttt{space}\; N) \wedge \texttt{sigma\_gen} \; (\texttt{space}\; M) \; N \; S \subseteq M$"
+  $\dots$
 \end{lstlisting}
 }
 \end{isalemma}
@@ -289,10 +290,11 @@ The natural filtration contains information concerning the process's past behavi
 \begin{lstlisting}[style=isabelle]
 lemma (in sigma_finite_measure) sigma_finite_filtered_measure_natural_filtration:
   assumes "$\texttt{stochastic\_process} \; M \; t_0 \; X$"
-      and exhausting_set: "$\texttt{countable} \; A$" "$(\bigcup A) = \texttt{space} \; M$" 
+  and exhausting_set: "$\texttt{countable} \; A$" "$(\bigcup A) = \texttt{space} \; M$" 
 		  "$\bigwedge a. \; a \in A \implies \texttt{emeasure} \; M \; a \neq \infty$" 
 		  "$\bigwedge a. \; a \in A \implies \exists b \in \texttt{borel}. \; a = ((X \; t_0) \; \text{-\textasciigrave} \; b) \; \cap \; \texttt{space} \; M$"
-    shows "$\texttt{sigma\_finite\_filtered\_measure} \; M \; (\texttt{natural\_filtration} \; M \; t_0 \; X) \; t_0$"
+  shows "$\texttt{sigma\_finite\_filtered\_measure} \; M \; (\texttt{natural\_filtration} \; M \; t_0 \; X) \; t_0$"
+  $\dots$
 \end{lstlisting}
 }
 \end{isalemma}
@@ -321,6 +323,7 @@ The properties we have shown concerning stochastic processes also hold for adapt
 lemma (in filtered_measure) adapted_process_const_fun:
   assumes "$f \in \texttt{borel\_measurable} \; (F \; t_0)$"
   shows "$\texttt{adapted\_process} \; M \; F \; t_0 \; (\lambda \_. \; f)$"
+  $\dots$
 \end{lstlisting}
 }
 \end{isalemma}
@@ -402,10 +405,10 @@ Notice that the measurability assumption we make here is on the entire map $(i, 
 lemma (in filtered_measure) progressive_process_const:
   assumes "$c \in \texttt{borel\_measurable} \; \texttt{borel}$"
   shows "$\texttt{progressive\_process} \; M \; F \; t_0 \; (\lambda i \; \_. \; c \; i)$"
-    using assms by (unfold_locales) 
-				   (auto simp add: measurable_split_conv 
-					intro!: measurable_compose[OF measurable_fst] 
-					measurable_restrict_space1)
+  using assms by (unfold_locales) 
+				 (auto simp add: measurable_split_conv 
+				  intro!: measurable_compose[OF measurable_fst] 
+				  measurable_restrict_space1)
   \end{lstlisting}
 }
 \end{isalemma}
@@ -467,7 +470,7 @@ Now comes the most challenging portion of this chapter.
 
 \section{Predictable Processes}
 
-Before defining predictable processes in full generality, we will discuss them in the discrete setting, where the definition is easier to grasp.
+Before defining predictable processes in full generality, we will introduce them in the discrete setting, where the definition is easier to grasp.
 
 \begin{definition}
 	A discrete-time stochastic process $(X_i)_{i\in\mathbb{N}}$ is called \textit{predictable} with respect to a filtration $(F_i)_{i\in\mathbb{N}}$, if $X_{i + 1}$ is $F_i$-measurable for all $i \in \mathbb{N}$.
@@ -476,10 +479,207 @@ Before defining predictable processes in full generality, we will discuss them i
 This means that the value of the process in the future, $X_{i+1}$, can be ``predicted'' using the information available up to time $i$. This definition is a special case of the following more general definition for arbitrary index sets.
 
 \begin{definition}
-	Let $(X_t)_{t\in[t_0, \infty)}$ be a stochastic process and $(F_t)_{t\in[t_0, \infty)}$ a filtration of the measure space $M$. We define the \textit{predictable $\sigma$-algebra} as follows.
+	Let $(F_t)_{t\in[t_0, \infty)}$ be a filtration of the measure space $M$. We define the \textit{predictable $\sigma$-algebra} $\Sigma_P$ as follows.
 	\[
 		\Sigma_P = \sigma(\{(s,t] \times A \;\vert\; A \in F_s \;\wedge\; t_0 \le s \;\wedge\; s < t \} \cup \{\{t_0\} \times A \;\vert\; A \in F_{t_0}\})
 	\]
-	We call $(X_t)_{t\in[t_0, \infty)}$ \textit{predictable} if the map $(t,x) \mapsto X_t(x)$ is measurable with respect to this $\sigma$-algebra
+	A stochastic process $(X_t)_{t\in[t_0, \infty)}$ is called \textit{predictable} if the map $(t,x) \mapsto X_t(x)$ is measurable with respect to this $\sigma$-algebra.
 \end{definition}
+
+At first glance, it is difficult to make intuitive sense of this definition. Investigating properties of predictable processes in arbitrary settings is well beyond the scope of this thesis. However, we will make the following remark.
+
+\begin{remark}
+	One can show that the $\sigma$-algebra $\Sigma_P$ coincides with the $\sigma$-algebra generated by all left-continuous adapted processes. A stochastic process is called left-continuous, if the sample paths $t \mapsto X_t(x)$ are left-continuous for $\mu$-almost all $x \in \Omega$. Right-continuity is similarly defined.
+\end{remark}
+
+The corresponding locale is easy to define.
+
+\begin{isadefinition}
+{\small
+\begin{lstlisting}[style=isabelle]
+locale predictable_process = filtered_measure $M$ $F$ $t_0$ for $M$ $F$ $t_0$
+	and $X$ :: "$\_ \; \Rightarrow \; \_ \; \Rightarrow \; \_ :: \; \{$second_countable_topology, banach$\}$" $+$
+  assumes progressive[measurable]: "$(\lambda (t, x). \; X \; t \; x) \in \texttt{borel\_measurable} \; \Sigma_P$"
+\end{lstlisting}
+}
+\end{isadefinition}
+
+In the previous section, our results concerning progressively measurable processes all made use of the fact that the projection functions $\pi_1 : [t_0, \infty) \times \Omega \rightarrow [t_0, \infty)$ and $\pi_2 : [t_0, \infty) \times \Omega \rightarrow \Omega$ are measurable with respect to the underlying $\sigma$-algebra. In that setting, this was a triviality, since the $\sigma$-algebra in question was the product $\sigma$-algebra $\mathcal{B}([t_0, t]) \otimes F_t$ for some $t \ge t_0$, which has many nice properties. We wish to show a similar statement for the projection functions $\pi_i$ when $[t_0, \infty) \times \Omega$ is equipped with the $\sigma$-algebra $\Sigma_P$. We have come up with a sufficient condition on the index set $[t_0, \infty)$ that guarantees this.
+
+\begin{lemma}
+	Assume there exists some countable family of sets $\mathcal{I} \subseteq \{(s, t] \;\vert\; t_0 \le s \;\wedge\; s < t\}$ such that $(t_0, \infty) \subseteq (\bigcup \mathcal{I})$. Then, $\pi_1$ is $\Sigma_P$-Borel-measurable and $\pi_2$ is $\Sigma_P$-$F_{t_0}$-measurable.
+\end{lemma}
+\begin{proof}
+	We first show that $\pi_1$ is $\Sigma_P$-Borel-measurable.
+	
+	//TODO
+	
+	Next, we shot that $\pi_2$ is $\Sigma_P$-$F_{t_0}$-measurable.
+\end{proof}
+
+\begin{remark}
+	We believe strongly that $\pi_2$ is not $\Sigma_P$-$F_{t}$-measurable for $t > t_0$ in general, or at least our condition is not sufficient to show this. This stems from the fact that $\pi_2^{-1}(S) = [t_0, \infty) \times S$ and the element $t_0$ can only originate from some set in $\{\{t_0\} \times A \;\vert\; A \in F_{t_0}\}$.
+\end{remark}
+
+In the discrete-time case, the family $\mathcal{I} = \{\{n + 1\}\}_{n \in \mathbb{N}}$ fulfills this condition. Similarly, in the continous-time case we can use $\mathcal{I} = \{(0,n + 1]\}\}_{n \in \mathbb{N}}$. The following lemmas in Isabelle reflect this.
+
+\begin{isalemma}
+{\small
+\begin{lstlisting}[style=isabelle]
+lemma (in nat_filtered_measure) measurable_predictable_sigma_snd:
+  shows "$\texttt{snd} \; \in \Sigma_P \rightarrow_M F \; 0$"
+  by (intro measurable_predictable_sigma_snd[of "$\texttt{range} \; (\lambda x. \; \{\texttt{Suc} \; x\})$"]) 
+	 (force | simp add: greaterThan_0)+
+
+lemma (in nat_filtered_measure) measurable_predictable_sigma_fst:
+  shows "$\texttt{fst} \; \in \Sigma_P \rightarrow_M \texttt{borel}$"
+  by (intro measurable_predictable_sigma_fst[of "$\texttt{range} \; (\lambda x. \; \{\texttt{Suc} \; x\})$"]) 
+	 (force | simp add: greaterThan_0)+
+\end{lstlisting}
+}
+\end{isalemma}
+
+\begin{isalemma}
+{\small
+\begin{lstlisting}[style=isabelle]
+lemma (in real_filtered_measure) measurable_predictable_sigma_snd:
+  shows "$\texttt{snd} \; \in \Sigma_P \rightarrow_M F \; 0$"
+  using real_arch_simple 
+  by (intro measurable_predictable_sigma_snd[of "$\texttt{range} \; (\lambda x::\texttt{nat}. \; \{0\texttt{<}..\texttt{real} \; (\texttt{Suc} \; x)\})$"]) 
+	 (fastforce intro: add_increasing)+
+
+lemma (in real_filtered_measure) measurable_predictable_sigma_fst:
+  shows "$\texttt{fst} \; \in \Sigma_P \rightarrow_M \texttt{borel}$"
+  using real_arch_simple 
+  by (intro measurable_predictable_sigma_fst[of "$\texttt{range} \; (\lambda x::\texttt{nat}. \; \{0\texttt{<}..\texttt{real} \; (\texttt{Suc} \; x)\})$"])
+	 (fastforce intro: add_increasing)+
+\end{lstlisting}
+}
+\end{isalemma}
+
+These measurability results concerning projections are necessary to show the following statements about ``constant'' processes being predictable.
+
+\begin{isalemma}
+{\small
+\begin{lstlisting}[style=isabelle]
+lemma (in filtered_measure) predictable_process_const_fun:
+  assumes "$\texttt{snd} \; \in \Sigma_P \rightarrow_M F \; t_0$" "$f \in \texttt{borel\_measurable} \; (F \; t_0)$"
+  shows "$\texttt{predictable\_process} \; M \; F \; t_0 \; (\lambda\_. \; f)$"
+  using measurable_compose_rev[OF assms(2)] assms(1) 
+  by (unfold_locales) (auto simp add: measurable_split_conv)
+\end{lstlisting}
+}
+\end{isalemma}
+
+\begin{isalemma}
+{\small
+\begin{lstlisting}[style=isabelle]
+lemma (in filtered_measure) predictable_process_const:
+  assumes "$\texttt{fst} \; \in \texttt{borel\_measurable} \; \Sigma_P$" "$c \in \texttt{borel\_measurable} \; \texttt{borel}$"
+  shows "$\texttt{predictable\_process} \; M \; F \; t_0 \; (\lambda i \_. \; c \; i)$"
+  using assms by (unfold_locales) (simp add: measurable_split_conv)
+\end{lstlisting}
+}
+\end{isalemma}
+
+We will now show that a predictable process is necessarily progressively measurable.
+
+\begin{lemma}
+	A predictable process $(X_t)_{[t_0,\infty)}$ is also progressively measurable.
+\end{lemma}
+\begin{proof}
+	Let $i \ge t_0$. We will show that the map $\iota : [t_0, i] \times \Omega \rightarrow [t_0,\infty) \times \Omega$, defined by $\iota(j,x) = (\min(i, j),x)$ is $(\mathcal{B}([t_0,i]) \otimes F_i)$-$\Sigma_P$-measurable. On this domain $\iota = \texttt{id}\vert_{[t_0, i]}$. Therefore, the statement follows simply from definitions of predictability and progressive measurability.
+	
+	For any $S$ in the generating set of $\Sigma_P$, we will show that $\iota^{-1}(S) \in \mathcal{B}([t_0,i]) \otimes F_i$. This is enough to show the required measurability.
+	
+	First, let $S = \{t_0\} \times A$ for some $A \in F_{t_0}\}$.
+	Then
+	\[
+		\iota^{-1}(S) = \{t_0\} \times A \in \mathcal{B}([t_0,i]) \otimes F_i
+	\]
+	since $\{t_0\}$ is closed and $F_{t_0} \subseteq F_i$.
+	
+	Next, let $S = (s,t] \times A$ for some $A \in F_s$ and $s, t \ge t_0$ with $s < t$.
+	Then
+	\[
+		\iota^{-1}(S) = (s, \min(i, t)] \times A
+	\]
+	
+	Assume $s \le i$. Then $A \in F_i$. Furthermore, $(s, \min(i, t)] \in \mathcal{B}([t_0,i])$ since the $\sigma$-algebra $\mathcal{B}([t_0,i])$ is generated by half-open intervals. 
+	Hence, $\iota^{-1}(S) \in \mathcal{B}([t_0,i]) \otimes F_i$.
+	
+	Assume $s > i$. Then $\iota^{-1}(S) = \varnothing \in \mathcal{B}([t_0,i]) \otimes F_i$. This covers all cases and the proof is complete.
+\end{proof}
+
+\begin{remark}
+	The definition of $\psi$ vacuously uses the function $\min(i,\cdot)$. We aim to show how the formalization of a
+\end{remark}
+
+We formalize this fact as a sublocale relation.
+
+\begin{isalemma}
+{\small
+\begin{lstlisting}[style=isabelle]
+sublocale predictable_process $\subseteq$ progressive_process
+  $\dots$
+\end{lstlisting}
+}
+\end{isalemma}
+
+In the scope of our thesis, we will only use results concerning discrete-time predictable processes. We will now show that the above definitions for predictable processes coincide when the index set is $\mathbb{N}$. First we show the following lemma.
+
+\begin{theorem}
+	Let $(\bigcup_{i \in \mathbb{N}} \; \{i\} \times A_i) \in \Sigma_P$ for some collection of sets $(A_i)_{i \in \mathbb{N}}$. Then $A_0 \in F_0$ and $A_{i+1} \in F_i$ for all $i \in \mathbb{N}$.
+\end{theorem}
+\begin{proof}
+	Consider the set 
+	\[
+		\mathcal{D} = \{S \in \Sigma_P \;\vert\; \forall (A_i)_{i \in \mathbb{N}}. \; S = (\bigcup_{i \in \mathbb{N}} \{i\} \times A_i) \Longrightarrow A_{i+1} \in F_i \;\wedge\; A_0 \in F_0 \}
+	\]
+	We will show that $\mathcal{D}$ constitutes a $\sigma$-algebra. Obviously $\varnothing \in \mathcal{D}$.
+	
+	Assume $S \in \mathcal{D}$. 
+	
+	Let $(A_i)_{i \in \mathbb{N}}$ be a family of sets with $(\mathbb{N} \times \Omega) \setminus S = (\bigcup_{i \in \mathbb{N}} \{i\} \times A_i)$. Then
+	\begin{align*}
+		S &= (\mathbb{N} \times \Omega) \setminus (\bigcup_{i \in \mathbb{N}} \{i\} \times A_i) \\
+		&= (\bigcup_{i \in \mathbb{N}} \{i\} \times \Omega) \setminus (\bigcup_{i \in \mathbb{N}} \{i\} \times A_i) \\
+		&= (\bigcup_{i \in \mathbb{N}} \{i\} \times (\Omega \setminus A_i))
+	\end{align*}
+	Hence, we know $\Omega \setminus A_{i+1} \in F_i$ and $\Omega \setminus A_0 \in F_0$. Therefore, $A_{i+1} \in F_i$ and $A_0 \in F_0$. We have $(\mathbb{N} \times \Omega) \setminus S \in \mathcal{D}$.
+	
+	Assume $S_i \in \mathcal{D}$ for $i \in \mathbb{N}$. 
+	
+	Let $(A_i)_{i \in \mathbb{N}}$ be a family of sets with $(\bigcup_{i \in \mathbb{N}} S_i) = (\bigcup_{i \in \mathbb{N}} \{i\} \times A_i)$. For each $S_i$, we need to find some family of sets $(B_j(i))_{j \in \mathbb{N}}$, such that $S_i = (\bigcup_{j \in \mathbb{N}} \{j\} \times B_j(i))$. Define
+	\[
+		B_j(i) = \pi_2(S_i \cap \{j\} \times \Omega)
+	\]
+	The intuition is as follows. We first select only those pairs in $S_i$, with the first component equal to $j$. Then we project onto the second component. Hence, we have the equality
+	\[
+		\{j\} \times B_j(i) = S_i \cap \{j\} \times \Omega
+	\]
+	Therefore $S_i = (\bigcup_{j \in \mathbb{N}} \{j\} \times B_j(i))$. We have $B_{j+1}(i) \in F_j$ and $B_0(i) \in F_0$. Furthermore, we know
+	\begin{align*}
+		A_i &= \pi_2\left((\bigcup_{j \in \mathbb{N}} S_j) \cap \{i\} \times \Omega\right) \\
+		&= \bigcup_{j \in \mathbb{N}} \pi_2(S_j \cap \{i\} \times \Omega) \\
+		&= \bigcup_{j \in \mathbb{N}} B_i(j)
+	\end{align*}
+	Hence, $A_{i + 1} \in F_i$ and $A_0 \in F_0$. Thus $\mathcal{D}$ is indeed a $\sigma$-algebra. Now we show 
+	\[
+		\{\{s + 1,\dots, t\} \times A \;\vert\; A \in F_s \;\wedge\; s < t \} \cup \{\{0\} \times A \;\vert\; A \in F_0\} \subseteq \mathcal{D}
+	\]
+	Let $S \in \{\{0\} \times A \;\vert\; A \in F_0\}$. Then $S = (\bigcup_{i \in \mathbb{N}} \{i\} \times A_i)$ implies $A_0 \in F_0$ and $A_i = \varnothing$ for $i > 0$. Hence $S \in \mathcal{D}$.
+	
+	Let $S = \{s + 1,\dots,t\} \times B$ with $s < t$ and $B \in F_s$ for some $s$, $t$ and $B$. Then, $S = (\bigcup_{i \in \mathbb{N}} \{i\} \times A_i)$ implies $A_i = B$ for $i \in \{s + 1,\dots,t\}$ and $A_i = \varnothing$ otherwise. Thus, $A_0 = \varnothing \in F_0$. Moreover, $A_{i + 1} = B \in F_i$ if $i \in \{s,\dots,t - 1\}$ since the subalgebras $F_i$ are nested, and $A_{i + 1} = \varnothing \in F_i$ for $i \notin \{s,\dots,t - 1\}$. Together with our previous result, this implies $\Sigma_P \subseteq \mathcal{D}$, which completes the proof.
+\end{proof}
+
+\begin{remark}
+	For the proof of this lemma in Isabelle, we have used the induction scheme \texttt{sigma\_sets.induct}, since the generated $\sigma$-algebra $\sigma(\cdot)$ is defined as an inductive set in Isabelle. The proof above demonstrates that this induction scheme is equivalent to the principle of ``good-sets'' which we have utilized.
+\end{remark}
+
+We can now characterize predictability in the discrete-setting as follows.
+
+\begin{theorem}
+	A stochastic process $(X_n)_{n \in \mathbb{N}}$ is predictable, if and only if $(X_{n + 1})_{n \in \mathbb{N}}$ is adapted to the filtration $(F_n)_{n \in \mathbb{N}}$ and $X_0$ is $F_0$-measurable.
+\end{theorem}
 

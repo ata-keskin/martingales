@@ -97,10 +97,10 @@ We show by contradiction that if $B_r(v) \cap S = \varnothing$,  then $A := f^{-
 
 The last inequality follows from the fact that $f(x) \in B_r(v)$ for $x \in A$. This contradicts our first assumption. Therefore $\mu(A) = 0$.
 
-Similar to the notation in Isabelle, we will use $-S$ to denote the complement of $S$. $- S$ is an open subset of $E$. By the previous lemma, there exist open balls $B_{r_i}(w_i)$ with $r_i \in \mathbb{Q}_{\ge 0}$, $w_i \in D$ for $i \in \mathbb{N}$ such that $\bigcup_i B_{r_i}(w_i) = - S$. Obviously, $w_i \in E \setminus S$ and $B_{r_i}(w_i) \cap S = \varnothing$ for $i \in \mathbb{N}$. It follows
+Notice that $E \setminus S$ is an open subset of $E$. By the previous lemma, there exist open balls $B_{r_i}(w_i)$ with $r_i \in \mathbb{Q}_{\ge 0}$, $w_i \in D$ for $i \in \mathbb{N}$ such that $\bigcup_i B_{r_i}(w_i) = - S$. Obviously, $w_i \in E \setminus S$ and $B_{r_i}(w_i) \cap S = \varnothing$ for $i \in \mathbb{N}$. It follows
 
 \begin{align*}
-	\mu(f^{-1}(- S)) &= \mu\left(\bigcup_i f^{-1}(B_{r_i}(w_i))\right) \\
+	\mu(f^{-1}(E \setminus S)) &= \mu\left(\bigcup_i f^{-1}(B_{r_i}(w_i))\right) \\
 	&\le \sum_i \mu(f^{-1}(B_{r_i}(w_i))) \\
 	&= 0
 \end{align*}
@@ -475,7 +475,7 @@ Hence, we have the following succint characterization.
 			  "$\texttt{integrable} \; M \; f$"
 			  "$\texttt{integrable} \; M \; g$"
 			  "$g \in \texttt{borel\_measurable} \; F$"
-		shows "AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; F \; f \; x = g \; x$"
+	  shows "AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; F \; f \; x = g \; x$"
 	  by (intro has_cond_exp_charact has_cond_expI' assms) auto
 	\end{lstlisting}
 }
@@ -677,7 +677,7 @@ If an integrable function $f$ is already $F$-measurable, then $\texttt{cond\_exp
 	corollary cond_exp_F_meas:
 	  assumes "$\texttt{integrable} \; M \; f$"
 			  "$f \in \texttt{borel\_measurable} \; F$"
-		shows "AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; F \; f \; x = f \; x$"
+	  shows "AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; F \; f \; x = f \; x$"
 	  by (rule cond_exp_charact, auto intro: assms)
 	\end{lstlisting}
 }

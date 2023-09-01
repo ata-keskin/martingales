@@ -11,8 +11,8 @@ locale stochastic_process =
   assumes random_variable[measurable]: "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow> X i \<in> borel_measurable M"
 begin
 
-definition left_continuous where "left_continuous = (AE \<xi> in M. \<forall>i. continuous (at_left i) (\<lambda>i. X i \<xi>))"
-definition right_continuous where "right_continuous = (AE \<xi> in M. \<forall>i. continuous (at_right i) (\<lambda>i. X i \<xi>))"
+definition left_continuous where "left_continuous = (AE \<xi> in M. \<forall>t. continuous (at_left t) (\<lambda>i. X i \<xi>))"
+definition right_continuous where "right_continuous = (AE \<xi> in M. \<forall>t. continuous (at_right t) (\<lambda>i. X i \<xi>))"
 
 end
 
@@ -390,7 +390,7 @@ qed
 
 lemma measurable_predictable_sigma_fst:
   assumes "countable \<I>" "\<I> \<subseteq> {{s<..t} | s t. t\<^sub>0 \<le> s \<and> s < t}" "{t\<^sub>0<..} \<subseteq> (\<Union>\<I>)"
-  shows "fst \<in> borel_measurable \<Sigma>\<^sub>P"
+  shows "fst \<in> \<Sigma>\<^sub>P \<rightarrow>\<^sub>M borel"
 proof -
   have "A \<times> space M \<in> sets \<Sigma>\<^sub>P" if "A \<in> sigma_sets {t\<^sub>0..} {{s<..t} | s t. t\<^sub>0 \<le> s \<and> s < t}" for A unfolding sets_predictable_sigma using that 
   proof (induction rule: sigma_sets.induct)
@@ -464,7 +464,7 @@ qed
 end
 
 locale predictable_process = filtered_measure M F t\<^sub>0 for M F t\<^sub>0 and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {second_countable_topology, banach}" +
-  assumes predictable: "case_prod X \<in> borel_measurable \<Sigma>\<^sub>P"
+  assumes predictable: "(\<lambda>(t, x). X t x) \<in> borel_measurable \<Sigma>\<^sub>P"
 begin
 
 lemmas predictableD = measurable_sets[OF predictable, unfolded space_predictable_sigma]
@@ -480,16 +480,16 @@ lemma (in nat_filtered_measure) measurable_predictable_sigma_snd:
   shows "snd \<in> \<Sigma>\<^sub>P \<rightarrow>\<^sub>M F 0"
   by (intro measurable_predictable_sigma_snd[of "range (\<lambda>x. {Suc x})"]) (force | simp add: greaterThan_0)+
 
+lemma (in nat_filtered_measure) measurable_predictable_sigma_fst:
+  shows "fst \<in> \<Sigma>\<^sub>P \<rightarrow>\<^sub>M borel"
+  by (intro measurable_predictable_sigma_fst[of "range (\<lambda>x. {Suc x})"]) (force | simp add: greaterThan_0)+
+
 lemma (in real_filtered_measure) measurable_predictable_sigma_snd:
   shows "snd \<in> \<Sigma>\<^sub>P \<rightarrow>\<^sub>M F 0"
   using real_arch_simple by (intro measurable_predictable_sigma_snd[of "range (\<lambda>x::nat. {0<..real (Suc x)})"]) (fastforce intro: add_increasing)+
 
-lemma (in nat_filtered_measure) measurable_predictable_sigma_fst:
-  shows "fst \<in> borel_measurable \<Sigma>\<^sub>P"
-  by (intro measurable_predictable_sigma_fst[of "range (\<lambda>x. {Suc x})"]) (force | simp add: greaterThan_0)+
-
 lemma (in real_filtered_measure) measurable_predictable_sigma_fst:
-  shows "fst \<in> borel_measurable \<Sigma>\<^sub>P"
+  shows "fst \<in> \<Sigma>\<^sub>P \<rightarrow>\<^sub>M borel"
   using real_arch_simple by (intro measurable_predictable_sigma_fst[of "range (\<lambda>x::nat. {0<..real (Suc x)})"]) (fastforce intro: add_increasing)+
 
 (* * *)
@@ -593,7 +593,7 @@ proof (unfold_locales)
       assume "S \<in> {{t\<^sub>0} \<times> A | A. A \<in> F t\<^sub>0}"
       then obtain A where S_is: "S = {t\<^sub>0} \<times> A" "A \<in> F t\<^sub>0" by blast
       hence "?min -` S \<inter> ({t\<^sub>0..i} \<times> space M) = {t\<^sub>0} \<times> A" using asm sets.sets_into_space[OF S_is(2)] by (auto simp add: space_F)
-      thus ?thesis using S_is sets_F_mono[OF order_refl asm] asm by (fastforce simp add: sets_restrict_space_iff)
+      thus ?thesis using S_is(2) sets_F_mono[OF order_refl asm] asm by (fastforce simp add: sets_restrict_space_iff)
     qed
     hence "?min -` S \<inter> space (restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i) \<in> restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i" by (simp add: space_pair_measure space_F[OF asm])
   }
@@ -646,6 +646,7 @@ next
   have a_in: "a \<subseteq> {0..} \<times> space M" using Compl(1) sets.sets_into_space sets_predictable_sigma space_predictable_sigma by metis
   hence A_in: "A i \<subseteq> space M" for i using Compl(4) by blast
   have a: "a = {0..} \<times> space M - (\<Union>i. {i} \<times> A i)" using a_in Compl(4) by blast
+  also have "... = - (\<Inter>j. - ({j} \<times> (space M - A j)))" by blast
   also have "... = (\<Union>j. {j} \<times> (space M - A j))" by blast
   finally have *: "(space M - A (Suc i)) \<in> F i" "(space M - A 0) \<in> F 0" using Compl(2,3) by auto
   {
@@ -688,18 +689,42 @@ proof (unfold_locales, intro borel_measurableI)
     by (subst Times_Int_distrib1[of "{Suc i}" UNIV "space M", simplified], subst inf.commute, subst Int_assoc[symmetric], subst Int_range_binary) 
        (intro sigma_sets_Inter binary_in_sigma_sets, fast)+
   moreover have "case_prod X -` S \<inter> ({Suc i} \<times> space M) = {Suc i} \<times> (X (Suc i) -` S \<inter> space M)" by (auto simp add: le_Suc_eq)
-  moreover have "... = (\<Union>j. {j} \<times> (if j = Suc i then (X (Suc i) -` S \<inter> space M) else {}))" by (auto split: if_splits)
+  moreover have "... = (\<Union>j. {j} \<times> (if j = Suc i then (X (Suc i) -` S \<inter> space M) else {}))" by (force split: if_splits)
   ultimately have "(\<Union>j. {j} \<times> (if j = Suc i then (X (Suc i) -` S \<inter> space M) else {})) \<in> \<Sigma>\<^sub>P" by argo
   thus "X (Suc i) -` S \<inter> space (F i) \<in> sets (F i)" using sets_in_filtration[of "\<lambda>j. if j = Suc i then (X (Suc i) -` S \<inter> space M) else {}"] space_F by presburger
 qed
 
-theorem nat_predictable_process_iff: "nat_predictable_process M F X = nat_adapted_process M F (\<lambda>i. X (Suc i))"
-proof (intro iffI nat_predictable_process.adapted_Suc)
-  assume "nat_adapted_process M F (\<lambda>i. X (Suc i))"
-  show "nat_predictable_process M F X" sorry
+theorem nat_predictable_process_iff: "nat_predictable_process M F X \<longleftrightarrow> nat_adapted_process M F (\<lambda>i. X (Suc i)) \<and> X 0 \<in> borel_measurable (F 0)"
+proof (intro iffI)
+  assume asm: "nat_adapted_process M F (\<lambda>i. X (Suc i)) \<and> X 0 \<in> borel_measurable (F 0)"
+  interpret nat_adapted_process M F "\<lambda>i. X (Suc i)" using asm by blast
+  have "(\<lambda>(x, y). X x y) \<in> borel_measurable \<Sigma>\<^sub>P"
+  proof (intro borel_measurableI)
+    fix S :: "'b set" assume open_S: "open S"
+    have "{i} \<times> (X i -` S \<inter> space M) \<in> sets \<Sigma>\<^sub>P" for i 
+    proof (cases i)
+      case 0
+      then show ?thesis unfolding sets_predictable_sigma 
+        using measurable_sets[OF _ borel_open[OF open_S], of "X 0" "F 0"] asm 
+        by (auto simp add: space_F)
+    next
+      case (Suc i)
+      have "{Suc i} = {i<..Suc i}" by fastforce
+      then show ?thesis unfolding sets_predictable_sigma 
+        using measurable_sets[OF adapted borel_open[OF open_S], of i] 
+        by (intro sigma_sets.Basic, auto simp add: space_F Suc)
+    qed
+    moreover have "(\<lambda>(x, y). X x y) -` S \<inter> space \<Sigma>\<^sub>P = (\<Union>i. {i} \<times> (X i -` S \<inter> space M))" by fastforce
+    ultimately show "(\<lambda>(x, y). X x y) -` S \<inter> space \<Sigma>\<^sub>P \<in> sets \<Sigma>\<^sub>P" by simp
+  qed
+  thus "nat_predictable_process M F X" by (unfold_locales)
+next
+  assume asm: "nat_predictable_process M F X"
+  interpret nat_predictable_process M F X by (rule asm)
+  show "nat_adapted_process M F (\<lambda>i. X (Suc i)) \<and> X 0 \<in> borel_measurable (F 0)" using adapted_Suc by simp
 qed
 
-subsection "Processes with an Ordering"
+subsection "Locales for Processes with an Ordering"
 
 text \<open>These locales are useful in the definition of sub- and supermartingales.\<close>
 
@@ -736,7 +761,7 @@ sublocale real_predictable_process_order \<subseteq> real_progressive_process_or
 sublocale real_progressive_process_order \<subseteq> real_adapted_process_order ..
 sublocale real_adapted_process_order \<subseteq> real_stochastic_process_order ..
 
-subsection "Processes with a Sigma Finite Filtration"
+subsection "Locales for Processes with a Sigma Finite Filtration"
 
 locale sigma_finite_adapted_process = adapted_process + sigma_finite_filtered_measure
 locale sigma_finite_progressive_process = progressive_process + sigma_finite_filtered_measure
@@ -795,5 +820,5 @@ sublocale nat_sigma_finite_adapted_process_order \<subseteq> nat_sigma_finite_fi
 sublocale real_sigma_finite_adapted_process_order \<subseteq> real_sigma_finite_filtered_measure ..
 
 text \<open>Thus, right from the outset, we have pretty much every locale we may need.\<close>
-
+                                                                            
 end
