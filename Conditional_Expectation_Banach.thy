@@ -1,6 +1,8 @@
 theory Conditional_Expectation_Banach                                                                 
 imports "HOL-Probability.Conditional_Expectation" Sigma_Finite_Measure_Addendum
-begin                                           
+begin
+
+section \<open>Conditional Expectation in Banach Spaces\<close>
 
 definition has_cond_exp :: "'a measure \<Rightarrow> 'a measure \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> ('a \<Rightarrow> 'b::{real_normed_vector, second_countable_topology}) \<Rightarrow> bool" where 
   "has_cond_exp M F f g = ((\<forall>A \<in> sets F. (\<integral> x \<in> A. f x \<partial>M) = (\<integral> x \<in> A. g x \<partial>M))
@@ -642,7 +644,7 @@ proof (rule has_cond_exp_charact, intro has_cond_expI')
   finally show "(\<integral>x\<in>A. (\<Sum>i\<in>I. f i x)\<partial>M) = (\<integral>x\<in>A. (\<Sum>i\<in>I. cond_exp M F (f i) x)\<partial>M)" by auto
 qed (auto simp add: assms integrable_cond_exp)
 
-subsection "Ordered Banach Spaces"
+subsection "Linearly Ordered Banach Spaces"
 
 lemma cond_exp_gr_c:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"

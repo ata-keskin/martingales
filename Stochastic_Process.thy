@@ -2,6 +2,8 @@ theory Stochastic_Process
 imports Filtered_Measure Measure_Space_Addendum
 begin      
 
+section \<open>Stochastic Processes\<close>
+
 subsection "Stochastic Process"
 
 text \<open>A stochastic process is a collection of random variables, indexed by a type \<^typ>\<open>'b\<close>.\<close>
@@ -443,7 +445,7 @@ proof -
       moreover have "{t\<^sub>0..} - {t<..} \<in> sigma_sets {t\<^sub>0..} ((\<inter>) {t\<^sub>0..} ` sigma_sets UNIV (range greaterThan))" using asm by (intro sigma_sets.Compl sigma_sets.Basic) auto
       ultimately show "{s<..t} \<in> sigma_sets {t\<^sub>0..} ((\<inter>) {t\<^sub>0..} ` sigma_sets UNIV (range greaterThan))" unfolding * Int_range_binary[of "{s<..}"] by (intro sigma_sets_Inter[OF _ binary_in_sigma_sets]) auto        
     qed
-    thus ?thesis unfolding borel_Ioi restrict_space_def emeasure_sigma by (force intro: sigma_eqI)     
+    thus ?thesis unfolding borel_Ioi restrict_space_def emeasure_sigma by (force intro: sigma_eqI)
   qed
   ultimately have "restrict_space borel {t\<^sub>0..} \<Otimes>\<^sub>M sigma (space M) {} \<subseteq> sets \<Sigma>\<^sub>P" 
     unfolding sets_pair_measure space_restrict_space space_measure_of_conv
@@ -714,102 +716,5 @@ next
   interpret nat_predictable_process M F X by (rule asm)
   show "nat_adapted_process M F (\<lambda>i. X (Suc i)) \<and> X 0 \<in> borel_measurable (F 0)" using adapted_Suc by simp
 qed
-
-subsection "Locales for Processes with an Ordering"
-
-text \<open>These locales are useful in the definition of sub- and supermartingales.\<close>
-
-locale stochastic_process_order = stochastic_process M t\<^sub>0 X for M t\<^sub>0 and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
-locale adapted_process_order = adapted_process M F t\<^sub>0 X for M F t\<^sub>0 and X :: "_  \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
-locale progressive_process_order = progressive_process M F t\<^sub>0 X for M F t\<^sub>0 and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
-locale predictable_process_order = predictable_process M F t\<^sub>0 X for M F t\<^sub>0 and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology, ordered_real_vector}"
-
-(* Discrete Time *)
-
-locale nat_stochastic_process_order = stochastic_process_order M "0 :: nat" X for M X
-locale nat_adapted_process_order = adapted_process_order M F "0 :: nat" X for M F X
-locale nat_progressive_process_order = progressive_process_order M F "0 :: nat" X for M F X
-locale nat_predictable_process_order = predictable_process_order M F "0 :: nat" X for M F X
-
-(* Continuous Time *)
-
-locale real_stochastic_process_order = stochastic_process_order M "0 :: real" X for M X
-locale real_adapted_process_order = adapted_process_order M F "0 :: real" X for M F X
-locale real_progressive_process_order = progressive_process_order M F "0 :: real" X for M F X
-locale real_predictable_process_order = predictable_process_order M F "0 :: real" X for M F X
-
-(* Hierarchies *)
-
-sublocale predictable_process_order \<subseteq> progressive_process_order ..
-sublocale progressive_process_order \<subseteq> adapted_process_order ..
-sublocale adapted_process_order \<subseteq> stochastic_process_order ..
-
-sublocale nat_predictable_process_order \<subseteq> nat_progressive_process_order ..
-sublocale nat_progressive_process_order \<subseteq> nat_adapted_process_order ..
-sublocale nat_adapted_process_order \<subseteq> nat_stochastic_process_order ..
-
-sublocale real_predictable_process_order \<subseteq> real_progressive_process_order ..
-sublocale real_progressive_process_order \<subseteq> real_adapted_process_order ..
-sublocale real_adapted_process_order \<subseteq> real_stochastic_process_order ..
-
-subsection "Locales for Processes with a Sigma Finite Filtration"
-
-locale sigma_finite_adapted_process = adapted_process + sigma_finite_filtered_measure
-locale sigma_finite_progressive_process = progressive_process + sigma_finite_filtered_measure
-locale sigma_finite_predictable_process = predictable_process + sigma_finite_filtered_measure
-
-locale sigma_finite_adapted_process_order = adapted_process_order + sigma_finite_filtered_measure
-locale sigma_finite_progressive_process_order = progressive_process_order + sigma_finite_filtered_measure
-locale sigma_finite_predictable_process_order = predictable_process_order + sigma_finite_filtered_measure
-
-(* Discrete Time *)
-
-locale nat_sigma_finite_adapted_process = sigma_finite_adapted_process M F "0 :: nat" X for M F X
-locale nat_sigma_finite_progressive_process = sigma_finite_progressive_process M F "0 :: nat" X for M F X
-locale nat_sigma_finite_predictable_process = sigma_finite_predictable_process M F "0 :: nat" X for M F X
-
-locale nat_sigma_finite_adapted_process_order = sigma_finite_adapted_process_order M F "0 :: nat" X for M F X
-locale nat_sigma_finite_progressive_process_order = sigma_finite_progressive_process_order M F "0 :: nat" X for M F X
-locale nat_sigma_finite_predictable_process_order = sigma_finite_predictable_process_order M F "0 :: nat" X for M F X
-
-(* Continuous Time *)
-
-locale real_sigma_finite_adapted_process = sigma_finite_adapted_process M F "0 :: real" X for M F X
-locale real_sigma_finite_progressive_process = sigma_finite_progressive_process M F "0 :: real" X for M F X
-locale real_sigma_finite_predictable_process = sigma_finite_predictable_process M F "0 :: real" X for M F X
-
-locale real_sigma_finite_adapted_process_order = sigma_finite_adapted_process_order M F "0 :: real" X for M F X
-locale real_sigma_finite_progressive_process_order = sigma_finite_progressive_process_order M F "0 :: real" X for M F X
-locale real_sigma_finite_predictable_process_order = sigma_finite_predictable_process_order M F "0 :: real" X for M F X
-
-(* Hierarchies (1/2) *)
-
-sublocale sigma_finite_predictable_process \<subseteq> sigma_finite_progressive_process ..
-sublocale sigma_finite_progressive_process \<subseteq> sigma_finite_adapted_process .. 
-
-sublocale nat_sigma_finite_predictable_process \<subseteq> nat_sigma_finite_progressive_process ..
-sublocale nat_sigma_finite_progressive_process \<subseteq> nat_sigma_finite_adapted_process .. 
-
-sublocale real_sigma_finite_predictable_process \<subseteq> real_sigma_finite_progressive_process ..
-sublocale real_sigma_finite_progressive_process \<subseteq> real_sigma_finite_adapted_process ..
-
-sublocale nat_sigma_finite_adapted_process \<subseteq> nat_sigma_finite_filtered_measure ..
-sublocale real_sigma_finite_adapted_process \<subseteq> real_sigma_finite_filtered_measure ..
-
-(* Hierarchies (2/2) *)
-
-sublocale sigma_finite_predictable_process_order \<subseteq> sigma_finite_progressive_process_order ..
-sublocale sigma_finite_progressive_process_order \<subseteq> sigma_finite_adapted_process_order .. 
-
-sublocale nat_sigma_finite_predictable_process_order \<subseteq> nat_sigma_finite_progressive_process_order ..
-sublocale nat_sigma_finite_progressive_process_order \<subseteq> nat_sigma_finite_adapted_process_order .. 
-
-sublocale real_sigma_finite_predictable_process_order \<subseteq> real_sigma_finite_progressive_process_order ..
-sublocale real_sigma_finite_progressive_process_order \<subseteq> real_sigma_finite_adapted_process_order ..
-
-sublocale nat_sigma_finite_adapted_process_order \<subseteq> nat_sigma_finite_filtered_measure ..
-sublocale real_sigma_finite_adapted_process_order \<subseteq> real_sigma_finite_filtered_measure ..
-
-text \<open>Thus, right from the outset, we have pretty much every locale we may need.\<close>
                                                                             
 end

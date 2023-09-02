@@ -24,7 +24,7 @@ locale stochastic_process =
 }
 \end{isadefinition}
 
-The measure $M$ represents the underlying measure space on which the stochastic process is defined. The index $t_0$ represents the initial point in time beyond which the process $X$ should be defined. As such, this locale formalizes a stochastic process defined on an interval $[t_0, \infty)$. 
+The measure $M$ represents the underlying measure space on which the stochastic process is defined. The index $t_0$ represents the initial point in time beyond which the process $X$ should be defined. As such, this locale formalizes a stochastic process defined on the interval $[t_0, \infty)$. 
 
 We have the following lemmas to introduce ``constant'' stochastic processes.
 
@@ -209,9 +209,29 @@ locale sigma_finite_filtered_measure = filtered_measure +
   \end{lstlisting}
 }
 \end{isadefinition}
+
 \begin{remark}
 	Since we artifically designated an element $t_0$ to represent the least index in consideration, we only need to show $\sigma$-finiteness for the sub-$\sigma$-algebra $F_{t_0}$. $\sigma$-finiteness of all other sub-$\sigma$-algebras follows from the monotonicity of the filtration.
 \end{remark}
+
+For the sake of completeness, we also introduce a local covering the case where the measure space is finite.
+
+\begin{isadefinition}
+{\small
+\begin{lstlisting}[style=isabelle]
+locale finite_filtered_measure = filtered_measure + finite_measure
+
+sublocale finite_filtered_measure $\subseteq$ sigma_finite_filtered_measure 
+  using subalgebra by (unfold_locales, 
+  					   blast, 
+					   meson dual_order.refl finite_measure_axioms finite_measure_def 
+							 finite_measure_restr_to_subalg subalgebra
+							 sigma_finite_measure.sigma_finite_countable)
+
+  \end{lstlisting}
+}
+\end{isadefinition}
+
 
 In order to make the ideas in this section a bit more concrete, we present the following two filtrations as examples.
 
@@ -303,7 +323,7 @@ This concludes our development of filtered measure spaces.
 
 \section{Adapted Processes}
 
-A stochastic process $X$ is called adapted to a filtration $(F_t)_{t \in [t_0, \infty)}$ if, for every index $t \ge t_0$, the random variable $X_t$ is measurable with respect to the $\sigma$-algebra $F_t$. This means that the value of $X_t$ depends only on the information available up to time $t$. In other words, the process ``adapts'' to the information in a way that it cannot anticipate future values based on events that have not occurred yet. We introduce the following locale.
+We call a stochastic process $(X_t)_{t \in [t_0, \infty)}$ is \textit{adapted to the filtration $(F_t)_{t \in [t_0, \infty)}$} if, for every index $t \ge t_0$, the random variable $X_t$ is measurable with respect to the $\sigma$-algebra $F_t$. This means that the value of $X_t$ depends only on the information available up to time $t$. In other words, the process ``adapts'' to the information in a way that it cannot anticipate future values based on events that have not occurred yet. We introduce the following locale.
 
 \begin{isalemma}
 {\small
@@ -379,7 +399,7 @@ Adapted processes are cruicial for defining martingales. A martingale is by defi
 The definition of a progressively measurable process is more intricate.
 
 \begin{definition}
-	Let $F$ be a filtration of the measure space $M$. A stochastic process $X$ is called progressively measurable (or simply \textit{progressive}) if, for every index $t \ge t_0$, the map $[t_0, t] \times \Omega \rightarrow E$ defined by $(i, w) \mapsto X_i(w)$ is measurable with respect to the $\sigma$-algebra $\mathcal{B}([t_0, t]) \otimes F_t$. Here $\mathcal{B}([t_0, t])$ denotes the Borel $\sigma$-algebra on $[t_0, t]$ induced by the order topology.
+	Let $(F_t)_{t \in [t_0, \infty)}$ be a filtration of the measure space $M$. A stochastic process $(X_t)_{t \in [t_0, \infty)}$ is called progressively measurable (or simply \textit{progressive}) if, for every index $t \ge t_0$, the map $[t_0, t] \times \Omega \rightarrow E$ defined by $(i, w) \mapsto X_i(w)$ is measurable with respect to the $\sigma$-algebra $\mathcal{B}([t_0, t]) \otimes F_t$. Here $\mathcal{B}([t_0, t])$ denotes the Borel $\sigma$-algebra on $[t_0, t]$ induced by the order topology.
 \end{definition}
 
 The formalized version is as follows.
@@ -481,7 +501,7 @@ This means that the value of the process in the future, $X_{i+1}$, can be ``pred
 	\[
 		\Sigma_P = \sigma(\{(s,t] \times A \;\vert\; A \in F_s \;\wedge\; t_0 \le s \;\wedge\; s < t \} \cup \{\{t_0\} \times A \;\vert\; A \in F_{t_0}\})
 	\]
-	A stochastic process $(X_t)_{t\in[t_0, \infty)}$ is called \textit{predictable} if the map $(t,x) \mapsto X_t(x)$ is measurable with respect to this $\sigma$-algebra.
+	A stochastic process $(X_t)_{t\in[t_0, \infty)}$ is called \textit{predictable} if the map $[t_0, \infty) \times \Omega \rightarrow E$ defined by $(t,x) \mapsto X_t(x)$ is measurable with respect to this $\sigma$-algebra.
 \end{definition}
 
 At first glance, it is difficult to make intuitive sense of this definition. Investigating properties of predictable processes in arbitrary settings is well beyond the scope of this thesis. However, we will make the following remark.
@@ -505,18 +525,53 @@ locale predictable_process = filtered_measure $M$ $F$ $t_0$ for $M$ $F$ $t_0$
 In the previous section, our results concerning progressively measurable processes all made use of the fact that the projection functions $\pi_1 : [t_0, \infty) \times \Omega \rightarrow [t_0, \infty)$ and $\pi_2 : [t_0, \infty) \times \Omega \rightarrow \Omega$ are measurable with respect to the underlying $\sigma$-algebra. In that setting, this was a triviality, since the $\sigma$-algebra in question was the product $\sigma$-algebra $\mathcal{B}([t_0, t]) \otimes F_t$ for some $t \ge t_0$, which has many nice properties. We wish to show a similar statement for the projection functions $\pi_i$ when $[t_0, \infty) \times \Omega$ is equipped with the $\sigma$-algebra $\Sigma_P$. We have come up with a sufficient condition on the index set $[t_0, \infty)$ that guarantees this.
 
 \begin{lemma}
-	Assume there exists some countable family of sets $\mathcal{I} \subseteq \{(s, t] \;\vert\; t_0 \le s \;\wedge\; s < t\}$ such that $(t_0, \infty) \subseteq (\bigcup \mathcal{I})$. Then, $\pi_1$ is $\Sigma_P$-Borel-measurable and $\pi_2$ is $\Sigma_P$-$F_{t_0}$-measurable.
+	Assume there exists some countable family of sets $\mathcal{I} \subseteq \{(s, t] \;\vert\; t_0 \le s \;\wedge\; s < t\}$ such that $(t_0, \infty) \subseteq (\bigcup \mathcal{I})$. Let $\pi_1 : [t_0, \infty) \times \Omega \rightarrow [t_0, \infty)$ and $\pi_2 : [t_0, \infty) \times \Omega \rightarrow \Omega$ be projections onto respective components. Then, $\pi_1$ is $\Sigma_P$-Borel-measurable and $\pi_2$ is $\Sigma_P$-$F_{t_0}$-measurable.
 \end{lemma}
 \begin{proof}
 	We first show that $\pi_1$ is $\Sigma_P$-Borel-measurable.
 	
-	//TODO
+	$\pi_1$ is trivially $(\mathcal{B}([t_0,\infty)) \otimes \sigma(\varnothing))$-Borel-measurable. Hence, if we can show 
+	\[
+		(\mathcal{B}([t_0,\infty)) \otimes \sigma(\varnothing)) \subseteq \Sigma_P
+	\]
+	then this implies that $\pi_1$ is $\Sigma_P$-Borel-measurable. For this, we will show that the Borel $\sigma$-algebra $\mathcal{B}([t_0,\infty))$ coincides with the $\sigma$-algebra generated by the set $\{(s,t] \;\vert\; t_0 \le s \;\wedge\; s < t\}$.
 	
-	Next, we shot that $\pi_2$ is $\Sigma_P$-$F_{t_0}$-measurable.
+	Since the ordering on $[t_0, \infty)$ is linear, the set of open rays $\{(s,\infty) \;\vert\; s \ge t_0\}$ generates the order topology on $\mathcal{B}([t_0,\infty))$. This also depends on the premise that the order topology is second-countable. Let $c \ge t_0$. We have
+	\begin{align*}
+		(c, \infty) &= (c, \infty) \cap (\bigcup \mathcal{I}) \\
+		&= (\bigcup_{I \in \mathcal{I}} I \cap (c, \infty))
+	\end{align*}
+	From the assumptions, we know that 
+	\[
+		I \cap (c, \infty) \in \{(s, t] \;\vert\; t_0 \le s \;\wedge\; s < t\}
+	\]
+	for $I \in \mathcal{I}$. Hence $(c, \infty) \in \sigma(\{(s,t] \;\vert\; t_0 \le s \;\wedge\; s < t\})$, since $\mathcal{I}$ is countable.
+	In the other direction, any interval $(s,t]$ with $s \ge t_0$ is obviously $\mathcal{B}([t_0,\infty))$-measurable. Thus, the $\sigma$-algebras indeed coincide. This completes the first part of the proof.
+	
+	Next, we show that $\pi_2$ is $\Sigma_P$-$F_{t_0}$-measurable.
+	Let $S \in F_{t_0}$. We have
+	\[
+		\pi_2^{-1}(S) = [t_0, \infty) \times S
+	\]
+	The assumptions already imply $(t_0, \infty) = (\bigcup \mathcal{I})$. Furthermore $S \in F_t$ for all $t \ge t_0$. Hence, we have
+	\[
+		(t_0, \infty) \times S = (\bigcup \mathcal{I}) \times S \in \Sigma_P \;\;\textrm{and}\;\; \{t_0\} \times S \in \Sigma_P
+	\]
+	which together imply $[t_0, \infty) \times S \in \Sigma_P$.
 \end{proof}
 
 \begin{remark}
-	We believe strongly that $\pi_2$ is not $\Sigma_P$-$F_{t}$-measurable for $t > t_0$ in general, or at least our condition is not sufficient to show this. This stems from the fact that $\pi_2^{-1}(S) = [t_0, \infty) \times S$ and the element $t_0$ can only originate from some set in $\{\{t_0\} \times A \;\vert\; A \in F_{t_0}\}$.
+	Our formal proof for the $\Sigma_P$-Borel-measurability of $\pi_1$ follows an alternative path to the one given here. The lemma \texttt{borel\_Ioi} establishes that the Borel $\sigma$-algebra  $\mathcal{B}$ on the entire space is generated by open rays. We then consider the restricted $\sigma$-algebra $\mathcal{B}([t_0,\infty))$, which is defined in Isabelle as
+	\[
+		\mathcal{B}([t_0,\infty)) = \sigma\left(\left\{[t_0, \infty) \cap A \;\vert\; A \in \mathcal{B}\right\}\right)
+	\]
+	Together with \texttt{borel\_Ioi} this yields
+	\[
+	 	\mathcal{B}([t_0,\infty)) = \sigma\left(\left\{[t_0, \infty) \cap A \;\vert\; A \in \sigma(\{(s,\infty) \;\vert\; s \in (-\infty,\infty)\})\right\}\right)
+	\]
+	In our formalization, we show that this $\sigma$-algebra on the right hand side is equal to $\sigma(\{(s,t] \;\vert\; t_0 \le s \;\wedge\; s < t\})$.
+	
+	On a different note, we believe strongly that $\pi_2$ is not $\Sigma_P$-$F_t$-measurable for $t > t_0$ in general, or at least our condition is not sufficient to show this. This stems from the fact that $\pi_2^{-1}(S) = [t_0, \infty) \times S$ and the element $t_0$ can only originate from some set in $\{\{t_0\} \times A \;\vert\; A \in F_{t_0}\}$. However, in general $F_t \not\subseteq F_{t_0}$.
 \end{remark}
 
 In the discrete-time case, the family $\mathcal{I} = \{\{n + 1\}\}_{n \in \mathbb{N}}$ fulfills this condition. Similarly, in the continous-time case we can use $\mathcal{I} = \{(0,n + 1]\}\}_{n \in \mathbb{N}}$. The following lemmas in Isabelle reflect this.
@@ -583,14 +638,14 @@ lemma (in filtered_measure) predictable_process_const:
 We will now show that a predictable process is necessarily progressively measurable.
 
 \begin{lemma}
-	A predictable process $(X_t)_{[t_0,\infty)}$ is also progressively measurable.
+	A predictable process $(X_t)_{t \in [t_0,\infty)}$ is also progressively measurable.
 \end{lemma}
 \begin{proof}
-	Let $i \ge t_0$. We will show that the map $\iota : [t_0, i] \times \Omega \rightarrow [t_0,\infty) \times \Omega$, defined by $\iota(j,x) = (\min(i, j),x)$ is $(\mathcal{B}([t_0,i]) \otimes F_i)$-$\Sigma_P$-measurable. On this domain $\iota = \texttt{id}\vert_{[t_0, i]}$. Therefore, the statement follows simply from definitions of predictability and progressive measurability.
+	Let $i \ge t_0$. Let $\iota$ denote the identity function, restricted to the domain $[t_0, i] \times \Omega$, i.e. $\iota = \texttt{id}\vert_{[t_0,t]}$. We aim to show that $\iota$ is $(\mathcal{B}([t_0,i]) \otimes F_i)$-$\Sigma_P$-measurable. The statement follows simply from definitions of predictability and progressive measurability.
 	
 	For any $S$ in the generating set of $\Sigma_P$, we will show that $\iota^{-1}(S) \in \mathcal{B}([t_0,i]) \otimes F_i$. This is enough to show the required measurability.
 	
-	First, let $S = \{t_0\} \times A$ for some $A \in F_{t_0}\}$.
+	First, let $S = \{t_0\} \times A$ for some $A \in F_{t_0}$.
 	Then
 	\[
 		\iota^{-1}(S) = \{t_0\} \times A \in \mathcal{B}([t_0,i]) \otimes F_i
@@ -608,10 +663,6 @@ We will now show that a predictable process is necessarily progressively measura
 	
 	Assume $s > i$. Then $\iota^{-1}(S) = \varnothing \in \mathcal{B}([t_0,i]) \otimes F_i$. This covers all cases and the proof is complete.
 \end{proof}
-
-\begin{remark}
-	The definition of $\psi$ vacuously uses the function $\min(i,\cdot)$. We aim to show how the formalization of a
-\end{remark}
 
 We formalize this fact as a sublocale relation.
 
@@ -676,8 +727,45 @@ In the scope of our thesis, we will only use results concerning discrete-time pr
 \end{remark}
 
 We can now characterize predictability in the discrete-setting as follows.
-
 \begin{theorem}
 	A stochastic process $(X_n)_{n \in \mathbb{N}}$ is predictable, if and only if $(X_{n + 1})_{n \in \mathbb{N}}$ is adapted to the filtration $(F_n)_{n \in \mathbb{N}}$ and $X_0$ is $F_0$-measurable.
 \end{theorem}
+\begin{proof}
+	Assume $(X_n)_{n \in \mathbb{N}}$ is predictable. Since predictable processes are also adapted, $X_0$ is $F_0$-measurable.
+	
+	Let $n \in \mathbb{N}$ and let $S$ be an open set. Consider the map $\psi$ defined by $\psi(i,x) = X_i(x)$. We have
+	\[
+		\psi^{-1}(S) \cap (\{n + 1\} \times \Omega) = \psi^{-1}(S) \cap ((n, n + 1] \times \Omega) \in \Sigma_P
+	\]
+	On the other hand
+	\[
+		\psi^{-1}(S) \cap (\{n + 1\} \times \Omega) = \{n + 1\} \times X_{n + 1}^{-1}(S)
+	\]
+	Applying the previous lemma for 
+	\[
+		A_i = 
+		\begin{cases}
+			X_{n + 1}^{-1}(S) &\quad \textrm{if} \; i = n + 1 \\
+			\varnothing &\quad \textrm{otherwise}
+		\end{cases}
+	\]
+	we get $X_{n + 1}^{-1}(S) \in F_n$. Hence $(X_{n + 1})_{n \in \mathbb{N}}$ is adapted to the filtration $(F_n)_{n \in \mathbb{N}}$.
+	
+	For the other direction, assume $(X_{n + 1})_{n \in \mathbb{N}}$ is adapted to the filtration $(F_n)_{n \in \mathbb{N}}$ and $X_0$ is $F_0$-measurable.
+	
+	Let $S$ be an open set. We have
+	\[
+		\{0\} \times X_0^{-1}(S) \in \Sigma_P
+	\]
+	using the definition of $\Sigma_P$ and the fact that $X_0$ is $F_0$-measurable. Similarly, for $n \in \mathbb{N}$ we have $X_{n + 1}^{-1}(S) \in F_n$. Hence
+	\[
+		\{n + 1\} \times X_{n + 1}^{-1}(S) = (n, n + 1] \times X_{n + 1}^{-1}(S) \in \Sigma_P
+	\]
+	Putting it all together, we have
+	\[
+		\psi^{-1}(S) = \left(\bigcup_{i \in \mathbb{N}} \{i\} \times X_i^{-1}(S) \right) \in \Sigma_P
+	\]
+	since $\Sigma_P$ is closed under countable unions. Thus $(X_n)_{n \in \mathbb{N}}$ is predictable.
+\end{proof}
 
+This finalizes our formalization of various types of stochastic processes in Isabelle.

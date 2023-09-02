@@ -12,8 +12,8 @@ session "Martingale" (AFP) = HOL +
     Bochner_Integration_Addendum
     Set_Integral_Addendum
     Sigma_Finite_Measure_Addendum
-    Filtered_Measure
     Conditional_Expectation_Banach
+    Filtered_Measure
     Stochastic_Process
     Martingale
 

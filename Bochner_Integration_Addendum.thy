@@ -2,6 +2,8 @@ theory Bochner_Integration_Addendum
   imports "HOL-Analysis.Bochner_Integration" Elementary_Metric_Spaces_Addendum
 begin
 
+section "Auxiliary Lemmas for Bochner Integration"
+
 subsection "Simple Functions"
   
 lemma integrable_implies_simple_function_sequence:

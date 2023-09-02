@@ -1,5 +1,5 @@
 theory Conditional_Expectation_Banach                                                                 
-imports "HOL-Probability.Conditional_Expectation" Sigma_Finite_Measure_Addendum Metric_Space_Addendum
+imports "HOL-Probability.Conditional_Expectation" Sigma_Finite_Measure_Addendum
 begin                                           
 
 definition has_cond_exp :: "'a measure \<Rightarrow> 'a measure \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> ('a \<Rightarrow> 'b::{real_normed_vector, second_countable_topology}) \<Rightarrow> bool" where 

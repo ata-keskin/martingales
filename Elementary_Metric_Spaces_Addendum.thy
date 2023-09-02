@@ -2,6 +2,8 @@ theory Elementary_Metric_Spaces_Addendum
   imports "HOL-Analysis.Elementary_Metric_Spaces"
 begin
 
+section \<open>Diameter Lemma\<close>
+
 lemma diameter_comp_strict_mono:
   fixes s :: "nat \<Rightarrow> 'a :: metric_space"
   assumes "strict_mono r" "bounded {s i |i. r n \<le> i}"

@@ -1,6 +1,8 @@
 theory Set_Integral_Addendum
   imports "HOL-Analysis.Set_Integral" Bochner_Integration_Addendum
-  begin
+begin
+
+section "Auxiliary Lemmas for Integrals on a Set"
 
 lemma set_integral_scaleR_left: 
   assumes "A \<in> sets M" "c \<noteq> 0 \<Longrightarrow> integrable M f"

@@ -260,6 +260,9 @@ proof (rule ccontr, goal_cases)
   ultimately show ?case using assms(2) by simp
 qed
 
+(* L1 Convergence Implies Subsequence - Convenience Lemma *)
+(* I am pretty sure we don't actually need this lemma *)
+
 lemma cauchy_L1_AE_cauchy_subseq:
   fixes s :: "nat \<Rightarrow> 'a \<Rightarrow> 'b::{banach, second_countable_topology}"
   assumes [measurable]: "\<And>n. integrable M (s n)"
@@ -322,6 +325,8 @@ proof-
   thus ?thesis by (rule that[OF strict_mono(1)])
 qed
 
+subsection "Linearly Ordered Banach Spaces"
+
 lemma integrable_max[simp, intro]:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology}"
   assumes fg[measurable]: "integrable M f" "integrable M g"
@@ -344,8 +349,6 @@ proof -
   have "norm (min (f x) (g x)) \<le> norm (f x) \<or> norm (min (f x) (g x)) \<le> norm (g x)" for x by linarith
   thus ?thesis by (intro integrable_bound[OF integrable_max[OF integrable_norm(1,1), OF assms]], auto)
 qed
-
-(* Versions of \<^thm>\<open>Bochner_Integration.integral_mono_AE\<close> for arbitrary orders *)
 
 lemma integral_nonneg_AE_banach:                        
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
@@ -403,8 +406,7 @@ lemma integral_mono_banach:
   shows "integral\<^sup>L M f \<le> integral\<^sup>L M g"
   using integral_mono_AE_banach assms by blast
 
-subsection "Integrability of the Diameter"
-
+subsection "Integrability and Measurability of the Diameter"
 
 context
   fixes s :: "nat \<Rightarrow> 'a \<Rightarrow> 'b :: {second_countable_topology, banach}" and M

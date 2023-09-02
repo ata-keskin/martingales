@@ -1,5 +1,5 @@
 theory Filtered_Measure
-imports "HOL-Probability.Conditional_Expectation" Measure_Space_Addendum
+imports "HOL-Probability.Conditional_Expectation"
 begin                                                                                          
 
 subsection \<open>Filtered Measure\<close>
@@ -27,19 +27,6 @@ lemma borel_measurable_mono:
 
 end
 
-subsection \<open>Filtered Sigma Finite Measure\<close>
-
-text \<open>The locale presented here is a generalization of the \<^locale>\<open>sigma_finite_subalgebra\<close> for a particular filtration.\<close>
-
-locale sigma_finite_filtered_measure = filtered_measure +
-  assumes sigma_finite: "sigma_finite_subalgebra M (F t\<^sub>0)"
-
-lemma (in sigma_finite_filtered_measure) sigma_finite_subalgebra_F[intro]:
-  assumes "t\<^sub>0 \<le> i"
-  shows "sigma_finite_subalgebra M (F i)"
-  using assms by (metis dual_order.refl sets_F_mono sigma_finite sigma_finite_subalgebra.nested_subalg_is_sigma_finite subalgebra subalgebra_def)
-
-subsubsection \<open>Typed locales\<close>
 
 locale nat_filtered_measure = filtered_measure M F 0 for M and F :: "nat \<Rightarrow> _"
 locale real_filtered_measure = filtered_measure M F 0 for M and F :: "real \<Rightarrow> _"
@@ -62,12 +49,40 @@ lemma borel_measurable_mono:
 
 end
 
+subsection \<open>Sigma Finite Filtered  Measure\<close>
+
+text \<open>The locale presented here is a generalization of the \<^locale>\<open>sigma_finite_subalgebra\<close> for a particular filtration.\<close>
+
+locale sigma_finite_filtered_measure = filtered_measure +
+  assumes sigma_finite: "sigma_finite_subalgebra M (F t\<^sub>0)"
+
+lemma (in sigma_finite_filtered_measure) sigma_finite_subalgebra_F[intro]:
+  assumes "t\<^sub>0 \<le> i"
+  shows "sigma_finite_subalgebra M (F i)"
+  using assms by (metis dual_order.refl sets_F_mono sigma_finite sigma_finite_subalgebra.nested_subalg_is_sigma_finite subalgebra subalgebra_def)
+
 locale nat_sigma_finite_filtered_measure = sigma_finite_filtered_measure M F 0 for M and F :: "nat \<Rightarrow> _"
 locale real_sigma_finite_filtered_measure = sigma_finite_filtered_measure M F 0 for M and F :: "real \<Rightarrow> _"
 
+sublocale nat_sigma_finite_filtered_measure \<subseteq> nat_filtered_measure ..
 sublocale nat_sigma_finite_filtered_measure \<subseteq> sigma_finite_subalgebra M "F i" by blast
 
-subsubsection "Constant Filtration"
+sublocale real_sigma_finite_filtered_measure \<subseteq> real_filtered_measure ..
+
+subsection \<open>Filtered Finite Measure\<close>
+
+locale finite_filtered_measure = filtered_measure + finite_measure
+
+sublocale finite_filtered_measure \<subseteq> sigma_finite_filtered_measure 
+  using subalgebra by (unfold_locales, blast, meson dual_order.refl finite_measure_axioms finite_measure_def finite_measure_restr_to_subalg sigma_finite_measure.sigma_finite_countable subalgebra)
+
+locale nat_finite_filtered_measure = finite_filtered_measure M F 0 for M and F :: "nat \<Rightarrow> _"
+locale real_finite_filtered_measure = finite_filtered_measure M F 0 for M and F :: "real \<Rightarrow> _"
+
+sublocale nat_finite_filtered_measure \<subseteq> nat_sigma_finite_filtered_measure ..
+sublocale real_finite_filtered_measure \<subseteq> real_sigma_finite_filtered_measure ..
+
+subsection "Constant Filtration"
 
 lemma filtered_measure_constant_filtration:
   assumes "subalgebra M F"

@@ -163,7 +163,7 @@ lemma density_nonneg:
   using averaging_theorem[OF assms(1), of "{0..}", OF closed_atLeast] assms(2)
   by (simp add: scaleR_nonneg_nonneg)
 
-lemma integral_nonneg_AE_eq_0_iff_AE:
+corollary integral_nonneg_AE_eq_0_iff_AE:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
   assumes f[measurable]: "integrable M f" and nonneg: "AE x in M. 0 \<le> f x"
   shows "integral\<^sup>L M f = 0 \<longleftrightarrow> (AE x in M. f x = 0)"
@@ -178,7 +178,7 @@ proof
   thus "AE x in M. f x = 0" by (intro density_zero f, blast)
 qed (auto simp add: integral_eq_zero_AE)
 
-lemma integral_eq_mono_AE_eq_AE:
+corollary integral_eq_mono_AE_eq_AE:
   fixes f g :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
   assumes "integrable M f" "integrable M g" "integral\<^sup>L M f = integral\<^sup>L M g" "AE x in M. f x \<le> g x" 
   shows "AE x in M. f x = g x"

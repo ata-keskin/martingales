@@ -179,7 +179,7 @@ Intuitively the diameter of a set $A$ measures how spread out or "large" the set
 \end{lemma}
 \begin{proof}
 \;\newline
-$\Longrightarrow$: Assume $(s_i)_{i\in\mathbb{N}}$ is Cauchy. 
+First, assume $(s_i)_{i\in\mathbb{N}}$ is Cauchy. 
 
 Recall that a set $A$ is bounded if there exists some $x \in E$ and $\varepsilon \in \mathbb{R}$ such that $d(x,y) \le \varepsilon$ for all $y \in A$. Since $(s_i)_{i\in\mathbb{N}}$ Cauchy, there exists some $N \in \mathbb{N}$ such that $d(s_n,s_m) < 1$ for all $n, m \ge N$. The set $\{s_i \; \vert \; i \in \{0,\dots,N\}\}$ is bounded since it is finite. Thus there exists some $a \in \mathbb{R}$ such that $d(s_N, s_i) < a$ for all $i \in \{0,\dots,N\}$. Therefore $d(s_N, s_i) < \max(a,1)$ for all $i \in \mathbb{N}$, which shows that $S_0$ is bounded. 
 
@@ -190,8 +190,8 @@ Let $\varepsilon > 0$. Then there exists some $N \in \mathbb{N}$ such that $d(s_
 	\textrm{diam}(S_N) = \sup_{x,y \in S_N} d(x,y) \le \frac{\varepsilon}{2} < \varepsilon
 \]
 Furthermore, we have $\textrm{diam}(S_n) \le \textrm{diam}(S_N)$ for $n \ge N$ because of the subset relation stated above. Thus $\lim_{n \to \infty} \textup{diam}(S_n) = 0$.
-\vspace{0.2cm}\par\noindent
-\noindent$\Longleftarrow:$ Assume $\lim_{n \to \infty} \textup{diam}(S_n) = 0$ and that $S_0$ is bounded. 
+
+For the other direction, assume $\lim_{n \to \infty} \textup{diam}(S_n) = 0$ and that $S_0$ is bounded. 
 
 Hence $\textrm{diam}(S_n) < \infty$ for all $n \in \mathbb{N}$ with the same argument as above. 
 
