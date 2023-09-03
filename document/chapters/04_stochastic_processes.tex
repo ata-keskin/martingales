@@ -303,7 +303,7 @@ sublocale stochastic_process $\subseteq$ filtered_measure_natural_filtration:
 }
 \end{isalemma}
 
-The natural filtration contains information concerning the process's past behavior at each point in time. The natural filtration is essentially the simplest filtration for studying a process. However, the natural filtration is not always $\sigma$-finite. In order to show that the natural filtration constitutes a sigma finite filtered measure, we need to provide a countable exhausting set in the preimage of $X_{t_0}$.
+The natural filtration contains information concerning the process's past behavior at each point in time. The natural filtration is essentially the simplest filtration for studying a process. However, the natural filtration is not always $\sigma$-finite. In order to show that the natural filtration give rise to a sigma finite filtered measure, we need to provide a countable exhausting set in the preimage of $X_{t_0}$.
 
 \begin{isalemma}
 {\small
@@ -314,6 +314,19 @@ lemma (in sigma_finite_measure) sigma_finite_filtered_measure_natural_filtration
 		  "$\bigwedge a. \; a \in A \implies \texttt{emeasure} \; M \; a \neq \infty$" 
 		  "$\bigwedge a. \; a \in A \implies \exists b \in \texttt{borel}. \; a = ((X \; t_0) \; \text{-\textasciigrave} \; b) \; \cap \; \texttt{space} \; M$"
   shows "$\texttt{sigma\_finite\_filtered\_measure} \; M \; (\texttt{natural\_filtration} \; M \; t_0 \; X) \; t_0$"
+  $\dots$
+\end{lstlisting}
+}
+\end{isalemma}
+
+Of course, if the measure is already finite, the filtered measure space is also finite.
+
+\begin{isalemma}
+{\small
+\begin{lstlisting}[style=isabelle]
+lemma (in finite_measure) finite_filtered_measure_natural_filtration:
+  assumes "$\texttt{stochastic\_process} \; M \; t_0 \; X$"
+  shows "$\texttt{finite\_filtered\_measure} \; M \; (\texttt{natural\_filtration} \; M \; t_0 \; X) \; t_0$"
   $\dots$
 \end{lstlisting}
 }

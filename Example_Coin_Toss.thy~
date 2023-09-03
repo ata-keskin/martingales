@@ -1,0 +1,5 @@
+theory Example_Coin_Toss
+imports Martingale
+begin
+
+end

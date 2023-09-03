@@ -173,7 +173,7 @@ This lemma already shows us the intuition behind the definition of a martingale.
 \begin{isalemma}
 {\small
 \begin{lstlisting}[style=isabelle]
-lemma (in submartingale) set_integral_le:
+lemma (in submartingale_linorder) set_integral_le:
   assumes "$A \in F \; i$" "$t_0 \le i$" "$i \le j$"
   shows "$\texttt{set\_lebesgue\_integral} \; M \; A \; (X \; i) \le \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; j)$"
 \end{lstlisting}
@@ -183,7 +183,7 @@ lemma (in submartingale) set_integral_le:
 \begin{isalemma}
 {\small
 \begin{lstlisting}[style=isabelle]
-lemma (in supermartingale) set_integral_ge:
+lemma (in supermartingale_linorder) set_integral_ge:
   assumes "$A \in F \; i$" "$t_0 \le i$" "$i \le j$"
   shows "$\texttt{set\_lebesgue\_integral} \; M \; A \; (X \; i) \ge \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; j)$"
 \end{lstlisting}
@@ -196,9 +196,11 @@ In this case, the intuition is similar. The average value of a submartingale on 
 Consider a coin-tossing game, where the coin lands on heads with probability $p \in [0,1]$. Assume that the gambler wins a fixed amount $c > 0$ on a heads outcome and loses the same amount $c$ on a tails outcome. Let $(X_n)_{n \in \mathbb{N}}$ be a stochastic process, where $X_n$ denotes the gambler's fortune after the $n$-th coin toss. Then, we have the following three cases.
 \begin{enumerate}
 \item If $p = \frac{1}{2}$, it means the coin is fair and has an equal chance of landing heads or tails. In this case, the gambler, on average, neither wins nor loses money over time. The expected value of the gambler's fortune stays the same over time. Therefore, $(X_n)_{n \in \mathbb{N}}$ is a martingale. \\
-\item If $p \le \frac{1}{2}$, it means the coin is biased in favor of tails. In this scenario, the gambler is more likely to lose money on each bet because the probability of getting heads is lower than $\frac{1}{2}$. Over time, the gambler's fortune decreases on average. Therefore, $(X_n)_{n \in \mathbb{N}}$ is a supermartingale.\\
+\item If $p \le \frac{1}{2}$, it means the coin is biased in favor of tails. In this scenario, the gambler is more likely to lose money on each bet. Over time, the gambler's fortune decreases on average. Therefore, $(X_n)_{n \in \mathbb{N}}$ is a supermartingale.\\
 \item If $p \ge \frac{1}{2}$, it means the coin is biased in favor of heads. In this case, the gambler is more likely to win money on each bet. Over time, the gambler's fortune tends to increase on average. Therefore, $(X_n)_{n \in \mathbb{N}}$ is a submartingale.
 \end{enumerate}
 \end{example}
+
+
 
 \section{Discrete-Time Martingales}

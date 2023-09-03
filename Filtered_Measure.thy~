@@ -1,6 +1,8 @@
 theory Filtered_Measure
 imports "HOL-Probability.Conditional_Expectation"
-begin                                                                                          
+begin
+
+section "Filtered Measure Spaces"
 
 subsection \<open>Filtered Measure\<close>
 

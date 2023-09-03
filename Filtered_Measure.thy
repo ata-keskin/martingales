@@ -51,7 +51,7 @@ lemma borel_measurable_mono:
 
 end
 
-subsection \<open>Sigma Finite Filtered  Measure\<close>
+subsection \<open>Sigma Finite Filtered Measure\<close>
 
 text \<open>The locale presented here is a generalization of the \<^locale>\<open>sigma_finite_subalgebra\<close> for a particular filtration.\<close>
 
@@ -71,7 +71,7 @@ sublocale nat_sigma_finite_filtered_measure \<subseteq> sigma_finite_subalgebra 
 
 sublocale real_sigma_finite_filtered_measure \<subseteq> real_filtered_measure ..
 
-subsection \<open>Filtered Finite Measure\<close>
+subsection \<open>Finite Filtered Measure\<close>
 
 locale finite_filtered_measure = filtered_measure + finite_measure
 
@@ -89,9 +89,14 @@ subsection "Constant Filtration"
 lemma filtered_measure_constant_filtration:
   assumes "subalgebra M F"
   shows "filtered_measure M (\<lambda>_. F) t\<^sub>0"
-  using assms by (unfold_locales) (auto simp add: subalgebra_def)
+  using assms by (unfold_locales) blast+
 
 sublocale sigma_finite_subalgebra \<subseteq> constant_filtration: sigma_finite_filtered_measure M "\<lambda>_ :: 't :: {second_countable_topology, linorder_topology}. F" t\<^sub>0
-  using subalg by (unfold_locales) (auto simp add: subalgebra_def)
+  using subalg by (unfold_locales) blast+
+
+lemma (in finite_measure) filtered_measure_constant_filtration:
+  assumes "subalgebra M F"
+  shows "finite_filtered_measure M (\<lambda>_. F) t\<^sub>0"
+  using assms by (unfold_locales) blast+
 
 end

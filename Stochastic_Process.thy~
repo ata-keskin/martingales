@@ -2,6 +2,8 @@ theory Stochastic_Process
 imports Filtered_Measure Measure_Space_Addendum
 begin      
 
+section \<open>Stochastic Processes\<close>
+
 subsection "Stochastic Process"
 
 text \<open>A stochastic process is a collection of random variables, indexed by a type \<^typ>\<open>'b\<close>.\<close>
