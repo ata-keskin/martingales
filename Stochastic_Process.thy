@@ -80,6 +80,9 @@ text \<open>The natural filtration induced by a stochastic process \<^term>\<ope
 definition natural_filtration :: "'a measure \<Rightarrow> 'b \<Rightarrow> ('b \<Rightarrow> 'a \<Rightarrow> 'c :: topological_space) \<Rightarrow> 'b :: {second_countable_topology, linorder_topology} \<Rightarrow> 'a measure" where
   "natural_filtration M t\<^sub>0 Y = (\<lambda>t. family_vimage_algebra (space M) {Y i | i. i \<in> {t\<^sub>0..t}} borel)"
 
+abbreviation "nat_natural_filtration \<equiv> \<lambda>M. natural_filtration M (0 :: nat)"
+abbreviation "real_natural_filtration \<equiv> \<lambda>M. natural_filtration M (0 :: real)"
+
 context stochastic_process
 begin
 

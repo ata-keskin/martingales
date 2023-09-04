@@ -3,7 +3,11 @@
 
 \chapter{Discussion}\label{chapter:discussion}
 
+In this chapter, we explore the formalization approach used in extending conditional expectation to Banach spaces, compare our work with existing formalizations in Lean and Isabelle, and outline directions for future research in martingales within this context.
+
 \section{Formalization Approach}
+
+In our formalization, we have tried to state every lemma in the most general sense possible. 
 
 A convex function of a martingale is a submartingale, by Jensen's inequality. For example, the square of the gambler's fortune in the fair coin game is a submartingale (which also follows from the fact that Xn2 - n is a martingale). Similarly, a concave function of a martingale is a supermartingale. Stopped Processes... Wiener Processes
 
@@ -19,7 +23,7 @@ The following tables provide a list of the entries in the \textsf{mathlib} forma
 	\texttt{martingale.adapted} & \texttt{adapted\_process.adapted}  \\
 	\texttt{martingale.add} & \texttt{martingale.add}  \\
 	\texttt{martingale.condexp\_ae\_eq} & \texttt{martingale.martingale\_property}  \\
-	\texttt{martingale.eq\_zero\_of\_predictable} & \texttt{martingale.predictable\_eq\_zero}  \\
+	\texttt{martingale.eq\_zero\_of\_predictable} & \texttt{martingale.predictable\_const}  \\
 	\texttt{martingale.integrable} & \texttt{martingale.integrable}  \\
 	\texttt{martingale.neg} & \texttt{martingale.uminus}  \\
 	\texttt{martingale.set\_integral\_eq} & \texttt{martingale.set\_integral\_eq}  \\
@@ -33,8 +37,8 @@ The following tables provide a list of the entries in the \textsf{mathlib} forma
 	\texttt{martingale\_const\_fun} & \texttt{sigma\_finite\_filtered\_measure.martingale\_const}  \\
 	\texttt{martingale\_iff} & \texttt{martingale\_iff}  \\
 	\texttt{martingale\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process.martingale\_nat}  \\
-	\texttt{martingale\_of\_condexp\_sub\_eq\_zero\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process.martingale\_of \_cond\_exp\_diff\_Suc\_eq\_zero}  \\
-	\texttt{martingale\_of\_set\_integral\_eq\_succ} & \texttt{nat\_sigma\_finite\_adapted\_process.martingale\_of \_set\_integral\_eq\_Suc}  \\
+	\texttt{martingale\_of\_condexp\_sub\_eq\_zero\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process.martingale\_of\-\_cond\_exp\_diff\_Suc\_eq\_zero}  \\
+	\texttt{martingale\_of\_set\_integral\_eq\_succ} & \texttt{nat\_sigma\_finite\_adapted\_process.martingale\_of\-\_set\_integral\_eq\_Suc}  \\
 	\texttt{martingale\_zero} & \texttt{sigma\_finite\_filtered\_measure.martingale\_zero} \\
 	\caption[Lookup Table for Martingale Lemmas and Definitions]{Lookup table for martingale lemmas and definitions}\label{tab:martingale_theories}
 \end{longtable}
@@ -52,19 +56,19 @@ The following tables provide a list of the entries in the \textsf{mathlib} forma
 	\texttt{submartingale.pos} & \texttt{submartingale.max\_0}  \\
 	\texttt{submartingale.set\_integral\_le} & \texttt{submartingale\_linorder.set\_integral\_le}  \\
 	\texttt{submartingale.smul\_nonneg} & \texttt{submartingale.scaleR\_nonneg}  \\
-	\texttt{submartingale.smul\_nonpos} & \texttt{submartingale.scaleR\_nonpos}  \\
+	\texttt{submartingale.smul\_le\_zero} & \texttt{submartingale.scaleR\_le\_zero}  \\
 	\texttt{submartingale.strongly\_measurable} & \texttt{stochastic\_process.random\_variable}  \\
 	\texttt{submartingale.sub\_martingale} & \texttt{submartingale.diff}  \\
 	\texttt{submartingale.sub\_supermartingale} & \texttt{submartingale.diff}  \\
 	\texttt{submartingale.sum\_mul\_sub} & \texttt{nat\_submartingale.partial\_sum\_scaleR}  \\
 	\texttt{submartingale.sum\_mul\_sub'} & \texttt{nat\_submartingale.partial\_sum\_scaleR'}  \\
 	\texttt{submartingale.sup} & \texttt{submartingale\_linorder.max}  \\
-	\texttt{submartingale.zero\_le\_of\_predictable} & \texttt{nat\_submartingale.predictable\_ge\_bot}  \\
-	\texttt{submartingale\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder .submartingale\_nat}  \\
-	\texttt{submartingale\_of\_condexp\_sub\_nonneg} & \texttt{sigma\_finite\_adapted\_process\_order .submartingale\_of\_cond\_exp\_diff\_nonneg}  \\
-	\texttt{submartingale\_of\_condexp\_sub\_nonneg\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder .submartingale\_of\_cond\_exp\_diff\_Suc\_nonneg}  \\
-	\texttt{submartingale\_of\_set\_integral\_le} & \texttt{sigma\_finite\_adapted\_process\_linorder .submartingale\_of\_set\_integral\_le}  \\
-	\texttt{submartingale\_of\_set\_integral\_le\_succ} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder .submartingale\_of\_set\_integral\_le\_Suc} \\
+	\texttt{submartingale.zero\_le\_of\_predictable} & \texttt{nat\_submartingale.predictable\_mono}  \\
+	\texttt{submartingale\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder\-.submartingale\_nat}  \\
+	\texttt{submartingale\_of\_condexp\_sub\_nonneg} & \texttt{sigma\_finite\_adapted\_process\_order.submar\-tingale\_of\_cond\_exp\_diff\_nonneg}  \\
+	\texttt{submartingale\_of\_condexp\_sub\_nonneg\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder\-.submartingale\_of\_cond\_exp\_diff\_Suc\_nonneg}  \\
+	\texttt{submartingale\_of\_set\_integral\_le} & \texttt{sigma\_finite\_adapted\_process\_linorder\-.submartingale\_of\_set\_integral\_le}  \\
+	\texttt{submartingale\_of\_set\_integral\_le\_succ} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder\-.submartingale\_of\_set\_integral\_le\_Suc} \\
 	\caption[Lookup Table for Submartingale Lemmas and Definitions]{Lookup table for submartingale lemmas and definitions}\label{tab:submartingale_theories}
 \end{longtable}
 \begin{longtable}{p{.5\textwidth} p{.5\textwidth}}
@@ -76,32 +80,23 @@ The following tables provide a list of the entries in the \textsf{mathlib} forma
 	\texttt{supermartingale.add\_martingale} & \texttt{supermartingale.add}  \\
 	\texttt{supermartingale.condexp\_ae\_le} & \texttt{supermartingale\_property}  \\
 	\texttt{supermartingale.integrable} & \texttt{supermartingale.integrable}  \\
-	\texttt{supermartingale.le\_zero\_of\_predictable} & \texttt{supermartingale.predictable\_le\_zero}  \\
+	\texttt{supermartingale.le\_zero\_of\_predictable} & \texttt{supermartingale.predictable\_mono}  \\
 	\texttt{supermartingale.neg} & \texttt{supermartingale.uminus}  \\
 	\texttt{supermartingale.set\_integral\_le} & \texttt{supermartingale\_linorder.set\_integral\_ge}  \\
 	\texttt{supermartingale.smul\_nonneg} & \texttt{supermartingale.scaleR\_nonneg}  \\
-	\texttt{supermartingale.smul\_nonpos} & \texttt{supermartingale.scaleR\_nonpos}  \\
+	\texttt{supermartingale.smul\_le\_zero} & \texttt{supermartingale.scaleR\_le\_zero}  \\
 	\texttt{supermartingale.strongly\_measurable} & \texttt{stochastic\_process.random\_variable}  \\
 	\texttt{supermartingale.sub\_martingale} & \texttt{supermartingale.diff}  \\
 	\texttt{supermartingale.sub\_submartingale} & \texttt{supermartingale.diff}  \\
-	\texttt{supermartingale\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder .supermartingale\_nat}  \\
-	\texttt{supermartingale\_of\_condexp\_sub\_nonneg\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder .supermartingale\_of\_cond\_exp\_diff\_Suc\_nonneg}  \\
-	\texttt{supermartingale\_of\_set\_integral\_succ\_le} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder .supermartingale\_of\_set\_integral\_le\_Suc} \\
+	\texttt{supermartingale\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder\-.supermartingale\_nat}  \\
+	\texttt{supermartingale\_of\_condexp\_sub\_nonneg\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder\-.supermartingale\_of\_cond\_exp\_diff\_Suc\_le\_zero}  \\
+	\texttt{supermartingale\_of\_set\_integral\_succ\_le} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder\-.supermartingale\_of\_set\_integral\_le\_Suc} \\
 	\caption[Lookup Table for Supermartingale Lemmas and Definitions]{Lookup table for supermartingale lemmas and definitions}\label{tab:supermartingale_theories}
 \end{longtable}
 }
-\section{Challenges and Limitations}
 
 \section{Future Research}
 
-\paragraph{Semimartingales}
+As briefly stated at the end of the last chapter, our work has primarily focused on laying the groundwork for formalizing martingales in arbitrary Banach spaces, with specific emphasis on extending conditional expectation and generalizing concepts in Bochner integration. Building upon our formalization framework, the natural next step is to delve into the formalization of key martingale theorems and properties, such as the martingale convergence theorem, the optional stopping theorem, and the Doob decomposition, among others. 
 
-\paragraph{Doob's Martingale Convergence}
-
-\paragraph{Fundamental Theorem of Arbitrage} 
-
-The fundamental theorem of asset pricing relates the concept of a fair market price for a financial asset to the notion of a risk-neutral measure. 
-
-It provides the necessary and sufficient conditions for a market to be arbitrage-free. 
-
-In this framework, the prices of financial assets can be treated as martingales, ensuring that there is no arbitrage opportunity.
+Simultaneously, we aspire to expand upon the formalization of stochastic processes introduced in this work. This will lead us into more advanced territories, such as stochastic differential equations (SDEs), It\^o calculus, and the theory of semimartingales.
