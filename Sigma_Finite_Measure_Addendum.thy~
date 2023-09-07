@@ -2,6 +2,8 @@ theory Sigma_Finite_Measure_Addendum
 imports Set_Integral_Addendum
 begin
 
+section "Averaging Theorem"
+
 (* Eneglking's book General Topology *)
 lemma balls_countable_basis:
   obtains D :: "'a :: {metric_space, second_countable_topology} set" 

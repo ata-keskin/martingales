@@ -130,7 +130,7 @@ At the beginning of our proof, we assumed $\mu(\Omega) < \infty$ without loss of
 
 This induction scheme allows us prove results about a $\sigma$-finite measure space $M$, assuming that we can show the property on arbitrary subspaces of $M$ with finite measure. For increased usability, we include additional assumptions such as $\texttt{emeasure}\; N \; \Omega \neq 0$ which let us to avoid unnecessary trivial cases. The proof of this induction scheme is straightforward.
 \begin{proof}
-Let $M = (\Omega, \Sigma, \mu)$ be a $\sigma$-finite measure space. There exists a family of sets with finite measure $(\Omega_i)_{i \in \mathbb{N}}$ such that $\bigcup_{i \in \mathbb{N}} \Omega_i = \Omega$. By assumption, the property $Q$ holds $\mu$-almost everywhere on all $\Omega_i$. Therefore the sets $\Omega_i \cap \{\neg Q\} \in \Sigma\vert_{\Omega_i} \subseteq \Sigma$ are all $\mu$-null sets. This means that $\bigcup_{i \in \mathbb{N}} (\Omega_i \cap \{\neg Q\}) = \{\neg Q\}$ is also $\mu$-null set, which completes the proof.
+Let $M = (\Omega, \Sigma, \mu)$ be a $\sigma$-finite measure space. There exists a family of sets with finite measure $(\Omega_i)_{i \in \mathbb{N}}$ such that $\bigcup_{i \in \mathbb{N}} \Omega_i = \Omega$. By assumption, the property $Q$ holds $\mu$-almost everywhere on all $\Omega_i$. Therefore the sets $\Omega_i \cap \{x \in \Omega \;\vert\; \neg Q(x)\} \in \Sigma\vert_{\Omega_i} \subseteq \Sigma$ are all $\mu$-null sets. This means that $\bigcup_{i \in \mathbb{N}} (\Omega_i \cap \{x \in \Omega \;\vert\; \neg Q(x)\}) = \{x \in \Omega \;\vert\; \neg Q(x)\}$ is also a $\mu$-null set, which completes the proof.
 \end{proof}
 
 Now that we have the averaging theorem at our disposal, we can lift the following results from the real case, to our more general setting.
@@ -163,13 +163,13 @@ The corollary on the uniqueness of densities is crucial in showing that the cond
 The goal of this subsection is to prove the diameter lemma, which provides a characterization of Cauchy sequences in metric spaces.
 
 \begin{definition}
-Let $E$ be a metric space with metric $d : E \times E \rightarrow \mathbb{R}$. The diameter of a set $A$ is defined as
+Let $E$ be a metric space with metric $d : E \times E \rightarrow \mathbb{R}$. The diameter of a set $A \subseteq E$ is defined as
 \[
 	\textrm{diam}(A) = \sup_{x,y \in A} d(x,y)
 \]
 \end{definition}
 
-Intuitively the diameter of a set $A$ measures how spread out or "large" the set $A$ is with respect to the distance defined by the metric.
+Intuitively the diameter of a set $A$ measures how ``spread out'' the set $A$ is with respect to the distance defined by the metric.
 
 \begin{lemma} (Diameter Lemma)\par
 	Let $E$ be a metric space with metric $d : E \times E \rightarrow \mathbb{R}$ and $(s_i)_{i\in\mathbb{N}} \subseteq E$ a sequence. Define $S_n = \{s_i \; \vert \; i \ge n \}$. The sequence $(s_i)_{i\in\mathbb{N}}$ is Cauchy, if and only if $S_0$ is bounded and
@@ -191,9 +191,7 @@ Let $\varepsilon > 0$. Then there exists some $N \in \mathbb{N}$ such that $d(s_
 \]
 Furthermore, we have $\textrm{diam}(S_n) \le \textrm{diam}(S_N)$ for $n \ge N$ because of the subset relation stated above. Thus $\lim_{n \to \infty} \textup{diam}(S_n) = 0$.
 
-For the other direction, assume $\lim_{n \to \infty} \textup{diam}(S_n) = 0$ and that $S_0$ is bounded. 
-
-Hence $\textrm{diam}(S_n) < \infty$ for all $n \in \mathbb{N}$ with the same argument as above. 
+For the other direction, assume $\lim_{n \to \infty} \textup{diam}(S_n) = 0$ and that $S_0$ is bounded. Hence $\textrm{diam}(S_n) < \infty$ for all $n \in \mathbb{N}$ with the same argument as above. 
 
 Let $\varepsilon > 0$. There exists some $N \in \mathbb{N}$ such that $\sup_{x,y \in S_n} d(x,y) < \varepsilon$ for all $n \ge N$. Hence $d(x,y) < \varepsilon$ for all $x, y \in S_n$ for $n \ge N$. This implies $d(s_i,s_j) < \varepsilon$ for all $i, j \ge n \ge N$, which shows that $(s_i)_{i\in\mathbb{N}}$ is Cauchy.
 \end{proof}
@@ -285,8 +283,6 @@ When working with an ordering on $E$, we may need to concern ourselves with non-
 \end{isalemma}
 
 The induction scheme looks complicated and cumbersome, but in essence it is the same induction scheme as the previous one with the added assumption of non-negativity everywhere. The proof is also largely the same. We just need to show that the partial sums stay non-negative all the way through.
-
-\pagebreak
 
 \subsection{Bochner Integration on Linearly Ordered Banach Spaces}
 
@@ -409,7 +405,7 @@ Before we can talk about \textit{the} conditional expectation, we must define wh
 \end{isadefinition}
 
 
-This predicate precisely characterizes what it means for a function $f$ to have a conditional expectation $g$ w.r.t the measure $M$ and the sub-$\sigma$-algebra $F$. Now we can use Hilbert's $\epsilon$-operator, \lstinline[language=isabelle]{SOME} in Isabelle \cite{Nipkow-Paulson-Wenzel:2002}, to define \textit{the} conditional expectation, if it exists.
+This predicate precisely characterizes what it means for a function $f$ to have a conditional expectation $g$ with respect to the measure $M$ and the sub-$\sigma$-algebra $F$. Now we can use Hilbert's $\epsilon$-operator, \lstinline[language=isabelle]{SOME} in Isabelle \cite{Nipkow-Paulson-Wenzel:2002}, to define \textit{the} conditional expectation, if it exists.
 
 
 \begin{isadefinition}
@@ -453,7 +449,7 @@ The conditional expectation of a function is unique up to a $\mu$-null set.
 	\]
 \end{lemma}
 \begin{proof}
-	The first statement follows directly from the definition of \texttt{cond\_exp}. To show $\texttt{cond\_exp} \; M \; F \; f = g \; \mu\texttt{-a.e.}$ we argue as follows. By the definition of \texttt{has\_cond\_exp} we have for any $A \in \texttt{sets} \; F$
+	The first statement follows directly from the definition of \texttt{cond\_exp}. To show ``$\texttt{cond\_exp} \; M \; F \; f = g$'' $\mu$-a.e. we argue as follows. By the definition of \texttt{has\_cond\_exp} we have for any $A \in F$
 	\[
 		\int_A \; f \; \textrm{d}\mu = \int_A \; g \; \textrm{d}\mu
 	\]
@@ -462,7 +458,7 @@ The conditional expectation of a function is unique up to a $\mu$-null set.
 		\int_A \; f \; \textrm{d}\mu = \int_A \; \texttt{cond\_exp} \; M \; F \; f \; \textrm{d}\mu
 	\]
 	Together with the lemma on the uniqueness of densities, we have 
-	\par\noindent$\texttt{cond\_exp} \; M \; F \; f = g \;\; \mu\vert_F\texttt{-a.e.}$. The lemma follows from the fact that all $\mu\vert_F$-null sets are also $\mu$-null sets.
+	\par\noindent``$\texttt{cond\_exp} \; M \; F \; f = g$'' $\mu\vert_F$-a.e. The lemma follows from the fact that all $\mu\vert_F$-null sets are also $\mu$-null sets.
 \end{proof}
 
 Hence, we have the following succint characterization.
@@ -483,9 +479,9 @@ Hence, we have the following succint characterization.
 
 \subsection{Existence}
 
-Showing the existence is a bit more involved. Specifically, what we aim to show is that $\normalfont\texttt{has\_cond\_exp} \; M \; F \; f \; (\texttt{cond\_exp} \; M \; F \; f)$ holds for any Bochner integrable $f$. We will use the standard machinery of measure theory. First, we will prove existence for indicator functions. Then we will extend our proof by linearity to simple functions. Finally we use a limiting argument to show that the conditional expectation exists for all Bochner integrable functions.
+Showing the existence is a bit more involved. Specifically, what we aim to show is that ``$\normalfont\texttt{has\_cond\_exp} \; M \; F \; f \; (\texttt{cond\_exp} \; M \; F \; f)$'' holds for any Bochner-integrable $f$. We will employ the standard machinery of measure theory. First, we will prove existence for indicator functions. Then we will extend our proof by linearity to simple functions. Finally we use a limiting argument to show that the conditional expectation exists for all Bochner-integrable functions.
 
-The conditional expectation operator has already been formalized for real valued functions by S\`ebastien Gou\"ezel via the definition \texttt{real\_cond\_exp}. The following lemmas show that our definition characterizes the same operator, at least in the real case.
+The conditional expectation operator has already been formalized for real-valued functions by S\`ebastien Gou\"ezel via the definition \texttt{real\_cond\_exp}. The following lemmas show that our definition characterizes the same operator, at least in the real case.
 
 \begin{isalemma}
 {\small
@@ -518,7 +514,7 @@ We can now show that the conditional expectation of indicator functions exist.
 	\]
 \end{lemma}
 \begin{proof}
-	The statement follows directly from the linearity of the Bochner integral and the previous lemmas.
+	The statement follows directly from the linearity of the Bochner-integral and the previous lemmas.
 \end{proof}
 
 Next, we show the following lemma concerning the sum of two conditional expectations.
@@ -530,10 +526,10 @@ Next, we show the following lemma concerning the sum of two conditional expectat
 	\]
 \end{lemma}
 \begin{proof}
-	The statement follows directly from the linearity of the Bochner integral.
+	The statement follows directly from the linearity of the Bochner-integral.
 \end{proof}
 
-Now, we can show that the conditional expectation of integrable simple functions exist.
+Now, we can show that the conditional expectation of an integrable simple function exists.
 
 \begin{isalemma}
 {\small
@@ -558,7 +554,7 @@ qed
 }
 \end{isalemma}
 
-Now comes the most difficult part. Given a convergent sequence of integrable simple functions $(s_n)_{n \in \mathbb{N}}$, we must show that the sequence $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ is also convergent. Furthermore, we must show that this limit satisfies the properties of a conditional expectation. Unfortunately, we will only be able to show that this sequence convergence in $L^1$. Luckily, this is enough to show that the operator $\texttt{cond\_exp} \; M \; F$ preserves limits as a function $L^1(E) \rightarrow L^1(E)$. We need the following lemma for this purpose
+Now comes the most difficult part. Given a convergent sequence of integrable simple functions $(s_n)_{n \in \mathbb{N}}$, we must show that the sequence $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ is also convergent. Furthermore, we must show that this limit satisfies the properties of a conditional expectation. Unfortunately, we will only be able to show that this sequence convergences in the $L^1$-norm. Luckily, this is enough to show that the operator $\texttt{cond\_exp} \; M \; F$ preserves limits as a function $L^1(E) \rightarrow L^1(E)$. We need the following lemma for this purpose
 
 \begin{lemma} (Contractivity for Simple Functions) \par
 	Let $f : \Omega \rightarrow E$ be an integrable simple function. Then
@@ -567,7 +563,7 @@ Now comes the most difficult part. Given a convergent sequence of integrable sim
 	\]
 \end{lemma}
 \begin{proof}
-	In the real case, one can show this property by decomposing a function into positive and negative parts. The statement follows via the induction scheme \par\noindent\texttt{integrable\_simple\_function\_induct}. 
+	In the real case, one can show this property by decomposing a function into positive and negative parts. The statement follows via the induction scheme \par\noindent\texttt{integrable\_simple\_function\_induct}.
 \end{proof}
 
 The following lemma is the most involved result of our formalization.
@@ -591,7 +587,7 @@ The following lemma is the most involved result of our formalization.
 	\[
 		\lim_{n \to \infty} \int \textrm{diam}(S_n(x)) \; \textrm{d}\mu = 0
 	\]
-	We will now show that $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ is Cauchy in the $L^1$ norm.
+	We will now show that $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ is Cauchy in the $L^1$-norm.
 	Let $\varepsilon > 0$. Hence there is some $N \in \mathbb{N}$ such that $\int \textrm{diam}(S_n(x)) < \varepsilon$. Thus for any $i,j \ge N$, we have
 	\[
 		\int \lVert s_i(x) - s_j(x) \rVert \; \textrm{d}\mu \le \int \textrm{diam}(S_N(x)) \; \textrm{d}\mu < \varepsilon
@@ -604,7 +600,7 @@ The following lemma is the most involved result of our formalization.
 		&= \int \lVert s_i(x) - s_j(x)\rVert \; \textrm{d}\mu \\
 		&< \varepsilon
 	\end{align*}
-	since $s_i(x)-s_j(x)$ is an integrable simple function and conditional expectation already exists in the real setting. Hence $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ is Cauchy in the $L^1$ norm. Therefore, there exists some subsequence $(\texttt{cond\_exp} \; M \; F \; s_{r_n})_{n \in \mathbb{N}}$ that convergences $\mu$-a.e. We have for all $n \in \mathbb{N}$
+	since $s_i(x)-s_j(x)$ is an integrable simple function and conditional expectation already exists in the real setting. Hence $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ is Cauchy in the $L^1$-norm. Therefore, there exists some subsequence $(\texttt{cond\_exp} \; M \; F \; s_{r_n})_{n \in \mathbb{N}}$ that convergences $\mu$-a.e. We have for all $n \in \mathbb{N}$
 	\[
 		\lVert (\texttt{cond\_exp} \; M \; F \; s_{r_n}) (x) \rVert \le \texttt{cond\_exp} \; M \; F \; (\lambda x. \; 2 \cdot \lVert f(x)\rVert) \; \mu\textrm{-a.e.}
 	\]
@@ -630,7 +626,7 @@ At one point in the proof of our lemma, we have used the fact that a convergent 
 	\end{lstlisting}
 }
 
-In our case, we can't easily formulate the convergence of $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ in the $L^1$ norm in the manner stated above. Therefore we have introduced the following lemma which is more flexible. Mathematically, the underlying argument is the same.
+In our case, it is cumbersome to formulate the convergence of $(\texttt{cond\_exp} \; M \; F \; s_n)_{n \in \mathbb{N}}$ in the $L^1$-norm in the manner stated above. One might be tempted to use the diameter lemma in the other direction to bring the expression into this form. On paper this is indeed plausible. However, it involves showing that the functions $\texttt{cond\_exp} \; M \; F \; s_n$ have an integrable upper bound $w$. Furthermore, one has to jump back and forth between using the binder \lstinline[mathescape]{AE $x$ in $M$.} and directly showing statements for $x \in \texttt{space} \; M$. We have decided that it would be easier to formalize and use the following more flexible lemma instead. Mathematically, the underlying argument is the same.
 
 \begin{isalemma}
 {\small
@@ -668,9 +664,11 @@ The main result of this subsection is formalized in Isabelle as follows
 
 \subsection{Properties of the Conditional Expectation}
 
+We will now introduce some commonly used properties of the conditional expectation.
+
 \subsubsection{Identity on $F$-measurable functions}
 
-If an integrable function $f$ is already $F$-measurable, then $\texttt{cond\_exp} \; M \; F \; f = f \;\;\mu\texttt{-a.e.}$ This is a corollary of the lemma on the characterization of \texttt{cond\_exp}.
+If an integrable function $f$ is already $F$-measurable, then ``$\texttt{cond\_exp} \; M \; F \; f = f$'' $\mu$-a.e. This is a corollary of the lemma on the characterization of \texttt{cond\_exp}.
 \begin{isacorollary}
 {\small
 	\begin{lstlisting}[style=isabelle]
@@ -706,7 +704,7 @@ The following property is called the \textit{tower property} of the conditional 
 
 A linear operator $L : V \rightarrow W$ between normed vector spaces $V$ and $W$ is called a \textit{contraction} if its operator norm
 \[
-	\lVert L \rVert_{\texttt{op}} = \inf\{ c \geq 0 : \lVert Lv \rVert_W \leq c \lVert v \rVert_V \textrm{ for all } v \in V \}
+	\lVert L \rVert_{\texttt{op}} = \inf\{ c \geq 0 \;\vert\; \lVert Lv \rVert_W \leq c \lVert v \rVert_V \textrm{ for all } v \in V \}
 \]
 is less than or equal to 1. Such an operator always preserves limits and has other useful properties in functional analysis \cite{sznagy2010}.
 
@@ -804,7 +802,7 @@ The following property of the conditional expectation is called ``pulling out wh
 
 \section{Conditional Expectation on Linearly Ordered Banach Spaces}
 
-In the presence of an ordering, we can prove certain monotonicity properties of the conditional expectation. We start with the following two lemmas
+In the presence of a linear ordering, we can prove certain monotonicity properties of the conditional expectation. We start with the following two lemmas
 
 \begin{lemma}
 	Let $f \in L^1(E)$. Assume $f \ge c$ $\mu$-a.e. for some $c \in E$. Then 

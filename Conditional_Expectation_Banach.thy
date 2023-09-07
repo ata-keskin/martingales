@@ -77,7 +77,7 @@ proof -
     also have "... = (\<integral>x \<in> A. cond_exp M F f x \<partial>?MF)" using subalg by (auto simp add: integral_subalgebra2 set_lebesgue_integral_def)
     finally have "(\<integral>x \<in> A. g x \<partial>?MF) = (\<integral>x \<in> A. cond_exp M F f x \<partial>?MF)" by simp
   }
-  hence "AE x in ?MF. cond_exp M F f x = g x" using cond_exp assms subalg by (intro density_unique, auto dest: has_cond_expD intro!: integrable_in_subalg)
+  hence "AE x in ?MF. cond_exp M F f x = g x" using cond_exp assms subalg by (intro density_unique_banach, auto dest: has_cond_expD intro!: integrable_in_subalg)
   then show "AE x in M. cond_exp M F f x = g x" using AE_restr_to_subalg[OF subalg] by simp
 qed
 
@@ -342,12 +342,11 @@ lemma has_cond_exp_simple_lim:
       and "\<And>x. x \<in> space M \<Longrightarrow> (\<lambda>i. s i x) \<longlonglongrightarrow> f x"
       and "\<And>x i. x \<in> space M \<Longrightarrow> norm (s i x) \<le> 2 * norm (f x)"
   obtains r 
-  where "has_cond_exp M F f (\<lambda>x. lim (\<lambda>i. cond_exp M F (s (r i)) x))" 
+  where "strict_mono r" "has_cond_exp M F f (\<lambda>x. lim (\<lambda>i. cond_exp M F (s (r i)) x))" 
         "AE x in M. convergent (\<lambda>i. cond_exp M F (s (r i)) x)"
-        "strict_mono r"
 proof -
   have [measurable]: "(s i) \<in> borel_measurable M" for i using assms(2) by (simp add: borel_measurable_simple_function)
-  have integrable_s: "integrable M (\<lambda>x. s i x)" for i using assms(2) assms(3) integrable_simple_function by blast
+  have integrable_s: "integrable M (\<lambda>x. s i x)" for i using assms integrable_simple_function by blast
   have integrable_4f: "integrable M (\<lambda>x. 4 * norm (f x))" using assms(1) by simp
   have integrable_2f: "integrable M (\<lambda>x. 2 * norm (f x))" using assms(1) by simp
   have integrable_2_cond_exp_norm_f: "integrable M (\<lambda>x. 2 * cond_exp M F (\<lambda>x. norm (f x)) x)" by fast
@@ -374,13 +373,11 @@ proof -
   qed
   ultimately have diameter_tendsto_zero: "(\<lambda>n. LINT x|M. diameter {s i x | i. n \<le> i}) \<longlonglongrightarrow> 0" by (intro integral_dominated_convergence[OF borel_measurable_const[of 0] _ integrable_4f, simplified]) (fast+)
   
-  have diameter_integrable: "integrable M (\<lambda>x. diameter {s i x | i. n \<le> i})" for n using assms(1,5) by (intro integrable_bound_diameter[OF bounded_range_s integrable_2f], auto)
+  have diameter_integrable: "integrable M (\<lambda>x. diameter {s i x | i. n \<le> i})" for n using assms(1,5) 
+    by (intro integrable_bound_diameter[OF bounded_range_s integrable_2f], auto)
 
-  have dist_integrable: "integrable M (\<lambda>x. dist (s i x) (s j x))" for i j 
-    using assms(5) dist_triangle3[of "s i _" _ 0, THEN order_trans, OF add_mono, of _ "2 * norm (f _)"]
+  have dist_integrable: "integrable M (\<lambda>x. dist (s i x) (s j x))" for i j  using assms(5) dist_triangle3[of "s i _" _ 0, THEN order_trans, OF add_mono, of _ "2 * norm (f _)"]
     by (intro Bochner_Integration.integrable_bound[OF integrable_4f]) fastforce+
-   
-  hence dist_norm_integrable: "integrable M (\<lambda>x. norm (s i x - s j x))" for i j unfolding dist_norm by presburger
 
   have "\<exists>N. \<forall>i\<ge>N. \<forall>j\<ge>N. LINT x|M. norm (cond_exp M F (s i) x - cond_exp M F (s j) x) < e" if e_pos: "e > 0" for e
   proof -
@@ -398,7 +395,7 @@ proof -
       have "LINT x|M. norm (cond_exp M F (s i) x - cond_exp M F (s j) x) = LINT x|M. norm (cond_exp M F (s i) x + - 1 *\<^sub>R cond_exp M F (s j) x)" unfolding dist_norm by simp
       also have "... = LINT x|M. norm (cond_exp M F (\<lambda>x. s i x - s j x) x)" using has_cond_exp_charact(2)[OF has_cond_exp_add[OF _ has_cond_exp_scaleR_right, OF has_cond_exp_charact(1,1), OF has_cond_exp_simple(1,1)[OF assms(2,3)]], THEN AE_symmetric, of i "-1" j] by (intro integral_cong_AE) force+      
       also have "... \<le> LINT x|M. cond_exp M F (\<lambda>x. norm (s i x - s j x)) x" using cond_exp_contraction_simple[OF _ fin_sup, of i j] integrable_cond_exp assms(2) by (intro integral_mono_AE, fast+)
-      also have "... = LINT x|M. norm (s i x - s j x)" unfolding set_integral_space(1)[OF integrable_cond_exp, symmetric] set_integral_space[OF dist_norm_integrable, symmetric] by (intro has_cond_expD(1)[OF has_cond_exp_simple[OF _ fin_sup_norm], symmetric]) (metis assms(2) simple_function_compose1 simple_function_diff, metis sets.top subalg subalgebra_def)
+      also have "... = LINT x|M. norm (s i x - s j x)" unfolding set_integral_space(1)[OF integrable_cond_exp, symmetric] set_integral_space[OF dist_integrable[unfolded dist_norm], symmetric] by (intro has_cond_expD(1)[OF has_cond_exp_simple[OF _ fin_sup_norm], symmetric]) (metis assms(2) simple_function_compose1 simple_function_diff, metis sets.top subalg subalgebra_def)
       finally show ?thesis unfolding dist_norm .  
     qed
     ultimately show ?thesis using order.strict_trans1 by meson
@@ -443,19 +440,6 @@ proof -
   }
   hence "has_cond_exp M F f (\<lambda>x. lim (\<lambda>i. cond_exp M F (s (r i)) x))" using assms(1) lim_integrable by (intro has_cond_expI', auto) 
   thus thesis using AE_Cauchy Cauchy_convergent strict_mono_r by (auto intro!: that)
-qed
-
-lemma cond_exp_simple_lim:
-    fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
-  assumes [measurable]:"integrable M f"
-      and "\<And>i. simple_function M (s i)"
-      and "\<And>i. emeasure M {y \<in> space M. s i y \<noteq> 0} \<noteq> \<infinity>"
-      and "\<And>x. x \<in> space M \<Longrightarrow> (\<lambda>i. s i x) \<longlonglongrightarrow> f x"
-      and "\<And>x i. x \<in> space M \<Longrightarrow> norm (s i x) \<le> 2 * norm (f x)"
-  obtains r where "AE x in M. (\<lambda>i. cond_exp M F (s (r i)) x) \<longlonglongrightarrow> cond_exp M F f x" "strict_mono r"
-proof -
-  obtain r where "AE x in M. cond_exp M F f x = lim (\<lambda>i. cond_exp M F (s (r i)) x)" "AE x in M. convergent (\<lambda>i. cond_exp M F (s (r i)) x)" "strict_mono r" using has_cond_exp_charact(2) by (auto intro: has_cond_exp_simple_lim[OF assms])
-  thus ?thesis by (auto intro!: that[of r] simp: convergent_LIMSEQ_iff)
 qed
 
 corollary has_cond_expI:
@@ -518,16 +502,19 @@ proof -
   obtain s where s: "\<And>i. simple_function M (s i)" "\<And>i. emeasure M {y \<in> space M. s i y \<noteq> 0} \<noteq> \<infinity>" "\<And>x. x \<in> space M \<Longrightarrow> (\<lambda>i. s i x) \<longlonglongrightarrow> f x" "\<And>i x. x \<in> space M \<Longrightarrow> norm (s i x) \<le> 2 * norm (f x)" 
     by (blast intro: integrable_implies_simple_function_sequence[OF assms])
 
-  obtain r where r: "AE x in M. (\<lambda>i. cond_exp M F (s (r i)) x) \<longlonglongrightarrow> cond_exp M F f x" "strict_mono r" using cond_exp_simple_lim[OF assms s] by blast
+  obtain r where r: "strict_mono r" and "has_cond_exp M F f (\<lambda>x. lim (\<lambda>i. cond_exp M F (s (r i)) x))" "AE x in M. (\<lambda>i. cond_exp M F (s (r i)) x) \<longlonglongrightarrow> lim (\<lambda>i. cond_exp M F (s (r i)) x)"
+    using has_cond_exp_simple_lim[OF assms s] unfolding convergent_LIMSEQ_iff by blast
+  hence r_tendsto: "AE x in M. (\<lambda>i. cond_exp M F (s (r i)) x) \<longlonglongrightarrow> cond_exp M F f x" using has_cond_exp_charact(2) by force
 
   have norm_s_r: "\<And>i. simple_function M (\<lambda>x. norm (s (r i) x))" "\<And>i. emeasure M {y \<in> space M. norm (s (r i) y) \<noteq> 0} \<noteq> \<infinity>" "\<And>x. x \<in> space M \<Longrightarrow> (\<lambda>i. norm (s (r i) x)) \<longlonglongrightarrow> norm (f x)" "\<And>i x. x \<in> space M \<Longrightarrow> norm (norm (s (r i) x)) \<le> 2 * norm (norm (f x))" 
-    using s by (auto intro: LIMSEQ_subseq_LIMSEQ[OF tendsto_norm r(2), unfolded comp_def] simple_function_compose1) 
+    using s by (auto intro: LIMSEQ_subseq_LIMSEQ[OF tendsto_norm r, unfolded comp_def] simple_function_compose1) 
   
-  obtain r' where r': "AE x in M. (\<lambda>i. (cond_exp M F (\<lambda>x. norm (s (r (r' i)) x)) x)) \<longlonglongrightarrow> cond_exp M F (\<lambda>x. norm (f x)) x" "strict_mono r'" using cond_exp_simple_lim[OF integrable_norm norm_s_r, OF assms] by blast
+  obtain r' where r': "strict_mono r'" and "has_cond_exp M F (\<lambda>x. norm (f x)) (\<lambda>x. lim (\<lambda>i. cond_exp M F (\<lambda>x. norm (s (r (r' i)) x)) x))" "AE x in M. (\<lambda>i. cond_exp M F (\<lambda>x. norm (s (r (r' i)) x)) x) \<longlonglongrightarrow> lim (\<lambda>i. cond_exp M F (\<lambda>x. norm (s (r (r' i)) x)) x)" using has_cond_exp_simple_lim[OF integrable_norm norm_s_r, OF assms] unfolding convergent_LIMSEQ_iff by blast
+  hence r'_tendsto: "AE x in M. (\<lambda>i. cond_exp M F (\<lambda>x. norm (s (r (r' i)) x)) x) \<longlonglongrightarrow> cond_exp M F (\<lambda>x. norm (f x)) x" using has_cond_exp_charact(2) by force
 
   have "AE x in M. \<forall>i. norm (cond_exp M F (s (r (r' i))) x) \<le> cond_exp M F (\<lambda>x. norm (s (r (r' i)) x)) x" using s by (auto intro: cond_exp_contraction_simple simp add: AE_all_countable)
-  moreover have "AE x in M. (\<lambda>i. norm (cond_exp M F (s (r (r' i))) x)) \<longlonglongrightarrow> norm (cond_exp M F f x)" using r LIMSEQ_subseq_LIMSEQ[OF tendsto_norm r'(2), unfolded comp_def] by fast
-  ultimately show ?thesis using LIMSEQ_le r'(1) by fast
+  moreover have "AE x in M. (\<lambda>i. norm (cond_exp M F (s (r (r' i))) x)) \<longlonglongrightarrow> norm (cond_exp M F f x)" using r_tendsto LIMSEQ_subseq_LIMSEQ[OF tendsto_norm r', unfolded comp_def] by fast
+  ultimately show ?thesis using LIMSEQ_le r'_tendsto by fast
 qed
 
 (* The following lemma (pulling out whats known) is far from trivial *)
@@ -548,7 +535,7 @@ proof-
     also have "... = set_lebesgue_integral M A (\<lambda>x. f x * cond_exp M F g x)" using cond_exp_real[OF assms(2)] asm' borel_measurable_cond_exp' borel_measurable_cond_exp2 measurable_from_subalg[OF subalg assms(3)] by (auto simp add: set_lebesgue_integral_def intro: integral_cong_AE)
     finally have "set_lebesgue_integral M A (cond_exp M F (\<lambda>x. f x * g x)) = \<integral>x\<in>A. (f x * cond_exp M F g x)\<partial>M" .
   }
-  hence "AE x in restr_to_subalg M F. cond_exp M F (\<lambda>x. f x * g x) x = f x * cond_exp M F g x" by (intro density_unique integrable_cond_exp integrable integrable_in_subalg subalg, measurable, simp add: set_lebesgue_integral_def integral_subalgebra2[OF subalg] sets_restr_to_subalg[OF subalg])
+  hence "AE x in restr_to_subalg M F. cond_exp M F (\<lambda>x. f x * g x) x = f x * cond_exp M F g x" by (intro density_unique_banach integrable_cond_exp integrable integrable_in_subalg subalg, measurable, simp add: set_lebesgue_integral_def integral_subalgebra2[OF subalg] sets_restr_to_subalg[OF subalg])
   thus "AE x in M. cond_exp M F (\<lambda>x. f x * g x) x = f x * cond_exp M F g x" by (rule AE_restr_to_subalg[OF subalg])
 qed
 

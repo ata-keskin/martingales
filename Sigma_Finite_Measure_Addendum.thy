@@ -144,7 +144,7 @@ lemma density_zero:
   using averaging_theorem[OF assms(1), of "{0}"] assms(2)
   by (simp add: scaleR_nonneg_nonneg)
 
-lemma density_unique:
+lemma density_unique_banach:
   fixes f f'::"'a \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes "integrable M f" "integrable M f'"
       and density_eq: "\<And>A. A \<in> sets M \<Longrightarrow> set_lebesgue_integral M A f = set_lebesgue_integral M A f'"

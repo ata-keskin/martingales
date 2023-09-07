@@ -496,16 +496,20 @@ locale nat_supermartingale_linorder = supermartingale_linorder M F "0 :: nat" X 
 sublocale nat_submartingale_linorder \<subseteq> nat_submartingale ..
 sublocale nat_supermartingale_linorder \<subseteq> nat_supermartingale ..
 
-lemma (in nat_martingale) predictable_eq_zero:
+lemma (in nat_martingale) predictable_const:
   assumes "nat_predictable_process M F X"
-  shows "AE \<xi> in M. X i \<xi> = X 0 \<xi>"
-proof (induction i)
-  case 0
-  then show ?case by (simp add: bot_nat_def)
-next
-  case (Suc i)
-  interpret S: nat_adapted_process M F "\<lambda>i. X (Suc i)" by (intro nat_predictable_process.adapted_Suc assms)
-  show ?case using Suc S.adapted[of i] martingale_property[OF _ le_SucI, of i] sigma_finite_subalgebra.cond_exp_F_meas[OF _ integrable, of "F i" "Suc i"] by fastforce
+  shows "AE \<xi> in M. X i \<xi> = X j \<xi>"
+proof -
+  have *: "AE \<xi> in M. X i \<xi> = X 0 \<xi>" for i
+  proof (induction i)
+    case 0
+    then show ?case by (simp add: bot_nat_def)
+  next
+    case (Suc i)
+    interpret S: nat_adapted_process M F "\<lambda>i. X (Suc i)" by (intro nat_predictable_process.adapted_Suc assms)
+    show ?case using Suc S.adapted[of i] martingale_property[OF _ le_SucI, of i] sigma_finite_subalgebra.cond_exp_F_meas[OF _ integrable, of "F i" "Suc i"] by fastforce
+  qed
+  show ?thesis using *[of i] *[of j] by force
 qed
 
 lemma (in nat_sigma_finite_adapted_process) martingale_of_set_integral_eq_Suc:

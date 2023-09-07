@@ -13,6 +13,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{geometry}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}[theorem]{Corollary}
@@ -42,7 +43,7 @@
     keywordstyle=[2]\bfseries\color{isargreen},
     keywords=[3]{if,then,else,SOME,let,in,AE,LINT},
     keywordstyle=[3]\color{isarblue},
-	keywords=[4]{define,assume,fix,show,thus},
+	keywords=[4]{define,assume,fix,show,thus, obtain},
     keywordstyle=[4]\bfseries\color{isarlightblue},
 }
 \lstdefinestyle{isabelle}
@@ -96,7 +97,6 @@
 
 \input{pages/title}
 \input{pages/disclaimer}
-\input{pages/acknowledgements}
 \input{pages/abstract}
 \microtypesetup{protrusion=false}
 \tableofcontents{}
@@ -108,25 +108,17 @@
 \input{chapters/02_background} %5
 \input{chapters/03_conditional_expectation} %21
 \input{chapters/04_stochastic_processes} %17
-\input{chapters/05_martingales} %12
-\input{chapters/06_discussion} %6
+\input{chapters/05_martingales} %13
+\input{chapters/06_discussion} %7
 \input{chapters/07_conclusion} %1
-% TODO: add more chapters here
 
-\appendix{}
+\appendix
 
 \microtypesetup{protrusion=false}
 
-\addchap{Abbreviations}
-\begin{acronym}
-	\itemsep-.25\baselineskip
-	\acro{AFP}[AFP]{Archive of Formal Proofs}
-	% TODO: add acronyms
-\end{acronym}
-
-\listoffigures{}
-\listoftables{}
 \microtypesetup{protrusion=true}
 \printbibliography{}
+
+\input{pages/appendix}
 
 \end{document}

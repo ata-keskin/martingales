@@ -7,6 +7,8 @@ In this section we will introduce and discuss martingales, the namesake of our t
 
 \section{Fundamentals}
 
+We start with the definition of a martingale.
+
 \begin{definition}
 	Let $(F_t)_{t \in [t_0,\infty)}$ be a filtration of the measure space $M$. A stochastic process $(X_t)_{t \in [t_0,\infty)}$ taking values in a Banach space $(E, \lVert \cdot \rVert)$ is a \textit{martingale with respect to the filtration $(F_t)_{t \in [t_0,\infty)}$} if the following conditions hold
 	\begin{enumerate}
@@ -31,7 +33,7 @@ locale martingale = sigma_finite_adapted_process +
 \end{isadefinition}
 
 \begin{remark}
- In addition to what we've discussed in the last chapter, we have introduced the locale \texttt{sigma\_finite\_adapted\_process} which combines the locale \texttt{adapted\_process} with the locale \texttt{sigma\_finite\_filtered\_measure}. Without this additional restriction, we can't use the operator \texttt{cond\_exp}. Similary, the locale \texttt{sigma\_finite\_adapted\_process\_order} places a restriction on the Banach space $(E, \lVert \cdot \rVert)$, asserting the existence of an ordering compatible with scalar multiplication. Finally, the locale \texttt{sigma\_finite\_adapted\_process\_linorder} further mandates that this ordering be total. We have also introduced locales for discrete-time and continuous-time counterparts.
+ In addition to what we've discussed in the last chapter, we have introduced the locale \texttt{sigma\_finite\_adapted\_process} which combines the locale \texttt{adapted\_process} with the locale \texttt{sigma\_finite\_filtered\_measure}. Without this additional restriction, we can't use the operator \texttt{cond\_exp}. Similary, the locale \texttt{sigma\_finite\_adapted\_process\-\_order} places a restriction on the Banach space $(E, \lVert \cdot \rVert)$, asserting the existence of an ordering compatible with scalar multiplication. Finally, the locale \texttt{sigma\_finite\_adapted\-\_process\_linorder} further mandates that this ordering be total. We have also introduced locales for discrete-time and continuous-time counterparts.
 \end{remark}
 
 Any stochastic process that is both a submartingale and a supermartingale is a martingale. Conversely, every martingale is also a submartingale and a supermartingale if there exists an ordering on the Banach space $E$. In anticipation of this result, we introduce the following locales.
@@ -305,9 +307,9 @@ In this case, the intuition is similar. The average value of a submartingale on 
 \begin{example}
 Consider a coin-tossing game, where the coin lands on heads with probability $p \in [0,1]$. Assume that the gambler wins a fixed amount $c > 0$ on a heads outcome and loses the same amount $c$ on a tails outcome. Let $(X_n)_{n \in \mathbb{N}}$ be a stochastic process, where $X_n$ denotes the gambler's fortune after the $n$-th coin toss. Then, we have the following three cases.
 \begin{enumerate}
-\item If $p = \frac{1}{2}$, it means the coin is fair and has an equal chance of landing heads or tails. In this case, the gambler, on average, neither wins nor loses money over time. The expected value of the gambler's fortune stays the same over time. Therefore, $(X_n)_{n \in \mathbb{N}}$ is a martingale. \\
+\item If $p = \frac{1}{2}$, it means the coin is fair and has an equal chance of landing heads or tails. In this case, the gambler, on average, neither wins nor loses money over time. The expected value of the gambler's fortune stays the same over time. Therefore, $(X_n)_{n \in \mathbb{N}}$ is a martingale.
 \item If $p \ge \frac{1}{2}$, it means the coin is biased in favor of heads. In this case, the gambler is more likely to win money on each bet. Over time, the gambler's fortune tends to increase on average. Therefore, $(X_n)_{n \in \mathbb{N}}$ is a submartingale.
-\item If $p \le \frac{1}{2}$, it means the coin is biased in favor of tails. In this scenario, the gambler is more likely to lose money on each bet. Over time, the gambler's fortune decreases on average. Therefore, $(X_n)_{n \in \mathbb{N}}$ is a supermartingale.\\
+\item If $p \le \frac{1}{2}$, it means the coin is biased in favor of tails. In this scenario, the gambler is more likely to lose money on each bet. Over time, the gambler's fortune decreases on average. Therefore, $(X_n)_{n \in \mathbb{N}}$ is a supermartingale.
 \end{enumerate}
 \end{example}
 
@@ -362,7 +364,7 @@ lemma (in sigma_finite_adapted_process_linorder) supermartingale_of_set_integral
 }
 \end{isalemma}
 
-The idea of the proof is the same. To prevent redundancy, we've demonstrated the latter lemma \texttt{supermartingale\_of\_set\_integral\_ge}, by equivalently showing that the stochastic process $(-X_t)_{t \in [t_0,\infty)}$ is a submartingale using \texttt{submartingale\_of\_set\_integral\_le}. This is easily achieved using the locale system.
+The idea of the proof is the same. To prevent redundancy, we've demonstrated the latter lemma \texttt{supermartingale\_of\_set\_integral\_ge}, by equivalently showing that the stochastic process $(-X_t)_{t \in [t_0,\infty)}$ is a submartingale using \texttt{submartingale\_of\_set\_integ\-ral\_le}. This is easily achieved using the locale system.
 
 Another way to characterize martingales is by examining the conditional expectation of the difference between the process's values at different points in time. We have the following lemmas to address this.
 
@@ -408,6 +410,24 @@ lemma (in sigma_finite_adapted_process_order) supermartingale_of_cond_exp_diff_l
 This characterization also has an informal interpretation. The expected future value of a martingale does not change, when we restrict it to those events that we can measure right now. In a similar fashion, the value of a submartingale is expected to increase and the value of a supermartingale is expected to decrease as time progresses.
 
 \section{Discrete-Time Martingales}
+
+Discrete-time martingales are widely used to model processes that evolve over a sequence of discrete time steps while satisfying the martingale property, such as financial asset prices, random walks, and stochastic games. We define the following locales.
+
+\begin{isadefinition}
+{\small
+\begin{lstlisting}[style=isabelle]
+locale nat_martingale = martingale $M$ $F$ "$0 :: \; \texttt{nat}$" $X$ for $M$ $F$ $X$
+locale nat_submartingale = submartingale $M$ $F$ "$0 :: \; \texttt{nat}$" $X$ for $M$ $F$ $X$
+locale nat_supermartingale = supermartingale $M$ $F$ "$0 :: \; \texttt{nat}$" $X$ for $M$ $F$ $X$
+
+locale nat_submartingale_linorder = submartingale_linorder $M$ $F$ "$0 :: \; \texttt{nat}$" $X$ for $M$ $F$ $X$
+locale nat_supermartingale_linorder = supermartingale_linorder $M$ $F$ "$0 :: \; \texttt{nat}$" $X$ for $M$ $F$ $X$
+
+sublocale nat_submartingale_linorder $\subseteq$ nat_submartingale ..
+sublocale nat_supermartingale_linorder $\subseteq$ nat_supermartingale ..
+\end{lstlisting}
+}
+\end{isadefinition}
 
 Many of the statements we have made above, can be simplified when the indexing set is discrete. Given a point in time $i \in \mathbb{N}$, it suffices to consider the successor $i + 1$, instead of all future times $j \ge i$. This can be stated as follows.
 
@@ -577,4 +597,4 @@ lemma (in nat_supermartingale) predictable_mono:
 }
 \end{isalemma}
 
-This wraps up our formalization of martingales in Isabelle. While we have not formalized any major results concerning martingales, as it was out of the scope of this thesis, we hold a strong belief that the groundwork we've laid here will provide an excellent foundation for future formalization endeavors.
+This wraps up our formalization of martingales in Isabelle. As it was out of the scope of this thesis, we have not formalized any major results concerning martingales. That being said, we hold a strong belief that the groundwork we've laid here will provide an excellent foundation for future formalization endeavors.

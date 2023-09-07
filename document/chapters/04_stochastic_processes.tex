@@ -3,7 +3,7 @@
 
 \chapter{Stochastic Processes}\label{chapter:stochastic_processes}
 
-It wouldn't make sense to talk about martingales without introducing stochastic processes first. In standard terminology, a stochastic process is a collection of random variables defined on the same probability space. The indexing set often represents time, and each random variable in the collection corresponds to an outcome at a specific point in that set. These processes are fundamental in understanding how random processes evolve over time. 
+It wouldn't make sense to talk about martingales without introducing stochastic processes first. In standard terminology, a stochastic process is a collection of random variables defined on the same probability space. The indexing set often represents time, and each random variable in the collection corresponds to an outcome at a specific point of time in that set.
 
 Take the example of stock price movement, where each day's stock price is a random variable influenced by a variety of uncertain factors. This sequence of prices forms a stochastic process, describing the stock's behavior. Another instance is the Poisson process, which models events like customer arrivals at a service center. This process captures the randomness in the timing of arrivals, aiding in optimizing resource allocation and enhancing customer service. In physics, Brownian motion characterizes the unpredictable and continuous trajectory followed by particles suspended in a medium due to random collisions with surrounding molecules, which is again modelled as a stochastic process. The theory of stochastic processes is the cornerstone for analysing randomness and building models that mirror real-world uncertainties.
 
@@ -12,6 +12,7 @@ Keeping this in consideration, we aim to build a comprehensive foundation for a 
 The locale system in Isabelle is useful for managing large formal developments, as it promotes modularity and reusability. It allows us to define generic theorems and structures in one place and then reuse them in multiple contexts without duplicating efforts. For instance, when defining filtered measure spaces in the following section, we will need to have an element act as the de facto bottom element of an index type. Locales allow us to easily fix such an element for this purpose.
 
 We start with the following locale definition.
+\pagebreak
 
 \begin{isadefinition}
 {\small
@@ -139,7 +140,7 @@ lemma partial_sum': "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda n \; 
 
 lemma stochastic_process_sum:
   assumes "$\bigwedge i. \; i \in I \implies \texttt{stochastic\_process} \; M \; t_0 \; (X \; i)$"
-  shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda k x. \; \sum i \in I. \; X \; i \; k \; x)$" 
+  shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda k \; x. \; \sum i \in I. \; X \; i \; k \; x)$" 
   using assms[THEN stochastic_process.random_variable] by (unfold_locales, auto)
 
 \end{lstlisting}
@@ -169,7 +170,7 @@ Before presenting the remaining process varities, we must introduce the concept 
 
 A filtered measure space is a measure space equipped with a sequence of increasing sub-$\sigma$-algebras, called a \textit{filtration} that represents the accumulation of information over time.
 
-Concretely, let $M$ be a measure space. Assume we have a sequence of sigma-algebras $(F_n)_{n \in \mathbb{N}}$ where 
+Let $M$ be a measure space. Assume we have a sequence of $\sigma$-algebras $(F_n)_{n \in \mathbb{N}}$ where 
 \[
 	F_0 \subseteq F_1 \subseteq F_2 \subseteq \dots
 \]
@@ -197,7 +198,7 @@ definition subalgebra::"$'a \; \texttt{measure} \; \Rightarrow 'a \; \texttt{mea
 	In Isabelle the $\texttt{measure}$ type is used to represent both measure spaces and $\sigma$-algebras. The latter is achieved by only considering the underlying $\sigma$-algebra via the projection \texttt{sets}.
 \end{remark}
 
-In general, a type with an ordering does not necessarily inhabit a bottom element, i.e. an element that is lesser than any other element. In the next section, we will see how the existence of a bottom element lets us make easy statements about what constitutes an adapted process and what not. From a practical point of view, this is not too much to assume, since all random processes one encounters in the real world must start at some fixed point in time (or at least that assumption can be made for practical purposes).
+In general, a type with an ordering does not necessarily inhabit a bottom element, i.e. an element that is less than or equal to any other element. In the next section, we will see how the existence of a bottom element lets us easily make statements concerning when a family of random variables constitutes an adapted process. From a practical point of view, this is not too much to assume, since all random processes one encounters in the real world must start at some fixed point in time (or at least that assumption can be made for practical purposes).
 
 The keen reader might have noticed that we need a little bit more to define martingales properly. Namely, the sub-$\sigma$-algebras that comprise the filtration $(F_n)_{n \in \mathbb{N}}$ must all be $\sigma$-finite. Otherwise, we can't make use of our lemmas concerning the conditional expectation. We introduce the following locale to adress this issue.
 
@@ -261,8 +262,8 @@ Preparing for our next example, we introduce a formalization for the notion of a
 \begin{isadefinition}
 {\small
 \begin{lstlisting}[style=isabelle]
-definition sigma_gen :: "$'a \; \texttt{set} \; \Rightarrow \; 'b \; \texttt{measure} \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \texttt{set} \; \Rightarrow \; 'a \;\texttt{measure}$" where
-  "$\texttt{sigma\_gen} \; \Omega \; N \; S \equiv \texttt{sigma} \; \Omega \; (\bigcup f \in S. \; \{(f \;\text{-\textasciigrave} \; A) \; \cap \; \Omega \;\vert\; A. \; A \in N\})$"
+definition family_vimage_algebra :: "$'a \; \texttt{set} \; \Rightarrow \; 'b \; \texttt{measure} \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \texttt{set} \; \Rightarrow \; 'a \;\texttt{measure}$" where
+  "$\texttt{family\_vimage\_algebra} \; \Omega \; S \; N  \equiv \texttt{sigma} \; \Omega \; (\bigcup f \in S. \; \{(f \;\text{-\textasciigrave} \; A) \; \cap \; \Omega \;\vert\; A. \; A \in N\})$"
 \end{lstlisting}
 }
 \end{isadefinition}
@@ -272,8 +273,9 @@ Given two measure spaces $(V, \mathcal{A})$ and $(W, \mathcal{B})$, it is a well
 \begin{isalemma}
 {\small
 \begin{lstlisting}[style=isabelle]
-lemma measurable_family_iff_contains_sigma_gen:
-  shows "$(S \subseteq M \rightarrow_M N) \longleftrightarrow S \subseteq (\texttt{space}\; M \rightarrow \;\texttt{space}\; N) \wedge \texttt{sigma\_gen} \; (\texttt{space}\; M) \; N \; S \subseteq M$"
+lemma measurable_family_iff_sets:
+  shows "$(S \subseteq N \rightarrow_M M) \longleftrightarrow S \subseteq (\texttt{space}\; N \rightarrow \;\texttt{space}\; M) \; \wedge$
+                            $\texttt{family\_vimage\_algebra} \; (\texttt{space}\; N) \; S\; M \subseteq N$"
   $\dots$
 \end{lstlisting}
 }
@@ -285,11 +287,11 @@ Now, we can introduce our more interesting example, the \textbf{natural filtrati
 {\small
 \begin{lstlisting}[style=isabelle]
 definition natural_filtration :: "$'a \; \texttt{measure} \; \Rightarrow \; 'b \; \Rightarrow \; ('b \; \Rightarrow \; 'a \; \Rightarrow \; 'c ) \; \Rightarrow \; 'b \; \Rightarrow \; 'a \; \texttt{measure}$" where
-  "$\texttt{natural\_filtration} \; M \; t_0 \; Y = (\lambda t. \; \texttt{sigma\_gen} \; (\texttt{space} \; M) \; \texttt{borel} \; \{Y \; i \; \vert\; i. \; i \in \{t_0..t\}\})$"
+  "$\texttt{natural\_filtration} \; M \; t_0 \; Y = (\lambda t. \; \texttt{family\_vimage\_algebra} \; (\texttt{space} \; M) \; \{Y \; i \; \vert\; i. \; i \in \{t_0..t\}\}\; \texttt{borel})$"
 \end{lstlisting}
 }
 \end{isadefinition}
-The natural filtration with respect to a stochastic process $Y$ is the filtration generated by all events involving the process up to the time index $t$, i.e. $F_t = \sigma(\{Y_i \; \vert\; i. \; i¸ \le t\})$. Assuming that $Y$ is a stochastic process, i.e. $Y_i$ is $M$-measurable for all $i \ge t_0$, the definition indeed provides a filtration. The following sublocale relation formalizes this.
+The natural filtration with respect to a stochastic process $Y$ is the filtration generated by all events involving the process up to the time index $t$, i.e. $F_t = \sigma(\{Y_i \; \vert\; i. \; i \le t\})$. Assuming that $Y$ is a stochastic process, i.e. $Y_i$ is $\Sigma$-measurable for all $i \ge t_0$, the definition indeed provides a filtration. The following sublocale relation formalizes this.
 
 \begin{isalemma}
 {\small
@@ -303,7 +305,7 @@ sublocale stochastic_process $\subseteq$ filtered_measure_natural_filtration:
 }
 \end{isalemma}
 
-The natural filtration contains information concerning the process's past behavior at each point in time. The natural filtration is essentially the simplest filtration for studying a process. However, the natural filtration is not always $\sigma$-finite. In order to show that the natural filtration give rise to a sigma finite filtered measure, we need to provide a countable exhausting set in the preimage of $X_{t_0}$.
+The natural filtration contains information concerning the process's past behavior at each point in time. The natural filtration is essentially the simplest filtration for studying a process. However, the natural filtration is not always $\sigma$-finite. In order to show that the natural filtration gives rise to a $\sigma$-finite filtered measure, we need to provide a countable exhausting set in the preimage of $X_{t_0}$.
 
 \begin{isalemma}
 {\small
@@ -336,7 +338,7 @@ This concludes our development of filtered measure spaces.
 
 \section{Adapted Processes}
 
-We call a stochastic process $(X_t)_{t \in [t_0, \infty)}$ is \textit{adapted to the filtration $(F_t)_{t \in [t_0, \infty)}$} if, for every index $t \ge t_0$, the random variable $X_t$ is measurable with respect to the $\sigma$-algebra $F_t$. This means that the value of $X_t$ depends only on the information available up to time $t$. In other words, the process ``adapts'' to the information in a way that it cannot anticipate future values based on events that have not occurred yet. We introduce the following locale.
+We call a stochastic process $(X_t)_{t \in [t_0, \infty)}$ \textit{adapted to the filtration $(F_t)_{t \in [t_0, \infty)}$} if, for every index $t \ge t_0$, the random variable $X_t$ is measurable with respect to the $\sigma$-algebra $F_t$. This means that the value of $X_t$ depends only on the information available up to time $t$. In other words, the process ``adapts'' to the information in a way that it cannot anticipate future values based on events that have not occurred yet. We introduce the following locale.
 
 \begin{isalemma}
 {\small
@@ -469,7 +471,7 @@ sublocale progressive_process $\subseteq$ adapted_process
 }
 \end{isalemma}
 
-On a more interesting note, progressive measurability is equivalent to adaptedness in the discrete setting. The following lemma demonstrates this.
+On a more interesting note, progressive measurability is equivalent to adaptedness in the discrete-time setting. The following lemma demonstrates this.
 
 \begin{lemma}
 	Let $(X_i)_{i \in \mathbb{N}}$ be an adapted process with respect to the filtration $(F_i)_{i \in \mathbb{N}}$. Then it is also progressively measurable.
@@ -501,7 +503,7 @@ Now comes the most challenging portion of this chapter.
 
 \section{Predictable Processes}
 
-Before defining predictable processes in full generality, we will introduce them in the discrete setting, where the definition is easier to grasp.
+Before defining predictable processes in full generality, we will introduce them in the discrete-time setting, where the definition is easier to grasp.
 
 \begin{definition}
 	A discrete-time stochastic process $(X_i)_{i\in\mathbb{N}}$ is called \textit{predictable} with respect to a filtration $(F_i)_{i\in\mathbb{N}}$, if $X_{i + 1}$ is $F_i$-measurable for all $i \in \mathbb{N}$.
@@ -688,7 +690,7 @@ sublocale predictable_process $\subseteq$ progressive_process
 }
 \end{isalemma}
 
-In the scope of our thesis, we will only use results concerning discrete-time predictable processes. We will now show that the above definitions for predictable processes coincide when the index set is $\mathbb{N}$. First we show the following lemma.
+In the scope of our thesis, we will only use results concerning discrete-time predictable processes. We will now show that the general definition of a predictable process coincides with the definition in the discrete-time case. First we show the following lemma.
 
 \begin{theorem}
 	Let $(\bigcup_{i \in \mathbb{N}} \; \{i\} \times A_i) \in \Sigma_P$ for some collection of sets $(A_i)_{i \in \mathbb{N}}$. Then $A_0 \in F_0$ and $A_{i+1} \in F_i$ for all $i \in \mathbb{N}$.

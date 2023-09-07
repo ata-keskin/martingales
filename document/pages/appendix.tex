@@ -1,0 +1,93 @@
+% !TeX root = ../main.tex
+% Add the above to each chapter to make compiling the PDF easier in some editors.
+\newgeometry{left=0.5cm,right=0.5cm}
+\chapter{Appendix}\label{chapter:appendix}
+
+The following tables contain the results of the \textsf{mathlib} document \texttt{probability.mar\-tingale.basic} matched with the corresponding results from our formalization.
+
+\vspace{1cm}
+
+\begin{longtable}{| p{.38\textwidth} p{.57\textwidth} |}
+	\caption[Lookup Table for Martingale Lemmas and Definitions]{Lookup table for martingale lemmas and definitions}\label{tab:martingale_theories} \vspace{0.5cm} \\
+	\hline
+	\textsf{Lean} & \textsf{Isabelle} \\ \hline
+	\texttt{martingale} & \texttt{martingale (locale)}  \\
+	\texttt{martingale.adapted} & \texttt{adapted\_process.adapted}  \\
+	\texttt{martingale.add} & \texttt{martingale.add}  \\
+	\texttt{martingale.condexp\_ae\_eq} & \texttt{martingale.martingale\_property}  \\
+	\texttt{martingale.eq\_zero\_of\_predictable} & \texttt{martingale.predictable\_const}  \\
+	\texttt{martingale.integrable} & \texttt{martingale.integrable}  \\
+	\texttt{martingale.neg} & \texttt{martingale.uminus}  \\
+	\texttt{martingale.set\_integral\_eq} & \texttt{martingale.set\_integral\_eq}  \\
+	\texttt{martingale.smul} & \texttt{martingale.scaleR}  \\
+	\texttt{martingale.strongly\_measurable} & \texttt{stochastic\_process.random\_variable}  \\
+	\texttt{martingale.sub} & \texttt{martingale.diff}  \\
+	\texttt{martingale.submartingale} & \textsf{via sublocale relation}  \\
+	\texttt{martingale.supermartingale} & \textsf{via sublocale relation}  \\
+	\texttt{martingale\_condexp} & \texttt{sigma\_finite\_filtered\_measure.martingale\_cond\_exp}  \\
+	\texttt{martingale\_const} & \texttt{finite\_filtered\_measure.martingale\_const}  \\
+	\texttt{martingale\_const\_fun} & \texttt{sigma\_finite\_filtered\_measure.martingale\_const}  \\
+	\texttt{martingale\_iff} & \texttt{martingale\_iff}  \\
+	\texttt{martingale\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process.martingale\_nat}  \\
+	\texttt{martingale\_of\_condexp\_sub\_eq\_zero\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process.martingale\_of\_cond\_exp\-\_diff\_Suc\_eq\_zero}  \\
+	\texttt{martingale\_of\_set\_integral\_eq\_succ} & \texttt{nat\_sigma\_finite\_adapted\_process.martingale\_of\_set\_integ\-ral\_eq\_Suc}  \\
+	\texttt{martingale\_zero} & \texttt{sigma\_finite\_filtered\_measure.martingale\_zero} \\
+	\hline
+\end{longtable}
+\pagebreak
+\begin{longtable}{| p{.38\textwidth} p{.57\textwidth} |}
+	\caption[Lookup Table for Submartingale Lemmas and Definitions]{Lookup table for submartingale lemmas and definitions}\label{tab:submartingale_theories} \vspace{0.5cm} \\
+	\hline
+	\textsf{Lean} & \textsf{Isabelle} \\ \hline
+	\texttt{submartingale} & \texttt{submartingale (locale)}  \\
+	\texttt{submartingale.adapted} & \texttt{adapted\_process.adapted}  \\
+	\texttt{submartingale.add} & \texttt{submartingale.add}  \\
+	\texttt{submartingale.add\_martingale} & \texttt{submartingale.add}  \\
+	\texttt{submartingale.ae\_le\_condexp} & \texttt{submartingale\_property}  \\
+	\texttt{submartingale.condexp\_sub\_nonneg} & \texttt{submartingale.cond\_exp\_diff\_nonneg}  \\
+	\texttt{submartingale.integrable} & \texttt{submartingale.integrable}  \\
+	\texttt{submartingale.neg} & \texttt{submartingale.uminus}  \\
+	\texttt{submartingale.pos} & \texttt{submartingale.max\_0}  \\
+	\texttt{submartingale.set\_integral\_le} & \texttt{submartingale\_linorder.set\_integral\_le}  \\
+	\texttt{submartingale.smul\_nonneg} & \texttt{submartingale.scaleR\_nonneg}  \\
+	\texttt{submartingale.smul\_le\_zero} & \texttt{submartingale.scaleR\_le\_zero}  \\
+	\texttt{submartingale.strongly\_measurable} & \texttt{stochastic\_process.random\_variable}  \\
+	\texttt{submartingale.sub\_martingale} & \texttt{submartingale.diff}  \\
+	\texttt{submartingale.sub\_supermartingale} & \texttt{submartingale.diff}  \\
+	\texttt{submartingale.sum\_mul\_sub} & \texttt{nat\_submartingale.partial\_sum\_scaleR}  \\
+	\texttt{submartingale.sum\_mul\_sub'} & \texttt{nat\_submartingale.partial\_sum\_scaleR'}  \\
+	\texttt{submartingale.sup} & \texttt{submartingale\_linorder.max}  \\
+	\texttt{submartingale.zero\_le\_of\_predictable} & \texttt{nat\_submartingale.predictable\_mono}  \\
+	\texttt{submartingale\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder.submartingale\-\_nat}  \\
+	\texttt{submartingale\_of\_condexp\_sub\_nonneg} & \texttt{sigma\_finite\_adapted\_process\_order.submartingale\_of\_cond\-\_exp\_diff\_nonneg}  \\
+	\texttt{submartingale\_of\_condexp\_sub\_nonneg\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder.submartingale\-\_of\_cond\_exp\_diff\_Suc\_nonneg}  \\
+	\texttt{submartingale\_of\_set\_integral\_le} & \texttt{sigma\_finite\_adapted\_process\_linorder.submartingale\_of\-\_set\_integral\_le}  \\
+	\texttt{submartingale\_of\_set\_integral\_le\_succ} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder.submartingale\-\_of\_set\_integral\_le\_Suc} \\
+	\hline
+\end{longtable}
+\pagebreak
+\begin{longtable}{| p{.38\textwidth} p{.57\textwidth} |}
+	\caption[Lookup Table for Supermartingale Lemmas and Definitions]{Lookup table for supermartingale lemmas and definitions}\label{tab:supermartingale_theories} \vspace{0.5cm} \\
+	\hline
+	\textsf{Lean} & \textsf{Isabelle} \\ \hline
+	\texttt{supermartingale} & \texttt{supermartingale (locale)}  \\
+	\texttt{supermartingale.adapted} & \texttt{adapted\_process.adapted}  \\
+	\texttt{supermartingale.add} & \texttt{supermartingale.add}  \\
+	\texttt{supermartingale.add\_martingale} & \texttt{supermartingale.add}  \\
+	\texttt{supermartingale.condexp\_ae\_le} & \texttt{supermartingale\_property}  \\
+	\texttt{supermartingale.integrable} & \texttt{supermartingale.integrable}  \\
+	\texttt{supermartingale.le\_zero\_of\_predictable} & \texttt{supermartingale.predictable\_mono}  \\
+	\texttt{supermartingale.neg} & \texttt{supermartingale.uminus}  \\
+	\texttt{supermartingale.set\_integral\_le} & \texttt{supermartingale\_linorder.set\_integral\_ge}  \\
+	\texttt{supermartingale.smul\_nonneg} & \texttt{supermartingale.scaleR\_nonneg}  \\
+	\texttt{supermartingale.smul\_le\_zero} & \texttt{supermartingale.scaleR\_le\_zero}  \\
+	\texttt{supermartingale.strongly\_measurable} & \texttt{stochastic\_process.random\_variable}  \\
+	\texttt{supermartingale.sub\_martingale} & \texttt{supermartingale.diff}  \\
+	\texttt{supermartingale.sub\_submartingale} & \texttt{supermartingale.diff}  \\
+	\texttt{supermartingale\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder.supermartingale\-\_nat}  \\
+	\texttt{supermartingale\_of\_condexp\_sub\_nonneg\-\_nat} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder.supermartingale\-\_of\_cond\-\_exp\_diff\_Suc\_le\_zero}  \\
+	\texttt{supermartingale\_of\_set\_integral\_succ\_le} & \texttt{nat\_sigma\_finite\_adapted\_process\_linorder.supermartingale\-\_of\_set\_integral\_le\_Suc} \\
+	\hline
+\end{longtable}
+
+\restoregeometry
