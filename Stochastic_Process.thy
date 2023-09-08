@@ -31,41 +31,41 @@ lemma stochastic_process_const:
 context stochastic_process
 begin
 
-lemma compose:
+lemma compose_stochastic:
   assumes "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow> f i \<in> borel_measurable borel"
   shows "stochastic_process M t\<^sub>0 (\<lambda>i \<xi>. (f i) (X i \<xi>))"
   by (unfold_locales) (intro measurable_compose[OF random_variable assms]) 
 
-lemma norm: "stochastic_process M t\<^sub>0 (\<lambda>i \<xi>. norm (X i \<xi>))" by (fastforce intro: compose)
+lemma norm_stochastic: "stochastic_process M t\<^sub>0 (\<lambda>i \<xi>. norm (X i \<xi>))" by (fastforce intro: compose_stochastic)
 
-lemma scaleR_right:
+lemma scaleR_right_stochastic:
   assumes "stochastic_process M t\<^sub>0 Y"
   shows "stochastic_process M t\<^sub>0 (\<lambda>i \<xi>. (Y i \<xi>) *\<^sub>R (X i \<xi>))"
   using stochastic_process.random_variable[OF assms] random_variable by (unfold_locales) simp
 
-lemma scaleR_right_const_fun: 
+lemma scaleR_right_const_fun_stochastic: 
   assumes "f \<in> borel_measurable M" 
   shows "stochastic_process M t\<^sub>0 (\<lambda>i \<xi>. f \<xi> *\<^sub>R (X i \<xi>))" 
   by (unfold_locales) (intro borel_measurable_scaleR assms random_variable)
 
-lemma scaleR_right_const: "stochastic_process M t\<^sub>0 (\<lambda>i \<xi>. c i *\<^sub>R (X i \<xi>))"
+lemma scaleR_right_const_stochastic: "stochastic_process M t\<^sub>0 (\<lambda>i \<xi>. c i *\<^sub>R (X i \<xi>))"
   by (unfold_locales) simp
 
-lemma add:
+lemma add_stochastic:
   assumes "stochastic_process M t\<^sub>0 Y"
   shows "stochastic_process M t\<^sub>0 (\<lambda>i \<xi>. X i \<xi> + Y i \<xi>)"
   using stochastic_process.random_variable[OF assms] random_variable by (unfold_locales) simp
 
-lemma diff:
+lemma diff_stochastic:
   assumes "stochastic_process M t\<^sub>0 Y"
   shows "stochastic_process M t\<^sub>0 (\<lambda>i \<xi>. X i \<xi> - Y i \<xi>)"
   using stochastic_process.random_variable[OF assms] random_variable by (unfold_locales) simp
 
-lemma uminus: "stochastic_process M t\<^sub>0 (-X)" using scaleR_right_const[of "\<lambda>_. -1"] by (simp add: fun_Compl_def)
+lemma uminus_stochastic: "stochastic_process M t\<^sub>0 (-X)" using scaleR_right_const_stochastic[of "\<lambda>_. -1"] by (simp add: fun_Compl_def)
 
-lemma partial_sum: "stochastic_process M t\<^sub>0 (\<lambda>n \<xi>. \<Sum>i\<in>{t\<^sub>0..<n}. X i \<xi>)" by (unfold_locales) simp
+lemma partial_sum_stochastic: "stochastic_process M t\<^sub>0 (\<lambda>n \<xi>. \<Sum>i\<in>{t\<^sub>0..n}. X i \<xi>)" by (unfold_locales) simp
 
-lemma partial_sum': "stochastic_process M t\<^sub>0 (\<lambda>n \<xi>. \<Sum>i\<in>{t\<^sub>0..n}. X i \<xi>)" by (unfold_locales) simp
+lemma partial_sum'_stochastic: "stochastic_process M t\<^sub>0 (\<lambda>n \<xi>. \<Sum>i\<in>{t\<^sub>0..<n}. X i \<xi>)" by (unfold_locales) simp
 
 end
 
@@ -83,39 +83,48 @@ definition natural_filtration :: "'a measure \<Rightarrow> 'b \<Rightarrow> ('b 
 abbreviation "nat_natural_filtration \<equiv> \<lambda>M. natural_filtration M (0 :: nat)"
 abbreviation "real_natural_filtration \<equiv> \<lambda>M. natural_filtration M (0 :: real)"
 
-context stochastic_process
-begin
+lemma space_natural_filtration[simp]: "space (natural_filtration M t\<^sub>0 X t) = space M" unfolding natural_filtration_def space_family_vimage_algebra ..
 
-lemma sets_natural_filtration': "sets (natural_filtration M t\<^sub>0 X t) = sigma_sets (space M) (\<Union>i\<in>{t\<^sub>0..t}. {X i -` A \<inter> space M | A. A \<in> borel})"
+lemma sets_natural_filtration: "sets (natural_filtration M t\<^sub>0 X t) = sigma_sets (space M) (\<Union>i\<in>{t\<^sub>0..t}. {X i -` A \<inter> space M | A. A \<in> borel})"
   unfolding natural_filtration_def sets_family_vimage_algebra by (intro sigma_sets_eqI) blast+
 
-lemma
-  shows sets_natural_filtration: "sets (natural_filtration M t\<^sub>0 X t) = sigma_sets (space M) (\<Union>i\<in>{t\<^sub>0..t}. {X i -` A \<inter> space M | A. open A})" 
-    and space_natural_filtration[simp]: "space (natural_filtration M t\<^sub>0 X t) = space M"
-proof -
-  show "space (natural_filtration M t\<^sub>0 X t) = space M" unfolding natural_filtration_def space_family_vimage_algebra ..
-  show "sets (natural_filtration M t\<^sub>0 X t) = sigma_sets (space M) (\<Union>i\<in>{t\<^sub>0..t}. {X i -` A \<inter> space M | A. open A})" unfolding sets_natural_filtration'
-  proof (intro sigma_sets_eqI, clarify)
-    fix i and A :: "'c set" assume asm: "i \<in> {t\<^sub>0..t}" " A \<in> sets borel"
-    hence "A \<in> sigma_sets UNIV {S. open S}" unfolding borel_def by simp
-    thus "X i -` A \<inter> space M \<in> sigma_sets (space M) (\<Union>i\<in>{t\<^sub>0..t}. {X i -` A \<inter> space M |A. open A})"
-    proof (induction)
-      case (Compl a)
-      have "X i -` (UNIV - a) \<inter> space M = space M - (X i -` a \<inter> space M)" by blast
-      then show ?case using Compl(2)[THEN sigma_sets.Compl] by presburger
-    next
-      case (Union a)
-      have "X i -` \<Union> (range a) \<inter> space M = \<Union> (range (\<lambda>j. X i -` a j \<inter> space M))" by blast
-      then show ?case using Union(2)[THEN sigma_sets.Union] by presburger
-    qed (auto intro: asm)
-  qed (intro sigma_sets.Basic, fastforce)
-qed
+lemma sets_natural_filtration': 
+  assumes "borel = sigma UNIV S"
+  shows "sets (natural_filtration M t\<^sub>0 X t) = sigma_sets (space M) (\<Union>i\<in>{t\<^sub>0..t}. {X i -` A \<inter> space M | A. A \<in> S})"
+proof (subst sets_natural_filtration, intro sigma_sets_eqI, clarify)
+  fix i and A :: "'a set" assume asm: "i \<in> {t\<^sub>0..t}" "A \<in> sets borel"
+  hence "A \<in> sigma_sets UNIV S" unfolding assms by simp
+  thus "X i -` A \<inter> space M \<in> sigma_sets (space M) (\<Union>i\<in>{t\<^sub>0..t}. {X i -` A \<inter> space M |A. A \<in> S})"
+  proof (induction)
+    case (Compl a)
+    have "X i -` (UNIV - a) \<inter> space M = space M - (X i -` a \<inter> space M)" by blast
+    then show ?case using Compl(2)[THEN sigma_sets.Compl] by presburger
+  next
+    case (Union a)
+    have "X i -` \<Union> (range a) \<inter> space M = \<Union> (range (\<lambda>j. X i -` a j \<inter> space M))" by blast
+    then show ?case using Union(2)[THEN sigma_sets.Union] by presburger
+  qed (auto intro: asm sigma_sets.Empty)
+qed (intro sigma_sets.Basic, force simp add: assms)
 
-lemma subalgebra_natural_filtration: 
+lemma sets_natural_filtration_open: 
+  "sets (natural_filtration M t\<^sub>0 X t) = sigma_sets (space M) (\<Union>i\<in>{t\<^sub>0..t}. {X i -` A \<inter> space M | A. open A})"
+  using sets_natural_filtration' by (force simp only: borel_def mem_Collect_eq)
+
+lemma sets_natural_filtration_oi: 
+  "sets (natural_filtration M t\<^sub>0 X t) = sigma_sets (space M) (\<Union>i\<in>{t\<^sub>0..t}. {X i -` A \<inter> space M | A :: _ :: {linorder_topology, second_countable_topology} set. A \<in> range greaterThan})" 
+  by (rule sets_natural_filtration'[OF borel_Ioi])
+
+lemma sets_natural_filtration_io:
+  "sets (natural_filtration M t\<^sub>0 X t) = sigma_sets (space M) (\<Union>i\<in>{t\<^sub>0..t}. {X i -` A \<inter> space M | A :: _ :: {linorder_topology, second_countable_topology} set. A \<in> range lessThan})" 
+  by (rule sets_natural_filtration'[OF borel_Iio])
+
+lemma sets_natural_filtration_ci:
+  "sets (natural_filtration M t\<^sub>0 X t) = sigma_sets (space M) (\<Union>i\<in>{t\<^sub>0..t}. {X i -` A \<inter> space M | A :: real set. A \<in> range atLeast})" 
+  by (rule sets_natural_filtration'[OF borel_Ici])
+
+lemma (in stochastic_process) subalgebra_natural_filtration: 
   shows "subalgebra M (natural_filtration M t\<^sub>0 X i)" 
   unfolding subalgebra_def using measurable_family_iff_sets by (force simp add: natural_filtration_def)
-
-end
 
 sublocale stochastic_process \<subseteq> filtered_measure_natural_filtration: filtered_measure M "natural_filtration M t\<^sub>0 X" t\<^sub>0
     by (unfold_locales) (intro subalgebra_natural_filtration, simp only: sets_natural_filtration, intro sigma_sets_subseteq, force) 
@@ -165,9 +174,9 @@ lemma adaptedD:
 end
 
 locale nat_adapted_process = adapted_process M F "0 :: nat" X for M F X
-sublocale nat_adapted_process \<subseteq> nat_filtered_measure ..
-
 locale real_adapted_process = adapted_process M F "0 :: real" X for M F X
+
+sublocale nat_adapted_process \<subseteq> nat_filtered_measure ..
 sublocale real_adapted_process \<subseteq> real_filtered_measure ..
 
 lemma (in filtered_measure) adapted_process_const_fun:
@@ -181,54 +190,54 @@ lemma (in filtered_measure) adapted_process_const:
 context adapted_process
 begin
 
-lemma compose:
+lemma compose_adapted:
   assumes "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow> f i \<in> borel_measurable borel"
   shows "adapted_process M F t\<^sub>0 (\<lambda>i \<xi>. (f i) (X i \<xi>))"
   by (unfold_locales) (intro measurable_compose[OF adapted assms])
 
-lemma norm: "adapted_process M F t\<^sub>0 (\<lambda>i \<xi>. norm (X i \<xi>))" by (fastforce intro: compose)
+lemma norm_adapted: "adapted_process M F t\<^sub>0 (\<lambda>i \<xi>. norm (X i \<xi>))" by (fastforce intro: compose_adapted)
 
-lemma scaleR_right:
+lemma scaleR_right_adapted:
   assumes "adapted_process M F t\<^sub>0 R"
   shows "adapted_process M F t\<^sub>0 (\<lambda>i \<xi>. (R i \<xi>) *\<^sub>R (X i \<xi>))"
   using adapted_process.adapted[OF assms] adapted by (unfold_locales) simp
   
-lemma scaleR_right_const_fun:
+lemma scaleR_right_const_fun_adapted:
   assumes "f \<in> borel_measurable (F t\<^sub>0)" 
   shows "adapted_process M F t\<^sub>0 (\<lambda>i \<xi>. f \<xi> *\<^sub>R (X i \<xi>))"
-  using assms by (fast intro: scaleR_right adapted_process_const_fun)
+  using assms by (fast intro: scaleR_right_adapted adapted_process_const_fun)
 
-lemma scaleR_right_const: "adapted_process M F t\<^sub>0 (\<lambda>i \<xi>. c i *\<^sub>R (X i \<xi>))" by (unfold_locales) simp
+lemma scaleR_right_const_adapted: "adapted_process M F t\<^sub>0 (\<lambda>i \<xi>. c i *\<^sub>R (X i \<xi>))" by (unfold_locales) simp
 
-lemma add:
+lemma add_adapted:
   assumes "adapted_process M F t\<^sub>0 Y"
   shows "adapted_process M F t\<^sub>0 (\<lambda>i \<xi>. X i \<xi> + Y i \<xi>)"
   using adapted_process.adapted[OF assms] adapted by (unfold_locales) simp
 
-lemma diff:
+lemma diff_adapted:
   assumes "adapted_process M F t\<^sub>0 Y"
   shows "adapted_process M F t\<^sub>0 (\<lambda>i \<xi>. X i \<xi> - Y i \<xi>)"
   using adapted_process.adapted[OF assms] adapted by (unfold_locales) simp
 
-lemma uminus: "adapted_process M F t\<^sub>0 (-X)" using scaleR_right_const[of "\<lambda>_. -1"] by (simp add: fun_Compl_def)
+lemma uminus_adapted: "adapted_process M F t\<^sub>0 (-X)" using scaleR_right_const_adapted[of "\<lambda>_. -1"] by (simp add: fun_Compl_def)
 
-lemma partial_sum: "adapted_process M F t\<^sub>0 (\<lambda>n \<xi>. \<Sum>i\<in>{t\<^sub>0..<n}. X i \<xi>)" 
-proof (unfold_locales)
-  fix i :: 'b
-  have "X j \<in> borel_measurable (F i)" if "t\<^sub>0 \<le> j" "j < i" for j using that adaptedE by fastforce
-  thus "(\<lambda>\<xi>. \<Sum>i\<in>{t\<^sub>0..<i}. X i \<xi>) \<in> borel_measurable (F i)" by simp
-qed
-
-lemma partial_sum': "adapted_process M F t\<^sub>0 (\<lambda>n \<xi>. \<Sum>i\<in>{t\<^sub>0..n}. X i \<xi>)" 
+lemma partial_sum_adapted: "adapted_process M F t\<^sub>0 (\<lambda>n \<xi>. \<Sum>i\<in>{t\<^sub>0..n}. X i \<xi>)" 
 proof (unfold_locales)
   fix i :: 'b
   have "X j \<in> borel_measurable (F i)" if "t\<^sub>0 \<le> j" "j \<le> i" for j using that adaptedE by meson
   thus "(\<lambda>\<xi>. \<Sum>i\<in>{t\<^sub>0..i}. X i \<xi>) \<in> borel_measurable (F i)" by simp
 qed
 
+lemma partial_sum'_adapted: "adapted_process M F t\<^sub>0 (\<lambda>n \<xi>. \<Sum>i\<in>{t\<^sub>0..<n}. X i \<xi>)" 
+proof (unfold_locales)
+  fix i :: 'b
+  have "X j \<in> borel_measurable (F i)" if "t\<^sub>0 \<le> j" "j < i" for j using that adaptedE by fastforce
+  thus "(\<lambda>\<xi>. \<Sum>i\<in>{t\<^sub>0..<i}. X i \<xi>) \<in> borel_measurable (F i)" by simp
+qed
+
 end
 
-lemma (in nat_adapted_process) partial_sum_Suc: "nat_adapted_process M F (\<lambda>n \<xi>. \<Sum>i<n. X (Suc i) \<xi>)" 
+lemma (in nat_adapted_process) partial_sum_Suc_adapted: "nat_adapted_process M F (\<lambda>n \<xi>. \<Sum>i<n. X (Suc i) \<xi>)" 
 proof (unfold_locales)
   fix i
   have "X j \<in> borel_measurable (F i)" if "j \<le> i" for j using that adaptedD by blast
@@ -292,7 +301,7 @@ lemma (in filtered_measure) progressive_process_const:
 context progressive_process
 begin
 
-lemma compose:
+lemma compose_progressive:
   assumes "case_prod f \<in> borel_measurable borel"
   shows "progressive_process M F t\<^sub>0 (\<lambda>i \<xi>. (f i) (X i \<xi>))"
 proof
@@ -304,34 +313,34 @@ proof
   ultimately show "(\<lambda>(j, \<xi>). (f j) (X j \<xi>)) \<in> borel_measurable (restrict_space borel {t\<^sub>0..i} \<Otimes>\<^sub>M F i)" using assms by (simp add: borel_prod)
 qed
 
-lemma norm: "progressive_process M F t\<^sub>0 (\<lambda>i \<xi>. norm (X i \<xi>))" using measurable_compose[OF progressive borel_measurable_norm] by (unfold_locales) simp
+lemma norm_progressive: "progressive_process M F t\<^sub>0 (\<lambda>i \<xi>. norm (X i \<xi>))" using measurable_compose[OF progressive borel_measurable_norm] by (unfold_locales) simp
 
-lemma scaleR_right:
+lemma scaleR_right_progressive:
   assumes "progressive_process M F t\<^sub>0 R"
   shows "progressive_process M F t\<^sub>0 (\<lambda>i \<xi>. (R i \<xi>) *\<^sub>R (X i \<xi>))"
   using progressive_process.progressive[OF assms] by (unfold_locales) (simp add: progressive assms)
   
-lemma scaleR_right_const_fun: 
+lemma scaleR_right_const_fun_progressive: 
   assumes "f \<in> borel_measurable (F t\<^sub>0)" 
   shows "progressive_process M F t\<^sub>0 (\<lambda>i \<xi>. f \<xi> *\<^sub>R (X i \<xi>))"
-  using assms by (fast intro: scaleR_right progressive_process_const_fun)
+  using assms by (fast intro: scaleR_right_progressive progressive_process_const_fun)
 
-lemma scaleR_right_const: 
+lemma scaleR_right_const_progressive: 
   assumes "c \<in> borel_measurable borel"
   shows "progressive_process M F t\<^sub>0 (\<lambda>i \<xi>. c i *\<^sub>R (X i \<xi>))" 
-  using assms by (fastforce intro: scaleR_right progressive_process_const)
+  using assms by (fastforce intro: scaleR_right_progressive progressive_process_const)
 
-lemma add:
+lemma add_progressive:
   assumes "progressive_process M F t\<^sub>0 Y"
   shows "progressive_process M F t\<^sub>0 (\<lambda>i \<xi>. X i \<xi> + Y i \<xi>)"
   using progressive_process.progressive[OF assms] by (unfold_locales) (simp add: progressive assms)
 
-lemma diff:
+lemma diff_progressive:
   assumes "progressive_process M F t\<^sub>0 Y"
   shows "progressive_process M F t\<^sub>0 (\<lambda>i \<xi>. X i \<xi> - Y i \<xi>)"
   using progressive_process.progressive[OF assms] by (unfold_locales) (simp add: progressive assms)
 
-lemma uminus: "progressive_process M F t\<^sub>0 (-X)" using scaleR_right_const[of "\<lambda>_. -1"] by (simp add: fun_Compl_def)
+lemma uminus_progressive: "progressive_process M F t\<^sub>0 (-X)" using scaleR_right_const_progressive[of "\<lambda>_. -1"] by (simp add: fun_Compl_def)
 
 end
 
@@ -530,7 +539,7 @@ lemma (in real_filtered_measure) predictable_process_const:
 context predictable_process
 begin
 
-lemma compose:
+lemma compose_predictable:
   assumes "fst \<in> borel_measurable \<Sigma>\<^sub>P" "case_prod f \<in> borel_measurable borel"
   shows "predictable_process M F t\<^sub>0 (\<lambda>i \<xi>. (f i) (X i \<xi>))"
 proof
@@ -539,38 +548,38 @@ proof
   ultimately show "(\<lambda>(i, \<xi>). f i (X i \<xi>)) \<in> borel_measurable \<Sigma>\<^sub>P" unfolding borel_prod using assms by simp
 qed
 
-lemma norm: "predictable_process M F t\<^sub>0 (\<lambda>i \<xi>. norm (X i \<xi>))" using measurable_compose[OF predictable borel_measurable_norm] 
+lemma norm_predictable: "predictable_process M F t\<^sub>0 (\<lambda>i \<xi>. norm (X i \<xi>))" using measurable_compose[OF predictable borel_measurable_norm] 
   by (unfold_locales) (simp add: prod.case_distrib)
 
-lemma scaleR_right:
+lemma scaleR_right_predictable:
   assumes "predictable_process M F t\<^sub>0 R"
   shows "predictable_process M F t\<^sub>0 (\<lambda>i \<xi>. (R i \<xi>) *\<^sub>R (X i \<xi>))"
   using predictable predictable_process.predictable[OF assms] by (unfold_locales) (auto simp add: measurable_split_conv)
 
-lemma scaleR_right_const_fun: 
+lemma scaleR_right_const_fun_predictable: 
   assumes "snd \<in> \<Sigma>\<^sub>P \<rightarrow>\<^sub>M F t\<^sub>0" "f \<in> borel_measurable (F t\<^sub>0)" 
   shows "predictable_process M F t\<^sub>0 (\<lambda>i \<xi>. f \<xi> *\<^sub>R (X i \<xi>))"
-  using assms by (fast intro: scaleR_right predictable_process_const_fun)
+  using assms by (fast intro: scaleR_right_predictable predictable_process_const_fun)
 
-lemma scaleR_right_const: 
+lemma scaleR_right_const_predictable: 
   assumes "fst \<in> borel_measurable \<Sigma>\<^sub>P" "c \<in> borel_measurable borel"
   shows "predictable_process M F t\<^sub>0 (\<lambda>i \<xi>. c i *\<^sub>R (X i \<xi>))" 
-  using assms by (fastforce intro: scaleR_right predictable_process_const)
+  using assms by (fastforce intro: scaleR_right_predictable predictable_process_const)
 
-lemma scaleR_right_const': "predictable_process M F t\<^sub>0 (\<lambda>i \<xi>. c *\<^sub>R (X i \<xi>))" 
-  by (fastforce intro: scaleR_right predictable_process_const')
+lemma scaleR_right_const'_predictable: "predictable_process M F t\<^sub>0 (\<lambda>i \<xi>. c *\<^sub>R (X i \<xi>))" 
+  by (fastforce intro: scaleR_right_predictable predictable_process_const')
 
-lemma add:
+lemma add_predictable:
   assumes "predictable_process M F t\<^sub>0 Y"
   shows "predictable_process M F t\<^sub>0 (\<lambda>i \<xi>. X i \<xi> + Y i \<xi>)"
   using predictable predictable_process.predictable[OF assms] by (unfold_locales) (auto simp add: measurable_split_conv)
 
-lemma diff:
+lemma diff_predictable:
   assumes "predictable_process M F t\<^sub>0 Y"
   shows "predictable_process M F t\<^sub>0 (\<lambda>i \<xi>. X i \<xi> - Y i \<xi>)"
   using predictable predictable_process.predictable[OF assms] by (unfold_locales) (auto simp add: measurable_split_conv)
 
-lemma uminus: "predictable_process M F t\<^sub>0 (-X)" using scaleR_right_const'[of "-1"] by (simp add: fun_Compl_def)
+lemma uminus_predictable: "predictable_process M F t\<^sub>0 (-X)" using scaleR_right_const'_predictable[of "-1"] by (simp add: fun_Compl_def)
 
 end
 

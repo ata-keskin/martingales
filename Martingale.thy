@@ -18,6 +18,8 @@ sublocale real_sigma_finite_adapted_process \<subseteq> real_sigma_finite_filter
 
 locale finite_adapted_process = adapted_process + finite_filtered_measure
 
+sublocale finite_adapted_process \<subseteq> sigma_finite_adapted_process ..
+
 locale nat_finite_adapted_process = finite_adapted_process M F "0 :: nat" X for M F X
 locale real_finite_adapted_process = finite_adapted_process M F "0 :: real" X for M F X
 
@@ -474,7 +476,7 @@ lemma (in sigma_finite_adapted_process_linorder) supermartingale_of_set_integral
       and "\<And>A i j. t\<^sub>0 \<le> i \<Longrightarrow> i \<le> j \<Longrightarrow> A \<in> F i \<Longrightarrow> set_lebesgue_integral M A (X j) \<le> set_lebesgue_integral M A (X i)" 
     shows "supermartingale M F t\<^sub>0 X"
 proof -
-  interpret _: adapted_process M F t\<^sub>0 "-X" by (rule uminus)
+  interpret _: adapted_process M F t\<^sub>0 "-X" by (rule uminus_adapted)
   interpret uminus_X: sigma_finite_adapted_process_linorder M F t\<^sub>0 "-X" ..
   note * = set_integral_uminus[unfolded set_integrable_def, OF integrable_mult_indicator[OF _ integrable]]
   have "supermartingale M F t\<^sub>0 (-(- X))"
@@ -618,8 +620,8 @@ lemma (in nat_submartingale_linorder) partial_sum_scaleR:
   shows "nat_submartingale M F (\<lambda>n \<xi>. \<Sum>i<n. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>))"
 proof-
   interpret C: nat_adapted_process M F C by (rule assms)
-  interpret C': nat_adapted_process M F "\<lambda>i \<xi>. C (i - 1) \<xi> *\<^sub>R (X i \<xi> - X (i - 1) \<xi>)" by (intro nat_adapted_process.intro adapted_process.scaleR_right adapted_process.diff, unfold_locales) (auto intro: adaptedD C.adaptedD)+
-  interpret C'': nat_adapted_process M F "\<lambda>n \<xi>. \<Sum>i<n. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>)" by (rule C'.partial_sum_Suc[unfolded diff_Suc_1])
+  interpret C': nat_adapted_process M F "\<lambda>i \<xi>. C (i - 1) \<xi> *\<^sub>R (X i \<xi> - X (i - 1) \<xi>)" by (intro nat_adapted_process.intro adapted_process.scaleR_right_adapted adapted_process.diff_adapted, unfold_locales) (auto intro: adaptedD C.adaptedD)+
+  interpret C'': nat_adapted_process M F "\<lambda>n \<xi>. \<Sum>i<n. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>)" by (rule C'.partial_sum_Suc_adapted[unfolded diff_Suc_1])
   interpret S: nat_sigma_finite_adapted_process_linorder M F "(\<lambda>n \<xi>. \<Sum>i<n. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>))" ..
   have "integrable M (\<lambda>x. C i x *\<^sub>R (X (Suc i) x - X i x))" for i using assms(2,3)[of i] by (intro Bochner_Integration.integrable_bound[OF integrable_scaleR_right, OF Bochner_Integration.integrable_diff, OF integrable(1,1), of R "Suc i" i]) (auto simp add: mult_mono)
   moreover have "AE \<xi> in M. 0 \<le> cond_exp M (F i) (\<lambda>\<xi>. (\<Sum>i<Suc i. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>)) - (\<Sum>i<i. C i \<xi> *\<^sub>R (X (Suc i) \<xi> - X i \<xi>))) \<xi>" for i 
@@ -659,7 +661,7 @@ lemma (in nat_sigma_finite_adapted_process_linorder) supermartingale_of_set_inte
       and "\<And>A i. A \<in> F i \<Longrightarrow> set_lebesgue_integral M A (X i) \<ge> set_lebesgue_integral M A (X (Suc i))" 
     shows "nat_supermartingale M F X"
 proof -
-  interpret _: adapted_process M F 0 "-X" by (rule uminus)
+  interpret _: adapted_process M F 0 "-X" by (rule uminus_adapted)
   interpret uminus_X: nat_sigma_finite_adapted_process_linorder M F "-X" ..
   note * = set_integral_uminus[unfolded set_integrable_def, OF integrable_mult_indicator[OF _ integrable]]
   have "nat_supermartingale M F (-(- X))" 
@@ -674,7 +676,7 @@ lemma (in nat_sigma_finite_adapted_process_linorder) supermartingale_nat:
       and "\<And>i. AE \<xi> in M. X i \<xi> \<ge> cond_exp M (F i) (X (Suc i)) \<xi>" 
     shows "nat_supermartingale M F X"
 proof -
-  interpret _: adapted_process M F 0 "-X" by (rule uminus)
+  interpret _: adapted_process M F 0 "-X" by (rule uminus_adapted)
   interpret uminus_X: nat_sigma_finite_adapted_process_linorder M F "-X" ..
   have "AE \<xi> in M. - X i \<xi> \<le> cond_exp M (F i) (\<lambda>x. - X (Suc i) x) \<xi>" for i using assms(2) cond_exp_uminus[OF integrable, of i "Suc i"] by force
   hence "nat_supermartingale M F (-(- X))" by (intro nat_supermartingale.intro submartingale.uminus nat_submartingale.axioms uminus_X.submartingale_nat) (auto simp add: fun_Compl_def integrable)

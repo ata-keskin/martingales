@@ -77,7 +77,7 @@ proof -
     also have "... = (\<integral>x \<in> A. cond_exp M F f x \<partial>?MF)" using subalg by (auto simp add: integral_subalgebra2 set_lebesgue_integral_def)
     finally have "(\<integral>x \<in> A. g x \<partial>?MF) = (\<integral>x \<in> A. cond_exp M F f x \<partial>?MF)" by simp
   }
-  hence "AE x in ?MF. cond_exp M F f x = g x" using cond_exp assms subalg by (intro density_unique, auto dest: has_cond_expD intro!: integrable_in_subalg)
+  hence "AE x in ?MF. cond_exp M F f x = g x" using cond_exp assms subalg by (intro density_unique_banach, auto dest: has_cond_expD intro!: integrable_in_subalg)
   then show "AE x in M. cond_exp M F f x = g x" using AE_restr_to_subalg[OF subalg] by simp
 qed
 
@@ -535,7 +535,7 @@ proof-
     also have "... = set_lebesgue_integral M A (\<lambda>x. f x * cond_exp M F g x)" using cond_exp_real[OF assms(2)] asm' borel_measurable_cond_exp' borel_measurable_cond_exp2 measurable_from_subalg[OF subalg assms(3)] by (auto simp add: set_lebesgue_integral_def intro: integral_cong_AE)
     finally have "set_lebesgue_integral M A (cond_exp M F (\<lambda>x. f x * g x)) = \<integral>x\<in>A. (f x * cond_exp M F g x)\<partial>M" .
   }
-  hence "AE x in restr_to_subalg M F. cond_exp M F (\<lambda>x. f x * g x) x = f x * cond_exp M F g x" by (intro density_unique integrable_cond_exp integrable integrable_in_subalg subalg, measurable, simp add: set_lebesgue_integral_def integral_subalgebra2[OF subalg] sets_restr_to_subalg[OF subalg])
+  hence "AE x in restr_to_subalg M F. cond_exp M F (\<lambda>x. f x * g x) x = f x * cond_exp M F g x" by (intro density_unique_banach integrable_cond_exp integrable integrable_in_subalg subalg, measurable, simp add: set_lebesgue_integral_def integral_subalgebra2[OF subalg] sets_restr_to_subalg[OF subalg])
   thus "AE x in M. cond_exp M F (\<lambda>x. f x * g x) x = f x * cond_exp M F g x" by (rule AE_restr_to_subalg[OF subalg])
 qed
 

@@ -1,5 +1,5 @@
 theory Conditional_Expectation_Banach                                                                 
-imports "HOL-Probability.Conditional_Expectation" Sigma_Finite_Measure_Addendum
+imports "HOL-Probability.Conditional_Expectation" "HOL-Probability.Independent_Family" Sigma_Finite_Measure_Addendum
 begin
 
 section \<open>Conditional Expectation in Banach Spaces\<close>
@@ -41,7 +41,12 @@ lemma integrable_cond_exp[intro]: "integrable M (cond_exp M F f)"
 
 lemma set_integrable_cond_exp[intro]:
   assumes "A \<in> sets M"
-shows "set_integrable M A (cond_exp M F f)" using integrable_mult_indicator[OF assms integrable_cond_exp, of F f] by (auto simp add: set_integrable_def intro!: integrable_mult_indicator[OF assms integrable_cond_exp])
+  shows "set_integrable M A (cond_exp M F f)" using integrable_mult_indicator[OF assms integrable_cond_exp, of F f] by (auto simp add: set_integrable_def intro!: integrable_mult_indicator[OF assms integrable_cond_exp])
+
+lemma has_cond_exp_self: 
+  assumes "integrable M f"
+  shows "has_cond_exp M (vimage_algebra (space M) f borel) f f"
+  using assms by (auto intro!: has_cond_expI' measurable_vimage_algebra1)
 
 context sigma_finite_subalgebra
 begin
@@ -760,5 +765,26 @@ corollary cond_exp_sup:
   unfolding sup_max using assms by (rule cond_exp_max)
 
 end
+
+subsection "Probability Spaces"
+
+sublocale prob_space \<subseteq> sigma_finite_measure "restr_to_subalg M F" 
+proof -
+  have "countable {space M}" by simp
+  moreover have "{space M} \<subseteq> sets (restr_to_subalg M F)" unfolding restr_to_subalg_def by simp
+  moreover have "\<Union> {space M} = space (restr_to_subalg M F)" unfolding restr_to_subalg_def space_measure_of_conv by simp
+  moreover have "\<forall>a\<in>{space M}. emeasure (restr_to_subalg M F) a \<noteq> \<infinity>" unfolding restr_to_subalg_def emeasure_measure_of_conv by simp
+  ultimately show "sigma_finite_measure (restr_to_subalg M F)" by unfold_locales blast
+qed
+
+lemma (in prob_space) has_cond_exp_indep:
+  assumes subalgebra: "subalgebra M F" "subalgebra M G"
+      and independent: "indep_set G (sigma (space M) (F \<union> vimage_algebra (space M) f borel))"
+      and "has_cond_exp M F f g"
+  shows "has_cond_exp M (sigma (space M) (F \<union> G)) f g"
+proof -
+  interpret sigma_finite_subalgebra M F using assms by unfold_locales
+  show ?thesis sorry
+qed
 
 end
