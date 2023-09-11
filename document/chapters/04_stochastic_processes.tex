@@ -11,8 +11,11 @@ Keeping this in consideration, we aim to build a comprehensive foundation for a 
 
 The locale system in Isabelle is useful for managing large formal developments, as it promotes modularity and reusability. It allows us to define generic theorems and structures in one place and then reuse them in multiple contexts without duplicating efforts. For instance, when defining filtered measure spaces in the following section, we will need to have an element act as the de facto bottom element of an index type. Locales allow us to easily fix such an element for this purpose.
 
-We start with the following locale definition.
-\pagebreak
+We state the definition of a stochastic process again, and subsequently introduce the corresponding locale.
+
+\begin{definition}
+	Let $(\Omega, \Sigma, \mu)$ be a measure space. Let $(f_i)_{i \in I}$ be a family of functions with $f_i : \Omega \rightarrow E$ for $i \in I$. The collection $(f_i)_{i \in I}$ is called a stochastic process if $f_i$ is $\Sigma$-measurable for all $i \in I$.
+\end{definition}
 
 \begin{isadefinition}
 {\small
@@ -35,17 +38,15 @@ We have the following lemmas to introduce ``constant'' stochastic processes.
 lemma stochastic_process_const_fun:
   assumes "$f \in \texttt{borel\_measurable} \; M$"
   shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda \_. \; f)$"
-  using assms by (unfold_locales)
 
 lemma stochastic_process_const:
   shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda i \; \_. \; c \; i)$" 
-  by (unfold_locales) simp
 
 \end{lstlisting}
 }
 \end{isalemma}
 
-For sake of completeness, we also provide the following collection of lemmas which show that stochastic processes are stable under various operations on a vector space.
+By composing a Borel-measurable function with a stochastic process, we obtain another stochastic process. We formalize this statement as follows.
 
 \begin{isalemma}
 {\small
@@ -53,101 +54,13 @@ For sake of completeness, we also provide the following collection of lemmas whi
 lemma compose:
   assumes "$\bigwedge i. \; t_0 \le i \implies f \; i \in \texttt{borel\_measurable} \; \texttt{borel}$"
   shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda i \; x. \; (f \; i) \; (X \; i \; x))$"
-  by (unfold_locales) (intro measurable_compose[OF random_variable assms])
   \end{lstlisting}
 }
 \end{isalemma}
 
+In the upcoming sections, we will observe how the assumptions for these statements change, when we place further restrictions on the collection of functions $(X_t)_{t \in [t_0,\infty)}$. For sake of completeness, we also provide lemmas which show that stochastic processes are stable under various operations on a vector space, such as norming, multiplication by a scalar valued function, addition, and partial sums over indices.
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma norm: "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda i \; x. \; \texttt{norm} \; (X \; i \; x))$" 
-  by (fastforce intro: compose)
-  \end{lstlisting}
-}
-\end{isalemma}
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma scaleR_right:
-  assumes "$\texttt{stochastic\_process} \; M \; t_0 \; Y$"
-  shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda i \; x. \; (Y \; i \; x) \; \cdot_R (X \; i \; x))$"
-  using stochastic_process.random_variable[OF assms] random_variable 
-  by (unfold_locales) simp
-
-lemma scaleR_right_const_fun: 
-  assumes "$f \in \texttt{borel\_measurable} \; M$" 
-  shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda i \; x. \; f \; x \cdot_R (X \; i \; x))$" 
-  by (unfold_locales) (intro borel_measurable_scaleR assms random_variable)
-
-lemma scaleR_right_const: "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda i \; x. \; c \; i \cdot_R (X \; i \; x))$"
-  by (unfold_locales) simp
-\end{lstlisting}
-}
-\end{isalemma}
-
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma add:
-  assumes "$\texttt{stochastic\_process} \; M \; t_0 \; Y$"
-  shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda i \; x. \; X \; i \; x + Y \; i \; x)$"
-  using stochastic_process.random_variable[OF assms] random_variable 
-  by (unfold_locales) simp
-\end{lstlisting}
-}
-\end{isalemma}
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma diff:
-  assumes "$\texttt{stochastic\_process} \; M \; t_0 \; Y$"
-  shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda i \; x. \; X \; i \; x - Y \; i \; x)$"
-  using stochastic_process.random_variable[OF assms] random_variable 
-  by (unfold_locales) simp
-\end{lstlisting}
-}
-\end{isalemma}
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma uminus: "$\texttt{stochastic\_process} \; M \; t_0 \; (-X)$" using scaleR_right_const[of "$\lambda \texttt{\_}. \; -1$"] 
-	by (simp add: fun_Compl_def)
-\end{lstlisting}
-}
-\end{isalemma}
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma partial_sum: "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda n \; x. \; \sum{i\in\{t_0..\texttt{<}n\}}. \; X \; i \; x)$" 
-	by (unfold_locales) simp
-
-lemma partial_sum': "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda n \; x. \; \sum{i\in\{t_0..n\}}. \; X \; i \; x)$" 
-	by (unfold_locales) simp
-\end{lstlisting}
-}
-\end{isalemma}
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-
-lemma stochastic_process_sum:
-  assumes "$\bigwedge i. \; i \in I \implies \texttt{stochastic\_process} \; M \; t_0 \; (X \; i)$"
-  shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda k \; x. \; \sum i \in I. \; X \; i \; k \; x)$" 
-  using assms[THEN stochastic_process.random_variable] by (unfold_locales, auto)
-
-\end{lstlisting}
-}
-\end{isalemma}
-
-We also specify the following sublocales to easily make statements about discrete-time and continuous-time stochastic processes.
+We also introduce the following sublocales to easily make statements about discrete-time and continuous-time stochastic processes.
 
 \begin{isadefinition}
 {\small
@@ -174,7 +87,18 @@ Let $M$ be a measure space. Assume we have a sequence of $\sigma$-algebras $(F_n
 \[
 	F_0 \subseteq F_1 \subseteq F_2 \subseteq \dots
 \]
-This sequence forms a filtration on $M$. Intuitively, each $F_n$ represents the information available up to time $n$. In general, the index set does not need to be countable. We only need it to be totally ordered, so that two indices are always comparable with one another. In Isabelle, we define the following locale to capture this concept.
+This sequence forms a filtration on $M$. Intuitively, each $F_n$ represents the information available up to time $n$. In general, the index set does not need to be countable. We only need it to be totally ordered, so that we can make statements about the order topology in induces. 
+
+In more detail we define a filtration as follows. 
+\begin{definition}
+	Let $M = (\Omega, \Sigma, \mu)$ be a measure space and $(F_t)_{t \in I}$ a collection of sub-$\sigma$-algebras of $\Sigma$. $(F_t)_{t \in I}$ is called a \textit{filtration} of the measure space $M$, if for any $i, j\in I$ with $i \le j$ we have 
+	\[
+		F_i \subseteq F_j
+	\]
+	Hence, the sub-$\sigma$-algebras $F_i$ reflect the accumulation of information over time.
+\end{definition}
+
+In Isabelle, we define the following locale to capture this concept.
 
 \begin{isadefinition}
 {\small
@@ -188,7 +112,7 @@ locale filtered_measure =
 with the predicate \texttt{subalgebra} in \texttt{HOL-Probability.Conditional\_Expectation} defined via
 
 \begin{lstlisting}[style=isabelle]
-definition subalgebra::"$'a \; \texttt{measure} \; \Rightarrow 'a \; \texttt{measure} \; \Rightarrow \texttt{bool}$" where
+definition subalgebra where
   "$\texttt{subalgebra} \; M \; F = ((\texttt{space} \; F = \texttt{space} \; M) \wedge (\texttt{sets} \; F \subseteq \texttt{sets} \; M))$"
   \end{lstlisting}
 }
@@ -221,13 +145,7 @@ For the sake of completeness, we also introduce a local covering the case where 
 {\small
 \begin{lstlisting}[style=isabelle]
 locale finite_filtered_measure = filtered_measure + finite_measure
-
 sublocale finite_filtered_measure $\subseteq$ sigma_finite_filtered_measure 
-  using subalgebra by (unfold_locales, 
-  					   blast, 
-					   meson dual_order.refl finite_measure_axioms finite_measure_def 
-							 finite_measure_restr_to_subalg subalgebra
-							 sigma_finite_measure.sigma_finite_countable)
 
   \end{lstlisting}
 }
@@ -242,11 +160,9 @@ In order to make the ideas in this section a bit more concrete, we present the f
 lemma filtered_measure_constant_filtration:
   assumes "$\texttt{subalgebra} \; M \; F$"
   shows "$\texttt{filtered\_measure} \; M \; (\lambda \_. \; F) \; t_0$"
-  using assms by (unfold_locales) (auto simp add: subalgebra_def)
 
 sublocale sigma_finite_subalgebra $\subseteq$ constant_filtration: 
 		sigma_finite_filtered_measure $M$ "$(\lambda$_. $F$)" $t_0$
-  using subalg by (unfold_locales) (auto simp add: subalgebra_def)
 \end{lstlisting}
 }
 \end{isalemma}
@@ -262,7 +178,7 @@ Preparing for our next example, we introduce a formalization for the notion of a
 \begin{isadefinition}
 {\small
 \begin{lstlisting}[style=isabelle]
-definition family_vimage_algebra :: "$'a \; \texttt{set} \; \Rightarrow \; 'b \; \texttt{measure} \; \Rightarrow \; ('a \; \Rightarrow \; 'b) \; \texttt{set} \; \Rightarrow \; 'a \;\texttt{measure}$" where
+definition family_vimage_algebra where
   "$\texttt{family\_vimage\_algebra} \; \Omega \; S \; N  \equiv \texttt{sigma} \; \Omega \; (\bigcup f \in S. \; \{(f \;\text{-\textasciigrave} \; A) \; \cap \; \Omega \;\vert\; A. \; A \in N\})$"
 \end{lstlisting}
 }
@@ -276,7 +192,6 @@ Given two measure spaces $(V, \mathcal{A})$ and $(W, \mathcal{B})$, it is a well
 lemma measurable_family_iff_sets:
   shows "$(S \subseteq N \rightarrow_M M) \longleftrightarrow S \subseteq (\texttt{space}\; N \rightarrow \;\texttt{space}\; M) \; \wedge$
                             $\texttt{family\_vimage\_algebra} \; (\texttt{space}\; N) \; S\; M \subseteq N$"
-  $\dots$
 \end{lstlisting}
 }
 \end{isalemma}
@@ -286,8 +201,9 @@ Now, we can introduce our more interesting example, the \textbf{natural filtrati
 \begin{isadefinition}
 {\small
 \begin{lstlisting}[style=isabelle]
-definition natural_filtration :: "$'a \; \texttt{measure} \; \Rightarrow \; 'b \; \Rightarrow \; ('b \; \Rightarrow \; 'a \; \Rightarrow \; 'c ) \; \Rightarrow \; 'b \; \Rightarrow \; 'a \; \texttt{measure}$" where
-  "$\texttt{natural\_filtration} \; M \; t_0 \; Y = (\lambda t. \; \texttt{family\_vimage\_algebra} \; (\texttt{space} \; M) \; \{Y \; i \; \vert\; i. \; i \in \{t_0..t\}\}\; \texttt{borel})$"
+definition natural_filtration where
+  "$\texttt{natural\_filtration} \; M \; t_0 \; Y$
+	$= (\lambda t. \; \texttt{family\_vimage\_algebra} \; (\texttt{space} \; M) \; \{Y \; i \; \vert\; i. \; i \in \{t_0..t\}\}\; \texttt{borel})$"
 \end{lstlisting}
 }
 \end{isadefinition}
@@ -298,28 +214,11 @@ The natural filtration with respect to a stochastic process $Y$ is the filtratio
 \begin{lstlisting}[style=isabelle]
 sublocale stochastic_process $\subseteq$ filtered_measure_natural_filtration: 
 	filtered_measure $M$ "natural_filtration $M$ $t_0$ $X$" $t_0$
-    by (unfold_locales) (intro subalgebra_natural_filtration, 
-						 simp only: sets_natural_filtration, 
-						 intro sigma_sets_subseteq, force) 
 \end{lstlisting}
 }
 \end{isalemma}
 
-The natural filtration contains information concerning the process's past behavior at each point in time. The natural filtration is essentially the simplest filtration for studying a process. However, the natural filtration is not always $\sigma$-finite. In order to show that the natural filtration gives rise to a $\sigma$-finite filtered measure, we need to provide a countable exhausting set in the preimage of $X_{t_0}$.
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in sigma_finite_measure) sigma_finite_filtered_measure_natural_filtration:
-  assumes "$\texttt{stochastic\_process} \; M \; t_0 \; X$"
-  and exhausting_set: "$\texttt{countable} \; A$" "$(\bigcup A) = \texttt{space} \; M$" 
-		  "$\bigwedge a. \; a \in A \implies \texttt{emeasure} \; M \; a \neq \infty$" 
-		  "$\bigwedge a. \; a \in A \implies \exists b \in \texttt{borel}. \; a = ((X \; t_0) \; \text{-\textasciigrave} \; b) \; \cap \; \texttt{space} \; M$"
-  shows "$\texttt{sigma\_finite\_filtered\_measure} \; M \; (\texttt{natural\_filtration} \; M \; t_0 \; X) \; t_0$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
+The natural filtration contains information concerning the process's past behavior at each point in time. The natural filtration is essentially the simplest filtration for studying a process. However, the natural filtration is not always $\sigma$-finite. In order to show that the natural filtration gives rise to a $\sigma$-finite filtered measure, we need to provide a countable exhausting set in the preimage of $X_{t_0}$. This statements is also present in our formalization\footnote{\texttt{Stochastic\_Process.sigma\_finite\_filtered\_measure\_natural\_filtration}}.
 
 Of course, if the measure is already finite, the filtered measure space is also finite.
 
@@ -329,7 +228,6 @@ Of course, if the measure is already finite, the filtered measure space is also 
 lemma (in finite_measure) finite_filtered_measure_natural_filtration:
   assumes "$\texttt{stochastic\_process} \; M \; t_0 \; X$"
   shows "$\texttt{finite\_filtered\_measure} \; M \; (\texttt{natural\_filtration} \; M \; t_0 \; X) \; t_0$"
-  $\dots$
 \end{lstlisting}
 }
 \end{isalemma}
@@ -338,7 +236,13 @@ This concludes our development of filtered measure spaces.
 
 \section{Adapted Processes}
 
-We call a stochastic process $(X_t)_{t \in [t_0, \infty)}$ \textit{adapted to the filtration $(F_t)_{t \in [t_0, \infty)}$} if, for every index $t \ge t_0$, the random variable $X_t$ is measurable with respect to the $\sigma$-algebra $F_t$. This means that the value of $X_t$ depends only on the information available up to time $t$. In other words, the process ``adapts'' to the information in a way that it cannot anticipate future values based on events that have not occurred yet. We introduce the following locale.
+\begin{definition}
+
+Let $(F_t)_{t \in [t_0, \infty)}$ be a filtration of the measure space $M = (\Omega, \Sigma, \mu)$. A stochastic process $(X_t)_{t \in [t_0, \infty)}$ is called \textit{an adapted process} if, for every index $t \ge t_0$, the random variable $X_t$ is measurable with respect to the $\sigma$-algebra $F_t$.
+
+\end{definition}
+
+This means that the value of $X_t$ depends only on the information available up to time $t$. In other words, the process ``adapts'' to the information in a way that it cannot anticipate future values based on events that have not occurred yet. We introduce the following locale.
 
 \begin{isalemma}
 {\small
@@ -358,23 +262,6 @@ The properties we have shown concerning stochastic processes also hold for adapt
 lemma (in filtered_measure) adapted_process_const_fun:
   assumes "$f \in \texttt{borel\_measurable} \; (F \; t_0)$"
   shows "$\texttt{adapted\_process} \; M \; F \; t_0 \; (\lambda \_. \; f)$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
-
-Furthermore, in the presence of a discrete index set, we have the following additional lemma concerning partial sums.
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in nat_adapted_process) partial_sum_Suc: 
-	"$\texttt{nat\_adapted\_process} \; M \; F \; (\lambda n \; x. \sum i<n. \; X \; (\texttt{Suc} \; i) \; x)$" 
-proof (unfold_locales)
-  fix $i$
-  have "$X \; j \in \texttt{borel\_measurable} \; (F \; i)$" if "$j \le i$" for $j$ using that adaptedD by blast
-  thus "$(\lambda x. \; \sum i<n. \; X \; (\texttt{Suc} \; i) \; x) \in \texttt{borel\_measurable} \; (F \; i)$" by auto
-qed
 \end{lstlisting}
 }
 \end{isalemma}
@@ -385,7 +272,6 @@ An adapted process is necessarily a stochastic process. This follows directly fr
 {\small
 \begin{lstlisting}[style=isabelle]
 sublocale adapted_process $\subseteq$ stochastic_process 
-  using measurable_from_subalg subalgebra adapted by (unfold_locales) blast
 
 sublocale nat_adapted_process $\subseteq$ nat_stochastic_process ..
 sublocale real_adapted_process $\subseteq$ real_stochastic_process ..
@@ -394,15 +280,13 @@ sublocale real_adapted_process $\subseteq$ real_stochastic_process ..
 \end{isalemma}
 
 
-In the other direction, a stochastic process is always adapted to the natural filtration it generates.
+In the other direction, a stochastic process is always adapted to the natural filtration it generates:
 
 \begin{isalemma}
 {\small
 \begin{lstlisting}[style=isabelle]
 sublocale stochastic_process $\subseteq$ adapted_natural: 
 	adapted_process $M$ "natural_filtration $M$ $t_0$ $X$" $t_0$ $X$ 
-  by (unfold_locales) (auto simp add: natural_filtration_def 
-  					   intro: random_variable measurable_sigma_gen) 
 \end{lstlisting}
 }
 \end{isalemma}
@@ -438,10 +322,6 @@ Notice that the measurability assumption we make here is on the entire map $(i, 
 lemma (in filtered_measure) progressive_process_const:
   assumes "$c \in \texttt{borel\_measurable} \; \texttt{borel}$"
   shows "$\texttt{progressive\_process} \; M \; F \; t_0 \; (\lambda i \; \_. \; c \; i)$"
-  using assms by (unfold_locales) 
-				 (auto simp add: measurable_split_conv 
-				  intro!: measurable_compose[OF measurable_fst] 
-				  measurable_restrict_space1)
   \end{lstlisting}
 }
 \end{isalemma}
@@ -454,19 +334,16 @@ Similarly, we must modify the premise of the lemma \texttt{compose} in order to 
 lemma compose:
   assumes "$(\lambda (i, x). \; f \; i \; x) \in \texttt{borel\_measurable} \; \texttt{borel}$"
   shows "$\texttt{progressive\_process} \; M \; F \; t_0 \; (\lambda i \; x. \; (f \; i) \; (X \; i \; x))$"
-  $\dots$
   \end{lstlisting}
 }
 \end{isalemma}
 
-A progressively measurable process is necessarily adapted. The proof is trivial and arises from the fact that the injection $y \mapsto (t, y)$ is measurable as a function $\Omega \rightarrow [t_0, t] \times \Omega$ for fixed $t \ge t_0$.
+A progressively measurable process is necessarily adapted. The proof is trivial and arises from the fact that the injection $y \mapsto (t, y)$ is measurable as a function $\Omega \rightarrow [t_0, t] \times \Omega$ for fixed $t \ge t_0$. We formalize this fact as a sublocale relation.
 
 \begin{isalemma}
 {\small
 \begin{lstlisting}[style=isabelle]
 sublocale progressive_process $\subseteq$ adapted_process 
-  using measurable_compose_rev[OF progressive measurable_Pair1'] 
-  unfolding prod.case by (unfold_locales) simp
 \end{lstlisting}
 }
 \end{isalemma}
@@ -494,7 +371,6 @@ Subsequently we express this fact in the language of locales.
 {\small
 \begin{lstlisting}[style=isabelle]
 sublocale nat_adapted_process $\subseteq$ nat_progressive_process
-  $\dots$
 \end{lstlisting}
 }
 \end{isalemma}
@@ -589,41 +465,7 @@ In the previous section, our results concerning progressively measurable process
 	On a different note, we believe strongly that $\pi_2$ is not $\Sigma_P$-$F_t$-measurable for $t > t_0$ in general, or at least our condition is not sufficient to show this. This stems from the fact that $\pi_2^{-1}(S) = [t_0, \infty) \times S$ and the element $t_0$ can only originate from some set in $\{\{t_0\} \times A \;\vert\; A \in F_{t_0}\}$. However, in general $F_t \not\subseteq F_{t_0}$.
 \end{remark}
 
-In the discrete-time case, the family $\mathcal{I} = \{\{n + 1\}\}_{n \in \mathbb{N}}$ fulfills this condition. Similarly, in the continous-time case we can use $\mathcal{I} = \{(0,n + 1]\}\}_{n \in \mathbb{N}}$. The following lemmas in Isabelle reflect this.
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in nat_filtered_measure) measurable_predictable_sigma_snd:
-  shows "$\texttt{snd} \; \in \Sigma_P \rightarrow_M F \; 0$"
-  by (intro measurable_predictable_sigma_snd[of "$\texttt{range} \; (\lambda x. \; \{\texttt{Suc} \; x\})$"]) 
-	 (force | simp add: greaterThan_0)+
-
-lemma (in nat_filtered_measure) measurable_predictable_sigma_fst:
-  shows "$\texttt{fst} \; \in \Sigma_P \rightarrow_M \texttt{borel}$"
-  by (intro measurable_predictable_sigma_fst[of "$\texttt{range} \; (\lambda x. \; \{\texttt{Suc} \; x\})$"]) 
-	 (force | simp add: greaterThan_0)+
-\end{lstlisting}
-}
-\end{isalemma}
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in real_filtered_measure) measurable_predictable_sigma_snd:
-  shows "$\texttt{snd} \; \in \Sigma_P \rightarrow_M F \; 0$"
-  using real_arch_simple 
-  by (intro measurable_predictable_sigma_snd[of "$\texttt{range} \; (\lambda x::\texttt{nat}. \; \{0\texttt{<}..\texttt{real} \; (\texttt{Suc} \; x)\})$"]) 
-	 (fastforce intro: add_increasing)+
-
-lemma (in real_filtered_measure) measurable_predictable_sigma_fst:
-  shows "$\texttt{fst} \; \in \Sigma_P \rightarrow_M \texttt{borel}$"
-  using real_arch_simple 
-  by (intro measurable_predictable_sigma_fst[of "$\texttt{range} \; (\lambda x::\texttt{nat}. \; \{0\texttt{<}..\texttt{real} \; (\texttt{Suc} \; x)\})$"])
-	 (fastforce intro: add_increasing)+
-\end{lstlisting}
-}
-\end{isalemma}
+In the discrete-time case, the family $\mathcal{I} = \{\{n + 1\}\}_{n \in \mathbb{N}}$ fulfills this condition. Similarly, in the continous-time case we can use $\mathcal{I} = \{(0,n + 1]\}\}_{n \in \mathbb{N}}$. In our formalization, we present these results in the context of the locales \texttt{nat\_filtered\_measure} and \texttt{real\_filtered\_measure}\footnote{\texttt{nat\_filtered\_measure.measurable\_predictable\_sigma\_snd} \quad \texttt{-.measurable\_predictable\_sigma\_fst} \\\texttt{real\_filtered\_measure.measurable\_predictable\_sigma\_snd} \quad \texttt{-.measurable\_predictable\_sigma\_fst}}.
 
 These measurability results concerning projections are necessary to show the following statements about ``constant'' processes being predictable.
 
@@ -633,19 +475,10 @@ These measurability results concerning projections are necessary to show the fol
 lemma (in filtered_measure) predictable_process_const_fun:
   assumes "$\texttt{snd} \; \in \Sigma_P \rightarrow_M F \; t_0$" "$f \in \texttt{borel\_measurable} \; (F \; t_0)$"
   shows "$\texttt{predictable\_process} \; M \; F \; t_0 \; (\lambda\_. \; f)$"
-  using measurable_compose_rev[OF assms(2)] assms(1) 
-  by (unfold_locales) (auto simp add: measurable_split_conv)
-\end{lstlisting}
-}
-\end{isalemma}
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
 lemma (in filtered_measure) predictable_process_const:
   assumes "$\texttt{fst} \; \in \texttt{borel\_measurable} \; \Sigma_P$" "$c \in \texttt{borel\_measurable} \; \texttt{borel}$"
   shows "$\texttt{predictable\_process} \; M \; F \; t_0 \; (\lambda i \_. \; c \; i)$"
-  using assms by (unfold_locales) (simp add: measurable_split_conv)
 \end{lstlisting}
 }
 \end{isalemma}
@@ -685,7 +518,6 @@ We formalize this fact as a sublocale relation.
 {\small
 \begin{lstlisting}[style=isabelle]
 sublocale predictable_process $\subseteq$ progressive_process
-  $\dots$
 \end{lstlisting}
 }
 \end{isalemma}

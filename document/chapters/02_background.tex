@@ -7,11 +7,13 @@ In the following section, we explore existing formalizations of martingales with
 
 \section{Existing Formalizations}
 
+We start by looking at the existing developments in the proof repositories \textsf{mathlib} and \textsf{AFP}.
+
 \subsection{Lean Mathematical Library}
 
-Our main motivation for formalizing a theory of martingales in Isabelle/HOL comes from the existing in-depth formalization of the same subject in \textsf{mathlib}. As stated on their online platform, ``The Lean mathematical library, \textsf{mathlib}, is a community-driven effort to build a unified library of mathematics formalized in the Lean proof assistant.'' The Lean formalization of martingales consists of six documents. In the introductory Lean document \texttt{probability.martingale.basic}, fundamentals of the theory of martingales are formalized. The aim of this bachelor's thesis is to reproduce the results contained in this document using Isabelle/HOL. As will become clear in a moment, this is not a straightforward task, since there are a lot of dependencies missing in the Isabelle/HOL libraries.
+Our main motivation for formalizing a theory of martingales in Isabelle/HOL comes from the existing in-depth formalization of the same subject in \textsf{mathlib}. As stated on their online platform, ``The Lean mathematical library, \textsf{mathlib}, is a community-driven effort to build a unified library of mathematics formalized in the Lean proof assistant'' \cite{Lean}. The Lean formalization of martingales consists of six documents. In the introductory Lean document \texttt{probability.martingale.basic}, fundamentals of the theory of martingales are formalized \cite{Degenne_Ying_2022}. The aim of this bachelor's thesis is to reproduce the results contained in this document using Isabelle/HOL. As will become clear in a moment, this is not a straightforward task, since there are a lot of dependencies missing in the Isabelle/HOL libraries.
 
-The document \texttt{probability.martingale.basic} contains definitions for martingales, submartingales and supermartingales \cite{Degenne_Ying_2022}. The main results of this document are
+The document \texttt{probability.martingale.basic} contains definitions for martingales, submartingales and supermartingales. The main results of this document are
 \begin{itemize}
 \item[$\rightarrow$]\lstinline[mathescape]{measure_theory.martingale $f$ $\mathcal{F}$ $\mu$:}
 \item[] \quad$f$ is a martingale with respect to filtration $\mathcal{F}$ and measure $\mu$.
@@ -20,7 +22,7 @@ The document \texttt{probability.martingale.basic} contains definitions for mart
 \item[$\rightarrow$]\lstinline[mathescape]{measure_theory.submartingale $f$ $\mathcal{F}$ $\mu$:}
 \item[] \quad$f$ is a submartingale with respect to filtration $\mathcal{F}$ and measure $\mu$.
 \item[$\rightarrow$]\lstinline[mathescape]{measure_theory.martingale_condexp $f$ $\mathcal{F}$ $\mu$:}
-\item[] \quad the sequence $(\mu[f \vert \mathcal{F}_i])_{i\in\mathcal{T}}$ is a martingale with respect to $\mathcal{F}$ and $\mu$, where $\mu[f \vert \mathcal{F}_i]$ denotes the conditional expectation of $f$ with respect to the subalgebra $\mathcal{F}_i$.
+\item[] \quad the sequence $(\mu[f \vert \mathcal{F}_i])_{i\in\mathcal{T}}$ is a martingale with respect to $\mathcal{F}$ and $\mu$, where $\mu[f \vert \mathcal{F}_i]$ denotes the conditional expectation of $f$ with respect to the subalgebra $\mathcal{F}_i$ and $\mu$.
 \end{itemize}
 
 On a first note, we see that this theory relies heavily on the conditional expectation operator in Banach spaces. Prior to our development, the only formalization of conditional expectation in Isabelle/HOL was done in the real setting and resides in the theory document \texttt{HOL-Probability.Conditional\_Expectation}. This formalization was accomplished by S\`ebastien Gou\"ezel, presumably in anticipation of his later entries \cite{Ergodic_Theory-AFP} and \cite{Lp-AFP}. We will delve further into the existing formalization and how our contribution improves upon it in the upcoming chapter.
@@ -47,31 +49,28 @@ This concludes our review of the \textsf{mathlib} formalization on martingales.
 
 \subsection{Archive of Formal Proofs}
 
-The \textsf{Archive of Formal Proofs} or \textsf{AFP} is a digital repository of formalized proofs and theories developed using the Isabelle theorem prover and proof assistant. The \textsf{AFP}  hosts a variety of formalizations and proofs, primarily in the fields of logic, mathematics, and computer science. The repository allows researchers to share their formal proofs, theories, and related materials with the broader community.
+The Archive of Formal Proofs (\textsf{AFP}) is a digital repository of formalized proofs and theories developed using the Isabelle theorem prover and proof assistant. The \textsf{AFP}  hosts a variety of formalizations and proofs, primarily in the fields of logic, mathematics, and computer science. The repository allows researchers to share their formal proofs, theories, and related materials with the broader community.
 
-The repository offers a search function, which allows us to find if any formalization on martingales have been done previously. A quick search yields the theory file \texttt{DiscretePricing.Martingale}. The entry \texttt{DiscretePricing}, which is attributed to Mnacho Echenim, focuses on the formalization of the Binomial Options Pricing Model in finance \cite{DiscretePricing-AFP}. A development of discrete-time real-valued martingales is given in order to introduce the concept of risk-neutral measures. Similar to the development on \textsf{mathlib}, the goal of this entry isn't to formalize martingales. A partial formalization of martingales and filtered measure spaces is given as a byproduct. The paper detailing this formalization can be found in the conference proceedings for the 26th International Conference on Automated Deduction \cite{EchenimPeltier}.
-
+The repository offers a search function, which allows us to find if any formalization on martingales have been done previously. A quick search yields the theory file \texttt{DiscretePricing.Martingale} \cite{DiscretePricing-AFP}. The entry \texttt{DiscretePricing}, by Mnacho Echenim, focuses on the formalization of the Binomial Options Pricing Model in finance \cite{EchenimPeltier}. A development of discrete-time real-valued martingales is given in order to introduce the concept of risk-neutral measures. Similar to the development on \textsf{mathlib}, the goal of this entry isn't to formalize martingales. An incomplete formalization of martingales and filtered measure spaces is only given as a byproduct.
 Apart from this entry, no other development on the theory of martingales is present on \textsf{AFP}.
 
 \section{Mathematical Foundations and Reference Material}
 
-The main focus of our project is to formalize martingales in as general of a setting as possible. In this vein, we will study martingales defined on arbitrary Banach spaces, as opposed to the reals only. The main obstacle we will face is the development of the conditional expectation operator in arbitrary Banach spaces. A great resource on this subject is the book \textit{Analysis in Banach Spaces} by Hytönen et al \cite{Hytoenen_2016}. As a primer for the upcoming chapter, we will quickly cover the basics of integration on Banach spaces. The following information can also be found in the aforementioned book.
+The main focus of our project is to formalize martingales in as general of a setting as possible. In this vein, we will study martingales defined on arbitrary Banach spaces, as opposed to the reals only. The main obstacle we will face is the development of the conditional expectation operator in arbitrary Banach spaces.As a primer for the upcoming chapters, we will quickly cover the basics of integration on Banach spaces. More information covering the prerequisites of our work can be found in the initial chapters of the book \textit{Analysis in Banach Spaces} \cite{Hytoenen_2016}.
 
 \begin{remark}
-	For the remainder of this document, unless stated otherwise explicitly, we fix a measure space $M = (\Omega, \Sigma, \mu)$ and a Banach space $(E, \lVert \cdot \rVert)$.
+	For the remainder of this document, unless stated otherwise explicitly, we fix a measure space $M = (\Omega, \Sigma, \mu)$ and a Banach space $(E, \lVert \cdot \rVert)$. Here $\Omega$ denotes an arbitrary set, $\Sigma$ a $\sigma$-algebra defined on this set, and $\mu : \Sigma \rightarrow \mathbb{R}_{\ge 0}$ a measure. Similarly, $E$ is a vector space which is complete with respect to the metric topology generated by the norm $\lVert \cdot \rVert$.
 \end{remark}
 
-Integration on Banach spaces is usually done using the Bochner-integral, which is defined similarly to the Lebesgue-integral. For $M$ a measure space and $E$ a Banach space, we define the Bochner-integral as follows
+Integration on Banach spaces is usually done using the Bochner-integral, which is defined similarly to the Lebesgue-integral. For $M$ a measure space and $E$ a Banach space, we introduce the Bochner-integral as follows:
 
-\leftskip0.5cm\relax
-\rightskip0.5cm\relax
 \vspace{0.3cm}
 
-First, we consider simple functions $s : \Omega \rightarrow E$. These are functions which can be expressed $\mu$-a.e. as finite sums of the form
+We consider simple functions $s : \Omega \rightarrow E$. These are functions which can be expressed $\mu$-almost everywhere ($\mu$-a.e.) as finite sums of the form
 \[
 	s = \sum_{i=1}^n \mathbf{1}_{A_i} \cdot_\mathbb{R} c_i
 \]
-where $\mathbf{1}_A$ is the indicator function of a set $A \in \Sigma$ and $c_i \in E$. Here $\cdot_\mathbb{R}$ denotes the scalar multiplication. We call such a function $s$ Bochner-integrable if $\mu(A_i) < \infty$ for all $i \in \{1,\dots,n\}$. In this case, we define the Bochner-integral simply as the sum
+where $\mathbf{1}_A$ is the indicator function of a set $A \in \Sigma$ and $c_i \in E$. Here $\cdot_\mathbb{R}$ denotes the scalar multiplication in $E$. We call such a function $s$ Bochner-integrable if $\mu(A_i) < \infty$ for all $A_i \in \Sigma$. In this case, we define the Bochner-integral simply as the sum
 \[
 	\int s \; \textrm{d}\mu = \sum_{i=1}^n \mu(A_i) \cdot_\mathbb{R} c_i
 \]
@@ -93,10 +92,8 @@ It can be shown via the triangle inequality that the integrals $\int f_n\; \text
 Furthermore, a function $f$ in this setting is Bochner-integrable, if and only if the function $x \mapsto \lVert f(x) \rVert$ is integrable.
 
 \vspace{0.3cm}
-\leftskip0cm\relax
-\rightskip0cm\relax
 
-A formalization of the Bochner-integral is available in Isabelle/HOL in the theory file \texttt{HOL-Analysis.Bochner\_Integration} \cite{hoelzl2011measuretheory}. This formalization, which is due to Johannes Hölzl, has the additional assumption that the space $E$ be second-countable. In the context of a metric space, this is the same as requiring separability.
+A formalization of the Bochner-integral is available in Isabelle/HOL in the theory file \texttt{HOL-Analysis.Bochner\_Integration} \cite{hoelzl2011measuretheory}. This formalization, by Johannes Hölzl, has the additional assumption that the space $E$ be second-countable. In the context of a metric space, this is the same as requiring separability.
 \vspace{0.3cm}
 \begin{remark}
 
@@ -106,8 +103,10 @@ Consequently, we don't need to concern ourselves with definining strong measurab
 \end{remark}
 \vspace{0.3cm}
 
-The book \textit{Analysis in Banach Spaces} also contains an in depth section on the construction of the conditional expectation operator on Banach spaces. For our purposes, we only need to focus on the case where $f : \Omega \rightarrow E$ is a Bochner-integrable function. In this case, the conditional expectation can be thought of as a linear operator $\mathbb{E}(\cdot\vert\mathcal{F}) : L^1(E) \rightarrow L^1(E)$ with respect to a sub-$\sigma$-algebra. The book contains theorems for the existence and uniqueness of conditional expectations (up to $\mu$-null sets) for functions not only in $L^1(E)$, but also for those in $L^2(E)$ and $L^0(E)$. The latter is the space of strongly measurable functions with codomain $E$. Unsuprisingly, the definition of conditional expectation in this case is a bit more complicated, since it has to take into account the case where $f$ is not integrable.
+The book \textit{Analysis in Banach Spaces} also contains an in depth section on the construction of the conditional expectation operator on Banach spaces. For our purposes, we only need to focus on the case where $f : \Omega \rightarrow E$ is a Bochner-integrable function, i.e. an element of $L^1(E)$. Here, $L^p(E)$ denotes the set of functions $f: \Omega \rightarrow E$, for which $x \mapsto \lVert f(x) \rVert^p$ is integrable which are unique upto a $\mu$-null set. In this case, the conditional expectation is constructed as a linear operator $L^1(E) \rightarrow L^1(E)$. The book contains theorems for the existence and uniqueness of conditional expectations (up to $\mu$-null sets) for functions not only in $L^1(E)$, but also for those in $L^2(E)$ and $L^0(E)$. The latter is the space of strongly measurable functions with codomain $E$. Unsuprisingly, the definition of conditional expectation in this case is a bit more complicated, since it has to take into account the case where $f$ is not integrable.
 
-For the defining stochastic processes in a general setting, we have used the definitions presented in the books \textit{PDE and Martingale Methods in Option Pricing} by Andrea Pascucci \cite{Pascucci_2011} and \textit{Stochastic Calculus and Applications} by Samuel N. Cohen and Robert J. Elliott \cite{Elliott_Cohen_1982}. Apart from these resources, we have made heavy use of the blog \textit{Almost Sure} by George Thowler from the University of Cambridge \cite{Thowler}.
+To demonstrate commonly used properties of conditional expectation, we have drawn upon the ideas presented in the lecture notes of Gordan Zitkovic during his lecture on conditional expectation at the University of Texas at Austin \cite{Zitkovic_2015}.
+
+For defining stochastic processes in a general setting, we have used the definitions presented in the books \textit{PDE and Martingale Methods in Option Pricing} by Andrea Pascucci \cite{Pascucci_2011} and \textit{Stochastic Calculus and Applications} by Samuel N. Cohen and Robert J. Elliott \cite{Elliott_Cohen_1982}. Apart from these resources, we have made heavy use of the blog \textit{Almost Sure} by George Thowler from the University of Cambridge \cite{Thowler}.
 
 Another extensive reference regarding martingales in Banach spaces is the book \textit{Martingales in Banach Spaces} by Gilles Pisier \cite{pisier_2016}. This resource provides an in-depth exploration of the theory of martingales in Banach spaces at a graduate level. Given the limited scope of this thesis, the book serves only as a supplementary resource.

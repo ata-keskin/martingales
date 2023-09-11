@@ -1,4 +1,4 @@
-theory Example_Coin_Toss
+theory Example_Coin_Toss                                                                                                
   imports Martingale "HOL-Probability.Stream_Space" "HOL-Probability.Probability_Mass_Function"
 begin
 
@@ -45,29 +45,15 @@ interpretation nat_martingale "bernoulli_stream p" "toss_filtration p" fortune
 proof (intro fortune.martingale_of_set_integral_eq_Suc integrable_fortune)
   fix A n
   assume asm: "A \<in> toss_filtration p n"
-  hence "A \<in> sigma_sets UNIV (\<Union>i\<in>{..n}. {toss i -` A | A. open A})" unfolding toss.sets_natural_filtration by (simp add: atLeastAtMost_def)
+  hence "A \<in> sigma_sets UNIV (\<Union>i\<in>{..n}. {toss i -` A | A. A \<in> range atLeast})" by (simp add: sets_natural_filtration_ci atLeastAtMost_def)
 
   have [measurable]: "A \<in> bernoulli_stream p" by (meson asm toss.subalgebra_natural_filtration in_mono subalgebra_def)
   have measurable_snth[measurable]: "{s. s !! j} \<in> bernoulli_stream p" for j using measurable_sets[OF measurable_snth, of "{True}" "measure_pmf (bernoulli_pmf p)" j, folded bernoulli_stream_def] by (simp add: vimage_def)
 
-  have prob_eq: "prob p (A \<inter> {s. snth s n}) = prob p (A \<inter> - {s. snth s n})"
+  have prob_eq: "prob p (A \<inter> {s. snth s (Suc n)}) = prob p (A \<inter> - {s. snth s (Suc n)})"
   proof -
     note emeasure_stream_space = prob_space.emeasure_stream_space[OF prob_space_measure_pmf, of _ "bernoulli_pmf p", folded bernoulli_stream_def, unfolded emeasure_eq_measure]
-    have "ennreal (prob p (A \<inter> {s. snth s n})) = ennreal (prob p (A \<inter> - {s. snth s n}))"
-    proof (induction n)
-      case 0
-      have "prob p {x. True ## x \<in> A} = prob p {x. False ## x \<in> A}" sorry
-
-      have t_True: "{x \<in> space (bernoulli_stream p). t ## x \<in> A \<inter> {s. s !! 0}} = {x. True ## x \<in> A \<and> t = True}" for t by auto
-      have t_False: "{x \<in> space (bernoulli_stream p). t ## x \<in> A \<inter> - {s. s !! 0}} = {x. False ## x \<in> A \<and> t = False}" for t by auto
-      have "prob p (A \<inter> {s. s !! 0}) = \<integral>\<^sup>+ t. (prob p {x. True ## x \<in> A \<and> t = True}) \<partial>measure_pmf (bernoulli_pmf p)"
-        by (subst emeasure_stream_space, fastforce intro: measurable_snth[of 0], simp only: t_True)
-      also have "... = (prob p {x. True ## x \<in> A}) * ennreal (1 / 2)" by (subst nn_integral_bernoulli_pmf[of p]) (auto simp add: p_eq_half)
-      then show ?case using measurable_snth[of 0] apply (subst emeasure_stream_space, simp) sorry
-    next
-      case (Suc n)
-      then show ?case sorry
-    qed
+    have "ennreal (prob p (A \<inter> {s. snth s (Suc n)})) = ennreal (prob p (A \<inter> - {s. snth s (Suc n)}))" 
     thus ?thesis by simp
   qed
 
@@ -76,11 +62,11 @@ proof (intro fortune.martingale_of_set_integral_eq_Suc integrable_fortune)
   ultimately have "(LINT s:A|bernoulli_stream p. fortune (Suc n) s) - (LINT s:A|bernoulli_stream p. fortune n s) = (LINT s:(A \<inter> {s. s !! (Suc n)}) \<union> (A \<inter> - {s. s !! (Suc n)})|bernoulli_stream p. toss (Suc n) s)" 
     by (subst set_integral_diff(2)[symmetric], auto simp only: set_integrable_def integrable_fortune measurable intro!: integrable_mult_indicator)
   also have "... = (LINT s:A \<inter> {s. snth s (Suc n)}|bernoulli_stream p. toss (Suc n) s) + (LINT s:A \<inter> -{s. snth s (Suc n)}|bernoulli_stream p. toss (Suc n) s)"
-    by (subst set_integral_Un, blast) (blast | (intro integrableI_bounded_set_indicator[folded set_integrable_def], simp, simp add: bernoulli_stream_def toss_def, simp add: emeasure_eq_measure, force simp: toss_def))+
-  also have "... = (LINT s:A \<inter> {s. snth s n}|bernoulli_stream p. 1) + (LINT s:A \<inter> -{s. snth s n}|bernoulli_stream p. -1)" 
-    by (simp add: toss_def set_lebesgue_integral_cong[of "A \<inter> {s. s !! n}" _ "\<lambda>_. 1" "toss (Suc n)"] set_lebesgue_integral_cong[of "A \<inter> -{s. s !! n}" _ "\<lambda>_. -1" "toss (Suc n)"])   
-  also have "... = prob p (A \<inter> {s. snth s n}) - prob p (A \<inter> -{s. snth s n})" unfolding set_lebesgue_integral_def by simp
-  finally show "(LINT s:A|bernoulli_stream p. fortune n s) = (LINT s:A|bernoulli_stream p. fortune (Suc n) s)"  using prob_eq by fastforce
+    by (subst set_integral_Un, blast) (blast | intro integrableI_bounded_set_indicator[folded set_integrable_def], simp only: measurable Diff_eq[symmetric], simp, simp add: emeasure_eq_measure, force simp: toss_def)+
+  also have "... = (LINT s:A \<inter> {s. snth s (Suc n)}|bernoulli_stream p. 1) + (LINT s:A \<inter> -{s. snth s (Suc n)}|bernoulli_stream p. -1)"
+    by (blast | subst set_lebesgue_integral_cong[of "A \<inter> {s. s !! (Suc n)}" _ "\<lambda>_. 1" "toss (Suc n)"] set_lebesgue_integral_cong[of "A \<inter> -{s. s !! (Suc n)}" _ "\<lambda>_. -1" "toss (Suc n)"], simp only: measurable Diff_eq[symmetric], simp add: toss_def)+
+  also have "... = prob p (A \<inter> {s. snth s (Suc n)}) - prob p (A \<inter> -{s. snth s (Suc n)})" unfolding set_lebesgue_integral_def by simp
+  finally show "(LINT s:A|bernoulli_stream p. fortune n s) = (LINT s:A|bernoulli_stream p. fortune (Suc n) s)" using prob_eq by fastforce
 qed
 
 end

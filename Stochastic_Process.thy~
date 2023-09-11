@@ -106,7 +106,7 @@ proof (subst sets_natural_filtration, intro sigma_sets_eqI, clarify)
   qed (auto intro: asm sigma_sets.Empty)
 qed (intro sigma_sets.Basic, force simp add: assms)
 
-lemma sets_natural_filtration_o: 
+lemma sets_natural_filtration_open: 
   "sets (natural_filtration M t\<^sub>0 X t) = sigma_sets (space M) (\<Union>i\<in>{t\<^sub>0..t}. {X i -` A \<inter> space M | A. open A})"
   using sets_natural_filtration' by (force simp only: borel_def mem_Collect_eq)
 

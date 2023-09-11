@@ -19,7 +19,11 @@ We start with the definition of a martingale.
 	Replacing ``$=$'' in the third condition with ``$\le$'' or ``$\ge$'' gives rise to the definition of a sub- or supermartingale, respectively.
 \end{definition}
 
-Using the results we have formalized in the previous chapters, we define the following locales.
+\begin{remark}
+ In addition to what we've discussed in the last chapter, we have introduced the locale \texttt{sigma\_finite\_adapted\_process} which combines the locale \texttt{adapted\_process} with the locale \texttt{sigma\_finite\_filtered\_measure}. Without this additional restriction, we can't use the operator \texttt{cond\_exp}. Similary, the locale \texttt{sigma\_finite\_adapted\_process\-\_order} places a restriction on the Banach space $(E, \lVert \cdot \rVert)$, asserting the existence of an ordering compatible with scalar multiplication. Finally, the locale \texttt{sigma\_finite\_adapted\-\_process\_linorder} further mandates that this ordering be total. We have also introduced locales for discrete-time and continuous-time counterparts.
+\end{remark}
+
+Using these additional definitions we introduce the following locale which formalizes martingales.
 
 \begin{isadefinition}
 {\small
@@ -28,24 +32,6 @@ locale martingale = sigma_finite_adapted_process +
   assumes integrable: "$\bigwedge i. \; t_0 \le i \implies \texttt{integrable} \; M \; (X \; i)$"
       and martingale_property: "$\bigwedge i \; j. \; t_0 \le i \implies i \le j$
 	  $\implies $AE$ \; x \; $in$ \; M. \; X \; i \; x = \texttt{cond\_exp} \; M \; (F \; i) \; (X \; j) \; x$"
-\end{lstlisting}
-}
-\end{isadefinition}
-
-\begin{remark}
- In addition to what we've discussed in the last chapter, we have introduced the locale \texttt{sigma\_finite\_adapted\_process} which combines the locale \texttt{adapted\_process} with the locale \texttt{sigma\_finite\_filtered\_measure}. Without this additional restriction, we can't use the operator \texttt{cond\_exp}. Similary, the locale \texttt{sigma\_finite\_adapted\_process\-\_order} places a restriction on the Banach space $(E, \lVert \cdot \rVert)$, asserting the existence of an ordering compatible with scalar multiplication. Finally, the locale \texttt{sigma\_finite\_adapted\-\_process\_linorder} further mandates that this ordering be total. We have also introduced locales for discrete-time and continuous-time counterparts.
-\end{remark}
-
-Any stochastic process that is both a submartingale and a supermartingale is a martingale. Conversely, every martingale is also a submartingale and a supermartingale if there exists an ordering on the Banach space $E$. In anticipation of this result, we introduce the following locales.
-
-\begin{isadefinition}
-{\small
-\begin{lstlisting}[style=isabelle]
-locale martingale_order = martingale $M$ $F$ $t_0$ $X$ for $M$ $F$ $t_0$
-	and $X$ :: "_ $\Rightarrow$ _ $\Rightarrow$ _ :: {order_topology, ordered_real_vector}"
-locale martingale_linorder = martingale $M$ $F$ $t_0$ $X$ for $M$ $F$ $t_0$
-	and $X$ :: "_ $\Rightarrow$ _ $\Rightarrow$ _ :: {linorder_topology, ordered_real_vector}"
-sublocale martingale_linorder $\subseteq$ martingale_order ..
 \end{lstlisting}
 }
 \end{isadefinition}
@@ -59,13 +45,6 @@ locale submartingale = sigma_finite_adapted_process_order +
   assumes integrable: "$\bigwedge i. \; t_0 \le i \implies \texttt{integrable} \; M \; (X \; i)$"
       and submartingale_property: "$\bigwedge i \; j. \; t_0 \le i \implies i \le j$
 	  $\implies $AE$ \; x \; $in$ \; M. \; X \; i \; x \le \texttt{cond\_exp} \; M \; (F \; i) \; (X \; j) \; x$"
-	  
-locale submartingale_linorder = submartingale $M$ $F$ $t_0$ $X$ for $M$ $F$ $t_0$ 
-	and $X$ :: "_ $\Rightarrow$ _ $\Rightarrow$ _ :: {linorder_topology}"
-
-sublocale martingale_order $\subseteq$ submartingale using martingale_property
-  by (unfold_locales) (force simp add: integrable)+
-sublocale martingale_linorder $\subseteq$ submartingale_linorder ..
 \end{lstlisting}
 }
 \end{isadefinition}
@@ -77,37 +56,28 @@ locale supermartingale = sigma_finite_adapted_process_order +
   assumes integrable: "$\bigwedge i. \; t_0 \le i \implies \texttt{integrable} \; M \; (X \; i)$"
       and supermartingale_property: "$\bigwedge i \; j. \; t_0 \le i \implies i \le j$
 	  $\implies $AE$ \; x \; $in$ \; M. \; X \; i \; x \ge \texttt{cond\_exp} \; M \; (F \; i) \; (X \; j) \; x$"
-	  
-locale supermartingale_linorder = supermartingale $M$ $F$ $t_0$ $X$ for $M$ $F$ $t_0$ 
-	and $X$ :: "_ $\Rightarrow$ _ $\Rightarrow$ _ :: {linorder_topology}"
-
-sublocale martingale_order $\subseteq$ supermartingale using martingale_property
-  by (unfold_locales) (force simp add: integrable)+
-sublocale martingale_linorder $\subseteq$ supermartingale_linorder ..
 \end{lstlisting}
 }
 \end{isadefinition}
 
-As noted before, a stochastic process taking values on an ordered Banach space is a martingale, if and only if it is both a submartingale and a supermartingale. The following lemma formalizes this fact.
+Any stochastic process that is both a submartingale and a supermartingale is a martingale. Conversely, every martingale is also a submartingale and a supermartingale if there exists an ordering on the Banach space $E$. In anticipation of this result, we introduce the following locale.
+
+\begin{isadefinition}
+{\small
+\begin{lstlisting}[style=isabelle]
+locale martingale_order = martingale $M$ $F$ $t_0$ $X$ for $M$ $F$ $t_0$
+	and $X$ :: "_ $\Rightarrow$ _ $\Rightarrow$ _ :: {order_topology, ordered_real_vector}"
+\end{lstlisting}
+}
+\end{isadefinition}
+
+Using thise locale we can state the following lemma which formalizes this fact.
 
 \begin{isalemma}
 {\small
 \begin{lstlisting}[style=isabelle]
 lemma martingale_iff: 
   shows "$\texttt{martingale} \; M \; F \; t_0 \; X \longleftrightarrow \texttt{submartingale} \; M \; F \; t_0 \; X \; \wedge \; \texttt{supermartingale} \; M \; F \; t_0 \; X$"
-proof (rule iffI)
-  assume asm: "$\texttt{martingale} \; M \; F \; t_0 \; X$"
-  interpret martingale_order $M$ $F$ $t_0$ $X$ by (intro martingale_order.intro asm)
-  show "$\texttt{submartingale} \; M \; F \; t_0 \; X \wedge \texttt{supermartingale} \; M \; F \; t_0 \; X$" 
-    using submartingale_axioms supermartingale_axioms by blast
-next
-  assume asm: "$\texttt{submartingale} \; M \; F \; t_0 \; X \wedge \texttt{supermartingale} \; M \; F \; t_0 \; X$"
-  interpret submartingale $M$ $F$ $t_0$ $X$ by (simp add: asm)
-  interpret supermartingale $M$ $F$ $t_0$ $X$ by (simp add: asm)
-  show "$\texttt{martingale} \; M \; F \; t_0 \; X$" 
-    using submartingale_property supermartingale_property 
-    by (unfold_locales) (intro integrable, blast, force)
-qed
 \end{lstlisting}
 }
 \end{isalemma}
@@ -117,12 +87,9 @@ Additionally, we have included lemmas for introducing martingales in simple case
 \begin{isalemma}
 {\small
 \begin{lstlisting}[style=isabelle]
-lemma (in sigma_finite_filtered_measure) martingale_const_fun[intro]:  
+lemma (in sigma_finite_filtered_measure) martingale_const_fun:  
   assumes "$\texttt{integrable} \; M \; f$" "$f \in \texttt{borel\_measurable} \; (F \; t_0)$"
   shows "$\texttt{martingale} \; M \; F \; t_0 \; (\lambda \_. \; f)$"
-  using assms sigma_finite_subalgebra.cond_exp_F_meas[OF _ assms(1), THEN AE_symmetric] 
-  		borel_measurable_mono
-  by (unfold_locales) blast+
 \end{lstlisting}
 }
 \end{isalemma}
@@ -132,175 +99,78 @@ The statements below follow directly.
 \begin{isacorollary}
 {\small
 \begin{lstlisting}[style=isabelle]
-corollary (in sigma_finite_filtered_measure) martingale_zero[intro]: 
+corollary (in sigma_finite_filtered_measure) martingale_zero: 
 	"$\texttt{martingale} \; M \; F \; t_0 \; (\lambda \_ \; \_. \; 0)$" by fastforce
 
-corollary (in finite_filtered_measure) martingale_const[intro]: 
+corollary (in finite_filtered_measure) martingale_const: 
 	"$\texttt{martingale} \; M \; F \; t_0 \; (\lambda \_ \; \_. \; c)$" by fastforce
 \end{lstlisting}
 }
 \end{isacorollary}
 
-The stochastic process defined by $X_t = \mathbb{E}(f \;\vert\; F_t)$ for $f \in L^1(E)$ is also a martingale. This follows from the tower property of the conditional expectation.
+Using our development of the conditional expectation operator, we have the following corollary.
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in sigma_finite_filtered_measure) martingale_cond_exp[intro]:  
-  assumes "$\texttt{integrable} \; M \; f$"
-  shows "$\texttt{martingale} \; M \; F \; t_0 \; (\lambda i. \; \texttt{cond\_exp} \; M \; (F \; i) \; f)$"
-  using sigma_finite_subalgebra.borel_measurable_cond_exp' borel_measurable_cond_exp 
-  by (unfold_locales) (auto intro: sigma_finite_subalgebra.cond_exp_nested_subalg[OF _ assms] 
-  							simp add: subalgebra_F subalgebra)
-\end{lstlisting}
-}
-\end{isalemma}
+\begin{corollary}
+	The stochastic process defined by $X_t = \mathbb{E}(f \;\vert\; F_t)$ for $f \in L^1(E)$ is also a martingale. 
+\end{corollary}
+\begin{proof}
+	This follows from the tower property of the conditional expectation.
+\end{proof}
 
 \section{Basic Operations and Alternative Characterizations}
 
-First and foremost, we will discuss elementary properties of martingales, submartingales and supermartingales. Multiplying a martingale $(X_t)_{t \in [t_0,\infty)}$ with a scalar $c \in \mathbb{R}$ yields another martingale. Similarly, the sum of two martingales $(X_t)_{t \in [t_0,\infty)}$ and $(Y_t)_{t \in [t_0,\infty)}$ is again a martingale. We have the following lemmas to account for this.
+First and foremost, we will discuss elementary properties of martingales, submartingales and supermartingales. 
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-context martingale
-begin
+\begin{lemma}
+	Let $(X_t)_{t \in [t_0,\infty)}$ be a martingale with respect to a filtration $(F_t)_{t \in [t_0,\infty)}$. We have
+	\begin{enumerate}
+	\item[$\bullet$] Let $c \in \mathbb{R}$. Then $(c \cdot X_t)_{t \in [t_0,\infty)}$ is also a martingale.
+	\item[$\bullet$] Let $(Y_t)_{t \in [t_0,\infty)}$ be another martingale with respect to the same filtration $(F_t)_{t \in [t_0,\infty)}$. Then $(X_t + Y_t)_{t \in [t_0,\infty)}$ and $(X_t - Y_t)_{t \in [t_0,\infty)}$ are also martingales.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	The statements follow using the linearity of the conditional expectation and the Bochner-integral.
+\end{proof}
 
-lemma scaleR_const[intro]:
-  shows "$\texttt{martingale} \; M \; F \; t_0 \; (\lambda i \; x. \; c \cdot_R X \; i \; x)$"
-  $\dots$
+Similarly, we have the following statement for submartingales.
 
-lemma uminus[intro]:
-  shows "$\texttt{martingale} \; M \; F \; t_0 \; (- X)$" 
-  using scaleR_const[of "$-1$"] by (force intro: back_subst[of "$\texttt{martingale} \; M \; F \; t_0$"])
+\begin{lemma}
+	Let $(X_t)_{t \in [t_0,\infty)}$ be a submartingale with respect to a filtration $(F_t)_{t \in [t_0,\infty)}$. We have
+	\begin{enumerate}
+	\item[$\bullet$] Let $c \in \mathbb{R}$ with $c \ge 0$. Then $(c \cdot X_t)_{t \in [t_0,\infty)}$ is also a submartingale.
+	\item[$\bullet$] Let $c \in \mathbb{R}$ with $c \le 0$. Then $(c \cdot X_t)_{t \in [t_0,\infty)}$ is a supermartingale.
+	\item[$\bullet$] Let $(Y_t)_{t \in [t_0,\infty)}$ be another submartingale with respect to the same filtration $(F_t)_{t \in [t_0,\infty)}$. Then $(X_t + Y_t)_{t \in [t_0,\infty)}$ is also a submartingale.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	These statements also follow using the linearity of the conditional expectation and the Bochner-integral.
+\end{proof}
 
-lemma add[intro]:
-  assumes "$\texttt{martingale} \; M \; F \; t_0 \; Y$"
-  shows "$\texttt{martingale} \; M \; F \; t_0 \; (\lambda i \; x. \; X \; i \; x + Y \; i \; x)$"
-  $\dots$
-
-lemma diff[intro]:
-  assumes "$\texttt{martingale} \; M \; F \; t_0 \; Y$"
-  shows "$\texttt{martingale} \; M \; F \; t_0 \; (\lambda i \; x. \; X \; i \; x - Y \; i \; x)$"
-  $\dots$
-  
-end
-\end{lstlisting}
-}
-\end{isalemma}
-
-If we scale a submartingale by a factor $c \ge 0$, then the resulting process is also a submartingale. Conversely, scaling it by a factor $c \le 0$ yields a supermartingale. 
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-context submartingale
-begin
-
-lemma scaleR_nonneg[intro]:
-  assumes "$c \ge 0$"
-  shows "$\texttt{submartingale} \; M \; F \; t_0 \; (\lambda i \; x. \; c \cdot_R X \; i \; x)$"
-  $\dots$
-
-lemma scaleR_le_zero[intro]:
-  assumes "$c \le 0$"
-  shows "$\texttt{supermartingale} \; M \; F \; t_0 \; (\lambda i \; x. \; c \cdot_R X \; i \; x)$"
-  $\dots$
-
-end
-\end{lstlisting}
-}
-\end{isalemma}
-
-The same holds true if we exchange ``submartingale'' with ``supermartingale'' in the statement of the lemma above.
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-context supermartingale
-begin
-
-lemma scaleR_nonneg[intro]:
-  assumes "$c \ge 0$"
-  shows "$\texttt{supermartingale} \; M \; F \; t_0 \; (\lambda i \; x. \; c \cdot_R X \; i \; x)$"
-  $\dots$
-
-lemma scaleR_le_zero[intro]:
-  assumes "$c \le 0$"
-  shows "$\texttt{submartingale} \; M \; F \; t_0 \; (\lambda i \; x. \; c \cdot_R X \; i \; x)$"
-  $\dots$
-
-end
-\end{lstlisting}
-}
-\end{isalemma}
-
-If the Banach space $E$ is linearly ordered, we can use the lemma \texttt{cond\_exp\_max} to show the following statement concerning the pointwise maximum of two submartingales.
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-
-lemma (in submartingale_linorder) max:
-  assumes "$\texttt{submartingale\_linorder} \; M \; F \; t_0 \; Y$"
-  shows "$\texttt{submartingale\_linorder} \; M \; F \; t_0 \; (\lambda i \; x. \; \max \; (X \; i \; x) \; (Y \; i \; x))$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
-
-Using the lemma \texttt{cond\_exp\_min}, an analogous statement holds for supermartingales if we replace ``$\max$'' with ``$\min$''.
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-
-lemma (in supermartingale_linorder) min:
-  assumes "$\texttt{supermartingale\_linorder} \; M \; F \; t_0 \; Y$"
-  shows "$\texttt{supermartingale\_linorder} \; M \; F \; t_0 \; (\lambda i \; x. \; \max \; (X \; i \; x) \; (Y \; i \; x))$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
+\begin{remark}
+In the lemma above we can exchange ``submartingale'' with ``supermartingale'' and the results are still valid.
+\end{remark}
 
 Going forward, we use the martingale property and the characterization of the conditional expectation to show the following lemma.
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in martingale) set_integral_eq:
-  assumes "$A \in F \; i$" "$t_0 \le i$" "$i \le j$"
-  shows "$\texttt{set\_lebesgue\_integral} \; M \; A \; (X \; i) = \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; j)$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
+\begin{lemma}
+	Let $(X_t)_{t \in [t_0,\infty)}$ be a martingale with respect to a filtration $(F_t)_{t \in [t_0,\infty)}$. Let $i,j \in [t_0,\infty)$ with $i \le j$ and $A \in F_i$. Then
+	\[
+		\int_A X_i \; \textrm{d}\mu = \int_A X_j \; \textrm{d}\mu
+	\]
+\end{lemma}
 
 This lemma already shows us the intuition behind the definition of a martingale. Let $A$ be a set which is measurable at time $i$, i.e. some property of the process which we can inspect at time $i$. The average value that the process has on this set at time $i$ is equal to the average value it will have on the same set at a future time $j$. Essentially, this is the reason why martingales are employed for modeling fair games that incorporate an element of chance. 
 
-Similarly, for sub- and supermartingales we have the following lemmas.
+Similarly, for submartingales we have the following lemmas.
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in submartingale_linorder) set_integral_le:
-  assumes "$A \in F \; i$" "$t_0 \le i$" "$i \le j$"
-  shows "$\texttt{set\_lebesgue\_integral} \; M \; A \; (X \; i) \le \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; j)$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
+\begin{lemma}
+	Let $(X_t)_{t \in [t_0,\infty)}$ be a submartingale with respect to a filtration $(F_t)_{t \in [t_0,\infty)}$. Let $i,j \in [t_0,\infty)$ with $i \le j$ and $A \in F_i$. Then
+	\[
+		\int_A X_i \; \textrm{d}\mu \le \int_A X_j \; \textrm{d}\mu
+	\]
+\end{lemma}
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in supermartingale_linorder) set_integral_ge:
-  assumes "$A \in F \; i$" "$t_0 \le i$" "$i \le j$"
-  shows "$\texttt{set\_lebesgue\_integral} \; M \; A \; (X \; i) \ge \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; j)$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
+Replacing ``$\le$'' with ``$\ge$'' gives a corresponding introduction lemma for supermartingales.
 
 In this case, the intuition is similar. The average value of a submartingale on a set which is measurable at time $i$ is less than or equal to the average value it will take on the same set at a future time $j$. The case for a supermartingale is analogous. Here is a simple example illustrating this concept.
 
@@ -315,97 +185,48 @@ Consider a coin-tossing game, where the coin lands on heads with probability $p 
 
 The property discussed above is of such fundamental significance that it can be employed to characterize martingales, submartingales, and supermartingales. We present the formal statement first, followed by a subsequent discussion of the proof idea.
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in sigma_finite_adapted_process) martingale_of_set_integral_eq:
-  assumes integrable: "$\bigwedge i. \; \texttt{integrable} \; M \; (X \; i)$"
-      and "$\bigwedge A \; i \; j. \; t_0 \le i \implies i \le j \implies A \in F \; i$
-	  $\implies \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; i) = \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; j)$" 
-  shows "$\texttt{martingale} \; M \; F \; t_0 \; X$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
-
+\begin{lemma}
+	Let $(X_t)_{t \in [t_0,\infty)}$ be an adapted process with respect to the filtration $(F_t)_{t \in [t_0,\infty)}$ consisting of Bochner-integrable random variables.
+  Assume 
+  \[
+  \normalfont \int_A X_i \;\textrm{d}\mu = \int_A X_j \;\textrm{d}\mu
+  \] 
+  for all $A \in F_i$ and for all $i,j \in [t_0,\infty)$ with $i \le j$. Then the process $(X_t)_{t \in [t_0,\infty)}$ is a martingale.
+\end{lemma}
+\begin{proof}
 Using the defining property of the conditional expectation, the second assumption can be restated as
 \[
-	\texttt{set\_lebesgue\_integral} \; M \; A \; (X \; i) = \texttt{set\_lebesgue\_integral} \; M \; A \; (\texttt{cond\_exp} \; M \; (F \; i) (X \; j))
+	\int_A X_i \;\textrm{d}\mu = \int_A \texttt{cond\_exp} \; M \; F_i \; X_j \;\textrm{d}\mu
 \]
-Applying the lemma on the uniqueness of densities and the fact that both functions are $F_i$-measurable, we get
+Applying the lemma on the uniqueness of densities (\ref{cor:density_unique}) and the fact that both functions are $F_i$-measurable, we get
 \[
-	\quad X \; i = \texttt{cond\_exp} \; M \; (F \; i) (X \; j) \;\; \mu\vert_{F_i}\textrm{-a.e.}
+	\quad X_i = \texttt{cond\_exp} \; M \; F_i \; X_j \;\; \mu\vert_{F_i}\textrm{-a.e.}
 \]
-The statement follows from the fact that $F_i \subseteq \Sigma$, i.e. all $\mu\vert_{F_i}$-null sets are $\mu$-null sets. Analogously, we have the following introduction lemmas for submartingales and supermartingales.
+The statement follows from the fact that $F_i \subseteq \Sigma$, i.e. all $\mu\vert_{F_i}$-null sets are $\mu$-null sets. 
+\end{proof}
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in sigma_finite_adapted_process_linorder) submartingale_of_set_integral_le:
-  assumes integrable: "$\bigwedge i. \; \texttt{integrable} \; M \; (X \; i)$"
-      and "$\bigwedge A \; i \; j. \; t_0 \le i \implies i \le j \implies A \in F \; i$
-	  $\implies \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; i) \le \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; j)$" 
-  shows "$\texttt{submartingale} \; M \; F \; t_0 \; X$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
+Analogously, we have the following introduction lemma for submartingales.
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in sigma_finite_adapted_process_linorder) supermartingale_of_set_integral_ge:
-  assumes integrable: "$\bigwedge i. \; t_0 \le i \implies \; \texttt{integrable} \; M \; (X \; i)$"
-      and "$\bigwedge A \; i \; j. \; t_0 \le i \implies i \le j \implies A \in F \; i$
-	  $\implies \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; i) \ge \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; j)$" 
-  shows "$\texttt{supermartingale} \; M \; F \; t_0 \; X$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
+\begin{lemma}
+	Let $(X_t)_{t \in [t_0,\infty)}$ be an adapted process with respect to the filtration $(F_t)_{t \in [t_0,\infty)}$ consisting of Bochner-integrable random variables.
+  Assume 
+  \[
+  \normalfont \int_A X_i \;\textrm{d}\mu \le \int_A X_j \;\textrm{d}\mu
+  \] 
+  for all $A \in F_i$ and for all $i,j \in [t_0,\infty)$ with $i \le j$. Then the process $(X_t)_{t \in [t_0,\infty)}$ is a submartingale.
+\end{lemma}
 
-The idea of the proof is the same. To prevent redundancy, we've demonstrated the latter lemma \texttt{supermartingale\_of\_set\_integral\_ge}, by equivalently showing that the stochastic process $(-X_t)_{t \in [t_0,\infty)}$ is a submartingale using \texttt{submartingale\_of\_set\_integ\-ral\_le}. This is easily achieved using the locale system.
+The idea of the proof is the same. To prevent redundancy in our formalization, we've demonstrated the lemma for supermartingales\footnote{\texttt{Martingales.supermartingale\_of\_set\_integral\_ge}} by equivalently showing that the stochastic process $(-X_t)_{t \in [t_0,\infty)}$ is a submartingale using the lemma above\footnote{\texttt{Martingales.submartingale\_of\_set\_integral\_le}}. This is easily achieved using the locale system.
 
 Another way to characterize martingales is by examining the conditional expectation of the difference between the process's values at different points in time. We have the following lemmas to address this.
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in sigma_finite_adapted_process) martingale_of_cond_exp_diff_eq_zero: 
-  assumes integrable: "$\bigwedge i. \; t_0 \le i \implies \; \texttt{integrable} \; M \; (X \; i)$" 
-      and diff_zero: "$\bigwedge i \; j. \; t_0 \le i \implies i \le j$
-	  $\implies \; $AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; (F \; i) \; (\lambda x. \; X \; j \; x \; - \; X \; i \; x) \; x = 0$"
-  shows "$\texttt{martingale} \; M \; F \; t_0 \; X$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in sigma_finite_adapted_process_order) submartingale_of_cond_exp_diff_nonneg:
-  assumes integrable: "$\bigwedge i. \; t_0 \le i \implies \; \texttt{integrable} \; M \; (X \; i)$" 
-      and diff_nonneg: "$\bigwedge i \; j. \; t_0 \le i \implies i \le j$
-	  $\implies \; $AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; (F \; i) \; (\lambda x. \; X \; j \; x \; - \; X \; i \; x) \; x \ge 0$"
-  shows "$\texttt{submartingale} \; M \; F \; t_0 \; X$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in sigma_finite_adapted_process_order) supermartingale_of_cond_exp_diff_le_zero: 
-  assumes integrable: "$\bigwedge i. \; t_0 \le i \implies \; \texttt{integrable} \; M \; (X \; i)$" 
-      and diff_nonneg: "$\bigwedge i \; j. \; t_0 \le i \implies i \le j$
-	  $\implies \; $AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; (F \; i) \; (\lambda x. \; X \; j \; x \; - \; X \; i \; x) \; x \le 0$"
-  shows "$\texttt{supermartingale} \; M \; F \; t_0 \; X$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
+\begin{lemma}
+  Let $(X_n)_{n \in \mathbb{N}}$ be an adapted process with respect to the filtration $(F_n)_{n \in \mathbb{N}}$ consisting of Bochner-integrable random variables. Assume 
+  \[
+  \normalfont \texttt{cond\_exp} \; M \; (F_i) \; (X_{i+1} - X_i) = 0 \quad\mu\textrm{-a.e.}
+  \] 
+  Then the process $(X_n)_{n \in \mathbb{N}}$ is a martingale.
+\end{lemma}
 
 This characterization also has an informal interpretation. The expected future value of a martingale does not change, when we restrict it to those events that we can measure right now. In a similar fashion, the value of a submartingale is expected to increase and the value of a supermartingale is expected to decrease as time progresses.
 
@@ -419,12 +240,6 @@ Discrete-time martingales are widely used to model processes that evolve over a 
 locale nat_martingale = martingale $M$ $F$ "$0 :: \; \texttt{nat}$" $X$ for $M$ $F$ $X$
 locale nat_submartingale = submartingale $M$ $F$ "$0 :: \; \texttt{nat}$" $X$ for $M$ $F$ $X$
 locale nat_supermartingale = supermartingale $M$ $F$ "$0 :: \; \texttt{nat}$" $X$ for $M$ $F$ $X$
-
-locale nat_submartingale_linorder = submartingale_linorder $M$ $F$ "$0 :: \; \texttt{nat}$" $X$ for $M$ $F$ $X$
-locale nat_supermartingale_linorder = supermartingale_linorder $M$ $F$ "$0 :: \; \texttt{nat}$" $X$ for $M$ $F$ $X$
-
-sublocale nat_submartingale_linorder $\subseteq$ nat_submartingale ..
-sublocale nat_supermartingale_linorder $\subseteq$ nat_supermartingale ..
 \end{lstlisting}
 }
 \end{isadefinition}
@@ -435,13 +250,11 @@ Many of the statements we have made above, can be simplified when the indexing s
 	Let $(F_n)_{n \in \mathbb{N}}$ be a filtration of the measure space $M$. A stochastic process $(X_n)_{n \in \mathbb{N}}$ which is adapted to the filtration $(F_n)_{n \in \mathbb{N}}$ is a martingale, if and only if it is integrable at all time indices and $X_n = \mathbb{E}(X_{n + 1} \;\vert\; F_n)$ $\mu$-a.e. for all $n \in \mathbb{N}$.
 \end{lemma}
 \begin{proof}
-	The ``only if'' part is evident.
+	The ``only if'' part is evident. For the other direction, let $n, m \in \mathbb{N}$ with $n \le m$. We will show that $X_n = \mathbb{E}(X_m \;\vert\; F_n)$ holds $\mu$-a.e. via induction on the difference $k := m - n$. 
+	\begin{enumerate}
+	\item[$\bullet$] For the induction basis, assume $k = 0$. Hence $n = m$. Since the process is adapted by our assumption, we have $X_n = \mathbb{E}(X_n \;\vert\; F_n) = \mathbb{E}(X_m \;\vert\; F_n)$.
 	
-	For the other direction, let $n, m \in \mathbb{N}$ with $n \le m$. We will show that $X_n = \mathbb{E}(X_m \;\vert\; F_n)$ holds $\mu$-a.e. via induction on the difference $k := m - n$. 
-	
-	For the induction basis, assume $k = 0$. Hence $n = m$. Since the process is adapted by our assumption, we have $X_n = \mathbb{E}(X_n \;\vert\; F_n) = \mathbb{E}(X_m \;\vert\; F_n)$.
-	
-	For the induction step, let $k + 1 = m - n$, and assume $X_i = \mathbb{E}(X_j \;\vert\; F_i)$ for all $i, j \in \mathbb{N}$ such that $k = j - i$ and $i \le j$. Using the fact that $k = m - (n + 1) \ge 0$, we have
+	\item[$\bullet$] For the induction step, let $k + 1 = m - n$, and assume $X_i = \mathbb{E}(X_j \;\vert\; F_i)$ for all $i, j \in \mathbb{N}$ such that $k = j - i$ and $i \le j$. Using the fact that $k = m - (n + 1) \ge 0$, we have
 	\[
 		X_{n + 1} = \mathbb{E}(X_m \;\vert\; F_{n + 1}) \;\;\mu\textrm{-a.e.}
 	\]
@@ -458,103 +271,37 @@ Many of the statements we have made above, can be simplified when the indexing s
 		X_n =  \mathbb{E}(X_m \;\vert\; F_n) \;\;\mu\textrm{-a.e.}
 	\]	
 	which completes the proof by induction.
+	\end{enumerate}
 \end{proof}
 
-The same proof idea can be used to show the statement for submartingales (resp. supermartingales) by replacing ``$=$'' with ``$\le$'' (resp. ``$\ge$'') and using the monotonicity of the conditional expectation. We use this characterization to introduce the following introduction lemmas for discrete-time martingales, submartingales and supermartingales.
+The same proof idea can be used to show the statement for submartingales (resp. supermartingales) by replacing ``$=$'' with ``$\le$'' (resp. ``$\ge$'') and using the monotonicity of the conditional expectation. We use this characterization to introduce the following introduction lemmas for discrete-time martingales. Analogous statements hold for submartingales and supermartingales as well.
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in nat_sigma_finite_adapted_process) martingale_nat:
-  assumes integrable: "$\bigwedge i. \; \texttt{integrable} \; M \; (X \; i)$" 
-      and "$\bigwedge i. \; $AE$ \; x \; $in$ \; M. \; X \; i \; x = \texttt{cond\_exp} \; M \; (F \; i) \; (X \; (\texttt{Suc} \; i)) \; x$" 
-  shows "$\texttt{nat\_martingale} \; M \; F \; X$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
+\begin{lemma}
+  Let $(X_n)_{n \in \mathbb{N}}$ be an adapted process with respect to the filtration $(F_n)_{n \in \mathbb{N}}$ consisting of Bochner-integrable random variables. Assume 
+  \[
+  \normalfont X_i = \texttt{cond\_exp} \; M \; (F_i) \; X_{i+1} \quad\mu\textrm{-a.e.} 
+  \]
+  for all $i \in \mathbb{N}$. Then the process $(X_n)_{n \in \mathbb{N}}$ is a martingale.
+\end{lemma}
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in nat_sigma_finite_adapted_process_linorder) submartingale_nat:
-  assumes integrable: "$\bigwedge i. \; \texttt{integrable} \; M \; (X \; i)$" 
-      and "$\bigwedge i. \; $AE$ \; x \; $in$ \; M. \; X \; i \; x \le \texttt{cond\_exp} \; M \; (F \; i) \; (X \; (\texttt{Suc} \; i)) \; x$" 
-  shows "$\texttt{nat\_submartingale} \; M \; F \; X$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
+We can express the alternative characterizations in the previous subsections this way as well.
 
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in nat_sigma_finite_adapted_process_linorder) supermartingale_nat:
-  assumes integrable: "$\bigwedge i. \; \texttt{integrable} \; M \; (X \; i)$" 
-      and "$\bigwedge i. \; $AE$ \; x \; $in$ \; M. \; X \; i \; x \ge \texttt{cond\_exp} \; M \; (F \; i) \; (X \; (\texttt{Suc} \; i)) \; x$" 
-  shows "$\texttt{nat\_supermartingale} \; M \; F \; X$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
+\begin{lemma}
+  Let $(X_n)_{n \in \mathbb{N}}$ be an adapted process with respect to the filtration $(F_n)_{n \in \mathbb{N}}$ consisting of Bochner-integrable random variables. 
+  Assume 
+  \[
+  \normalfont \int_A X_i \;\textrm{d}\mu = \int_A X_{i+1} \;\textrm{d}\mu
+  \] 
+  for all $A \in F_i$ for all $i \in \mathbb{N}$. Then the process $(X_n)_{n \in \mathbb{N}}$ is a martingale.
+\end{lemma}
 
-We can express the characterizations in the previous subsections this way as well.
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in nat_sigma_finite_adapted_process) martingale_of_set_integral_eq_Suc:
-  assumes integrable: "$\bigwedge i. \; \texttt{integrable} \; M \; (X \; i)$"
-  and "$\bigwedge A \; i. \; A \in F \; i \implies \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; i) = \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; (\texttt{Suc} \; i))$" 
-  shows "$\texttt{nat\_martingale} \; M \; F \; X$"
-  $\dots$
-  
-lemma (in nat_sigma_finite_adapted_process) martingale_of_cond_exp_diff_Suc_eq_zero:
-  assumes integrable: "$\bigwedge i. \; \texttt{integrable} \; M \; (X \; i)$" 
-  and "$\bigwedge i. \; $AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; (F \; i) \; (\lambda x. \; X \; (\texttt{Suc} \; i) \; x \; - \; X \; i \; x) \; x = 0$" 
-  shows "$\texttt{nat\_martingale} \; M \; F \; X$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in nat_sigma_finite_adapted_process_linorder) submartingale_of_set_integral_le_Suc:
-  assumes integrable: "$\bigwedge i. \; \texttt{integrable} \; M \; (X \; i)$" 
-  and "$\bigwedge A \; i. \; A \in F \; i \implies \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; i) \le \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; (\texttt{Suc} \; i))$" 
-  shows "$\texttt{nat\_submartingale} \; M \; F \; X$"
-  $\dots$
-  
-lemma (in nat_sigma_finite_adapted_process_linorder) 
-	submartingale_of_cond_exp_diff_Suc_nonneg:
-  assumes integrable: "$\bigwedge i. \; \texttt{integrable} \; M \; (X \; i)$" 
-      and "$\bigwedge i. \; $AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; (F \; i) \; (\lambda x. \; X \; (\texttt{Suc} \; i) \; x \; - \; X \; i \; x) \; x \ge 0$" 
-  shows "$\texttt{nat\_submartingale} \; M \; F \; X$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
-
-\begin{isalemma}
-{\small
-\begin{lstlisting}[style=isabelle]
-lemma (in nat_sigma_finite_adapted_process_linorder) supermartingale_of_set_integral_ge_Suc:
-  assumes integrable: "$\bigwedge i. \; \texttt{integrable} \; M \; (X \; i)$" 
-  and "$\bigwedge A \; i. \; A \in F \; i \implies \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; i) \ge \texttt{set\_lebesgue\_integral} \; M \; A \; (X \; (\texttt{Suc} \; i))$" 
-  shows "$\texttt{nat\_supermartingale} \; M \; F \; X$"
-  $\dots$
-  
-lemma (in nat_sigma_finite_adapted_process_linorder) 
-	supermartingale_of_cond_exp_diff_Suc_le_zero:
-  assumes integrable: "$\bigwedge i. \; \texttt{integrable} \; M \; (X \; i)$" 
-  and "$\bigwedge i. \; $AE$ \; x \; $in$ \; M. \; \texttt{cond\_exp} \; M \; (F \; i) \; (\lambda x. \; X \; (\texttt{Suc} \; i) \; x \; - \; X \; i \; x) \; x \le 0$" 
-  shows "$\texttt{nat\_supermartingale} \; M \; F \; X$"
-  $\dots$
-\end{lstlisting}
-}
-\end{isalemma}
+\begin{lemma}
+  Let $(X_n)_{n \in \mathbb{N}}$ be an adapted process with respect to the filtration $(F_n)_{n \in \mathbb{N}}$ consisting of Bochner-integrable random variables. Assume 
+  \[
+  \normalfont \texttt{cond\_exp} \; M \; F_i \; (X_{i+1} - X_i) = 0 \quad\mu\textrm{-a.e.}
+  \] 
+  for all $i \in \mathbb{N}$. Then the process $(X_n)_{n \in \mathbb{N}}$ is a martingale.
+\end{lemma}
 
 Lastly, we will discuss the behavior of discrete-time martingales, under the additional assumption that they are predictable. At the end of the preceeding chapter, we had shown that a discrete-time $(X_n)_{n \in \mathbb{N}}$ process is predictable, if and only if the time shifted process $(X_{n + 1})_{n \in \mathbb{N}}$ is an adapted process. That is, $X_{n+1}$ is $F_n$ measurable for all $n \in \mathbb{N}$. Under this additional assumption the martingale property becomes trivial, i.e.
 \[
@@ -568,7 +315,6 @@ By induction, we have $X_n = X_0$ $\mu$-a.e. Hence, a predictable martingale mus
 lemma (in nat_martingale) predictable_const:
   assumes "$\texttt{nat\_predictable\_process} \; M \; F \; X$"
   shows "AE$ \; x \; $in$ \; M. \; X \; i \; x = X \; j \; x$"
-  $\dots$
 \end{lstlisting}
 }
 \end{isalemma}
@@ -581,7 +327,6 @@ In the same vein, a predictable submartingale must be monotonically increasing a
 lemma (in nat_submartingale) predictable_mono:
   assumes "$\texttt{nat\_predictable\_process} \; M \; F \; X$" "$i \le j$"
   shows "AE$ \; x \; $in$ \; M. \; X \; i \; x \le X \; j \; x$"
-  $\dots$
 \end{lstlisting}
 }
 \end{isalemma}
@@ -592,7 +337,6 @@ lemma (in nat_submartingale) predictable_mono:
 lemma (in nat_supermartingale) predictable_mono:
   assumes "$\texttt{nat\_predictable\_process} \; M \; F \; X$" "$i \le j$"
   shows "AE$ \; x \; $in$ \; M. \; X \; i \; x \ge X \; j \; x$"
-  $\dots$
 \end{lstlisting}
 }
 \end{isalemma}

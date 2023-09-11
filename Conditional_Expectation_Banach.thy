@@ -48,6 +48,16 @@ lemma has_cond_exp_self:
   shows "has_cond_exp M (vimage_algebra (space M) f borel) f f"
   using assms by (auto intro!: has_cond_expI' measurable_vimage_algebra1)
 
+lemma has_cond_exp_sets_cong:
+  assumes "sets F = sets G"
+  shows "has_cond_exp M F = has_cond_exp M G"
+  using assms unfolding has_cond_exp_def by force
+
+lemma cond_exp_sets_cong:
+  assumes "sets F = sets G"
+  shows "AE x in M. cond_exp M F f x = cond_exp M G f x"
+  by (intro AE_I2, simp add: cond_exp_def has_cond_exp_sets_cong[OF assms, of M])
+
 context sigma_finite_subalgebra
 begin
 
@@ -768,23 +778,198 @@ end
 
 subsection "Probability Spaces"
 
-sublocale prob_space \<subseteq> sigma_finite_measure "restr_to_subalg M F" 
+lemma (in prob_space) prob_space_restr_to_subalg:
+  assumes "subalgebra M F"
+  shows "prob_space (restr_to_subalg M F)" 
 proof -
   have "countable {space M}" by simp
   moreover have "{space M} \<subseteq> sets (restr_to_subalg M F)" unfolding restr_to_subalg_def by simp
-  moreover have "\<Union> {space M} = space (restr_to_subalg M F)" unfolding restr_to_subalg_def space_measure_of_conv by simp
+  moreover have "\<Union> {space M} = space (restr_to_subalg M F)" unfolding space_restr_to_subalg by simp
   moreover have "\<forall>a\<in>{space M}. emeasure (restr_to_subalg M F) a \<noteq> \<infinity>" unfolding restr_to_subalg_def emeasure_measure_of_conv by simp
-  ultimately show "sigma_finite_measure (restr_to_subalg M F)" by unfold_locales blast
+  ultimately show "prob_space (restr_to_subalg M F)" using emeasure_space_1 emeasure_restr_to_subalg[OF assms sets.top] assms
+    by unfold_locales (blast, auto simp add: space_restr_to_subalg subalgebra_def)
 qed
 
-lemma (in prob_space) has_cond_exp_indep:
+lemma (in prob_space) sigma_finite_subalgebra_restr_to_subalg:
+  assumes "subalgebra M F"
+  shows "sigma_finite_subalgebra M F" 
+proof (intro sigma_finite_subalgebra.intro)
+  interpret F: prob_space "restr_to_subalg M F" using assms prob_space_restr_to_subalg by blast
+  show "sigma_finite_measure (restr_to_subalg M F)" by (rule F.sigma_finite_measure_axioms)
+qed (rule assms)
+
+lemma (in prob_space) cond_exp_trivial:
+  fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach}"
+  assumes "integrable M f"
+  shows "AE x in M. cond_exp M (sigma (space M) {}) f x = expectation f"
+proof -
+  interpret sigma_finite_subalgebra M "sigma (space M) {}" by (auto intro: sigma_finite_subalgebra_restr_to_subalg simp add: subalgebra_def sigma_sets_empty_eq)
+  show ?thesis using assms by (intro cond_exp_charact) (auto simp add: sigma_sets_empty_eq set_lebesgue_integral_def prob_space cong: Bochner_Integration.integral_cong)
+qed
+
+lemma (in prob_space) cond_exp_indep_subalgebra:
+  fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, real_normed_field}"
   assumes subalgebra: "subalgebra M F" "subalgebra M G"
       and independent: "indep_set G (sigma (space M) (F \<union> vimage_algebra (space M) f borel))"
-      and "has_cond_exp M F f g"
-  shows "has_cond_exp M (sigma (space M) (F \<union> G)) f g"
+  assumes [measurable]: "integrable M f"
+  shows "AE x in M. cond_exp M (sigma (space M) (F \<union> G)) f x = cond_exp M F f x"
 proof -
-  interpret sigma_finite_subalgebra M F using assms by unfold_locales
-  show ?thesis sorry
+  interpret Un_sigma: sigma_finite_subalgebra M "sigma (space M) (F \<union> G)" using assms(1,2) by (auto intro!: sigma_finite_subalgebra_restr_to_subalg sets.sigma_sets_subset simp add: subalgebra_def space_measure_of_conv sets_measure_of_conv)
+  interpret sigma_finite_subalgebra M F using assms by (auto intro: sigma_finite_subalgebra_restr_to_subalg)
+  {
+    fix A
+    assume asm: "A \<in> sigma (space M) {a \<inter> b | a b. a \<in> F \<and> b \<in> G}"
+    have in_events: "sigma_sets (space M) {a \<inter> b |a b. a \<in> sets F \<and> b \<in> sets G} \<subseteq> events" using subalgebra by (intro sets.sigma_sets_subset, auto simp add: subalgebra_def)
+    have "Int_stable {a \<inter> b | a b. a \<in> F \<and> b \<in> G}"
+    proof (intro Int_stableI, clarsimp)
+      fix af bf ag bg
+      assume F: "af \<in> F" "bf \<in> F" and G: "ag \<in> G" "bg \<in> G"
+      have "af \<inter> bf \<in> F" by (intro sets.Int F)
+      moreover have "ag \<inter> bg \<in> G" by (intro sets.Int G)
+      ultimately show "\<exists>a b. af \<inter> ag \<inter> (bf \<inter> bg) = a \<inter> b \<and> a \<in> sets F \<and> b \<in> sets G" by (metis inf_assoc inf_left_commute)
+    qed
+    moreover have "{a \<inter> b | a b. a \<in> F \<and> b \<in> G} \<subseteq> Pow (space M)" using subalgebra by (force simp add: subalgebra_def dest: sets.sets_into_space)
+    moreover have "A \<in> sigma_sets (space M) {a \<inter> b | a b. a \<in> F \<and> b \<in> G}" using calculation asm by force
+    ultimately have "set_lebesgue_integral M A f = set_lebesgue_integral M A (cond_exp M F f)"
+    proof (induction rule: sigma_sets_induct_disjoint)
+      case (basic A)
+      then obtain a b where A: "A = a \<inter> b" "a \<in> F" "b \<in> G" by blast
+
+      hence events[measurable]: "a \<in> events" "b \<in> events" using subalgebra by (auto simp add: subalgebra_def)
+
+      have [simp]: "sigma_sets (space M) {indicator b -` A \<inter> space M |A. A \<in> borel} \<subseteq> G"
+        using borel_measurable_indicator[OF A(3), THEN measurable_sets] sets.top subalgebra
+        by (intro sets.sigma_sets_subset') (fastforce simp add: subalgebra_def)+
+
+      have Un_in_sigma: "F \<union> vimage_algebra (space M) f borel \<subseteq> sigma (space M) (F \<union> vimage_algebra (space M) f borel)" by (metis equalityE le_supI sets.space_closed sigma_le_sets space_vimage_algebra subalg subalgebra_def)
+
+      have [intro]: "indep_var borel (indicator b) borel (\<lambda>\<omega>. indicator a \<omega> *\<^sub>R f \<omega>)"
+      proof -
+        have [simp]: "sigma_sets (space M) {(\<lambda>\<omega>. indicator a \<omega> *\<^sub>R f \<omega>) -` A \<inter> space M |A. A \<in> borel} \<subseteq> sigma (space M) (F \<union> vimage_algebra (space M) f borel)"
+        proof -
+          have *: "(\<lambda>\<omega>. indicator a \<omega> *\<^sub>R f \<omega>) \<in> borel_measurable (sigma (space M) (F \<union> vimage_algebra (space M) f borel))"
+            using borel_measurable_indicator[OF A(2), THEN measurable_sets, OF borel_open] subalgebra
+            by (intro borel_measurable_scaleR borel_measurableI Un_in_sigma[THEN subsetD])
+               (auto simp add: space_measure_of_conv subalgebra_def sets_vimage_algebra2)
+          thus ?thesis using measurable_sets[OF *] by (intro sets.sigma_sets_subset', auto simp add: space_measure_of_conv)
+        qed
+        have "indep_set (sigma_sets (space M) {indicator b -` A \<inter> space M |A. A \<in> borel}) (sigma_sets (space M) {(\<lambda>\<omega>. indicator a \<omega> *\<^sub>R f \<omega>) -` A \<inter> space M |A. A \<in> borel})" 
+          using independent unfolding indep_set_def by (rule indep_sets_mono_sets, auto split: bool.split)
+        thus ?thesis by (subst indep_var_eq, auto intro!: borel_measurable_scaleR)
+      qed
+
+      have [intro]: "indep_var borel (indicator b) borel (\<lambda>\<omega>. indicat_real a \<omega> *\<^sub>R cond_exp M F f \<omega>)"
+      proof -
+        have [simp]:"sigma_sets (space M) {(\<lambda>\<omega>. indicator a \<omega> *\<^sub>R cond_exp M F f \<omega>) -` A \<inter> space M |A. A \<in> borel} \<subseteq> sigma (space M) (F \<union> vimage_algebra (space M) f borel)"
+        proof -
+          have *: "(\<lambda>\<omega>. indicator a \<omega> *\<^sub>R cond_exp M F f \<omega>) \<in> borel_measurable (sigma (space M) (F \<union> vimage_algebra (space M) f borel))"
+            using borel_measurable_indicator[OF A(2), THEN measurable_sets, OF borel_open] subalgebra 
+                  borel_measurable_cond_exp[THEN measurable_sets, OF borel_open, of _ M F f]
+            by (intro borel_measurable_scaleR borel_measurableI Un_in_sigma[THEN subsetD])
+               (auto simp add: space_measure_of_conv subalgebra_def)
+          thus ?thesis using measurable_sets[OF *] by (intro sets.sigma_sets_subset', auto simp add: space_measure_of_conv)
+        qed
+        have "indep_set (sigma_sets (space M) {indicator b -` A \<inter> space M |A. A \<in> borel}) (sigma_sets (space M) {(\<lambda>\<omega>. indicator a \<omega> *\<^sub>R cond_exp M F f \<omega>) -` A \<inter> space M |A. A \<in> borel})" 
+          using independent unfolding indep_set_def by (rule indep_sets_mono_sets, auto split: bool.split)
+        thus ?thesis by (subst indep_var_eq, auto intro!: borel_measurable_scaleR)
+      qed
+
+  
+      have "set_lebesgue_integral M A f = (LINT x|M. indicator b x * (indicator a x *\<^sub>R f x))"
+        unfolding set_lebesgue_integral_def A indicator_inter_arith 
+        by (intro Bochner_Integration.integral_cong, auto simp add: scaleR_scaleR[symmetric] indicator_times_eq_if(1))
+      also have "... = (LINT x|M. indicator b x) * (LINT x|M. indicator a x *\<^sub>R f x)" 
+        by (intro indep_var_lebesgue_integral
+                  Bochner_Integration.integrable_bound[OF integrable_const[of "1 :: 'b"] borel_measurable_indicator]
+                  integrable_mult_indicator[OF _ assms(4)], blast) (auto simp add: indicator_def)
+        also have "... = (LINT x|M. indicator b x) * (LINT x|M. indicator a x *\<^sub>R cond_exp M F f x)" 
+          using cond_exp_set_integral[OF assms(4) A(2)] unfolding set_lebesgue_integral_def by argo
+        also have "... = (LINT x|M. indicator b x * (indicator a x *\<^sub>R cond_exp M F f x))"
+        by (intro indep_var_lebesgue_integral[symmetric]
+                  Bochner_Integration.integrable_bound[OF integrable_const[of "1 :: 'b"] borel_measurable_indicator]
+                  integrable_mult_indicator[OF _ integrable_cond_exp], blast) (auto simp add: indicator_def)
+      also have "... = set_lebesgue_integral M A (cond_exp M F f)" 
+        unfolding set_lebesgue_integral_def A indicator_inter_arith 
+        by (intro Bochner_Integration.integral_cong, auto simp add: scaleR_scaleR[symmetric] indicator_times_eq_if(1))
+      finally show ?case .
+    next
+      case empty
+      then show ?case unfolding set_lebesgue_integral_def by simp
+    next
+      case (compl A)
+      have A_in_space: "A \<subseteq> space M" using compl using in_events sets.sets_into_space by blast
+      have "set_lebesgue_integral M (space M - A) f = set_lebesgue_integral M (space M - A \<union> A) f - set_lebesgue_integral M A f"
+        using compl(1) in_events
+        by (subst set_integral_Un[of "space M - A" A], blast)
+           (simp | intro integrable_mult_indicator[folded set_integrable_def, OF _ assms(4)], fast)+
+      also have "... = set_lebesgue_integral M (space M - A \<union> A) (cond_exp M F f) - set_lebesgue_integral M A (cond_exp M F f)" 
+        using cond_exp_set_integral[OF assms(4) sets.top] compl subalgebra by (simp add: subalgebra_def Un_absorb2[OF A_in_space])
+      also have "... = set_lebesgue_integral M (space M - A) (cond_exp M F f)"
+        using compl(1) in_events
+        by (subst set_integral_Un[of "space M - A" A], blast)
+           (simp | intro integrable_mult_indicator[folded set_integrable_def, OF _ integrable_cond_exp], fast)+
+      finally show ?case .
+    next
+      case (union A)
+      have "set_lebesgue_integral M (\<Union> (range A)) f = (\<Sum>i. set_lebesgue_integral M (A i) f)" 
+        using union in_events
+        by (intro lebesgue_integral_countable_add) (auto simp add: disjoint_family_onD intro!: integrable_mult_indicator[folded set_integrable_def, OF _ assms(4)]) 
+      also have "... = (\<Sum>i. set_lebesgue_integral M (A i) (cond_exp M F f))" using union by presburger
+      also have "... = set_lebesgue_integral M (\<Union> (range A)) (cond_exp M F f)"
+        using union in_events
+        by (intro lebesgue_integral_countable_add[symmetric]) (auto simp add: disjoint_family_onD intro!: integrable_mult_indicator[folded set_integrable_def, OF _ integrable_cond_exp]) 
+      finally show ?case .
+    qed
+  }
+  moreover have "sigma (space M) {a \<inter> b | a b. a \<in> F \<and> b \<in> G} = sigma (space M) (F \<union> G)"
+  proof -
+    have "sigma_sets (space M) {a \<inter> b |a b. a \<in> sets F \<and> b \<in> sets G} = sigma_sets (space M) (sets F \<union> sets G)"
+    proof (intro sigma_sets_eqI ; clarsimp ; cases)
+      fix a b assume asm: "a \<in> F" "b \<in> G"
+      thus "a \<inter> b \<in> sigma_sets (space M) (F \<union> G)" using subalgebra unfolding Int_range_binary by (intro sigma_sets_Inter[OF _ binary_in_sigma_sets]) (force simp add: subalgebra_def dest: sets.sets_into_space)+
+    next
+      fix a
+      assume "a \<in> sets F"
+      thus "a \<in> sigma_sets (space M) {a \<inter> b |a b. a \<in> sets F \<and> b \<in> sets G}"
+        using subalgebra sets.top[of G] sets.sets_into_space[of _ F] 
+        by (intro sigma_sets.Basic, auto simp add: subalgebra_def)
+    next
+      fix a assume "a \<in> sets F \<or> a \<in> sets G" "a \<notin> sets F"
+      hence "a \<in> sets G" by blast
+      thus "a \<in> sigma_sets (space M) {a \<inter> b |a b. a \<in> sets F \<and> b \<in> sets G}" 
+        using subalgebra sets.top[of F] sets.sets_into_space[of _ G] 
+        by (intro sigma_sets.Basic, auto simp add: subalgebra_def)
+    qed (blast)
+    thus ?thesis using subalgebra by (intro sigma_eqI) (force simp add: subalgebra_def dest: sets.sets_into_space)+
+  qed
+  moreover have "(cond_exp M F f) \<in> borel_measurable (sigma (space M) (sets F \<union> sets G))"
+  proof -
+    have "F \<subseteq> sigma (space M) (F \<union> G)" by (metis Un_least Un_upper1 measure_of_of_measure sets.space_closed sets_measure_of sigma_sets_subseteq subalg subalgebra(2) subalgebra_def)
+    thus ?thesis using borel_measurable_cond_exp[THEN measurable_sets, OF borel_open, of _ M F f] subalgebra by (intro borel_measurableI, force simp only: space_measure_of_conv subalgebra_def)
+  qed
+  ultimately show ?thesis using assms(4) integrable_cond_exp by (intro Un_sigma.cond_exp_charact) presburger+
+qed
+
+lemma (in prob_space) cond_exp_indep:
+  fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, real_normed_field}"
+  assumes subalgebra: "subalgebra M F"
+      and independent: "indep_set F (vimage_algebra (space M) f borel)"
+      and integrable: "integrable M f"
+  shows "AE x in M. cond_exp M F f x = expectation f"
+proof -
+  have "indep_set F (sigma (space M) (sigma (space M) {} \<union> (vimage_algebra (space M) f borel)))"
+    using independent unfolding indep_set_def 
+    by (rule indep_sets_mono_sets, simp add: bool.split) 
+       (metis bot.extremum dual_order.refl sets.sets_measure_of_eq sets.sigma_sets_subset' sets_vimage_algebra_space space_vimage_algebra sup.absorb_iff2)
+  hence cond_exp_indep: "AE x in M. cond_exp M (sigma (space M) (sigma (space M) {} \<union> F)) f x = expectation f"
+    using cond_exp_indep_subalgebra[OF _ subalgebra _ integrable, of "sigma (space M) {}"] cond_exp_trivial[OF integrable]
+    by (auto simp add: subalgebra_def sigma_sets_empty_eq)
+  have "sets (sigma (space M) (sigma (space M) {} \<union> F)) = F"
+    using subalgebra sets.top[of F] unfolding subalgebra_def 
+    by (simp add: sigma_sets_empty_eq, subst insert_absorb[of "space M" F], blast) 
+       (metis insert_absorb[OF sets.empty_sets] sets.sets_measure_of_eq)
+  hence "AE x in M. cond_exp M (sigma (space M) (sigma (space M) {} \<union> F)) f x = cond_exp M F f x" by (rule cond_exp_sets_cong)
+  thus ?thesis using cond_exp_indep by force
 qed
 
 end

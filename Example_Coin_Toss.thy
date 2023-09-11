@@ -53,7 +53,7 @@ proof (intro fortune.martingale_of_set_integral_eq_Suc integrable_fortune)
   have prob_eq: "prob p (A \<inter> {s. snth s (Suc n)}) = prob p (A \<inter> - {s. snth s (Suc n)})"
   proof -
     note emeasure_stream_space = prob_space.emeasure_stream_space[OF prob_space_measure_pmf, of _ "bernoulli_pmf p", folded bernoulli_stream_def, unfolded emeasure_eq_measure]
-    have "ennreal (prob p (A \<inter> {s. snth s (Suc n)})) = ennreal (prob p (A \<inter> - {s. snth s (Suc n)}))" 
+    have "ennreal (prob p (A \<inter> {s. snth s (Suc n)})) = ennreal (prob p (A \<inter> - {s. snth s (Suc n)}))" sorry
     thus ?thesis by simp
   qed
 

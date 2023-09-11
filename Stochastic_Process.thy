@@ -137,7 +137,7 @@ lemma (in sigma_finite_measure) sigma_finite_filtered_measure_natural_filtration
     shows "sigma_finite_filtered_measure M (natural_filtration M t\<^sub>0 X) t\<^sub>0"
 proof (unfold_locales)
   interpret stochastic_process M t\<^sub>0 X by (rule assms)
-  have "A \<subseteq> sets (restr_to_subalg M (natural_filtration M t\<^sub>0 X t\<^sub>0))" using exhausting_set by (simp add: sets_restr_to_subalg[OF subalgebra_natural_filtration] sets_natural_filtration') fast
+  have "A \<subseteq> sets (restr_to_subalg M (natural_filtration M t\<^sub>0 X t\<^sub>0))" using exhausting_set by (simp add: sets_restr_to_subalg[OF subalgebra_natural_filtration] sets_natural_filtration) fast
   moreover have "\<Union> A = space (restr_to_subalg M (natural_filtration M t\<^sub>0 X t\<^sub>0))" unfolding space_restr_to_subalg using exhausting_set by simp
   moreover have "\<forall>a\<in>A. emeasure (restr_to_subalg M (natural_filtration M t\<^sub>0 X t\<^sub>0)) a \<noteq> \<infinity>" using calculation(1) exhausting_set(3) 
     by (auto simp add: sets_restr_to_subalg[OF subalgebra_natural_filtration] emeasure_restr_to_subalg[OF subalgebra_natural_filtration])
