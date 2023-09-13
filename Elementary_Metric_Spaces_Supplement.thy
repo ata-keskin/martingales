@@ -1,4 +1,4 @@
-theory Elementary_Metric_Spaces_Addendum
+theory Elementary_Metric_Spaces_Supplement
   imports "HOL-Analysis.Elementary_Metric_Spaces"
 begin
 

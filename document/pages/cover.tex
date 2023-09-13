@@ -27,15 +27,17 @@
   {\Large \getDoctype{} in Mathematics \par}
 
   \vspace{10mm}
+  \IfFileExists{logos/isabelle.pdf}{%
+    \includegraphics[height=30mm]{logos/isabelle.pdf}
+  }{}
+
+  \vspace{10mm}
   {\huge\bfseries \getTitle{} \par}
 
   \vspace{10mm}
   {\LARGE \getAuthor{}}
 
-  \vspace{40mm}
-  \IfFileExists{logos/isabelle.pdf}{%
-    \includegraphics[height=25mm]{logos/isabelle.pdf}
-  }{}
+
 
   \IfFileExists{logos/faculty-\fg.pdf}{%
     \vfill{}

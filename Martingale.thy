@@ -1,4 +1,7 @@
-theory Martingale                 
+(*  Author:     Ata Keskin, TU München 
+*)
+
+theory Martingale
   imports Stochastic_Process Conditional_Expectation_Banach
 begin                
 
@@ -8,7 +11,7 @@ text \<open>The following locales are necessary for defining martingales.\<close
 
 subsection "Additional Locale Definitions"
 
-locale sigma_finite_adapted_process = adapted_process + sigma_finite_filtered_measure
+locale sigma_finite_adapted_process = sigma_finite_filtered_measure M F t\<^sub>0 + adapted_process M F t\<^sub>0 X for M F t\<^sub>0 X
 
 locale nat_sigma_finite_adapted_process = sigma_finite_adapted_process M F "0 :: nat" X for M F X
 locale real_sigma_finite_adapted_process = sigma_finite_adapted_process M F "0 :: real" X for M F X
@@ -16,7 +19,7 @@ locale real_sigma_finite_adapted_process = sigma_finite_adapted_process M F "0 :
 sublocale nat_sigma_finite_adapted_process \<subseteq> nat_sigma_finite_filtered_measure ..
 sublocale real_sigma_finite_adapted_process \<subseteq> real_sigma_finite_filtered_measure ..
 
-locale finite_adapted_process = adapted_process + finite_filtered_measure
+locale finite_adapted_process = finite_filtered_measure M F t\<^sub>0 + adapted_process M F t\<^sub>0 X for M F t\<^sub>0 X
 
 sublocale finite_adapted_process \<subseteq> sigma_finite_adapted_process ..
 
@@ -548,7 +551,7 @@ proof (unfold_locales)
     have j: "j = Suc (n + i)" using Suc by linarith
     have n: "n = n + i - i" using Suc by linarith
     have *: "AE \<xi> in M. cond_exp M (F (n + i)) (X j) \<xi> = X (n + i) \<xi>" unfolding j using assms(2)[THEN AE_symmetric] by blast
-    have "AE \<xi> in M. cond_exp M (F i) (X j) \<xi> = cond_exp M (F i) (cond_exp M (F (n + i)) (X j)) \<xi>" by (intro cond_exp_nested_subalg integrable subalg, simp add: subalgebra_def space_F sets_F_mono)
+    have "AE \<xi> in M. cond_exp M (F i) (X j) \<xi> = cond_exp M (F i) (cond_exp M (F (n + i)) (X j)) \<xi>" by (intro cond_exp_nested_subalg integrable subalg, simp add: subalgebra_def sets_F_mono)
     hence "AE \<xi> in M. cond_exp M (F i) (X j) \<xi> = cond_exp M (F i) (X (n + i)) \<xi>" using cond_exp_cong_AE[OF integrable_cond_exp integrable *] by force
     thus ?case using Suc(1)[OF n] by fastforce
   qed

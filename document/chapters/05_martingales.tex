@@ -3,7 +3,7 @@
 
 \chapter{Martingales}\label{chapter:martingales}
 
-In this section we will introduce and discuss martingales, the namesake of our thesis. Originally referring to a system of betting strategies, martingales have evolved far beyond their gambling origins and have found profound applications in various fields, including finance, probability theory, and statistical analysis. Our formalization aims for a high level of generality while maintaining clarity and simplicity, making it easier for future formalization efforts to build upon our foundation.
+In this section we will introduce and discuss martingales, the namesake of our thesis. Originally referring to a system of betting strategies, martingales have evolved far beyond their gambling origins and have found profound applications in various fields, including finance, probability theory, and statistical analysis. Our formalization aims for a high level of generality while maintaining clarity and simplicity, making it easier for future formalization efforts to build upon our foundation. The results formalized in this chapter can be found in the theory file \texttt{Martingale.Martingale} \cite{Keskin_A_Formalization_of_2023}.
 
 \section{Fundamentals}
 
@@ -216,7 +216,7 @@ Analogously, we have the following introduction lemma for submartingales.
   for all $A \in F_i$ and for all $i,j \in [t_0,\infty)$ with $i \le j$. Then the process $(X_t)_{t \in [t_0,\infty)}$ is a submartingale.
 \end{lemma}
 
-The idea of the proof is the same. To prevent redundancy in our formalization, we've demonstrated the lemma for supermartingales\footnote{\texttt{Martingales.supermartingale\_of\_set\_integral\_ge}} by equivalently showing that the stochastic process $(-X_t)_{t \in [t_0,\infty)}$ is a submartingale using the lemma above\footnote{\texttt{Martingales.submartingale\_of\_set\_integral\_le}}. This is easily achieved using the locale system.
+The idea of the proof is the same. To prevent redundancy in our formalization, we've demonstrated the lemma for supermartingales\footnote{\texttt{Martingale.supermartingale\_of\_set\_integral\_ge}} by equivalently showing that the stochastic process $(-X_t)_{t \in [t_0,\infty)}$ is a submartingale using the lemma above\footnote{\texttt{Martingale.submartingale\_of\_set\_integral\_le}}. This is easily achieved using the locale system.
 
 Another way to characterize martingales is by examining the conditional expectation of the difference between the process's values at different points in time. We have the following lemmas to address this.
 
@@ -244,10 +244,10 @@ locale nat_supermartingale = supermartingale $M$ $F$ "$0 :: \; \texttt{nat}$" $X
 }
 \end{isadefinition}
 
-Many of the statements we have made above, can be simplified when the indexing set is discrete. Given a point in time $i \in \mathbb{N}$, it suffices to consider the successor $i + 1$, instead of all future times $j \ge i$. This can be stated as follows.
+Many of the statements we have made above, can be simplified when the indexing set is the natural numbers. Given a point in time $i \in \mathbb{N}$, it suffices to consider the successor $i + 1$, instead of all future times $j \ge i$. This can be stated as follows.
 
 \begin{lemma}
-	Let $(F_n)_{n \in \mathbb{N}}$ be a filtration of the measure space $M$. A stochastic process $(X_n)_{n \in \mathbb{N}}$ which is adapted to the filtration $(F_n)_{n \in \mathbb{N}}$ is a martingale, if and only if it is integrable at all time indices and $X_n = \mathbb{E}(X_{n + 1} \;\vert\; F_n)$ $\mu$-a.e. for all $n \in \mathbb{N}$.
+	Let $(F_n)_{n \in \mathbb{N}}$ be a filtration of the measure space $M$. A stochastic process $(X_n)_{n \in \mathbb{N}}$ which is adapted to the filtration $(F_n)_{n \in \mathbb{N}}$ is a martingale, if and only if it is integrable at all time indices $n \in \mathbb{N}$ and $X_n = \mathbb{E}(X_{n + 1} \;\vert\; F_n)$ $\mu$-a.e. for all $n \in \mathbb{N}$.
 \end{lemma}
 \begin{proof}
 	The ``only if'' part is evident. For the other direction, let $n, m \in \mathbb{N}$ with $n \le m$. We will show that $X_n = \mathbb{E}(X_m \;\vert\; F_n)$ holds $\mu$-a.e. via induction on the difference $k := m - n$. 
@@ -274,7 +274,7 @@ Many of the statements we have made above, can be simplified when the indexing s
 	\end{enumerate}
 \end{proof}
 
-The same proof idea can be used to show the statement for submartingales (resp. supermartingales) by replacing ``$=$'' with ``$\le$'' (resp. ``$\ge$'') and using the monotonicity of the conditional expectation. We use this characterization to introduce the following introduction lemmas for discrete-time martingales. Analogous statements hold for submartingales and supermartingales as well.
+The same proof idea can be used to show the statement for submartingales (resp. supermartingales) by replacing ``$=$'' with ``$\le$'' (resp. ``$\ge$'') and using the monotonicity of the conditional expectation. We use this characterization to introduce the following introduction lemmas for discrete-time martingales. Analogous statements hold for submartingales and supermartingales as well:
 
 \begin{lemma}
   Let $(X_n)_{n \in \mathbb{N}}$ be an adapted process with respect to the filtration $(F_n)_{n \in \mathbb{N}}$ consisting of Bochner-integrable random variables. Assume 
@@ -284,7 +284,7 @@ The same proof idea can be used to show the statement for submartingales (resp. 
   for all $i \in \mathbb{N}$. Then the process $(X_n)_{n \in \mathbb{N}}$ is a martingale.
 \end{lemma}
 
-We can express the alternative characterizations in the previous subsections this way as well.
+We can express the alternative characterizations in the previous subsections this way as well:
 
 \begin{lemma}
   Let $(X_n)_{n \in \mathbb{N}}$ be an adapted process with respect to the filtration $(F_n)_{n \in \mathbb{N}}$ consisting of Bochner-integrable random variables. 
@@ -319,7 +319,7 @@ lemma (in nat_martingale) predictable_const:
 }
 \end{isalemma}
 
-In the same vein, a predictable submartingale must be monotonically increasing and a predictable supermartingale must be monotonically decreasing.
+In the same vein, a predictable submartingale must be monotonically increasing and a predictable supermartingale must be monotonically decreasing:
 
 \begin{isalemma}
 {\small

@@ -1,3 +1,6 @@
+(*  Author:     Ata Keskin, TU München 
+*)
+
 theory Measure_Space_Addendum
   imports "HOL-Analysis.Measure_Space"
 begin
@@ -41,11 +44,5 @@ next
     thus ?case using measurable_iff_sets[unfolded family_vimage_algebra_singleton[symmetric]] subset[THEN subsetD, OF 1] by fast 
   qed
 qed
-
-lemma sigma_sets_int:
-  assumes "S \<subseteq> Pow \<Omega>" "a \<in> sigma_sets \<Omega> S" "b \<in> sigma_sets \<Omega> S"
-  shows "a \<inter> b \<in> sigma_sets \<Omega> S" 
-  using assms unfolding Int_range_binary 
-  by (intro sigma_sets_Inter binary_in_sigma_sets)
 
 end

@@ -1,5 +1,8 @@
-theory Conditional_Expectation_Banach                                                                 
-imports "HOL-Probability.Conditional_Expectation" "HOL-Probability.Independent_Family" Sigma_Finite_Measure_Addendum
+(*  Author:     Ata Keskin, TU München 
+*)
+
+theory Conditional_Expectation_Banach
+  imports "HOL-Probability.Conditional_Expectation" "HOL-Probability.Independent_Family" Bochner_Integration_Supplement
 begin
 
 section \<open>Conditional Expectation in Banach Spaces\<close>

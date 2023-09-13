@@ -1,4 +1,7 @@
-theory Example_Coin_Toss                                                                                                
+(*  Author:     Ata Keskin, TU München 
+*)
+
+theory Example_Coin_Toss
   imports Martingale "HOL-Probability.Stream_Space" "HOL-Probability.Probability_Mass_Function"
 begin
 
@@ -15,6 +18,9 @@ definition fortune :: "nat \<Rightarrow> bool stream \<Rightarrow> real" where
 definition toss :: "nat \<Rightarrow> bool stream \<Rightarrow> real" where
   "toss n = (\<lambda>s. if snth s n then 1 else -1)"
 
+lemma toss_indicator_def: "toss n = indicator {s. s !! n} - indicator {s. \<not> s !! n}"
+  unfolding toss_def indicator_def by force
+
 lemma fortune_Suc: "fortune (Suc n) s = fortune n s + toss (Suc n) s"
   by (induction n arbitrary: s) (simp add: fortune_def toss_def)+
 
@@ -29,9 +35,13 @@ abbreviation "toss_filtration p \<equiv> nat_natural_filtration (bernoulli_strea
 
 interpretation toss: nat_stochastic_process "bernoulli_stream p" toss unfolding toss_def by (unfold_locales, auto simp add: bernoulli_stream_def)
 
-interpretation fortune: nat_finite_adapted_process "bernoulli_stream p" "toss_filtration p" fortune unfolding fortune_toss_sum 
-  by (intro nat_finite_adapted_process.intro finite_adapted_process.intro)
-     (presburger add: toss.adapted_natural.partial_sum_adapted atMost_atLeast0, intro_locales) 
+interpretation fortune: nat_finite_adapted_process "bernoulli_stream p" "toss_filtration p" fortune 
+  unfolding fortune_toss_sum   
+  by (intro nat_finite_adapted_process.intro finite_adapted_process.intro toss.adapted_natural.partial_sum_adapted[folded atMost_atLeast0]) intro_locales
+
+lemma integrable_toss: "integrable (bernoulli_stream p) (toss n)" 
+  using toss.random_variable
+  by (intro Bochner_Integration.integrable_bound[OF integrable_const[of _ "1 :: real"]]) (auto simp add: toss_def)
 
 lemma integrable_fortune: "integrable (bernoulli_stream p) (fortune n)" using fortune_bound 
   by (intro Bochner_Integration.integrable_bound[OF integrable_const[of _ "Suc n"] fortune.random_variable]) auto
@@ -42,31 +52,18 @@ context
 begin
 
 interpretation nat_martingale "bernoulli_stream p" "toss_filtration p" fortune
-proof (intro fortune.martingale_of_set_integral_eq_Suc integrable_fortune)
-  fix A n
-  assume asm: "A \<in> toss_filtration p n"
-  hence "A \<in> sigma_sets UNIV (\<Union>i\<in>{..n}. {toss i -` A | A. A \<in> range atLeast})" by (simp add: sets_natural_filtration_ci atLeastAtMost_def)
-
-  have [measurable]: "A \<in> bernoulli_stream p" by (meson asm toss.subalgebra_natural_filtration in_mono subalgebra_def)
-  have measurable_snth[measurable]: "{s. s !! j} \<in> bernoulli_stream p" for j using measurable_sets[OF measurable_snth, of "{True}" "measure_pmf (bernoulli_pmf p)" j, folded bernoulli_stream_def] by (simp add: vimage_def)
-
-  have prob_eq: "prob p (A \<inter> {s. snth s (Suc n)}) = prob p (A \<inter> - {s. snth s (Suc n)})"
+proof (intro fortune.martingale_of_cond_exp_diff_Suc_eq_zero integrable_fortune)
+  fix n
+  have "indep_set p (sets (toss_filtration p n)) (sets (vimage_algebra (space (bernoulli_stream p)) (toss (Suc n)) borel))" sorry
+  moreover have "fortune (Suc n) s - fortune n s = toss (Suc n) s" for s by (force simp add: fortune_toss_sum)
+  moreover have "expectation p (toss (Suc n)) = 0"
   proof -
-    note emeasure_stream_space = prob_space.emeasure_stream_space[OF prob_space_measure_pmf, of _ "bernoulli_pmf p", folded bernoulli_stream_def, unfolded emeasure_eq_measure]
-    have "ennreal (prob p (A \<inter> {s. snth s (Suc n)})) = ennreal (prob p (A \<inter> - {s. snth s (Suc n)}))" sorry
-    thus ?thesis by simp
-  qed
-
-  have "fortune (Suc n) s - fortune n s = toss (Suc n) s" for s by (force simp add: fortune_toss_sum)
-  moreover have "A = (A \<inter> {s. s !! (Suc n)}) \<union> (A \<inter> - {s. s !! (Suc n)})" by blast
-  ultimately have "(LINT s:A|bernoulli_stream p. fortune (Suc n) s) - (LINT s:A|bernoulli_stream p. fortune n s) = (LINT s:(A \<inter> {s. s !! (Suc n)}) \<union> (A \<inter> - {s. s !! (Suc n)})|bernoulli_stream p. toss (Suc n) s)" 
-    by (subst set_integral_diff(2)[symmetric], auto simp only: set_integrable_def integrable_fortune measurable intro!: integrable_mult_indicator)
-  also have "... = (LINT s:A \<inter> {s. snth s (Suc n)}|bernoulli_stream p. toss (Suc n) s) + (LINT s:A \<inter> -{s. snth s (Suc n)}|bernoulli_stream p. toss (Suc n) s)"
-    by (subst set_integral_Un, blast) (blast | intro integrableI_bounded_set_indicator[folded set_integrable_def], simp only: measurable Diff_eq[symmetric], simp, simp add: emeasure_eq_measure, force simp: toss_def)+
-  also have "... = (LINT s:A \<inter> {s. snth s (Suc n)}|bernoulli_stream p. 1) + (LINT s:A \<inter> -{s. snth s (Suc n)}|bernoulli_stream p. -1)"
-    by (blast | subst set_lebesgue_integral_cong[of "A \<inter> {s. s !! (Suc n)}" _ "\<lambda>_. 1" "toss (Suc n)"] set_lebesgue_integral_cong[of "A \<inter> -{s. s !! (Suc n)}" _ "\<lambda>_. -1" "toss (Suc n)"], simp only: measurable Diff_eq[symmetric], simp add: toss_def)+
-  also have "... = prob p (A \<inter> {s. snth s (Suc n)}) - prob p (A \<inter> -{s. snth s (Suc n)})" unfolding set_lebesgue_integral_def by simp
-  finally show "(LINT s:A|bernoulli_stream p. fortune n s) = (LINT s:A|bernoulli_stream p. fortune (Suc n) s)" using prob_eq by fastforce
+    have "expectation p (toss (Suc n)) = \<P>(v in bernoulli_stream p. v !! Suc n) *\<^sub>R 1 + \<P>(v in bernoulli_stream p. \<not> v !! Suc n) *\<^sub>R -1"
+      unfolding toss_indicator_def using p_eq_half apply simp
+      
+  ultimately show "AE \<xi> in bernoulli_stream p. cond_exp (bernoulli_stream p) (toss_filtration p n)
+                      (\<lambda>\<xi>. fortune (Suc n) \<xi> - fortune n \<xi>) \<xi> =
+                     0" using cond_exp_indep[OF fortune.subalg _ integrable_toss, of p n] by force
 qed
 
 end

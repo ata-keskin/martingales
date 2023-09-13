@@ -9,28 +9,31 @@ Take the example of stock price movement, where each day's stock price is a rand
 
 Keeping this in consideration, we aim to build a comprehensive foundation for a theory of stochastic process in Isabelle. Since the definition is so straightforward, it usually suffices to just consider a collection of measurable functions to make formal statements about stochastic processes. There is not much to gain from making an explicit definition on its own. Nonetheless, we must create a framework to discuss stochastic processes that can afterwards be broadened to formalize concepts like adaptedness and predictability. Locales present themselves as the solution we are looking for.
 
-The locale system in Isabelle is useful for managing large formal developments, as it promotes modularity and reusability. It allows us to define generic theorems and structures in one place and then reuse them in multiple contexts without duplicating efforts. For instance, when defining filtered measure spaces in the following section, we will need to have an element act as the de facto bottom element of an index type. Locales allow us to easily fix such an element for this purpose.
+The locale system in Isabelle is useful for managing large formal developments, as it promotes modularity and reusability. It allows us to define generic theorems and structures in one place and then reuse them in multiple contexts without duplicating efforts. For instance, when defining filtered measure spaces in the following section, we will need to have an element act as the de facto bottom element of an index type. Locales allow us to easily fix such an element for this purpose. The results formalized in this chapter can be found in the theory files \texttt{Martingale.Filtered\_Measure}, \texttt{Martingale.Measure\_Space\_Supplement} and \texttt{Martingale.Stochastic\_Process} \cite{Keskin_A_Formalization_of_2023}.
+\vspace{2em}\\
 
-We state the definition of a stochastic process again, and subsequently introduce the corresponding locale.
+We state the definition of a stochastic process again.
 
 \begin{definition}
-	Let $(\Omega, \Sigma, \mu)$ be a measure space. Let $(f_i)_{i \in I}$ be a family of functions with $f_i : \Omega \rightarrow E$ for $i \in I$. The collection $(f_i)_{i \in I}$ is called a stochastic process if $f_i$ is $\Sigma$-measurable for all $i \in I$.
+	Let $(\Omega, \Sigma, \mu)$ be a measure space. Let $(X_i)_{i \in I}$ be a family of functions with $X_i : \Omega \rightarrow E$ for $i \in I$. The collection $(X_i)_{i \in I}$ is called a stochastic process if $X_i$ is $\Sigma$-measurable for all $i \in I$.
 \end{definition}
+
+Subsequently, we introduce the corresponding locale.
 
 \begin{isadefinition}
 {\small
 \begin{lstlisting}[style=isabelle]
 locale stochastic_process =
   fixes $M \; t_0$ 
-    and $X$ :: "$'b \; :: \; \{$second_countable_topology, linorder_topology$\} \Rightarrow \; 'a \; \Rightarrow \; 'c$"
+    and $X$ :: "$'b \; :: \; \{$second_countable_topology, order_topology, t2_space$\} \Rightarrow \; 'a \; \Rightarrow \; 'c$"
   assumes random_variable[measurable]: "$\bigwedge i. \; t_0 \le i \implies X \; i \in \texttt{borel\_measurable} \; M$"
 \end{lstlisting}
 }
 \end{isadefinition}
 
-The measure $M$ represents the underlying measure space on which the stochastic process is defined. The index $t_0$ represents the initial point in time beyond which the process $X$ should be defined. As such, this locale formalizes a stochastic process defined on the interval $[t_0, \infty)$. 
+The measure $M$ represents the underlying measure space on which the stochastic process is defined. The index $t_0$ represents the initial point in time beyond which the process $X$ should be defined. As such, this locale formalizes a stochastic process defined on the set $[t_0, \infty) = \{t \;\vert\; t \ge t_0\}$. In the upcoming section, we will discuss why we chose to constrain the index set in this manner.
 
-We have the following lemmas to introduce ``constant'' stochastic processes.
+We have the following introduction lemmas for ``constant'' stochastic processes.
 
 \begin{isalemma}
 {\small
@@ -46,12 +49,12 @@ lemma stochastic_process_const:
 }
 \end{isalemma}
 
-By composing a Borel-measurable function with a stochastic process, we obtain another stochastic process. We formalize this statement as follows.
+The lemmas state that we can define a stochastic process by setting $X_i = f$ for a measurable function $f : \Omega \rightarrow E$, or via $X_i = c$ for some $c \in E$. Furthermore, by composing a Borel-measurable function with a stochastic process, we can obtain another stochastic process. We formalize this statement as follows.
 
 \begin{isalemma}
 {\small
 \begin{lstlisting}[style=isabelle]
-lemma compose:
+lemma compose_stochastic:
   assumes "$\bigwedge i. \; t_0 \le i \implies f \; i \in \texttt{borel\_measurable} \; \texttt{borel}$"
   shows "$\texttt{stochastic\_process} \; M \; t_0 \; (\lambda i \; x. \; (f \; i) \; (X \; i \; x))$"
   \end{lstlisting}
@@ -87,9 +90,7 @@ Let $M$ be a measure space. Assume we have a sequence of $\sigma$-algebras $(F_n
 \[
 	F_0 \subseteq F_1 \subseteq F_2 \subseteq \dots
 \]
-This sequence forms a filtration on $M$. Intuitively, each $F_n$ represents the information available up to time $n$. In general, the index set does not need to be countable. We only need it to be totally ordered, so that we can make statements about the order topology in induces. 
-
-In more detail we define a filtration as follows. 
+This sequence forms a filtration on $M$. Intuitively, each $F_n$ represents the information available up to time $n$. In general, the index set does not need to be countable. The exact definition of a filtration is as follows. 
 \begin{definition}
 	Let $M = (\Omega, \Sigma, \mu)$ be a measure space and $(F_t)_{t \in I}$ a collection of sub-$\sigma$-algebras of $\Sigma$. $(F_t)_{t \in I}$ is called a \textit{filtration} of the measure space $M$, if for any $i, j\in I$ with $i \le j$ we have 
 	\[
@@ -104,7 +105,7 @@ In Isabelle, we define the following locale to capture this concept.
 {\small
 \begin{lstlisting}[style=isabelle]
 locale filtered_measure = 
-  fixes $M \; F$ and $t_0$ :: "$'b \; :: \; \{$second_countable_topology, linorder_topology$\}$"
+  fixes $M \; F$ and $t_0$ :: "$'b \; :: \; \{$second_countable_topology, order_topology, t2_space$\}$"
   assumes subalgebra: "$\bigwedge i. \; t_0 \le i \implies \texttt{subalgebra} \; M \; (F \; i)$"
       and sets_F_mono: "$\bigwedge i \; j. \; t_0 \le i \implies i \le j \implies \texttt{sets} \; (F \; i) \subseteq \texttt{sets} \; (F \; j)$"
 \end{lstlisting}
@@ -152,7 +153,9 @@ sublocale finite_filtered_measure $\subseteq$ sigma_finite_filtered_measure
 \end{isadefinition}
 
 
-In order to make the ideas in this section a bit more concrete, we present the following two filtrations as examples.
+In order to make the ideas in this section a bit more concrete, we will now discuss two example filtrations. 
+
+If we have some sub-$\sigma$-algebra $F \subseteq \Sigma$, then we can trivially take as our filtration $F_i = F$ for all $i \in [t_0,\infty)$. If we additionally know that we are working with a $\sigma$-finite subalgebra, then this yields a trivial $\sigma$-finite filtration on $M$. This choice of filtration is called a \textbf{constant filtration}. In Isabelle, we have the following lemma and the sublocale relation to reflect this.
 
 \begin{isalemma}
 {\small
@@ -167,13 +170,11 @@ sublocale sigma_finite_subalgebra $\subseteq$ constant_filtration:
 }
 \end{isalemma}
 
-If we have some sub-$\sigma$-algebra $F \subseteq \Sigma$, then we can trivially take as our filtration $F_i = F$ for all $i \in [t_0,\infty)$. If we additionally know that we are working with a $\sigma$-finite subalgebra, then this yields a trivial $\sigma$-finite filtration on $M$. This choice of filtration is called a \textbf{constant filtration}. 
-
 \begin{remark}
-	In the above lemma, both entries convey the same information. The first one is stated in terms of premises and results, the latter in the language of locales. The notion of a $\sigma$-algebra being a subalgebra is formalized via the predicate \texttt{subalgebra}. Had the formalization been done in the language of locales, we could replace the first statement with an equivalent sublocale relation.
+	Both of the statements above convey the same information essentially. The first one is stated in terms of premises and results, the latter in the language of locales. The notion of a $\sigma$-algebra being a subalgebra is formalized via the predicate \texttt{subalgebra}. Had the formalization been done in the language of locales, we could replace the first statement with an equivalent sublocale relation.
 \end{remark}
 
-Preparing for our next example, we introduce a formalization for the notion of a $\sigma$-algebra generated by a family of functions.
+Preparing for our next example, we introduce a formalization for the notion of a $\sigma$-algebra generated by a family of functions:
 
 \begin{isadefinition}
 {\small
@@ -196,7 +197,7 @@ lemma measurable_family_iff_sets:
 }
 \end{isalemma}
 
-Now, we can introduce our more interesting example, the \textbf{natural filtration}.
+Now, we can introduce our more interesting example, the \textbf{natural filtration}. Formally, we define it as follows.
 
 \begin{isadefinition}
 {\small
@@ -220,7 +221,7 @@ sublocale stochastic_process $\subseteq$ filtered_measure_natural_filtration:
 
 The natural filtration contains information concerning the process's past behavior at each point in time. The natural filtration is essentially the simplest filtration for studying a process. However, the natural filtration is not always $\sigma$-finite. In order to show that the natural filtration gives rise to a $\sigma$-finite filtered measure, we need to provide a countable exhausting set in the preimage of $X_{t_0}$. This statements is also present in our formalization\footnote{\texttt{Stochastic\_Process.sigma\_finite\_filtered\_measure\_natural\_filtration}}.
 
-Of course, if the measure is already finite, the filtered measure space is also finite.
+Of course, if the measure is already finite, the filtered measure space is also finite:
 
 \begin{isalemma}
 {\small
@@ -254,8 +255,7 @@ locale adapted_process = filtered_measure $M$ $F$ $t_0$ for $M$ $F$ $t_0$
 }
 \end{isalemma}
 
-The properties we have shown concerning stochastic processes also hold for adapted processes. Although in some cases, for example in the following statement, we need to modify the measurability assumptions we make. Here, we see how constraining ourselves to an index set bounded from below helps make the assumption simpler.
-
+The properties we have shown concerning stochastic processes also hold for adapted processes. Although in some cases, we need to modify the measurability assumptions we make. For example, a constant process is adapted to a filtration, only if the defining function $f$ is $F_{t_0}$-measurable. The following formal lemma reflects this.
 \begin{isalemma}
 {\small
 \begin{lstlisting}[style=isabelle]
@@ -265,8 +265,10 @@ lemma (in filtered_measure) adapted_process_const_fun:
 \end{lstlisting}
 }
 \end{isalemma}
-
-An adapted process is necessarily a stochastic process. This follows directly from the fact that $F_t \subseteq \Sigma$ for all $t \ge t_0$.
+\begin{remark}
+Here, we see how constraining ourselves to an index set bounded from below helps make the assumption simpler. In order to show that the process is adapted, it suffices to check that $f$ is $F_{t_0}$-measurable. Without such a least element, we would have to check that $f$ is $F_t$-measurable for all indices $t$.
+\end{remark}
+An adapted process is necessarily a stochastic process. This follows directly from the fact that $F_t \subseteq \Sigma$ for all $t \ge t_0$. We capture this via the following sublocale relation.
 
 \begin{isalemma}
 {\small
@@ -314,7 +316,7 @@ locale progressive_process = filtered_measure $M$ $F$ $t_0$ for $M$ $F$ $t_0$
 }
 \end{isadefinition}
 
-Notice that the measurability assumption we make here is on the entire map $(i, w) \mapsto X_i(w)$ instead of being ``pointwise'' as in the previous two sections. As a side effect, the stochastic process defined by $X_i = c(i)$ for some $c : [t_0, \infty) \rightarrow E$ is progressively measurable, only if the function $c$ is Borel measurable. Previously, this assumption was not required.
+Notice that the measurability assumption we make here is on the entire map $(i, w) \mapsto X_i(w)$ instead of being ``pointwise'' as in the previous two sections. As a side effect, the stochastic process defined by $X_i = c(i)$ for some $c : [t_0, \infty) \rightarrow E$ is progressively measurable, only if the function $c$ is Borel measurable. Previously, this assumption was not required. Hence, we modify the corresponding lemma:
 
 \begin{isalemma}
 {\small
@@ -326,12 +328,12 @@ lemma (in filtered_measure) progressive_process_const:
 }
 \end{isalemma}
 
-Similarly, we must modify the premise of the lemma \texttt{compose} in order to reflect this change.
+Similarly, we must modify the premise of the lemma \texttt{compose} in order to reflect this change:
 
 \begin{isalemma}
 {\small
 \begin{lstlisting}[style=isabelle]
-lemma compose:
+lemma compose_progressive:
   assumes "$(\lambda (i, x). \; f \; i \; x) \in \texttt{borel\_measurable} \; \texttt{borel}$"
   shows "$\texttt{progressive\_process} \; M \; F \; t_0 \; (\lambda i \; x. \; (f \; i) \; (X \; i \; x))$"
   \end{lstlisting}
@@ -388,7 +390,7 @@ Before defining predictable processes in full generality, we will introduce them
 This means that the value of the process in the future, $X_{i+1}$, can be ``predicted'' using the information available up to time $i$. This definition is a special case of the following more general definition for arbitrary index sets.
 
 \begin{definition}
-	Let $(F_t)_{t\in[t_0, \infty)}$ be a filtration of the measure space $M$. We define the \textit{predictable $\sigma$-algebra} $\Sigma_P$ as follows.
+	Let $[t_0, \infty)$ be linearly ordered.  Let $(F_t)_{t\in[t_0, \infty)}$ be a filtration of the measure space $M$. We define the \textit{predictable $\sigma$-algebra} $\Sigma_P$ as follows.
 	\[
 		\Sigma_P = \sigma(\{(s,t] \times A \;\vert\; A \in F_s \;\wedge\; t_0 \le s \;\wedge\; s < t \} \cup \{\{t_0\} \times A \;\vert\; A \in F_{t_0}\})
 	\]
@@ -406,7 +408,7 @@ The corresponding locale is easy to define.
 \begin{isadefinition}
 {\small
 \begin{lstlisting}[style=isabelle]
-locale predictable_process = filtered_measure $M$ $F$ $t_0$ for $M$ $F$ $t_0$
+locale predictable_process = linearly_filtered_measure $M$ $F$ $t_0$ for $M$ $F$ $t_0$
 	and $X$ :: "$\_ \; \Rightarrow \; \_ \; \Rightarrow \; \_ :: \; \{$second_countable_topology, banach$\}$" $+$
   assumes progressive[measurable]: "$(\lambda (t, x). \; X \; t \; x) \in \texttt{borel\_measurable} \; \Sigma_P$"
 \end{lstlisting}
@@ -465,7 +467,7 @@ In the previous section, our results concerning progressively measurable process
 	On a different note, we believe strongly that $\pi_2$ is not $\Sigma_P$-$F_t$-measurable for $t > t_0$ in general, or at least our condition is not sufficient to show this. This stems from the fact that $\pi_2^{-1}(S) = [t_0, \infty) \times S$ and the element $t_0$ can only originate from some set in $\{\{t_0\} \times A \;\vert\; A \in F_{t_0}\}$. However, in general $F_t \not\subseteq F_{t_0}$.
 \end{remark}
 
-In the discrete-time case, the family $\mathcal{I} = \{\{n + 1\}\}_{n \in \mathbb{N}}$ fulfills this condition. Similarly, in the continous-time case we can use $\mathcal{I} = \{(0,n + 1]\}\}_{n \in \mathbb{N}}$. In our formalization, we present these results in the context of the locales \texttt{nat\_filtered\_measure} and \texttt{real\_filtered\_measure}\footnote{\texttt{nat\_filtered\_measure.measurable\_predictable\_sigma\_snd} \quad \texttt{-.measurable\_predictable\_sigma\_fst} \\\texttt{real\_filtered\_measure.measurable\_predictable\_sigma\_snd} \quad \texttt{-.measurable\_predictable\_sigma\_fst}}.
+In the discrete-time case, the family $\mathcal{I} = \{\{n + 1\}\}_{n \in \mathbb{N}}$ fulfills this condition. Similarly, in the continous-time case we can use $\mathcal{I} = \{(0,n + 1]\}\}_{n \in \mathbb{N}}$. In our formalization, we present these results in the context of the locales \texttt{nat\_filtered\_measure} and \texttt{real\_filtered\_measure}\footnote{\texttt{Filtered\_Measure.nat\_filtered\_measure.measurable\_predictable\_sigma\_snd} \quad \texttt{-.measurable\_predictable\_sigma\_fst} \\\texttt{real\_filtered\_measure.measurable\_predictable\_sigma\_snd} \quad \texttt{-.measurable\_predictable\_sigma\_fst}}.
 
 These measurability results concerning projections are necessary to show the following statements about ``constant'' processes being predictable.
 

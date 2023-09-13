@@ -1,4 +1,7 @@
-theory Measure_Space_Addendum
+(*  Author:     Ata Keskin, TU München 
+*)
+
+theory Measure_Space_Supplement
   imports "HOL-Analysis.Measure_Space"
 begin
 
