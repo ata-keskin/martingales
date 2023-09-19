@@ -3,13 +3,13 @@
 
 \chapter{Stochastic Processes}\label{chapter:stochastic_processes}
 
-It wouldn't make sense to talk about martingales without introducing stochastic processes first. In standard terminology, a stochastic process is a collection of random variables defined on the same probability space. The indexing set often represents time, and each random variable in the collection corresponds to an outcome at a specific point of time in that set.
+It would not make sense to talk about martingales without introducing stochastic processes first. In standard terminology, a stochastic process is a collection of random variables defined on the same probability space. The indexing set often represents time, and each random variable in the collection corresponds to an outcome at a specific point of time in that set.
 
 Take the example of stock price movement, where each day's stock price is a random variable influenced by a variety of uncertain factors. This sequence of prices forms a stochastic process, describing the stock's behavior. Another instance is the Poisson process, which models events like customer arrivals at a service center. This process captures the randomness in the timing of arrivals, aiding in optimizing resource allocation and enhancing customer service. In physics, Brownian motion characterizes the unpredictable and continuous trajectory followed by particles suspended in a medium due to random collisions with surrounding molecules, which is again modelled as a stochastic process. The theory of stochastic processes is the cornerstone for analysing randomness and building models that mirror real-world uncertainties.
 
 Keeping this in consideration, we aim to build a comprehensive foundation for a theory of stochastic process in Isabelle. Since the definition is so straightforward, it usually suffices to just consider a collection of measurable functions to make formal statements about stochastic processes. There is not much to gain from making an explicit definition on its own. Nonetheless, we must create a framework to discuss stochastic processes that can afterwards be broadened to formalize concepts like adaptedness and predictability. Locales present themselves as the solution we are looking for.
 
-The locale system in Isabelle is useful for managing large formal developments, as it promotes modularity and reusability. It allows us to define generic theorems and structures in one place and then reuse them in multiple contexts without duplicating efforts. For instance, when defining filtered measure spaces in the following section, we will need to have an element act as the de facto bottom element of an index type. Locales allow us to easily fix such an element for this purpose. The results formalized in this chapter can be found in the theory files \texttt{Martingale.Filtered\_Measure}, \texttt{Martingale.Measure\_Space\_Supplement} and \texttt{Martingale.Stochastic\_Process} \cite{Keskin_A_Formalization_of_2023}.
+The locale system in Isabelle is useful for managing large formal developments, as it promotes modularity and reusability. It allows us to define generic theorems and structures in one place and then reuse them in multiple contexts without duplicating efforts. For instance, when defining filtered measure spaces in the following section, we will need to have an element act as the de facto bottom element of an index type. Locales allow us to easily fix such an element for this purpose. The results formalized in this chapter can be found in the theory files \texttt{Martingale.Filtered\_Measure}, \texttt{Martingale.Measure\_Space\_Supplement} and \texttt{Martingale.Stochastic\_Process} in \cite{Keskin_A_Formalization_of_2023}.
 \vspace{2em}\\
 
 We state the definition of a stochastic process again.
@@ -125,7 +125,7 @@ definition subalgebra where
 
 In general, a type with an ordering does not necessarily inhabit a bottom element, i.e. an element that is less than or equal to any other element. In the next section, we will see how the existence of a bottom element lets us easily make statements concerning when a family of random variables constitutes an adapted process. From a practical point of view, this is not too much to assume, since all random processes one encounters in the real world must start at some fixed point in time (or at least that assumption can be made for practical purposes).
 
-The keen reader might have noticed that we need a little bit more to define martingales properly. Namely, the sub-$\sigma$-algebras that comprise the filtration $(F_n)_{n \in \mathbb{N}}$ must all be $\sigma$-finite. Otherwise, we can't make use of our lemmas concerning the conditional expectation. We introduce the following locale to adress this issue.
+The keen reader might have noticed that we need a little bit more to define martingales properly. Namely, the sub-$\sigma$-algebras that comprise the filtration $(F_n)_{n \in \mathbb{N}}$ must all be $\sigma$-finite. Otherwise, we can not make use of our lemmas concerning the conditional expectation. We introduce the following locale to adress this issue.
 
 \begin{isadefinition}
 {\small
@@ -219,7 +219,7 @@ sublocale stochastic_process $\subseteq$ filtered_measure_natural_filtration:
 }
 \end{isalemma}
 
-The natural filtration contains information concerning the process's past behavior at each point in time. The natural filtration is essentially the simplest filtration for studying a process. However, the natural filtration is not always $\sigma$-finite. In order to show that the natural filtration gives rise to a $\sigma$-finite filtered measure, we need to provide a countable exhausting set in the preimage of $X_{t_0}$. This statements is also present in our formalization\footnote{\texttt{Stochastic\_Process.sigma\_finite\_filtered\_measure\_natural\_filtration}}.
+The natural filtration contains information concerning the process's past behavior at each point in time. The natural filtration is essentially the simplest filtration for studying a process. However, the natural filtration is not always $\sigma$-finite. In order to show that the natural filtration gives rise to a $\sigma$-finite filtered measure, we need to provide a countable exhausting set in the preimage of $X_{t_0}$. This statements is also present in our formalization\footnote{\texttt{Stochastic\_Process.sigma\_finite\_filtered\_measure\_natural\_filtration} in \cite{Keskin_A_Formalization_of_2023}}.
 
 Of course, if the measure is already finite, the filtered measure space is also finite:
 
@@ -467,7 +467,7 @@ In the previous section, our results concerning progressively measurable process
 	On a different note, we believe strongly that $\pi_2$ is not $\Sigma_P$-$F_t$-measurable for $t > t_0$ in general, or at least our condition is not sufficient to show this. This stems from the fact that $\pi_2^{-1}(S) = [t_0, \infty) \times S$ and the element $t_0$ can only originate from some set in $\{\{t_0\} \times A \;\vert\; A \in F_{t_0}\}$. However, in general $F_t \not\subseteq F_{t_0}$.
 \end{remark}
 
-In the discrete-time case, the family $\mathcal{I} = \{\{n + 1\}\}_{n \in \mathbb{N}}$ fulfills this condition. Similarly, in the continous-time case we can use $\mathcal{I} = \{(0,n + 1]\}\}_{n \in \mathbb{N}}$. In our formalization, we present these results in the context of the locales \texttt{nat\_filtered\_measure} and \texttt{real\_filtered\_measure}\footnote{\texttt{Filtered\_Measure.nat\_filtered\_measure.measurable\_predictable\_sigma\_snd} \quad \texttt{-.measurable\_predictable\_sigma\_fst} \\\texttt{real\_filtered\_measure.measurable\_predictable\_sigma\_snd} \quad \texttt{-.measurable\_predictable\_sigma\_fst}}.
+In the discrete-time case, the family $\mathcal{I} = \{\{n + 1\}\}_{n \in \mathbb{N}}$ fulfills this condition. Similarly, in the continous-time case we can use $\mathcal{I} = \{(0,n + 1]\}\}_{n \in \mathbb{N}}$. In our formalization, we present these results in the context of the locales \texttt{nat\_filtered\_measure} and \texttt{real\_filtered\_measure}\footnote{\texttt{Filtered\_Measure.nat\_filtered\_measure.measurable\_predictable\_sigma\_snd} \quad \texttt{-.measurable\_predictable\_sigma\_fst} \\\texttt{real\_filtered\_measure.measurable\_predictable\_sigma\_snd} \quad \texttt{-.measurable\_predictable\_sigma\_fst} in \cite{Keskin_A_Formalization_of_2023}}.
 
 These measurability results concerning projections are necessary to show the following statements about ``constant'' processes being predictable.
 
@@ -575,7 +575,7 @@ In the scope of our thesis, we will only use results concerning discrete-time pr
 	For the proof of this lemma in Isabelle, we have used the induction scheme \texttt{sigma\_sets.induct}, since the generated $\sigma$-algebra $\sigma(\cdot)$ is defined as an inductive set in Isabelle. The proof above demonstrates that this induction scheme is equivalent to the principle of ``good-sets'' which we have utilized.
 \end{remark}
 
-We can now characterize predictability in the discrete-setting as follows.
+We can now characterize predictability in the discrete-time setting as follows.
 \begin{theorem}
 	A stochastic process $(X_n)_{n \in \mathbb{N}}$ is predictable, if and only if $(X_{n + 1})_{n \in \mathbb{N}}$ is adapted to the filtration $(F_n)_{n \in \mathbb{N}}$ and $X_0$ is $F_0$-measurable.
 \end{theorem}

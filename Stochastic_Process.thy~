@@ -513,12 +513,12 @@ lemma (in linearly_filtered_measure) predictable_process_const_fun:
     shows "predictable_process M F t\<^sub>0 (\<lambda>_. f)"
   using measurable_compose_rev[OF assms(2)] assms(1) by (unfold_locales) (auto simp add: measurable_split_conv)
 
-lemma (in nat_filtered_measure) predictable_process_const_fun':
+lemma (in nat_filtered_measure) predictable_process_const_fun'[intro]:
   assumes "f \<in> borel_measurable (F 0)"
   shows "nat_predictable_process M F (\<lambda>_. f)"
   using assms by (intro predictable_process_const_fun[OF measurable_predictable_sigma_snd', THEN nat_predictable_process.intro])
 
-lemma (in real_filtered_measure) predictable_process_const_fun':
+lemma (in real_filtered_measure) predictable_process_const_fun'[intro]:
   assumes "f \<in> borel_measurable (F 0)"
   shows "real_predictable_process M F (\<lambda>_. f)"
   using assms by (intro predictable_process_const_fun[OF measurable_predictable_sigma_snd', THEN real_predictable_process.intro])
@@ -528,16 +528,16 @@ lemma (in linearly_filtered_measure) predictable_process_const:
   shows "predictable_process M F t\<^sub>0 (\<lambda>i _. c i)"
   using assms by (unfold_locales) (simp add: measurable_split_conv)
 
-lemma (in linearly_filtered_measure) predictable_process_CONST:
+lemma (in linearly_filtered_measure) predictable_process_const_const[intro]:
   shows "predictable_process M F t\<^sub>0 (\<lambda>_ _. c)"
   by (unfold_locales) simp
 
-lemma (in nat_filtered_measure) predictable_process_const':
+lemma (in nat_filtered_measure) predictable_process_const'[intro]:
   assumes "c \<in> borel_measurable borel"
   shows "nat_predictable_process M F (\<lambda>i _. c i)"
   using assms by (intro predictable_process_const[OF measurable_predictable_sigma_fst', THEN nat_predictable_process.intro])
 
-lemma (in real_filtered_measure) predictable_process_const':
+lemma (in real_filtered_measure) predictable_process_const'[intro]:
   assumes "c \<in> borel_measurable borel"
   shows "real_predictable_process M F (\<lambda>i _. c i)"
   using assms by (intro predictable_process_const[OF measurable_predictable_sigma_fst', THEN real_predictable_process.intro])
@@ -573,7 +573,7 @@ lemma scaleR_right_const_predictable:
   using assms by (fastforce intro: scaleR_right_predictable predictable_process_const)
 
 lemma scaleR_right_const'_predictable: "predictable_process M F t\<^sub>0 (\<lambda>i \<xi>. c *\<^sub>R (X i \<xi>))" 
-  by (fastforce intro: scaleR_right_predictable predictable_process_const')
+  by (fastforce intro: scaleR_right_predictable predictable_process_const_const)
 
 lemma add_predictable:
   assumes "predictable_process M F t\<^sub>0 Y"

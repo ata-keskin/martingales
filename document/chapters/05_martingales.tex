@@ -3,7 +3,7 @@
 
 \chapter{Martingales}\label{chapter:martingales}
 
-In this section we will introduce and discuss martingales, the namesake of our thesis. Originally referring to a system of betting strategies, martingales have evolved far beyond their gambling origins and have found profound applications in various fields, including finance, probability theory, and statistical analysis. Our formalization aims for a high level of generality while maintaining clarity and simplicity, making it easier for future formalization efforts to build upon our foundation. The results formalized in this chapter can be found in the theory file \texttt{Martingale.Martingale} \cite{Keskin_A_Formalization_of_2023}.
+In this section we will introduce and discuss martingales, the namesake of our thesis. Originally referring to a system of betting strategies, martingales have evolved far beyond their gambling origins and have found profound applications in various fields, including finance, probability theory, and statistical analysis. Our formalization aims for a high level of generality while maintaining clarity and simplicity, making it easier for future formalization efforts to build upon our foundation. The results formalized in this chapter can be found in the theory file \texttt{Martingale.Martingale} in \cite{Keskin_A_Formalization_of_2023}.
 
 \section{Fundamentals}
 
@@ -20,7 +20,7 @@ We start with the definition of a martingale.
 \end{definition}
 
 \begin{remark}
- In addition to what we've discussed in the last chapter, we have introduced the locale \texttt{sigma\_finite\_adapted\_process} which combines the locale \texttt{adapted\_process} with the locale \texttt{sigma\_finite\_filtered\_measure}. Without this additional restriction, we can't use the operator \texttt{cond\_exp}. Similary, the locale \texttt{sigma\_finite\_adapted\_process\-\_order} places a restriction on the Banach space $(E, \lVert \cdot \rVert)$, asserting the existence of an ordering compatible with scalar multiplication. Finally, the locale \texttt{sigma\_finite\_adapted\-\_process\_linorder} further mandates that this ordering be total. We have also introduced locales for discrete-time and continuous-time counterparts.
+ In addition to what we've discussed in the last chapter, we have introduced the locale \texttt{sigma\_finite\_adapted\_process} which combines the locale \texttt{adapted\_process} with the locale \texttt{sigma\_finite\_filtered\_measure}. Without this additional restriction, we can not use the operator \texttt{cond\_exp}. Similary, the locale  \texttt{sigma\_finite\_adapted\_pro\-cess\-\_order} places a restriction on the Banach space $(E, \lVert \cdot \rVert)$, asserting the existence of an ordering compatible with scalar multiplication. Finally, the locale \texttt{sigma\_finite\_adap\-ted\-\_process\_linorder} further mandates that this ordering be total. We have also introduced locales for discrete-time and continuous-time counterparts.
 \end{remark}
 
 Using these additional definitions we introduce the following locale which formalizes martingales.
@@ -216,7 +216,7 @@ Analogously, we have the following introduction lemma for submartingales.
   for all $A \in F_i$ and for all $i,j \in [t_0,\infty)$ with $i \le j$. Then the process $(X_t)_{t \in [t_0,\infty)}$ is a submartingale.
 \end{lemma}
 
-The idea of the proof is the same. To prevent redundancy in our formalization, we've demonstrated the lemma for supermartingales\footnote{\texttt{Martingale.supermartingale\_of\_set\_integral\_ge}} by equivalently showing that the stochastic process $(-X_t)_{t \in [t_0,\infty)}$ is a submartingale using the lemma above\footnote{\texttt{Martingale.submartingale\_of\_set\_integral\_le}}. This is easily achieved using the locale system.
+The idea of the proof is the same. To prevent redundancy in our formalization, we've demonstrated the lemma for supermartingales\footnote{\texttt{Martingale.supermartingale\_of\_set\_integral\_ge} in \cite{Keskin_A_Formalization_of_2023}} by equivalently showing that the stochastic process $(-X_t)_{t \in [t_0,\infty)}$ is a submartingale using the lemma above\footnote{\texttt{Martingale.submartingale\_of\_set\_integral\_le} in \cite{Keskin_A_Formalization_of_2023}}. This is easily achieved using the locale system.
 
 Another way to characterize martingales is by examining the conditional expectation of the difference between the process's values at different points in time. We have the following lemmas to address this.
 

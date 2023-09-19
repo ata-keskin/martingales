@@ -51,8 +51,8 @@ This concludes our review of the \textsf{mathlib} formalization on martingales.
 
 The Archive of Formal Proofs (\textsf{AFP}) is a digital repository of formalized proofs and theories developed using the Isabelle theorem prover and proof assistant. The \textsf{AFP}  hosts a variety of formalizations and proofs, primarily in the fields of logic, mathematics, and computer science. The repository allows researchers to share their formal proofs, theories, and related materials with the broader community.
 
-The repository offers a search function, which allows us to find if any formalization on martingales have been done previously. A quick search yields the theory file \texttt{DiscretePricing.Martingale} \cite{DiscretePricing-AFP}. The entry \texttt{DiscretePricing}, by Mnacho Echenim, focuses on the formalization of the Binomial Options Pricing Model in finance \cite{EchenimPeltier}. A development of discrete-time real-valued martingales is given in order to introduce the concept of risk-neutral measures. Similar to the development on \textsf{mathlib}, the goal of this entry isn't to formalize martingales. An incomplete formalization of martingales and filtered measure spaces is only given as a byproduct.
-Apart from this entry, no other development on the theory of martingales is present on \textsf{AFP}.
+The repository offers a search function, which allows us to find if any formalization on martingales have been done previously. A quick search yields the theory file \texttt{DiscretePricing.Martingale} \cite{DiscretePricing-AFP}. The entry \texttt{DiscretePricing}, by Mnacho Echenim, focuses on the formalization of the Binomial Options Pricing Model in finance \cite{EchenimPeltier}. A development of discrete-time real-valued martingales is given in order to introduce the concept of risk-neutral measures. Similar to the development on \textsf{mathlib}, the goal of this entry is not to formalize martingales. An incomplete formalization of martingales and filtered measure spaces is only given as a byproduct.
+Apart from this entry, no other development on the theory of martingales is present on the \textsf{AFP}.
 
 \section{Mathematical Foundations and Reference Material}
 
@@ -99,7 +99,7 @@ A formalization of the Bochner-integral is available in Isabelle/HOL in the theo
 
 One can show that a function $f$ is strongly measurable if and only if it is essentially separably valued and for all $A \in \mathcal{B}(E)$ we have $f^{-1}(A) \in \Sigma$. Here $\mathcal{B}(E)$ denotes the Borel $\sigma$-algebra on $E$. A function is called essentially separably valued if there exists a $\mu$-null set $N \subseteq \Omega$, such that $f (\Omega \setminus N)$ is separable as a subspace of $E$. Therefore, if $E$ is already a separable Banach space, a function $f : \Omega \rightarrow E$ is strongly measurable if and only if it is $\Sigma$-measurable.
 
-Consequently, we don't need to concern ourselves with definining strong measurability when working within separable (or equivalently second-countable) Banach spaces.
+Consequently, we do not need to concern ourselves with definining strong measurability when working within separable (or equivalently second-countable) Banach spaces.
 \end{remark}
 \vspace{0.3cm}
 

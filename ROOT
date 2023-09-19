@@ -7,11 +7,9 @@ session "Martingale" (AFP) = HOL +
     "HOL-Probability"
 
   theories
-    Measure_Space_Addendum
-    Elementary_Metric_Spaces_Addendum
-    Bochner_Integration_Addendum
-    Set_Integral_Addendum
-    Sigma_Finite_Measure_Addendum
+    Measure_Space_Supplement
+    Elementary_Metric_Spaces_Supplement
+    Bochner_Integration_Supplement
     Conditional_Expectation_Banach
     Filtered_Measure
     Stochastic_Process

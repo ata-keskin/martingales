@@ -49,7 +49,7 @@ In the second equality, we use the fact that $g$ is $\mathcal{H}$-measurable. Ra
 \end{example}
 \vspace{0.3cm}
 
-Technicalities aside, this shows that the conditional expectation always exists and is unique up to $\mu$-null set for all $X \in \mathcal{L}^1(\mathbb{R})$. Our job now will be to construct a similar operator on arbitrary Banach spaces using methods from functional analysis and measure theory. The results formalized in this chapter can be found in the theory files \texttt{Martingale.Elementary\_Metric\_Spaces\_Supplement}, \;\texttt{Martingale.Bochner\_Integra\-tion\_Supplement}, and \texttt{Martingale.Conditional\_Expectation\_Banach} \cite{Keskin_A_Formalization_of_2023}.
+Technicalities aside, this shows that the conditional expectation always exists and is unique up to $\mu$-null set for all $X \in \mathcal{L}^1(\mathbb{R})$. Our job now will be to construct a similar operator on arbitrary Banach spaces using methods from functional analysis and measure theory. The results formalized in this chapter can be found in the theory files \texttt{Martingale.Elementary\_Metric\_Spaces\_Supplement}, \;\texttt{Martingale.Bochner\_Integra\-tion\_Supplement}, and \texttt{Martingale.Conditional\_Expectation\_Banach} in \cite{Keskin_A_Formalization_of_2023}.
 
 \section{Preliminaries}
 
@@ -110,7 +110,7 @@ Thus $\{f \notin S \}$ is a $\mu$-null set, which completes the proof.
 
 \end{proof}
 
-The formalization of the averaging theorem was part of our development\footnote{\texttt{Bochner\_Integration\_Supplement.averaging\_theorem}}. At the beginning of our proof, we assumed $\mu(\Omega) < \infty$ without loss of generality. This is only possible since we assumed the measure space in question to be $\sigma$-finite. To simplify the formalization of proofs employing this argument, we have introduced the following induction scheme
+The formalization of the averaging theorem was part of our development\footnote{\texttt{Bochner\_Integration\_Supplement.averaging\_theorem} in \cite{Keskin_A_Formalization_of_2023}}. At the beginning of our proof, we assumed $\mu(\Omega) < \infty$ without loss of generality. This is only possible since we assumed the measure space in question to be $\sigma$-finite. To simplify the formalization of proofs employing this argument, we have introduced the following induction scheme
 
 \begin{isalemma}
 {\small
@@ -156,7 +156,7 @@ Now that we have the averaging theorem at our disposal, we can lift the followin
 	Our first assumption guarantees that $\{ y \in E \;\vert\; y \ge 0 \}$ is a closed subset of $E$. Applying the averaging theorem on this set, yields the desired result.
 \end{proof}
 
-The corollary on the uniqueness of densities (\ref{cor:density_unique}) is crucial in showing that the conditional expectation is unique as an element of $L^1(E)$. These statements are formalized seperately as well.\footnote{\texttt{Bochner\_Integration\_Supplement.density\_zero}\quad \texttt{-.density\_unique\_banach}\quad \texttt{-.density\_nonneg}}
+The corollary on the uniqueness of densities (\ref{cor:density_unique}) is crucial in showing that the conditional expectation is unique as an element of $L^1(E)$. These statements are formalized seperately as well.\footnote{\texttt{Bochner\_Integration\_Supplement.density\_zero}\quad \texttt{-.density\_unique\_banach}\quad \texttt{-.density\_nonneg} in \cite{Keskin_A_Formalization_of_2023}}
 
 \subsection{Diameter Lemma}
 
@@ -195,7 +195,7 @@ For the other direction, assume $\lim_{n \to \infty} \textup{diam}(S_n) = 0$ and
 Let $\varepsilon > 0$. There exists some $N \in \mathbb{N}$ such that $\sup_{x,y \in S_n} d(x,y) < \varepsilon$ for all $n \ge N$. Hence $d(x,y) < \varepsilon$ for all $x, y \in S_n$ for $n \ge N$. This implies $d(s_i,s_j) < \varepsilon$ for all $i, j \ge n \ge N$, which shows that $(s_i)_{i\in\mathbb{N}}$ is Cauchy.
 \end{proof}
 
-In our construction of the conditional expectation, we will use the diameter lemma\footnote{\texttt{Elementary\_Metric\_Spaces\_Addendum.cauchy\_iff\_diameter\_tends\_to\_zero\_and\_bounded}} (\ref{lem:diameter}) to show that the limit of a sequence of simple functions admits a conditional expectation. 
+In our construction of the conditional expectation, we will use the diameter lemma\footnote{\texttt{Elementary\_Metric\_Spaces\_Addendum.cauchy\_iff\_diameter\_tends\_to\_zero\_and\_bounded} in \cite{Keskin_A_Formalization_of_2023}} (\ref{lem:diameter}) to show that the limit of a sequence of simple functions admits a conditional expectation. 
 
 In anticipation of this, we formalize the following lemmas concerning measurability and integrability.
 
@@ -228,13 +228,13 @@ The proofs are straightforward and depend on the measurability of the supremum f
 
 In the upcoming sections of our work, we will frequently need to prove statements about integrable simple functions. For simple functions $s : \Omega \rightarrow \mathbb{R}_{\ge 0} \cup \{\infty\}$, the Isabelle theory \texttt{HOL\_Analysis.Nonnegative\_Lebesgue\_Integration} already provides an induction scheme \texttt{simple\_function\_induct}. For our purposes we extend this scheme to cover integrable simple functions $s : \Omega \rightarrow E$. Notice that a simple function $s$ is integrable if and only if $\mu(\{s \neq 0\}) < \infty$.
 
-The idea of the new induction scheme\footnote{\texttt{Bochner\_Integration\_Supplement.integrable\_simple\_function\_induct}} is simple. We know $f$ can be represented $\mu$-a.e. as a finite sum $\sum_{i=1}^n \mathbf{1}_{A_i} \cdot c_i$  for some collection of measurable sets $(A_i)_{i=1,\dots,n}$ and elements $c_i \in E$. We do induction on $n$. We first show that the statement holds for indicator functions of measurable sets with finite measure. Then, we extends this by linearity to arbitrary simple functions. Since $f$ is representable as a finite sum $\mu$-a.e. we need to show that $P$ is invariant for functions which are equal $\mu$-a.e. This guarantees that $P$ is a well defined predicate on the space $L^1(E)$.
+The idea of the new induction scheme\footnote{\texttt{Bochner\_Integration\_Supplement.integrable\_simple\_function\_induct} in \cite{Keskin_A_Formalization_of_2023}} is simple. We know $f$ can be represented $\mu$-a.e. as a finite sum $\sum_{i=1}^n \mathbf{1}_{A_i} \cdot c_i$  for some collection of measurable sets $(A_i)_{i=1,\dots,n}$ and elements $c_i \in E$. We do induction on $n$. We first show that the statement holds for indicator functions of measurable sets with finite measure. Then, we extends this by linearity to arbitrary simple functions. Since $f$ is representable as a finite sum $\mu$-a.e. we need to show that $P$ is invariant for functions which are equal $\mu$-a.e. This guarantees that $P$ is a well defined predicate on the space $L^1(E)$.
 
 \begin{remark}
 To make proving certain properties easier, we have the additional assumption $\lVert f(x) + g(x) \rVert = \lVert f(x) \rVert + \lVert g(x) \rVert$ in the second case of the formal statement. It is easy to see why we can assume this without loss of generality. If we have some simple function $s = \sum_{i=1}^n \mathbf{1}_{A_i} \cdot c_i$, we can assume the sets $A_i$ to be pairwise disjoint. Thus, if $x \in A_j$ for some $j \le n$ we have $\lVert s(x) \rVert = \lVert \mathbf{1}_{A_j}(x) \cdot c_j\rVert = \sum_{i=1}^n \mathbf{1}_{A_i} \cdot \lVert c_i \rVert$.
 \end{remark}
 
-When working with an ordering on $E$, we may need to concern ourselves with non-negative simple functions. For this goal, we have another induction scheme\footnote{\texttt{Bochner\_Integration\_Supplement.integrable\_simple\_function\_induct\_nn}}.\label{ind:simple_nn}
+When working with an ordering on $E$, we may need to concern ourselves with non-negative simple functions. For this goal, we have another induction scheme\footnote{\texttt{Bochner\_Integration\_Supplement.integrable\_simple\_function\_induct\_nn} in \cite{Keskin_A_Formalization_of_2023}}.\label{ind:simple_nn}
 
 This induction scheme looks even more complicated and cumbersome, but in essence it is the same induction scheme as the previous one with the added assumption of non-negativity everywhere. The proof is also largely the same. We just need to show that the partial sums stay non-negative all the way through.
 
@@ -284,7 +284,7 @@ Hence, we know $\int \max(0, s_n) \;\textrm{d}\mu \ge 0$ for all $n \in \mathbb{
 
 \end{proof}
 \begin{remark}
-For the proof of this statement, we need the topology on $E$ to coincide with the order topology. Otherwise, we can't guarantee statements such as $(\forall i. \; x_i \ge 0) \implies \lim_{i \to \infty} x_i \ge 0$ or the continuity of the $\max$ function.
+For the proof of this statement, we need the topology on $E$ to coincide with the order topology. Otherwise, we can not guarantee statements such as $(\forall i. \; x_i \ge 0) \implies \lim_{i \to \infty} x_i \ge 0$ or the continuity of the $\max$ function.
 \end{remark}
 This lemma entails the following corollary.
 \begin{corollary}
