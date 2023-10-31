@@ -24,7 +24,11 @@
 %
 \isatagdocument
 %
-\isamarkupsection{Diameter Lemma%
+\isamarkupsection{Supplementary Lemmas for Elementary Metric Spaces%
+}
+\isamarkuptrue%
+%
+\isamarkupsubsection{Diameter Lemma%
 }
 \isamarkuptrue%
 %
@@ -139,7 +143,7 @@
 \ \ \isacommand{show}\isamarkupfalse%
 \ {\isacharquery}{\kern0pt}thesis\ \isanewline
 \ \ \isacommand{proof}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}{\isacharparenleft}{\kern0pt}intro\ iffI{\isacharparenright}{\kern0pt}\ {\isacharsemicolon}{\kern0pt}\ clarsimp{\isacharparenright}{\kern0pt}\isanewline
+\ {\isacharparenleft}{\kern0pt}intro\ iffI{\isacharparenright}{\kern0pt}\isanewline
 \ \ \ \ \isacommand{assume}\isamarkupfalse%
 \ asm{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}Cauchy\ s{\isachardoublequoteclose}\isanewline
 \ \ \ \ \isacommand{have}\isamarkupfalse%
@@ -193,7 +197,7 @@
 \ \ \isacommand{next}\isamarkupfalse%
 \isanewline
 \ \ \ \ \isacommand{assume}\isamarkupfalse%
-\ asm{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharparenleft}{\kern0pt}{\isasymlambda}n{\isachardot}{\kern0pt}\ diameter\ {\isacharbraceleft}{\kern0pt}s\ i\ {\isacharbar}{\kern0pt}i{\isachardot}{\kern0pt}\ n\ {\isasymle}\ i{\isacharbraceright}{\kern0pt}{\isacharparenright}{\kern0pt}\ {\isasymlonglonglongrightarrow}\ {\isadigit{0}}{\isachardoublequoteclose}\ {\isachardoublequoteopen}bounded\ {\isacharparenleft}{\kern0pt}range\ s{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ asm{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharparenleft}{\kern0pt}{\isasymlambda}n{\isachardot}{\kern0pt}\ diameter\ {\isacharbraceleft}{\kern0pt}s\ i\ {\isacharbar}{\kern0pt}i{\isachardot}{\kern0pt}\ n\ {\isasymle}\ i{\isacharbraceright}{\kern0pt}{\isacharparenright}{\kern0pt}\ {\isasymlonglonglongrightarrow}\ {\isadigit{0}}\ {\isasymand}\ bounded\ {\isacharparenleft}{\kern0pt}range\ s{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \ \ \isacommand{have}\isamarkupfalse%
 \ {\isachardoublequoteopen}{\isasymexists}N{\isachardot}{\kern0pt}\ {\isasymforall}n{\isasymge}N{\isachardot}{\kern0pt}\ {\isasymforall}m{\isasymge}N{\isachardot}{\kern0pt}\ dist\ {\isacharparenleft}{\kern0pt}s\ n{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}s\ m{\isacharparenright}{\kern0pt}\ {\isacharless}{\kern0pt}\ e{\isachardoublequoteclose}\ \isakeyword{if}\ e{\isacharunderscore}{\kern0pt}pos{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}e\ {\isachargreater}{\kern0pt}\ {\isadigit{0}}{\isachardoublequoteclose}\ \isakeyword{for}\ e\isanewline
 \ \ \ \ \isacommand{proof}\isamarkupfalse%
@@ -209,7 +213,7 @@
 \ {\isachardoublequoteopen}n\ {\isasymge}\ N{\isachardoublequoteclose}\ {\isachardoublequoteopen}m\ {\isasymge}\ N{\isachardoublequoteclose}\isanewline
 \ \ \ \ \ \ \ \ \isacommand{hence}\isamarkupfalse%
 \ {\isachardoublequoteopen}dist\ {\isacharparenleft}{\kern0pt}s\ n{\isacharparenright}{\kern0pt}\ {\isacharparenleft}{\kern0pt}s\ m{\isacharparenright}{\kern0pt}\ {\isacharless}{\kern0pt}\ e{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
-\ cSUP{\isacharunderscore}{\kern0pt}lessD{\isacharbrackleft}{\kern0pt}OF\ bounded{\isacharunderscore}{\kern0pt}imp{\isacharunderscore}{\kern0pt}dist{\isacharunderscore}{\kern0pt}bounded{\isacharbrackleft}{\kern0pt}THEN\ bounded{\isacharunderscore}{\kern0pt}imp{\isacharunderscore}{\kern0pt}bdd{\isacharunderscore}{\kern0pt}above{\isacharbrackright}{\kern0pt}{\isacharcomma}{\kern0pt}\ OF\ asm{\isacharparenleft}{\kern0pt}{\isadigit{2}}{\isacharparenright}{\kern0pt}\ diam{\isacharunderscore}{\kern0pt}less{\isacharbrackleft}{\kern0pt}unfolded\ diameter{\isacharunderscore}{\kern0pt}SUP{\isacharbrackright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ \isacommand{by}\isamarkupfalse%
+\ cSUP{\isacharunderscore}{\kern0pt}lessD{\isacharbrackleft}{\kern0pt}OF\ bounded{\isacharunderscore}{\kern0pt}imp{\isacharunderscore}{\kern0pt}dist{\isacharunderscore}{\kern0pt}bounded{\isacharbrackleft}{\kern0pt}THEN\ bounded{\isacharunderscore}{\kern0pt}imp{\isacharunderscore}{\kern0pt}bdd{\isacharunderscore}{\kern0pt}above{\isacharbrackright}{\kern0pt}{\isacharcomma}{\kern0pt}\ OF\ {\isacharunderscore}{\kern0pt}\ diam{\isacharunderscore}{\kern0pt}less{\isacharbrackleft}{\kern0pt}unfolded\ diameter{\isacharunderscore}{\kern0pt}SUP{\isacharbrackright}{\kern0pt}{\isacharbrackright}{\kern0pt}\ asm\ \isacommand{by}\isamarkupfalse%
 \ auto\isanewline
 \ \ \ \ \ \ \isacommand{{\isacharbraceright}{\kern0pt}}\isamarkupfalse%
 \isanewline
@@ -233,7 +237,6 @@
 \isanewline
 %
 \endisadelimproof
-\isanewline
 %
 \isadelimtheory
 \ \ \isanewline
@@ -258,68 +261,65 @@
 %:%12=2%:%
 %:%13=3%:%
 %:%27=5%:%
-%:%37=7%:%
-%:%38=7%:%
-%:%39=8%:%
-%:%40=9%:%
-%:%41=10%:%
-%:%48=11%:%
-%:%49=11%:%
-%:%50=12%:%
-%:%51=12%:%
-%:%52=12%:%
-%:%53=12%:%
-%:%54=13%:%
-%:%55=13%:%
-%:%60=13%:%
-%:%63=14%:%
+%:%31=7%:%
+%:%41=9%:%
+%:%42=9%:%
+%:%43=10%:%
+%:%44=11%:%
+%:%45=12%:%
+%:%52=13%:%
+%:%53=13%:%
+%:%54=14%:%
+%:%55=14%:%
+%:%56=14%:%
+%:%57=14%:%
+%:%58=15%:%
+%:%59=15%:%
 %:%64=15%:%
-%:%65=15%:%
-%:%66=16%:%
-%:%67=17%:%
-%:%68=18%:%
-%:%75=19%:%
-%:%76=19%:%
-%:%77=20%:%
-%:%78=20%:%
-%:%79=20%:%
-%:%80=20%:%
-%:%81=21%:%
-%:%82=21%:%
-%:%83=21%:%
-%:%84=21%:%
-%:%85=22%:%
-%:%86=22%:%
-%:%87=22%:%
-%:%88=22%:%
-%:%89=23%:%
-%:%95=23%:%
-%:%98=24%:%
+%:%67=16%:%
+%:%68=17%:%
+%:%69=17%:%
+%:%70=18%:%
+%:%71=19%:%
+%:%72=20%:%
+%:%79=21%:%
+%:%80=21%:%
+%:%81=22%:%
+%:%82=22%:%
+%:%83=22%:%
+%:%84=22%:%
+%:%85=23%:%
+%:%86=23%:%
+%:%87=23%:%
+%:%88=23%:%
+%:%89=24%:%
+%:%90=24%:%
+%:%91=24%:%
+%:%92=24%:%
+%:%93=25%:%
 %:%99=25%:%
-%:%100=25%:%
-%:%101=26%:%
-%:%102=27%:%
+%:%102=26%:%
+%:%103=27%:%
+%:%104=27%:%
 %:%105=28%:%
-%:%109=28%:%
-%:%110=28%:%
-%:%111=28%:%
-%:%116=28%:%
-%:%119=29%:%
+%:%106=29%:%
+%:%109=30%:%
+%:%113=30%:%
+%:%114=30%:%
+%:%115=30%:%
 %:%120=30%:%
-%:%121=30%:%
-%:%122=31%:%
-%:%123=32%:%
-%:%130=33%:%
-%:%131=33%:%
-%:%132=34%:%
-%:%133=34%:%
-%:%134=34%:%
+%:%123=31%:%
+%:%124=32%:%
+%:%125=32%:%
+%:%126=33%:%
+%:%127=34%:%
+%:%134=35%:%
 %:%135=35%:%
-%:%136=35%:%
-%:%137=35%:%
-%:%138=35%:%
-%:%139=36%:%
-%:%140=36%:%
+%:%136=36%:%
+%:%137=36%:%
+%:%138=36%:%
+%:%139=37%:%
+%:%140=37%:%
 %:%141=37%:%
 %:%142=37%:%
 %:%143=38%:%
@@ -330,50 +330,50 @@
 %:%148=40%:%
 %:%149=41%:%
 %:%150=41%:%
-%:%151=41%:%
-%:%152=41%:%
-%:%153=42%:%
-%:%154=42%:%
+%:%151=42%:%
+%:%152=42%:%
+%:%153=43%:%
+%:%154=43%:%
 %:%155=43%:%
 %:%156=43%:%
-%:%157=43%:%
+%:%157=44%:%
 %:%158=44%:%
-%:%159=44%:%
-%:%160=44%:%
-%:%161=44%:%
-%:%162=45%:%
-%:%163=45%:%
-%:%164=45%:%
+%:%159=45%:%
+%:%160=45%:%
+%:%161=45%:%
+%:%162=46%:%
+%:%163=46%:%
+%:%164=46%:%
 %:%165=46%:%
-%:%166=46%:%
-%:%167=46%:%
-%:%168=46%:%
-%:%169=46%:%
-%:%170=47%:%
-%:%171=47%:%
-%:%172=47%:%
-%:%173=47%:%
-%:%174=47%:%
-%:%175=48%:%
-%:%176=48%:%
+%:%166=47%:%
+%:%167=47%:%
+%:%168=47%:%
+%:%169=48%:%
+%:%170=48%:%
+%:%171=48%:%
+%:%172=48%:%
+%:%173=48%:%
+%:%174=49%:%
+%:%175=49%:%
+%:%176=49%:%
 %:%177=49%:%
 %:%178=49%:%
-%:%179=49%:%
-%:%180=49%:%
-%:%181=49%:%
-%:%182=49%:%
-%:%183=50%:%
-%:%184=50%:%
-%:%185=50%:%
-%:%186=50%:%
-%:%187=51%:%
-%:%188=51%:%
+%:%179=50%:%
+%:%180=50%:%
+%:%181=51%:%
+%:%182=51%:%
+%:%183=51%:%
+%:%184=51%:%
+%:%185=51%:%
+%:%186=51%:%
+%:%187=52%:%
+%:%188=52%:%
 %:%189=52%:%
 %:%190=52%:%
-%:%191=52%:%
-%:%192=52%:%
-%:%193=53%:%
-%:%194=53%:%
+%:%191=53%:%
+%:%192=53%:%
+%:%193=54%:%
+%:%194=54%:%
 %:%195=54%:%
 %:%196=54%:%
 %:%197=55%:%
@@ -382,32 +382,35 @@
 %:%200=56%:%
 %:%201=57%:%
 %:%202=57%:%
-%:%203=57%:%
-%:%204=57%:%
-%:%205=58%:%
-%:%206=58%:%
+%:%203=58%:%
+%:%204=58%:%
+%:%205=59%:%
+%:%206=59%:%
 %:%207=59%:%
 %:%208=59%:%
-%:%209=59%:%
+%:%209=60%:%
 %:%210=60%:%
-%:%211=60%:%
-%:%212=60%:%
-%:%213=60%:%
-%:%214=61%:%
-%:%215=61%:%
+%:%211=61%:%
+%:%212=61%:%
+%:%213=61%:%
+%:%214=62%:%
+%:%215=62%:%
 %:%216=62%:%
 %:%217=62%:%
-%:%218=62%:%
+%:%218=63%:%
 %:%219=63%:%
-%:%220=63%:%
+%:%220=64%:%
 %:%221=64%:%
 %:%222=64%:%
-%:%223=64%:%
-%:%224=64%:%
-%:%225=65%:%
-%:%226=65%:%
+%:%223=65%:%
+%:%224=65%:%
+%:%225=66%:%
+%:%226=66%:%
 %:%227=66%:%
-%:%233=66%:%
-%:%236=67%:%
-%:%239=68%:%
-%:%244=69%:%
+%:%228=66%:%
+%:%229=67%:%
+%:%230=67%:%
+%:%231=68%:%
+%:%237=68%:%
+%:%242=69%:%
+%:%247=70%:%

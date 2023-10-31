@@ -72,7 +72,7 @@ lemma cond_exp_null:
   shows "cond_exp M F f = (\<lambda>_. 0)"
   unfolding cond_exp_def using assms by argo
 
-(* We state the tower property of the conditional expectation in terms of the predicate has_cond_exp *)
+text \<open>We state the tower property of the conditional expectation in terms of the predicate \<^term>\<open>has_cond_exp\<close>.\<close>
 
 lemma has_cond_exp_nested_subalg:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
@@ -80,7 +80,7 @@ lemma has_cond_exp_nested_subalg:
   shows "has_cond_exp M F h' h"
   by (intro has_cond_expI') (metis assms has_cond_expD in_mono subalgebra_def)+
 
-(* The following lemma shows that the conditional expectation is unique as an element of L^1, given that it exists. *)
+text \<open>The following lemma shows that the conditional expectation is unique as an element of L1, given that it exists.\<close>
 
 lemma has_cond_exp_charact:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
@@ -663,9 +663,9 @@ proof (rule has_cond_exp_charact, intro has_cond_expI')
   finally show "(\<integral>x\<in>A. (\<Sum>i\<in>I. f i x)\<partial>M) = (\<integral>x\<in>A. (\<Sum>i\<in>I. cond_exp M F (f i) x)\<partial>M)" by auto
 qed (auto simp add: assms integrable_cond_exp)
 
-subsection "Linearly Ordered Banach Spaces"
+subsection \<open>Linearly Ordered Banach Spaces\<close>
 
-(* In this subsection we show monotonicity results concerning the conditional expectation operator. *)
+text \<open>In this subsection we show monotonicity results concerning the conditional expectation operator.\<close>
 
 lemma cond_exp_gr_c:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
@@ -796,7 +796,7 @@ corollary cond_exp_sup:
 
 end
 
-subsection "Probability Spaces"
+subsection \<open>Probability Spaces\<close>
 
 lemma (in prob_space) sigma_finite_subalgebra_restr_to_subalg:
   assumes "subalgebra M F"
@@ -814,6 +814,8 @@ proof -
   interpret sigma_finite_subalgebra M "sigma (space M) {}" by (auto intro: sigma_finite_subalgebra_restr_to_subalg simp add: subalgebra_def sigma_sets_empty_eq)
   show ?thesis using assms by (intro cond_exp_charact) (auto simp add: sigma_sets_empty_eq set_lebesgue_integral_def prob_space cong: Bochner_Integration.integral_cong)
 qed
+
+text \<open>The following lemma shows that independent sigma algebras don't matter for the conditional expectation.\<close>
 
 lemma (in prob_space) cond_exp_indep_subalgebra:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, real_normed_field}"

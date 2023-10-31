@@ -5,7 +5,7 @@ theory Filtered_Measure
   imports "HOL-Probability.Conditional_Expectation"
 begin
 
-section "Filtered Measure Spaces"
+section \<open>Filtered Measure Spaces\<close>
 
 subsection \<open>Filtered Measure\<close>
 
@@ -68,7 +68,7 @@ locale real_finite_filtered_measure = finite_filtered_measure M F "0 :: real" fo
 sublocale nat_finite_filtered_measure \<subseteq> nat_sigma_finite_filtered_measure ..
 sublocale real_finite_filtered_measure \<subseteq> real_sigma_finite_filtered_measure ..
 
-subsection "Constant Filtration"
+subsection \<open>Constant Filtration\<close>
 
 lemma filtered_measure_constant_filtration:
   assumes "subalgebra M F"

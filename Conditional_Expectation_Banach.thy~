@@ -72,7 +72,7 @@ lemma cond_exp_null:
   shows "cond_exp M F f = (\<lambda>_. 0)"
   unfolding cond_exp_def using assms by argo
 
-(* We state the tower property of the conditional expectation in terms of the predicate has_cond_exp *)
+text \<open>We state the tower property of the conditional expectation in terms of the predicate \<^term>\<open>has_cond_exp\<close>.\<close>
 
 lemma has_cond_exp_nested_subalg:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
@@ -80,7 +80,7 @@ lemma has_cond_exp_nested_subalg:
   shows "has_cond_exp M F h' h"
   by (intro has_cond_expI') (metis assms has_cond_expD in_mono subalgebra_def)+
 
-(* The following lemma shows that the conditional expectation is unique as an element of L^1, given that it exists. *)
+text \<open>The following lemma shows that the conditional expectation is unique as an element of L1, given that it exists.\<close>
 
 lemma has_cond_exp_charact:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
@@ -665,7 +665,7 @@ qed (auto simp add: assms integrable_cond_exp)
 
 subsection "Linearly Ordered Banach Spaces"
 
-(* In this subsection we show monotonicity results concerning the conditional expectation operator. *)
+text \<open>In this subsection we show monotonicity results concerning the conditional expectation operator.\<close>
 
 lemma cond_exp_gr_c:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
@@ -688,13 +688,14 @@ proof -
     have [simp]: "set_integrable M A f" unfolding set_integrable_def by (rule integrable_mult_indicator, auto simp add: assms(1))
     have "AE x in M. indicator A x *\<^sub>R c = indicator A x *\<^sub>R f x"
     proof (rule integral_eq_mono_AE_eq_AE)
-      show "LINT x|M. indicator A x *\<^sub>R c = LINT x|M. indicator A x *\<^sub>R f x" 
-      proof (simp only: set_lebesgue_integral_def[symmetric], rule antisym)
-        show "(\<integral>x\<in>A. c \<partial>M) \<le> (\<integral>x\<in>A. f x \<partial>M)" using assms(2) by (intro set_integral_mono_AE_banach) auto
+      have "(\<integral>x\<in>A. c \<partial>M) \<le> (\<integral>x\<in>A. f x \<partial>M)" using assms(2) by (intro set_integral_mono_AE_banach) auto
+      moreover
+      {
         have "(\<integral>x\<in>A. f x \<partial>M) = (\<integral>x\<in>A. cond_exp M F f x \<partial>M)" by (rule cond_exp_set_integral, auto simp add: assms)
         also have "... \<le> (\<integral>x\<in>A. c \<partial>M)" using A by (auto intro!: set_integral_mono_banach simp add: X_def)
-        finally show "(\<integral>x\<in>A. f x \<partial>M) \<le> (\<integral>x\<in>A. c \<partial>M)" by simp
-      qed
+        finally have "(\<integral>x\<in>A. f x \<partial>M) \<le> (\<integral>x\<in>A. c \<partial>M)" by simp
+      }
+      ultimately show "LINT x|M. indicator A x *\<^sub>R c = LINT x|M. indicator A x *\<^sub>R f x" unfolding set_lebesgue_integral_def by simp
       show "AE x in M. indicator A x *\<^sub>R c \<le> indicator A x *\<^sub>R f x" using assms by (auto simp add: X_def indicator_def)
     qed (auto simp add: set_integrable_def[symmetric])
     hence "AE x\<in>A in M. c = f x" by auto
@@ -795,7 +796,7 @@ corollary cond_exp_sup:
 
 end
 
-subsection "Probability Spaces"
+subsection \<open>Probability Spaces\<close>
 
 lemma (in prob_space) sigma_finite_subalgebra_restr_to_subalg:
   assumes "subalgebra M F"
@@ -814,6 +815,8 @@ proof -
   show ?thesis using assms by (intro cond_exp_charact) (auto simp add: sigma_sets_empty_eq set_lebesgue_integral_def prob_space cong: Bochner_Integration.integral_cong)
 qed
 
+text \<open>The following lemma shows that independent sigma algebras don't matter for the conditional expectation.\<close>
+
 lemma (in prob_space) cond_exp_indep_subalgebra:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, real_normed_field}"
   assumes subalgebra: "subalgebra M F" "subalgebra M G"
@@ -828,12 +831,15 @@ proof -
     assume asm: "A \<in> sigma (space M) {a \<inter> b | a b. a \<in> F \<and> b \<in> G}"
     have in_events: "sigma_sets (space M) {a \<inter> b |a b. a \<in> sets F \<and> b \<in> sets G} \<subseteq> events" using subalgebra by (intro sets.sigma_sets_subset, auto simp add: subalgebra_def)
     have "Int_stable {a \<inter> b | a b. a \<in> F \<and> b \<in> G}"
-    proof (intro Int_stableI, clarsimp)
-      fix af bf ag bg
-      assume F: "af \<in> F" "bf \<in> F" and G: "ag \<in> G" "bg \<in> G"
-      have "af \<inter> bf \<in> F" by (intro sets.Int F)
-      moreover have "ag \<inter> bg \<in> G" by (intro sets.Int G)
-      ultimately show "\<exists>a b. af \<inter> ag \<inter> (bf \<inter> bg) = a \<inter> b \<and> a \<in> sets F \<and> b \<in> sets G" by (metis inf_assoc inf_left_commute)
+    proof -
+      {
+        fix af bf ag bg
+        assume F: "af \<in> F" "bf \<in> F" and G: "ag \<in> G" "bg \<in> G"
+        have "af \<inter> bf \<in> F" by (intro sets.Int F)
+        moreover have "ag \<inter> bg \<in> G" by (intro sets.Int G)
+        ultimately have "\<exists>a b. af \<inter> ag \<inter> (bf \<inter> bg) = a \<inter> b \<and> a \<in> sets F \<and> b \<in> sets G" by (metis inf_assoc inf_left_commute)
+      }
+      thus ?thesis by (force intro!: Int_stableI)
     qed
     moreover have "{a \<inter> b | a b. a \<in> F \<and> b \<in> G} \<subseteq> Pow (space M)" using subalgebra by (force simp add: subalgebra_def dest: sets.sets_into_space)
     moreover have "A \<in> sigma_sets (space M) {a \<inter> b | a b. a \<in> F \<and> b \<in> G}" using calculation asm by force
@@ -930,22 +936,29 @@ proof -
   moreover have "sigma (space M) {a \<inter> b | a b. a \<in> F \<and> b \<in> G} = sigma (space M) (F \<union> G)"
   proof -
     have "sigma_sets (space M) {a \<inter> b |a b. a \<in> sets F \<and> b \<in> sets G} = sigma_sets (space M) (sets F \<union> sets G)"
-    proof (intro sigma_sets_eqI ; clarsimp ; cases)
-      fix a b assume asm: "a \<in> F" "b \<in> G"
-      thus "a \<inter> b \<in> sigma_sets (space M) (F \<union> G)" using subalgebra unfolding Int_range_binary by (intro sigma_sets_Inter[OF _ binary_in_sigma_sets]) (force simp add: subalgebra_def dest: sets.sets_into_space)+
-    next
-      fix a
-      assume "a \<in> sets F"
-      thus "a \<in> sigma_sets (space M) {a \<inter> b |a b. a \<in> sets F \<and> b \<in> sets G}"
-        using subalgebra sets.top[of G] sets.sets_into_space[of _ F] 
-        by (intro sigma_sets.Basic, auto simp add: subalgebra_def)
-    next
-      fix a assume "a \<in> sets F \<or> a \<in> sets G" "a \<notin> sets F"
-      hence "a \<in> sets G" by blast
-      thus "a \<in> sigma_sets (space M) {a \<inter> b |a b. a \<in> sets F \<and> b \<in> sets G}" 
-        using subalgebra sets.top[of F] sets.sets_into_space[of _ G] 
-        by (intro sigma_sets.Basic, auto simp add: subalgebra_def)
-    qed (blast)
+    proof -
+      {
+        fix a b assume asm: "a \<in> F" "b \<in> G"
+        hence "a \<inter> b \<in> sigma_sets (space M) (F \<union> G)" using subalgebra unfolding Int_range_binary by (intro sigma_sets_Inter[OF _ binary_in_sigma_sets]) (force simp add: subalgebra_def dest: sets.sets_into_space)+
+      }
+      moreover
+      {
+        fix a
+        assume "a \<in> sets F"
+        hence "a \<in> sigma_sets (space M) {a \<inter> b |a b. a \<in> sets F \<and> b \<in> sets G}"
+          using subalgebra sets.top[of G] sets.sets_into_space[of _ F] 
+          by (intro sigma_sets.Basic, auto simp add: subalgebra_def)
+      }
+      moreover
+      {
+        fix a assume "a \<in> sets F \<or> a \<in> sets G" "a \<notin> sets F"
+        hence "a \<in> sets G" by blast
+        hence "a \<in> sigma_sets (space M) {a \<inter> b |a b. a \<in> sets F \<and> b \<in> sets G}" 
+          using subalgebra sets.top[of F] sets.sets_into_space[of _ G] 
+          by (intro sigma_sets.Basic, auto simp add: subalgebra_def)
+      }
+      ultimately show ?thesis by (intro sigma_sets_eqI) auto
+    qed
     thus ?thesis using subalgebra by (intro sigma_eqI) (force simp add: subalgebra_def dest: sets.sets_into_space)+
   qed
   moreover have "(cond_exp M F f) \<in> borel_measurable (sigma (space M) (sets F \<union> sets G))"

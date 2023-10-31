@@ -34,7 +34,7 @@ proof -
   have "{s i |i. N \<le> i} \<noteq> {}" for N by blast
   hence diameter_SUP: "diameter {s i |i. N \<le> i} = (SUP (i, j) \<in> {N..} \<times> {N..}. dist (s i) (s j))" for N unfolding diameter_def by (auto intro!: arg_cong[of _ _ Sup])
   show ?thesis 
-  proof ((intro iffI) ; clarsimp)
+  proof (intro iffI)
     assume asm: "Cauchy s"
     have "\<exists>N. \<forall>n\<ge>N. norm (diameter {s i |i. n \<le> i}) < e" if e_pos: "e > 0" for e
     proof -
@@ -51,19 +51,18 @@ proof -
     qed                 
     thus "(\<lambda>n. diameter {s i |i. n \<le> i}) \<longlonglongrightarrow> 0 \<and> bounded (range s)" using cauchy_imp_bounded[OF asm] by (simp add: LIMSEQ_iff)
   next
-    assume asm: "(\<lambda>n. diameter {s i |i. n \<le> i}) \<longlonglongrightarrow> 0" "bounded (range s)"
+    assume asm: "(\<lambda>n. diameter {s i |i. n \<le> i}) \<longlonglongrightarrow> 0 \<and> bounded (range s)"
     have "\<exists>N. \<forall>n\<ge>N. \<forall>m\<ge>N. dist (s n) (s m) < e" if e_pos: "e > 0" for e
     proof -
       obtain N where diam_less: "diameter {s i |i. r \<le> i} < e" if "r \<ge> N" for r using LIMSEQ_D asm(1) e_pos by fastforce
       {
         fix n m assume "n \<ge> N" "m \<ge> N"
-        hence "dist (s n) (s m) < e" using cSUP_lessD[OF bounded_imp_dist_bounded[THEN bounded_imp_bdd_above], OF asm(2) diam_less[unfolded diameter_SUP]] by auto
+        hence "dist (s n) (s m) < e" using cSUP_lessD[OF bounded_imp_dist_bounded[THEN bounded_imp_bdd_above], OF _ diam_less[unfolded diameter_SUP]] asm by auto
       }
       thus ?thesis by blast
     qed
     then show "Cauchy s" by (simp add: Cauchy_def)
   qed            
 qed
-
   
 end

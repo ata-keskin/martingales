@@ -43,7 +43,7 @@
 \isacommand{locale}\isamarkupfalse%
 \ filtered{\isacharunderscore}{\kern0pt}measure\ {\isacharequal}{\kern0pt}\ \isanewline
 \ \ \isakeyword{fixes}\ M\ F\ \isakeyword{and}\ t\isactrlsub {\isadigit{0}}\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isacharprime}{\kern0pt}b\ {\isacharcolon}{\kern0pt}{\isacharcolon}{\kern0pt}\ {\isacharbraceleft}{\kern0pt}second{\isacharunderscore}{\kern0pt}countable{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ order{\isacharunderscore}{\kern0pt}topology{\isacharcomma}{\kern0pt}\ t{\isadigit{2}}{\isacharunderscore}{\kern0pt}space{\isacharbraceright}{\kern0pt}{\isachardoublequoteclose}\isanewline
-\ \ \isakeyword{assumes}\ subalgebra{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isasymAnd}i{\isachardot}{\kern0pt}\ t\isactrlsub {\isadigit{0}}\ {\isasymle}\ i\ {\isasymLongrightarrow}\ subalgebra\ M\ {\isacharparenleft}{\kern0pt}F\ i{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ subalgebras{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isasymAnd}i{\isachardot}{\kern0pt}\ t\isactrlsub {\isadigit{0}}\ {\isasymle}\ i\ {\isasymLongrightarrow}\ subalgebra\ M\ {\isacharparenleft}{\kern0pt}F\ i{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \ \ \ \ \ \ \isakeyword{and}\ sets{\isacharunderscore}{\kern0pt}F{\isacharunderscore}{\kern0pt}mono{\isacharcolon}{\kern0pt}\ {\isachardoublequoteopen}{\isasymAnd}i\ j{\isachardot}{\kern0pt}\ t\isactrlsub {\isadigit{0}}\ {\isasymle}\ i\ {\isasymLongrightarrow}\ i\ {\isasymle}\ j\ {\isasymLongrightarrow}\ sets\ {\isacharparenleft}{\kern0pt}F\ i{\isacharparenright}{\kern0pt}\ {\isasymle}\ sets\ {\isacharparenleft}{\kern0pt}F\ j{\isacharparenright}{\kern0pt}{\isachardoublequoteclose}\isanewline
 \isakeyword{begin}\isanewline
 \isanewline
@@ -58,7 +58,7 @@
 %
 \isatagproof
 \isacommand{using}\isamarkupfalse%
-\ subalgebra\ assms\ \isacommand{by}\isamarkupfalse%
+\ subalgebras\ assms\ \isacommand{by}\isamarkupfalse%
 \ {\isacharparenleft}{\kern0pt}simp\ add{\isacharcolon}{\kern0pt}\ subalgebra{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}%
 \endisatagproof
 {\isafoldproof}%
@@ -157,7 +157,7 @@ The locale presented here is a generalization of the \isa{sigma{\isacharundersco
 \isatagproof
 \isacommand{using}\isamarkupfalse%
 \ assms\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}metis\ dual{\isacharunderscore}{\kern0pt}order{\isachardot}{\kern0pt}refl\ sets{\isacharunderscore}{\kern0pt}F{\isacharunderscore}{\kern0pt}mono\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}initial\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}subalgebra{\isachardot}{\kern0pt}nested{\isacharunderscore}{\kern0pt}subalg{\isacharunderscore}{\kern0pt}is{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite\ subalgebra\ subalgebra{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}%
+\ {\isacharparenleft}{\kern0pt}metis\ dual{\isacharunderscore}{\kern0pt}order{\isachardot}{\kern0pt}refl\ sets{\isacharunderscore}{\kern0pt}F{\isacharunderscore}{\kern0pt}mono\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}initial\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}subalgebra{\isachardot}{\kern0pt}nested{\isacharunderscore}{\kern0pt}subalg{\isacharunderscore}{\kern0pt}is{\isacharunderscore}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite\ subalgebras\ subalgebra{\isacharunderscore}{\kern0pt}def{\isacharparenright}{\kern0pt}%
 \endisatagproof
 {\isafoldproof}%
 %
@@ -231,8 +231,8 @@ The locale presented here is a generalization of the \isa{sigma{\isacharundersco
 %
 \isatagproof
 \isacommand{using}\isamarkupfalse%
-\ subalgebra\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}{\kern0pt}unfold{\isacharunderscore}{\kern0pt}locales{\isacharcomma}{\kern0pt}\ blast{\isacharcomma}{\kern0pt}\ meson\ dual{\isacharunderscore}{\kern0pt}order{\isachardot}{\kern0pt}refl\ finite{\isacharunderscore}{\kern0pt}measure{\isacharunderscore}{\kern0pt}axioms\ finite{\isacharunderscore}{\kern0pt}measure{\isacharunderscore}{\kern0pt}def\ finite{\isacharunderscore}{\kern0pt}measure{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure{\isachardot}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}countable\ subalgebra{\isacharparenright}{\kern0pt}%
+\ subalgebras\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}{\kern0pt}unfold{\isacharunderscore}{\kern0pt}locales{\isacharcomma}{\kern0pt}\ blast{\isacharcomma}{\kern0pt}\ meson\ dual{\isacharunderscore}{\kern0pt}order{\isachardot}{\kern0pt}refl\ finite{\isacharunderscore}{\kern0pt}measure{\isacharunderscore}{\kern0pt}axioms\ finite{\isacharunderscore}{\kern0pt}measure{\isacharunderscore}{\kern0pt}def\ finite{\isacharunderscore}{\kern0pt}measure{\isacharunderscore}{\kern0pt}restr{\isacharunderscore}{\kern0pt}to{\isacharunderscore}{\kern0pt}subalg\ sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}measure{\isachardot}{\kern0pt}sigma{\isacharunderscore}{\kern0pt}finite{\isacharunderscore}{\kern0pt}countable{\isacharparenright}{\kern0pt}%
 \endisatagproof
 {\isafoldproof}%
 %

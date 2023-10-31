@@ -2,7 +2,9 @@ theory Elementary_Metric_Spaces_Supplement
   imports "HOL-Analysis.Elementary_Metric_Spaces"
 begin
 
-section \<open>Diameter Lemma\<close>
+section \<open>Supplementary Lemmas for Elementary Metric Spaces\<close>
+
+subsection \<open>Diameter Lemma\<close>
 
 lemma diameter_comp_strict_mono:
   fixes s :: "nat \<Rightarrow> 'a :: metric_space"

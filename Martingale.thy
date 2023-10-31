@@ -9,7 +9,7 @@ section \<open>Martingales\<close>
 
 text \<open>The following locales are necessary for defining martingales.\<close>
 
-subsection "Additional Locale Definitions"
+subsection \<open>Additional Locale Definitions\<close>
 
 locale sigma_finite_adapted_process = sigma_finite_filtered_measure M F t\<^sub>0 + adapted_process M F t\<^sub>0 X for M F t\<^sub>0 X
 
@@ -568,7 +568,7 @@ proof (intro martingale_nat integrable)
   show "AE \<xi> in M. X i \<xi> = cond_exp M (F i) (X (Suc i)) \<xi>" using cond_exp_diff[OF integrable(1,1), of i "Suc i" i] cond_exp_F_meas[OF integrable adapted, of i] assms(2)[of i] by fastforce
 qed
 
-subsection "Discrete Time Submartingales"
+subsection \<open>Discrete Time Submartingales\<close>
 
 lemma (in nat_submartingale) predictable_mono:
   assumes "nat_predictable_process M F X" "i \<le> j"
@@ -644,7 +644,7 @@ proof -
   show ?thesis by (intro partial_sum_scaleR[of _ R] assms) (intro_locales)
 qed
 
-subsection "Discrete Time Supermartingales"
+subsection \<open>Discrete Time Supermartingales\<close>
 
 lemma (in nat_supermartingale) predictable_mono:
   assumes "nat_predictable_process M F X" "i \<le> j"
