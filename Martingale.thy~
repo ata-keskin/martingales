@@ -65,6 +65,7 @@ locale real_finite_adapted_process_linorder = finite_adapted_process_linorder M 
 sublocale nat_finite_adapted_process_linorder \<subseteq> nat_sigma_finite_adapted_process_linorder ..
 sublocale real_finite_adapted_process_linorder \<subseteq> real_sigma_finite_adapted_process_linorder ..
 
+
 subsection \<open>Martingale\<close>
 
 locale martingale = sigma_finite_adapted_process +
@@ -112,8 +113,6 @@ locale supermartingale_linorder = supermartingale M F t\<^sub>0 X for M F t\<^su
 
 sublocale martingale_order \<subseteq> supermartingale using martingale_property by (unfold_locales) (force simp add: integrable)+
 sublocale martingale_linorder \<subseteq> supermartingale_linorder ..
-
-text \<open>A stochastic process is a martingale, if and only if it is both a submartingale and a supermartingale.\<close>
 
 lemma martingale_iff: 
   shows "martingale M F t\<^sub>0 X \<longleftrightarrow> submartingale M F t\<^sub>0 X \<and> supermartingale M F t\<^sub>0 X"

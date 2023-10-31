@@ -1,7 +1,7 @@
 (*  Author:     Ata Keskin, TU München 
 *)
 
-theory Measure_Space_Addendum
+theory Measure_Space_Supplement
   imports "HOL-Analysis.Measure_Space"
 begin
 
@@ -43,6 +43,25 @@ next
     have "family_vimage_algebra (space N) {x} M \<subseteq> N" by (metis (no_types, lifting) 1 2 sets_family_vimage_algebra SUP_le_iff sigma_sets_le_sets_iff singletonD)
     thus ?case using measurable_iff_sets[unfolded family_vimage_algebra_singleton[symmetric]] subset[THEN subsetD, OF 1] by fast 
   qed
+qed
+
+lemma family_vimage_algebra_diff:
+  shows "family_vimage_algebra \<Omega> S M = sigma \<Omega> (sets (family_vimage_algebra \<Omega> (S - I) M) \<union> family_vimage_algebra \<Omega> (S \<inter> I) M)"
+  using sets.space_closed space_measure_of_conv 
+  unfolding family_vimage_algebra_def sets_family_vimage_algebra
+  by (intro sigma_eqI, blast, fastforce)
+     (intro sigma_sets_eqI, blast, simp add: sets_measure_of_conv split: if_splits, 
+      meson Diff_subset Sup_subset_mono in_mono inf_sup_ord(1) sigma_sets_subseteq subset_image_iff, fastforce+)
+
+lemma sigma_Un_Int_stable_generator:
+  assumes "space A = \<Omega>" "space B = \<Omega>"
+  shows "sigma \<Omega> (sets A \<union> sets B) = sigma \<Omega> {a \<inter> b | a b. a \<in> A \<and> b \<in> B}"
+proof -
+  show ?thesis
+  using assms using sets.space_closed
+  apply (intro sigma_eqI)
+    apply blast apply blast
+  apply (intro sigma_sets_eqI, intro sigma_sets.Basic) sorry
 qed
 
 end

@@ -14,6 +14,7 @@ session "Martingale" (AFP) = HOL +
     Filtered_Measure
     Stochastic_Process
     Martingale
+    Example_Coin_Toss
 
   document_files
     "root.tex"

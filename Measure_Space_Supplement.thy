@@ -45,4 +45,12 @@ next
   qed
 qed
 
+lemma family_vimage_algebra_diff:
+  shows "family_vimage_algebra \<Omega> S M = sigma \<Omega> (sets (family_vimage_algebra \<Omega> (S - I) M) \<union> family_vimage_algebra \<Omega> (S \<inter> I) M)"
+  using sets.space_closed space_measure_of_conv 
+  unfolding family_vimage_algebra_def sets_family_vimage_algebra
+  by (intro sigma_eqI, blast, fastforce)
+     (intro sigma_sets_eqI, blast, simp add: sets_measure_of_conv split: if_splits, 
+      meson Diff_subset Sup_subset_mono in_mono inf_sup_ord(1) sigma_sets_subseteq subset_image_iff, fastforce+)
+
 end
