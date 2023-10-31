@@ -5,6 +5,8 @@ theory Example_Coin_Toss
   imports Martingale "HOL-Probability.Stream_Space" "HOL-Probability.Probability_Mass_Function"
 begin
 
+section \<open>Example: Coin Toss\<close>
+
 text \<open>We consider a probability space consisting of infinite sequences of coin tosses.\<close>
 
 definition bernoulli_stream :: "real \<Rightarrow> (bool stream) measure" where
