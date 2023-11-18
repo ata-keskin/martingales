@@ -1,7 +1,7 @@
 chapter AFP
 
-session "Martingale" (AFP) = HOL +
-  options [timeout = 10000, document = pdf, document_output = "isabelle_docs", show_question_marks = false]
+session "Martingales" (AFP) = HOL +
+  options [timeout = 9000, document = pdf, document_output = "isabelle_docs", show_question_marks = false]
 
   sessions
     "HOL-Probability"
@@ -18,3 +18,4 @@ session "Martingale" (AFP) = HOL +
 
   document_files
     "root.tex"
+    "root.bib"

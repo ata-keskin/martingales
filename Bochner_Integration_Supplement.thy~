@@ -7,7 +7,9 @@ begin
 
 section \<open>Supplementary Lemmas for Bochner Integration\<close>
 
-subsection "Integrable Simple Functions"
+subsection \<open>Integrable Simple Functions\<close>
+
+text \<open>We restate some basic results concerning Bochner-integrable functions.\<close>
   
 lemma integrable_implies_simple_function_sequence:
   fixes f :: "'a \<Rightarrow> 'b::{banach, second_countable_topology}"
@@ -29,24 +31,26 @@ proof-
   thus ?thesis using that s by blast
 qed
 
+text \<open>Simple functions can be represented by sums of indicator functions.\<close>
+
 lemma simple_function_indicator_representation:
   fixes f ::"'a \<Rightarrow> 'b :: {second_countable_topology, banach}"
-  assumes f: "simple_function M f" and x: "x \<in> space M"
+  assumes "simple_function M f" "x \<in> space M"
   shows "f x = (\<Sum>y \<in> f ` space M. indicator (f -` {y} \<inter> space M) x *\<^sub>R y)"
   (is "?l = ?r")
 proof -
   have "?r = (\<Sum>y \<in> f ` space M.
     (if y = f x then indicator (f -` {y} \<inter> space M) x *\<^sub>R y else 0))" by (auto intro!: sum.cong)
   also have "... =  indicator (f -` {f x} \<inter> space M) x *\<^sub>R f x" using assms by (auto dest: simple_functionD)
-  also have "... = f x" using x by (auto simp: indicator_def)
+  also have "... = f x" using assms by (auto simp: indicator_def)
   finally show ?thesis by auto
 qed
 
 lemma simple_function_indicator_representation_AE:
   fixes f ::"'a \<Rightarrow> 'b :: {second_countable_topology, banach}"
-  assumes f: "simple_function M f"
+  assumes "simple_function M f"
   shows "AE x in M. f x = (\<Sum>y \<in> f ` space M. indicator (f -` {y} \<inter> space M) x *\<^sub>R y)"  
-  by (metis (mono_tags, lifting) AE_I2 simple_function_indicator_representation f)
+  by (metis (mono_tags, lifting) AE_I2 simple_function_indicator_representation assms)
 
 lemmas simple_function_scaleR[intro] = simple_function_compose2[where h="(*\<^sub>R)"]
 lemmas integrable_simple_function = simple_bochner_integrable.intros[THEN has_bochner_integral_simple_bochner_integrable, THEN integrable.intros] 
@@ -265,7 +269,8 @@ proof (rule ccontr, goal_cases)
   ultimately show ?case using assms(2) by simp
 qed
 
-text \<open>Convergence in L1-Norm implies existence of a subsequence which convergences almost everywhere. This lemma is easier to use than the existing one in \<^theory>\<open>HOL-Analysis.Bochner_Integration\<close>\<close>
+text \<open>Convergence in L1-Norm implies existence of a subsequence which convergences almost everywhere. 
+      This lemma is easier to use than the existing one in \<^theory>\<open>HOL-Analysis.Bochner_Integration\<close>\<close>
 
 lemma cauchy_L1_AE_cauchy_subseq:
   fixes s :: "nat \<Rightarrow> 'a \<Rightarrow> 'b::{banach, second_countable_topology}"
@@ -329,7 +334,7 @@ proof-
   thus ?thesis by (rule that[OF strict_mono(1)])
 qed
 
-subsection "Totally Ordered Banach Spaces"
+subsection \<open>Totally Ordered Banach Spaces\<close>
 
 lemma integrable_max[simp, intro]:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology}"
@@ -354,6 +359,7 @@ proof -
   thus ?thesis by (intro integrable_bound[OF integrable_max[OF integrable_norm(1,1), OF assms]], auto)
 qed
 
+text \<open>Restatement of integral_nonneg_AE for functions taking values in a Banach space.\<close>
 lemma integral_nonneg_AE_banach:                        
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
   assumes [measurable]: "f \<in> borel_measurable M" and nonneg: "AE x in M. 0 \<le> f x"
@@ -466,7 +472,7 @@ proof -
 qed
 end    
 
-subsection "Auxiliary Lemmas for Integrals on a Set"
+subsection \<open>Auxiliary Lemmas for Set Integrals\<close>
 
 lemma set_integral_scaleR_left: 
   assumes "A \<in> sets M" "c \<noteq> 0 \<Longrightarrow> integrable M f"
@@ -513,9 +519,15 @@ lemma set_integral_mono_AE_banach:
   assumes "set_integrable M A f" "set_integrable M A g" "AE x\<in>A in M. f x \<le> g x"
   shows "set_lebesgue_integral M A f \<le> set_lebesgue_integral M A g" using assms unfolding set_lebesgue_integral_def by (auto simp add: set_integrable_def intro!: integral_mono_AE_banach[of M "\<lambda>x. indicator A x *\<^sub>R f x" "\<lambda>x. indicator A x *\<^sub>R g x"], simp add: indicator_def)
 
-subsection "Averaging Theorem"
+subsection \<open>Averaging Theorem\<close>
 
-(* Eneglking's book General Topology *)
+text \<open>We aim to lift results from the real case to arbitrary Banach spaces. 
+      Our fundamental tool in this regard will be the averaging theorem. The proof of this theorem is due to Serge Lang (Real and Functional Analysis). 
+      The theorem allows us to make statements about a function’s value almost everywhere, depending on the value its integral takes on various sets of the measure space.\<close>
+
+text \<open>Before we introduce and prove the averaging theorem, we will first show the following lemma which is crucial for our proof. 
+      While not stated exactly in this manner, our proof makes use of the characterization of second-countable topological spaces given in the book General Topology by Ryszard Engelking (Theorem 4.1.15).\<close>
+(* Engelking's book General Topology *)
 lemma balls_countable_basis:
   obtains D :: "'a :: {metric_space, second_countable_topology} set" 
   where "topological_basis (case_prod ball ` (D \<times> (\<rat> \<inter> {0<..})))"
@@ -541,6 +553,8 @@ qed
 context sigma_finite_measure
 begin         
 
+text \<open>To show statements concerning \<open>\<sigma>\<close>-finite measure spaces, one usually shows the statement for finite measure spaces and uses a limiting argument to show it for the \<open>\<sigma>\<close>-finite case.
+      The following induction scheme formalizes this.\<close>
 lemma sigma_finite_measure_induct[case_names finite_measure, consumes 0]:
   assumes "\<And>(N :: 'a measure) \<Omega>. finite_measure N 
                               \<Longrightarrow> N = restrict_space M \<Omega>
@@ -574,7 +588,7 @@ proof -
 qed
 
 (* Real Functional Analysis - Lang*)
-text \<open>The following lemma allows us to make statements about the behavious of a function almost everywhere, depending on the value it takes on average.\<close>
+text \<open>The Averaging Theorem allows us to make statements concerning how a function behaves almost everywhere, depending on its behaviour on average.\<close>
 lemma averaging_theorem:
   fixes f::"_ \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes [measurable]:"integrable M f" 
@@ -656,7 +670,7 @@ lemma density_zero:
   using averaging_theorem[OF assms(1), of "{0}"] assms(2)
   by (simp add: scaleR_nonneg_nonneg)
 
-text \<open>This lemma shows that densities are unique in Banach spaces.\<close>
+text \<open>The following lemma shows that densities are unique in Banach spaces.\<close>
 lemma density_unique_banach:
   fixes f f'::"'a \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes "integrable M f" "integrable M f'"
@@ -678,7 +692,7 @@ lemma density_nonneg:
   using averaging_theorem[OF assms(1), of "{0..}", OF closed_atLeast] assms(2)
   by (simp add: scaleR_nonneg_nonneg)
 
-corollary integral_nonneg_AE_eq_0_iff_AE:
+corollary integral_nonneg_eq_0_iff_AE_banach:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
   assumes f[measurable]: "integrable M f" and nonneg: "AE x in M. 0 \<le> f x"
   shows "integral\<^sup>L M f = 0 \<longleftrightarrow> (AE x in M. f x = 0)"
@@ -699,7 +713,7 @@ corollary integral_eq_mono_AE_eq_AE:
   shows "AE x in M. f x = g x"
 proof -
   define h where "h = (\<lambda>x. g x - f x)"
-  have "AE x in M. h x = 0" unfolding h_def using assms by (subst integral_nonneg_AE_eq_0_iff_AE[symmetric]) auto
+  have "AE x in M. h x = 0" unfolding h_def using assms by (subst integral_nonneg_eq_0_iff_AE_banach[symmetric]) auto
   then show ?thesis unfolding h_def by auto
 qed
 

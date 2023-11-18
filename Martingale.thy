@@ -130,6 +130,8 @@ qed
 
 subsection \<open>Martingale Lemmas\<close>
 
+text \<open>In the following segment, we cover basic properties of martingales.\<close>
+
 context martingale
 begin
 
@@ -195,6 +197,8 @@ proof -
 qed
 
 end
+
+text \<open>Using properties of the conditional expectation, we present the following alternative characterizations of martingales.\<close>
 
 lemma (in sigma_finite_adapted_process) martingale_of_cond_exp_diff_eq_zero: 
   assumes integrable: "\<And>i. t\<^sub>0 \<le> i \<Longrightarrow> integrable M (X i)" 
@@ -491,6 +495,9 @@ proof -
   thus ?thesis unfolding fun_Compl_def by simp
 qed
 
+text \<open>Many of the statements we have made concerning martingales can be simplified when the indexing set is the natural numbers. 
+      Given a point in time \<^term>\<open>i \<in> \<nat>\<close>, it suffices to consider the successor \<^term>\<open>i + 1\<close>, instead of all future times \<^term>\<open>j \<ge> i\<close>.\<close>
+
 subsection \<open>Discrete Time Martingales\<close>
 
 locale nat_martingale = martingale M F "0 :: nat" X for M F X
@@ -503,6 +510,7 @@ locale nat_supermartingale_linorder = supermartingale_linorder M F "0 :: nat" X 
 sublocale nat_submartingale_linorder \<subseteq> nat_submartingale ..
 sublocale nat_supermartingale_linorder \<subseteq> nat_supermartingale ..
 
+text \<open>A predictable martingale is necessarily constant.\<close>
 lemma (in nat_martingale) predictable_const:
   assumes "nat_predictable_process M F X"
   shows "AE \<xi> in M. X i \<xi> = X j \<xi>"

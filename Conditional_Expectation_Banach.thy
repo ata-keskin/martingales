@@ -7,11 +7,16 @@ begin
 
 section \<open>Conditional Expectation in Banach Spaces\<close>
 
+text \<open>Before we can talk about 'the' conditional expectation, we must define what it means for a function to have a conditional expectation.\<close> 
+
 definition has_cond_exp :: "'a measure \<Rightarrow> 'a measure \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> ('a \<Rightarrow> 'b::{real_normed_vector, second_countable_topology}) \<Rightarrow> bool" where 
   "has_cond_exp M F f g = ((\<forall>A \<in> sets F. (\<integral> x \<in> A. f x \<partial>M) = (\<integral> x \<in> A. g x \<partial>M))
                         \<and> integrable M f 
                         \<and> integrable M g 
                         \<and> g \<in> borel_measurable F)"
+
+text \<open>This predicate precisely characterizes what it means for a function \<^term>\<open>f\<close> to have a conditional expectation \<^term>\<open>g\<close>,
+      with respect to the measure \<^term>\<open>M\<close> and the sub-\<open>\<sigma>\<close>-algebra \<^term>\<open>F\<close>.\<close>
 
 lemma has_cond_expI':
   assumes "\<And>A. A \<in> sets F \<Longrightarrow> (\<integral> x \<in> A. f x \<partial>M) = (\<integral> x \<in> A. g x \<partial>M)"
@@ -29,9 +34,7 @@ lemma has_cond_expD:
         "g \<in> borel_measurable F"
   using assms unfolding has_cond_exp_def by simp+
 
-(* The predicate has_cond_exp precisely characterizes what it means for a function f to have
-   a conditional expectation g w.r.t the measure M and the sub-sigma-algebra F. 
-   Now we can use Hilbert's epsilon-operator SOME to define the conditional expectation, if it exists. *)
+text \<open>Now we can use Hilbert’s \<open>\<some>\<close>-operator to define the conditional expectation, if it exists.\<close>
 
 definition cond_exp :: "'a measure \<Rightarrow> 'a measure \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> ('a \<Rightarrow> 'b::{banach, second_countable_topology})" where
   "cond_exp M F f = (if \<exists>g. has_cond_exp M F f g then (SOME g. has_cond_exp M F f g) else (\<lambda>_. 0))"
@@ -112,6 +115,10 @@ corollary cond_exp_charact:
     shows "AE x in M. cond_exp M F f x = g x"
   by (intro has_cond_exp_charact has_cond_expI' assms) auto
 
+text \<open>Identity on F-measurable functions:\<close>
+
+text \<open>If an integrable function \<^term>\<open>f\<close> is already \<^term>\<open>F\<close>-measurable, then \<^term>\<open>cond_exp M F f = f\<close> \<open>µ\<close>-a.e.
+      This is a corollary of the lemma on the characterization of \<^term>\<open>cond_exp\<close>.\<close>
 corollary cond_exp_F_meas[intro, simp]:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
   assumes "integrable M f"
@@ -124,10 +131,10 @@ text \<open>Congruence\<close>
 lemma has_cond_exp_cong:
   assumes "integrable M f" "\<And>x. x \<in> space M \<Longrightarrow> f x = g x" "has_cond_exp M F g h"
   shows "has_cond_exp M F f h"
-proof (intro has_cond_expI'[OF _ assms(1)], goal_cases)
-  case (1 A)
+proof (intro has_cond_expI'[OF _ assms(1)])
+  fix A assume asm: "A \<in> sets F"
   hence "set_lebesgue_integral M A f = set_lebesgue_integral M A g" by (intro set_lebesgue_integral_cong) (meson assms(2) subalg in_mono subalgebra_def sets.sets_into_space subalgebra_def subsetD)+
-  then show ?case using 1 assms(3) by (simp add: has_cond_exp_def)
+  thus "set_lebesgue_integral M A f = set_lebesgue_integral M A h" using asm assms(3) by (simp add: has_cond_exp_def)
 qed (auto simp add: has_cond_expD[OF assms(3)])
 
 lemma cond_exp_cong:
@@ -173,6 +180,7 @@ next
   ultimately show ?thesis unfolding cond_exp_def by auto
 qed
 
+text \<open>The conditional expectation operator on the reals, \<^term>\<open>real_cond_exp\<close>, satisfies the conditions of the conditional expectation as we have defined it.\<close>
 lemma has_cond_exp_real:
   fixes f :: "'a \<Rightarrow> real"
   assumes "integrable M f"
@@ -193,6 +201,11 @@ lemma cond_exp_cmult:
 
 subsection \<open>Existence\<close>
 
+text \<open>Showing the existence is a bit involved. Specifically, what we aim to show is that \<^term>\<open>has_cond_exp M F f (cond_exp M F f)\<close> holds for any Bochner-integrable \<^term>\<open>f\<close>.
+      We will employ the standard machinery of measure theory. First, we will prove existence for indicator functions. 
+      Then we will extend our proof by linearity to simple functions. 
+      Finally we use a limiting argument to show that the conditional expectation exists for all Bochner-integrable functions.\<close>
+
 text \<open>Indicator functions\<close>
 
 lemma has_cond_exp_indicator:
@@ -206,13 +219,13 @@ proof (intro has_cond_expI', goal_cases)
   finally show ?case .
 next
   case 2
-  then show ?case using integrable_scaleR_left integrable_real_indicator assms by blast
+  show ?case using integrable_scaleR_left integrable_real_indicator assms by blast
 next
   case 3
   show ?case using assms by (intro integrable_scaleR_left, intro real_cond_exp_int, blast+)
 next
   case 4
-  then show ?case by (intro borel_measurable_scaleR, intro Conditional_Expectation.borel_measurable_cond_exp, simp)
+  show ?case by (intro borel_measurable_scaleR, intro Conditional_Expectation.borel_measurable_cond_exp, simp)
 qed
 
 lemma cond_exp_indicator[intro]:
@@ -238,13 +251,13 @@ proof (intro has_cond_expI', goal_cases)
   finally show ?case .
 next
   case 2
-  then show ?case by (metis Bochner_Integration.integrable_add assms has_cond_expD(2))
+  show ?case by (metis Bochner_Integration.integrable_add assms has_cond_expD(2))
 next
   case 3
-  then show ?case by (metis Bochner_Integration.integrable_add assms has_cond_expD(3))
+  show ?case by (metis Bochner_Integration.integrable_add assms has_cond_expD(3))
 next
   case 4
-  then show ?case using assms borel_measurable_add has_cond_expD(4) by blast
+  show ?case using assms borel_measurable_add has_cond_expD(4) by blast
 qed
 
 lemma has_cond_exp_scaleR_right:
@@ -285,6 +298,8 @@ lemma cond_exp_uminus:
   shows "AE x in M. cond_exp M F (\<lambda>x. - f x) x = - cond_exp M F f x"
   using cond_exp_scaleR_right[OF assms, of "-1"] by force
 
+text \<open>Together with the induction scheme \<open>integrable_simple_function_induct\<close>, we can show that the conditional expectation of an integrable simple function exists.\<close>
+
 corollary has_cond_exp_simple:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
   assumes "simple_function M f" "emeasure M {y \<in> space M. f y \<noteq> 0} \<noteq> \<infinity>"
@@ -300,6 +315,15 @@ next
   case (add u v)
   then show ?case using has_cond_exp_add has_cond_exp_charact(1) by blast
 qed
+
+text \<open>Now comes the most difficult part. Given a convergent sequence of integrable simple functions \<^term>\<open>\<lambda>n. s n\<close>, 
+      we must show that the sequence \<^term>\<open>\<lambda>n. cond_exp M F (s n)\<close> is also convergent. Furthermore, we must show that this limit satisfies the properties of a conditional expectation. 
+      Unfortunately, we will only be able to show that this sequence convergences in the L1-norm. 
+      Luckily, this is enough to show that the operator \<^term>\<open>cond_exp M F\<close> preserves limits as a function from L1 to L1.\<close>
+
+text \<open>In anticipation of this result, we show that the conditional expectation operator is a contraction for simple functions.
+      We first reformulate the lemma \<open>real_cond_exp_abs\<close>, which shows the statement for real-valued functions, using our definitions. 
+      Then we show the statement for simple functions via induction.\<close>
 
 lemma cond_exp_contraction_real:
   fixes f :: "'a \<Rightarrow> real"
@@ -384,6 +408,8 @@ proof -
   have Cauchy: "Cauchy (\<lambda>n. s n x)" if "x \<in> space M" for x using assms(4) LIMSEQ_imp_Cauchy that by blast
   hence bounded_range_s: "bounded (range (\<lambda>n. s n x))" if "x \<in> space M" for x using that cauchy_imp_bounded by fast
 
+  text \<open>Since the sequence \<^term>\<open>(\<lambda>n. s n x)\<close> is Cauchy for almost all \<^term>\<open>x\<close>, we know that the diameter tends to zero almost everywhere.\<close>
+  text \<open>Dominated convergence tells us that the integral of the diameter also converges to zero.\<close>
   have "AE x in M. (\<lambda>n. diameter {s i x | i. n \<le> i}) \<longlonglongrightarrow> 0" using Cauchy cauchy_iff_diameter_tends_to_zero_and_bounded by fast
   moreover have "(\<lambda>x. diameter {s i x |i. n \<le> i}) \<in> borel_measurable M" for n using bounded_range_s borel_measurable_diameter by measurable
   moreover have "AE x in M. norm (diameter {s i x |i. n \<le> i}) \<le> 4 * norm (f x)" for n
@@ -403,6 +429,9 @@ proof -
   have dist_integrable: "integrable M (\<lambda>x. dist (s i x) (s j x))" for i j  using assms(5) dist_triangle3[of "s i _" _ 0, THEN order_trans, OF add_mono, of _ "2 * norm (f _)"]
     by (intro Bochner_Integration.integrable_bound[OF integrable_4f]) fastforce+
 
+  text \<open>Since \<^term>\<open>cond_exp M F\<close> is a contraction for simple functions, the following sequence of integral values is also Cauchy.\<close>
+  text \<open>This follows, since the distance between the terms of this sequence are always less than or equal to the diameter, which itself converges to zero.\<close>
+  text \<open>Hence, we obtain a subsequence which is Cauchy almost everywhere.\<close>
   have "\<exists>N. \<forall>i\<ge>N. \<forall>j\<ge>N. LINT x|M. norm (cond_exp M F (s i) x - cond_exp M F (s j) x) < e" if e_pos: "e > 0" for e
   proof -
     obtain N where *: "LINT x|M. diameter {s i x | i. n \<le> i} < e" if "n \<ge> N" for n using that order_tendsto_iff[THEN iffD1, OF diameter_tendsto_zero, unfolded eventually_sequentially] e_pos by presburger
@@ -424,9 +453,14 @@ proof -
     qed
     ultimately show ?thesis using order.strict_trans1 by meson
   qed
-  then obtain r where strict_mono_r: "strict_mono r" and AE_Cauchy: "AE x in M. Cauchy (\<lambda>i. cond_exp M F (s (r i)) x)" by (rule cauchy_L1_AE_cauchy_subseq[OF integrable_cond_exp], auto)
+  then obtain r where strict_mono_r: "strict_mono r" and AE_Cauchy: "AE x in M. Cauchy (\<lambda>i. cond_exp M F (s (r i)) x)"
+    by (rule cauchy_L1_AE_cauchy_subseq[OF integrable_cond_exp], auto)
   hence ae_lim_cond_exp: "AE x in M. (\<lambda>n. cond_exp M F (s (r n)) x) \<longlonglongrightarrow> lim (\<lambda>n. cond_exp M F (s (r n)) x)" using Cauchy_convergent_iff convergent_LIMSEQ_iff by fastforce
 
+  text \<open>Now that we have a candidate for the conditional expectation, we must show that it actually has the required properties.\<close>
+
+  text \<open>Dominated convergence shows that this limit is indeed integrable.\<close>
+  text \<open>Here, we again use the fact that conditional expectation is a contraction on simple functions.\<close>
   have cond_exp_bounded: "AE x in M. norm (cond_exp M F (s (r n)) x) \<le> cond_exp M F (\<lambda>x. 2 * norm (f x)) x" for n
   proof -
     have "AE x in M. norm (cond_exp M F (s (r n)) x) \<le> cond_exp M F (\<lambda>x. norm (s (r n) x)) x" by (rule cond_exp_contraction_simple[OF assms(2,3)])
@@ -435,6 +469,7 @@ proof -
   qed
   have lim_integrable: "integrable M (\<lambda>x. lim (\<lambda>i. cond_exp M F (s (r i)) x))" by (intro integrable_dominated_convergence[OF _ borel_measurable_cond_exp' integrable_cond_exp ae_lim_cond_exp cond_exp_bounded], simp)
 
+  text \<open>Moreover, we can use the DCT twice to show that the conditional expectation property holds, i.e. the value of the integral of the candidate, agrees with \<^term>\<open>f\<close> on sets \<^term>\<open>A \<in> F\<close>.\<close>
   {
     fix A assume A_in_sets_F: "A \<in> sets F"
     have "AE x in M. norm (indicator A x *\<^sub>R cond_exp M F (s (r n)) x) \<le> cond_exp M F (\<lambda>x. 2 * norm (f x)) x" for n
@@ -462,10 +497,12 @@ proof -
     also have "... = LINT x:A|M. f x" using limI[OF lim_s_int] by argo
     finally have "LINT x:A|M. lim (\<lambda>n. cond_exp M F (s (r n)) x) = LINT x:A|M. f x" .
   }
+  text \<open>Putting it all together, we have the statement we are looking for.\<close>
   hence "has_cond_exp M F f (\<lambda>x. lim (\<lambda>i. cond_exp M F (s (r i)) x))" using assms(1) lim_integrable by (intro has_cond_expI', auto) 
   thus thesis using AE_Cauchy Cauchy_convergent strict_mono_r by (auto intro!: that)
 qed
 
+text \<open>Now, we can show that the conditional expectation is well-defined for all integrable functions.\<close>
 corollary has_cond_expI:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
   assumes "integrable M f"
@@ -475,18 +512,9 @@ proof -
   show ?thesis using has_cond_exp_simple_lim[OF assms s_is] has_cond_exp_charact(1) by metis
 qed
 
-(* Now that we are able to show that the conditional expectation always exists for an integrable function, 
-   we can don't need to state everything in terms of has_cond_exp *)
-
 subsection \<open>Properties\<close>
 
-(* Tower Property *)
-
-lemma cond_exp_nested_subalg:
-  fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
-  assumes "integrable M f" "subalgebra M G" "subalgebra G F"
-  shows "AE \<xi> in M. cond_exp M F f \<xi> = cond_exp M F (cond_exp M G f) \<xi>"
-  using has_cond_expI assms sigma_finite_subalgebra_def by (auto intro!: has_cond_exp_nested_subalg[THEN has_cond_exp_charact(2), THEN AE_symmetric] sigma_finite_subalgebra.has_cond_expI[OF sigma_finite_subalgebra.intro[OF assms(2)]] nested_subalg_is_sigma_finite)
+text \<open>The defining property of the conditional expectation now always holds, given that the function \<^term>\<open>f\<close> is integrable.\<close>
 
 lemma cond_exp_set_integral:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
@@ -494,7 +522,19 @@ lemma cond_exp_set_integral:
   shows "(\<integral> x \<in> A. f x \<partial>M) = (\<integral> x \<in> A. cond_exp M F f x \<partial>M)"
   using has_cond_expD(1)[OF has_cond_expI, OF assms] by argo
 
+(* Tower Property *)
+
+text \<open>The following property of the conditional expectation is called the "Tower Property".\<close>
+
+lemma cond_exp_nested_subalg:
+  fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
+  assumes "integrable M f" "subalgebra M G" "subalgebra G F"
+  shows "AE \<xi> in M. cond_exp M F f \<xi> = cond_exp M F (cond_exp M G f) \<xi>"
+  using has_cond_expI assms sigma_finite_subalgebra_def by (auto intro!: has_cond_exp_nested_subalg[THEN has_cond_exp_charact(2), THEN AE_symmetric] sigma_finite_subalgebra.has_cond_expI[OF sigma_finite_subalgebra.intro[OF assms(2)]] nested_subalg_is_sigma_finite)
+
 (* Linearity *)
+
+text \<open>The conditional expectation is linear.\<close>
 
 lemma cond_exp_add:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology,banach}"
@@ -524,7 +564,10 @@ lemma cond_exp_scaleR_left:
       subst set_integral_scaleR_left, blast, intro integrable_cond_exp)
       auto
 
-(* The conditional expectation operator is a contraction, i.e. a bounded linear operator with operator norm less than or equal to 1. *)
+text \<open>The conditional expectation operator is a contraction, i.e. a bounded linear operator with operator norm less than or equal to 1.\<close>
+text \<open>To show this we first obtain a subsequence \<^term>\<open>\<lambda>x. (\<lambda>i. s (r i) x)\<close>, such that \<^term>\<open>(\<lambda>i. cond_exp M F (s (r i)) x)\<close> converges to \<^term>\<open>cond_exp M F f x\<close> a.e. 
+      Afterwards, we obtain a sub-subsequence \<^term>\<open>\<lambda>x. (\<lambda>i. s (r (r' i)) x)\<close>, such that  \<^term>\<open>(\<lambda>i. cond_exp M F (\<lambda>x. norm (s (r i))) x)\<close> converges to \<^term>\<open>cond_exp M F (\<lambda>x. norm (f x)) x\<close> a.e.
+      Finally, we show that the inequality holds by showing that the terms of the subsequences obey the inequality and the fact that a subsequence of a convergent sequence converges to the same limit.\<close>
 
 lemma cond_exp_contraction:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
@@ -549,7 +592,8 @@ proof -
   ultimately show ?thesis using LIMSEQ_le r'_tendsto by fast
 qed
 
-(* The following lemmas are called "pulling out whats known" in literature. *)
+text \<open>The following lemmas are called "pulling out whats known". We first show the statement for real-valued functions using the lemma \<open>real_cond_exp_intg\<close>, which is already present.
+      We then show it for arbitrary \<^term>\<open>g\<close> using the lecture notes of Gordan Zitkovic for the course "Theory of Probability I".\<close>
 
 lemma cond_exp_measurable_mult:
   fixes f g :: "'a \<Rightarrow> real"
@@ -586,7 +630,7 @@ proof -
     proof -
       obtain s where s_is: "\<And>i. simple_function ?F (s i)" "\<And>x. x \<in> space ?F \<Longrightarrow> (\<lambda>i. s i x) \<longlonglongrightarrow> z x" "\<And>i x. x \<in> space ?F \<Longrightarrow> norm (s i x) \<le> 2 * norm (z x)" using borel_measurable_implies_sequence_metric[OF asm(2), of 0] by force
 
-      (* We need to apply the dominated convergence theorem twice, therefore we need to show the following prerequisites *)
+      text \<open>We need to apply the dominated convergence theorem twice, therefore we need to show the following prerequisites.\<close>
 
       have s_scaleR_g_tendsto: "AE x in M. (\<lambda>i. s i x *\<^sub>R g x) \<longlonglongrightarrow> z x *\<^sub>R g x" using s_is(2) by (simp add: space_restr_to_subalg tendsto_scaleR)
       have s_scaleR_cond_exp_g_tendsto: "AE x in ?F. (\<lambda>i. s i x *\<^sub>R cond_exp M F g x) \<longlonglongrightarrow> z x *\<^sub>R cond_exp M F g x" using s_is(2) by (simp add: tendsto_scaleR)
@@ -604,7 +648,7 @@ proof -
       }
       note s_scaleR_cond_exp_g_AE_bdd = this
 
-      (* In the following section we need to pay attention to which measures we are using for integration. The rhs is F-measurable while the lhs is only M-measurable*)
+      text \<open>In the following section we need to pay attention to which measures we are using for integration. The rhs is F-measurable while the lhs is only M-measurable.\<close>
 
       {
         fix i
@@ -624,7 +668,7 @@ proof -
       }
       note integral_s_eq = this
 
-      (* Now we just plug in the results we obtained into DCT, and use the fact that limits are unique. *)
+      text \<open>Now we just plug in the results we obtained into DCT, and use the fact that limits are unique.\<close>
 
       show "integrable M (\<lambda>x. z x *\<^sub>R cond_exp M F g x)" using s_scaleR_cond_exp_g_meas asm(2) borel_measurable_cond_exp' by (intro integrable_from_subalg[OF subalg] integrable_cond_exp integrable_dominated_convergence[OF _ _ _ s_scaleR_cond_exp_g_tendsto s_scaleR_cond_exp_g_AE_bdd]) (auto intro: measurable_from_subalg[OF subalg] integrable_in_subalg measurable_in_subalg subalg)
          
@@ -635,8 +679,7 @@ proof -
   }
   note * = this
 
-  (* The main statement now follows with "z x := indicator A x * f x" *)
-  
+  text \<open>The main statement now follows with \<^term>\<open>z = (\<lambda>x. indicator A x * f x)\<close>.\<close>
   show "integrable M (\<lambda>x. f x *\<^sub>R cond_exp M F g x)" using * assms measurable_in_subalg[OF subalg] by blast
 
   {
@@ -815,7 +858,7 @@ proof -
   show ?thesis using assms by (intro cond_exp_charact) (auto simp add: sigma_sets_empty_eq set_lebesgue_integral_def prob_space cong: Bochner_Integration.integral_cong)
 qed
 
-text \<open>The following lemma shows that independent sigma algebras don't matter for the conditional expectation.\<close>
+text \<open>The following lemma shows that independent \<open>\<sigma>\<close>-algebras don't matter for the conditional expectation.\<close>
 
 lemma (in prob_space) cond_exp_indep_subalgebra:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, real_normed_field}"
@@ -968,6 +1011,8 @@ proof -
   qed
   ultimately show ?thesis using assms(4) integrable_cond_exp by (intro Un_sigma.cond_exp_charact) presburger+
 qed
+
+text \<open>If a random variable is independent of a \<open>\<sigma>\<close>-algebra \<^term>\<open>F\<close>, its conditional expectation \<^term>\<open>cond_exp M F f\<close> is just its expectation.\<close>
 
 lemma (in prob_space) cond_exp_indep:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, real_normed_field}"

@@ -12,7 +12,7 @@ Keeping this in consideration, we aim to build a comprehensive foundation for a 
 The locale system in Isabelle is useful for managing large formal developments, as it promotes modularity and reusability. It allows us to define generic theorems and structures in one place and then reuse them in multiple contexts without duplicating efforts. For instance, when defining filtered measure spaces in the following section, we will need to have an element act as the de facto bottom element of an index type. Locales allow us to easily fix such an element for this purpose. The results formalized in this chapter can be found in the theory files \texttt{Martingale.Filtered\_Measure}, \texttt{Martingale.Measure\_Space\_Supplement} and \texttt{Martingale.Stochastic\_Process} in \cite{Keskin_A_Formalization_of_2023}.
 \vspace{2em}\\
 
-We state the definition of a stochastic process again.
+We state the definition of a stochastic process.
 
 \begin{definition}
 	Let $(\Omega, \Sigma, \mu)$ be a measure space. Let $(X_i)_{i \in I}$ be a family of functions with $X_i : \Omega \rightarrow E$ for $i \in I$. The collection $(X_i)_{i \in I}$ is called a stochastic process if $X_i$ is $\Sigma$-measurable for all $i \in I$.
@@ -120,7 +120,7 @@ definition subalgebra where
 \end{isadefinition}
 
 \begin{remark}
-	In Isabelle the $\texttt{measure}$ type is used to represent both measure spaces and $\sigma$-algebras. The latter is achieved by only considering the underlying $\sigma$-algebra via the projection \texttt{sets}.
+	In Isabelle the $\texttt{measure}$ type is used to represent both measure spaces and $\sigma$-algebras. The latter is achieved by only considering the underlying $\sigma$-algebra via the projection ``\texttt{sets}''.
 \end{remark}
 
 In general, a type with an ordering does not necessarily inhabit a bottom element, i.e. an element that is less than or equal to any other element. In the next section, we will see how the existence of a bottom element lets us easily make statements concerning when a family of random variables constitutes an adapted process. From a practical point of view, this is not too much to assume, since all random processes one encounters in the real world must start at some fixed point in time (or at least that assumption can be made for practical purposes).
@@ -146,8 +146,6 @@ For the sake of completeness, we also introduce a local covering the case where 
 {\small
 \begin{lstlisting}[style=isabelle]
 locale finite_filtered_measure = filtered_measure + finite_measure
-sublocale finite_filtered_measure $\subseteq$ sigma_finite_filtered_measure 
-
   \end{lstlisting}
 }
 \end{isadefinition}
@@ -582,7 +580,7 @@ We can now characterize predictability in the discrete-time setting as follows.
 \begin{proof}
 	Assume $(X_n)_{n \in \mathbb{N}}$ is predictable. Since predictable processes are also adapted, $X_0$ is $F_0$-measurable.
 	
-	Let $n \in \mathbb{N}$ and let $S$ be an open set. Consider the map $\psi$ defined by $\psi(i,x) = X_i(x)$. We have
+	Let $n \in \mathbb{N}$ and let $S \subseteq E$ be an open set. Consider the map $\psi$ defined by $\psi(i,x) = X_i(x)$. We have
 	\[
 		\psi^{-1}(S) \cap (\{n + 1\} \times \Omega) = \psi^{-1}(S) \cap ((n, n + 1] \times \Omega) \in \Sigma_P
 	\]

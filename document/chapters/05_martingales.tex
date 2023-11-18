@@ -20,7 +20,7 @@ We start with the definition of a martingale.
 \end{definition}
 
 \begin{remark}
- In addition to what we've discussed in the last chapter, we have introduced the locale \texttt{sigma\_finite\_adapted\_process} which combines the locale \texttt{adapted\_process} with the locale \texttt{sigma\_finite\_filtered\_measure}. Without this additional restriction, we can not use the operator \texttt{cond\_exp}. Similary, the locale  \texttt{sigma\_finite\_adapted\_pro\-cess\-\_order} places a restriction on the Banach space $(E, \lVert \cdot \rVert)$, asserting the existence of an ordering compatible with scalar multiplication. Finally, the locale \texttt{sigma\_finite\_adap\-ted\-\_process\_linorder} further mandates that this ordering be total. We have also introduced locales for discrete-time and continuous-time counterparts.
+ In addition to what we have discussed in the last chapter, we have introduced the locale \texttt{sigma\_finite\_adapted\_process} which combines the locale \texttt{adapted\_process} with the locale \texttt{sigma\_finite\_filtered\_measure}. Without this additional restriction, we can not use the operator \texttt{cond\_exp}. Similary, the locale  \texttt{sigma\_finite\_adapted\_pro\-cess\-\_order} places a restriction on the Banach space $(E, \lVert \cdot \rVert)$, asserting the existence of an ordering compatible with scalar multiplication. Finally, the locale \texttt{sigma\_finite\_adap\-ted\-\_process\_linorder} further mandates that this ordering be total. We have also introduced locales for discrete-time and continuous-time counterparts.
 \end{remark}
 
 Using these additional definitions we introduce the following locale which formalizes martingales.
@@ -216,7 +216,7 @@ Analogously, we have the following introduction lemma for submartingales.
   for all $A \in F_i$ and for all $i,j \in [t_0,\infty)$ with $i \le j$. Then the process $(X_t)_{t \in [t_0,\infty)}$ is a submartingale.
 \end{lemma}
 
-The idea of the proof is the same. To prevent redundancy in our formalization, we've demonstrated the lemma for supermartingales\footnote{\texttt{Martingale.supermartingale\_of\_set\_integral\_ge} in \cite{Keskin_A_Formalization_of_2023}} by equivalently showing that the stochastic process $(-X_t)_{t \in [t_0,\infty)}$ is a submartingale using the lemma above\footnote{\texttt{Martingale.submartingale\_of\_set\_integral\_le} in \cite{Keskin_A_Formalization_of_2023}}. This is easily achieved using the locale system.
+The idea of the proof is the same. To prevent redundancy in our formalization, we have demonstrated the lemma for supermartingales\footnote{\texttt{Martingale.supermartingale\_of\_set\_integral\_ge} in \cite{Keskin_A_Formalization_of_2023}} by equivalently showing that the stochastic process $(-X_t)_{t \in [t_0,\infty)}$ is a submartingale using the lemma above\footnote{\texttt{Martingale.submartingale\_of\_set\_integral\_le} in \cite{Keskin_A_Formalization_of_2023}}. This is easily achieved using the locale system.
 
 Another way to characterize martingales is by examining the conditional expectation of the difference between the process's values at different points in time. We have the following lemmas to address this.
 
@@ -303,7 +303,7 @@ We can express the alternative characterizations in the previous subsections thi
   for all $i \in \mathbb{N}$. Then the process $(X_n)_{n \in \mathbb{N}}$ is a martingale.
 \end{lemma}
 
-Lastly, we will discuss the behavior of discrete-time martingales, under the additional assumption that they are predictable. At the end of the preceeding chapter, we had shown that a discrete-time $(X_n)_{n \in \mathbb{N}}$ process is predictable, if and only if the time shifted process $(X_{n + 1})_{n \in \mathbb{N}}$ is an adapted process. That is, $X_{n+1}$ is $F_n$ measurable for all $n \in \mathbb{N}$. Under this additional assumption the martingale property becomes trivial, i.e.
+Lastly, we will discuss the behavior of discrete-time martingales, under the additional assumption that they are predictable. At the end of the preceeding chapter, we have shown that a discrete-time $(X_n)_{n \in \mathbb{N}}$ process is predictable, if and only if the time shifted process $(X_{n + 1})_{n \in \mathbb{N}}$ is an adapted process. That is, $X_{n+1}$ is $F_n$ measurable for all $n \in \mathbb{N}$. Under this additional assumption the martingale property becomes trivial, i.e.
 \[
 	X_n = \mathbb{E}(X_{n+1} \;\vert\; F_n) = X_{n+1} \;\;\mu\textrm{-a.e.}
 \]

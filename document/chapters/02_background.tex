@@ -25,7 +25,7 @@ The document \texttt{probability.martingale.basic} contains definitions for mart
 \item[] \quad the sequence $(\mu[f \vert \mathcal{F}_i])_{i\in\mathcal{T}}$ is a martingale with respect to $\mathcal{F}$ and $\mu$, where $\mu[f \vert \mathcal{F}_i]$ denotes the conditional expectation of $f$ with respect to the subalgebra $\mathcal{F}_i$ and $\mu$.
 \end{itemize}
 
-On a first note, we see that this theory relies heavily on the conditional expectation operator in Banach spaces. Prior to our development, the only formalization of conditional expectation in Isabelle/HOL was done in the real setting and resides in the theory document \texttt{HOL-Probability.Conditional\_Expectation}. This formalization was accomplished by S\`ebastien Gou\"ezel, presumably in anticipation of his later entries \cite{Ergodic_Theory-AFP} and \cite{Lp-AFP}. We will delve further into the existing formalization and how our contribution improves upon it in the upcoming chapter.
+On a first note, we see that this theory relies heavily on the conditional expectation operator in Banach spaces. Prior to our development, the only formalization of conditional expectation in Isabelle/HOL was done in the real setting and resides in the theory document \texttt{HOL-Probability.Conditional\_Expectation}. This formalization was accomplished by S\`ebastien Gou\"ezel, presumably in anticipation of his later entries \cite{Ergodic_Theory-AFP} and \cite{Lp-AFP}. We will delve further into the existing formalization and how our contribution improves upon it in the upcoming section.
 
 Within the \textsf{mathlib} formalization, the majority of lemmata on martingales require the measures in question to be finite. In our formalization of martingales, we will demonstrate that $\sigma$-finiteness suffices alone. This approach is also consistent with our generalized formalization of conditional expectation, as it inherits the $\sigma$-finiteness requirement from the pre-existing formalization in the real setting.
 
@@ -36,9 +36,9 @@ Another short-coming of the \textsf{mathlib} formalization is its treatment of p
 
 Another important point to consider is the restrictions placed on the types in question. In the \textsf{mathlib} formalization, martingales are defined as a family of integrable functions $f : \iota \rightarrow \Omega \rightarrow E$, indexed by the set $\iota$. The \textsf{mathlib} formalization further requires that
 \begin{itemize}
-\item $\iota$ is a preordered set,
+\item $\iota$ is a pre-ordered set,
 \item $\Omega$ is a measurable space (i.e. a set together with a $\sigma$-algebra $\Sigma$),
-\item $E$ is a normed and complete vector space.
+\item $E$ is a normed and complete $\mathbb{R}$-vector space, i.e. a Banach space.
 \end{itemize}
 
 These restrictions are easily replicated in our formalization using type classes and the ``\texttt{measure}'' type. We simply restrict ourselves to functions $f : \; 't \;\rightarrow \; 'a \;\texttt{measure} \;\rightarrow\; 'b$, where the type $'t$ is an instance of the type class \texttt{order\_topology} and the type $'b$ is an instance of the type class \texttt{banach}. With this specification, our approach mirrors the \textsf{mathlib} formalization, since measure spaces, measurable spaces and $\sigma$-algebras are all represented using the type ``\texttt{measure}'' in Isabelle/HOL.
@@ -56,7 +56,7 @@ Apart from this entry, no other development on the theory of martingales is pres
 
 \section{Mathematical Foundations and Reference Material}
 
-The main focus of our project is to formalize martingales in as general of a setting as possible. In this vein, we will study martingales defined on arbitrary Banach spaces, as opposed to the reals only. The main obstacle we will face is the development of the conditional expectation operator in arbitrary Banach spaces.As a primer for the upcoming chapters, we will quickly cover the basics of integration on Banach spaces. More information covering the prerequisites of our work can be found in the initial chapters of the book \textit{Analysis in Banach Spaces} \cite{Hytoenen_2016}.
+The main focus of our project is to formalize martingales in as general of a setting as possible. In this vein, we will study martingales defined on arbitrary Banach spaces, as opposed to the reals only. The main obstacle we will face is the development of the conditional expectation operator in arbitrary Banach spaces. As a primer for the upcoming chapters, we will quickly cover the basics of integration on Banach spaces. More information covering the prerequisites of our work can be found in the initial chapters of the book \textit{Analysis in Banach Spaces} \cite{Hytoenen_2016}.
 
 \begin{remark}
 	For the remainder of this document, unless stated otherwise explicitly, we fix a measure space $M = (\Omega, \Sigma, \mu)$ and a Banach space $(E, \lVert \cdot \rVert)$. Here $\Omega$ denotes an arbitrary set, $\Sigma$ a $\sigma$-algebra defined on this set, and $\mu : \Sigma \rightarrow \mathbb{R}_{\ge 0}$ a measure. Similarly, $E$ is a vector space which is complete with respect to the metric topology generated by the norm $\lVert \cdot \rVert$.

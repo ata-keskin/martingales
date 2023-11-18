@@ -37,7 +37,7 @@ locale linearly_filtered_measure = filtered_measure M F t\<^sub>0 for M and F ::
 locale nat_filtered_measure = linearly_filtered_measure M F 0 for M and F :: "nat \<Rightarrow> _"
 locale real_filtered_measure = linearly_filtered_measure M F 0 for M and F :: "real \<Rightarrow> _"
 
-subsection \<open>Sigma Finite Filtered Measure\<close>
+subsection \<open>\<open>\<sigma>\<close>-Finite Filtered Measure\<close>
 
 text \<open>The locale presented here is a generalization of the \<^locale>\<open>sigma_finite_subalgebra\<close> for a particular filtration.\<close>
 
