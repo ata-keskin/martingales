@@ -7,7 +7,16 @@ begin
 
 section \<open>Conditional Expectation in Banach Spaces\<close>
 
-text \<open>Before we can talk about 'the' conditional expectation, we must define what it means for a function to have a conditional expectation.\<close> 
+text \<open>While constructing the conditional expectation operator, we have come up with the following approach, which is based on the construction in \cite{Hytoenen_2016}. 
+      Both our approach, and the one in \cite{Hytoenen_2016} are based on showing that the conditional expectation is a contraction on some dense subspace of the space of functions \<open>L\<^sup>1(E)\<close>.
+      In our approach, we start by constructing the conditional expectation explicitly for simple functions. 
+      Then we show that the conditional expectation is a contraction on simple functions, i.e. \<open>\<parallel>E(s|F)(x)\<parallel> \<le> E(\<parallel>s(x)\<parallel>|F)\<close> for \<open>\<mu>\<close>-almost all \<open>x \<in> \<Omega>\<close> with \<open>s : \<Omega> \<rightarrow> E\<close> simple and integrable. 
+      Using this, we can show that the conditional expectation of a convergent sequence of simple functions is again convergent. 
+      Finally, we show that this limit exhibits the properties of a conditional expectation. 
+      This approach has the benefit of being straightforward and easy to implement, since we could make use of the existing formalization for real-valued functions.
+      To use the construction in \cite{Hytoenen_2016} we need more tools from functional analysis, which Isabelle/HOL currently does not have.\<close>
+
+text \<open>Before we can talk about 'the' conditional expectation, we must define what it means for a function to have a conditional expectation.\<close>
 
 definition has_cond_exp :: "'a measure \<Rightarrow> 'a measure \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> ('a \<Rightarrow> 'b::{real_normed_vector, second_countable_topology}) \<Rightarrow> bool" where 
   "has_cond_exp M F f g = ((\<forall>A \<in> sets F. (\<integral> x \<in> A. f x \<partial>M) = (\<integral> x \<in> A. g x \<partial>M))
@@ -117,7 +126,7 @@ corollary cond_exp_charact:
 
 text \<open>Identity on F-measurable functions:\<close>
 
-text \<open>If an integrable function \<^term>\<open>f\<close> is already \<^term>\<open>F\<close>-measurable, then \<^term>\<open>cond_exp M F f = f\<close> \<open>µ\<close>-a.e.
+text \<open>If an integrable function \<^term>\<open>f\<close> is already \<^term>\<open>F\<close>-measurable, then \<^term>\<open>cond_exp M F f = f\<close> \<open>\<mu>\<close>-a.e.
       This is a corollary of the lemma on the characterization of \<^term>\<open>cond_exp\<close>.\<close>
 corollary cond_exp_F_meas[intro, simp]:
   fixes f :: "'a \<Rightarrow> 'b::{second_countable_topology, banach}"
@@ -593,7 +602,7 @@ proof -
 qed
 
 text \<open>The following lemmas are called "pulling out whats known". We first show the statement for real-valued functions using the lemma \<open>real_cond_exp_intg\<close>, which is already present.
-      We then show it for arbitrary \<^term>\<open>g\<close> using the lecture notes of Gordan Zitkovic for the course "Theory of Probability I".\<close>
+      We then show it for arbitrary \<^term>\<open>g\<close> using the lecture notes of Gordan Zitkovic for the course "Theory of Probability I" \cite{Zitkovic_2015}.\<close>
 
 lemma cond_exp_measurable_mult:
   fixes f g :: "'a \<Rightarrow> real"
@@ -858,7 +867,7 @@ proof -
   show ?thesis using assms by (intro cond_exp_charact) (auto simp add: sigma_sets_empty_eq set_lebesgue_integral_def prob_space cong: Bochner_Integration.integral_cong)
 qed
 
-text \<open>The following lemma shows that independent \<open>\<sigma>\<close>-algebras don't matter for the conditional expectation.\<close>
+text \<open>The following lemma shows that independent \<open>\<sigma>\<close>-algebras don't matter for the conditional expectation. The proof is adapted from \cite{Zitkovic_2015}.\<close>
 
 lemma (in prob_space) cond_exp_indep_subalgebra:
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, real_normed_field}"

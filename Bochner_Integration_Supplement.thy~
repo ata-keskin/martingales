@@ -359,7 +359,7 @@ proof -
   thus ?thesis by (intro integrable_bound[OF integrable_max[OF integrable_norm(1,1), OF assms]], auto)
 qed
 
-text \<open>Restatement of integral_nonneg_AE for functions taking values in a Banach space.\<close>
+text \<open>Restatement of \<open>integral_nonneg_AE\<close> for functions taking values in a Banach space.\<close>
 lemma integral_nonneg_AE_banach:                        
   fixes f :: "'a \<Rightarrow> 'b :: {second_countable_topology, banach, linorder_topology, ordered_real_vector}"
   assumes [measurable]: "f \<in> borel_measurable M" and nonneg: "AE x in M. 0 \<le> f x"
@@ -522,11 +522,11 @@ lemma set_integral_mono_AE_banach:
 subsection \<open>Averaging Theorem\<close>
 
 text \<open>We aim to lift results from the real case to arbitrary Banach spaces. 
-      Our fundamental tool in this regard will be the averaging theorem. The proof of this theorem is due to Serge Lang (Real and Functional Analysis). 
+      Our fundamental tool in this regard will be the averaging theorem. The proof of this theorem is due to Serge Lang (Real and Functional Analysis) \<open>\cite{Lang_1993}\<close>. 
       The theorem allows us to make statements about a function’s value almost everywhere, depending on the value its integral takes on various sets of the measure space.\<close>
 
 text \<open>Before we introduce and prove the averaging theorem, we will first show the following lemma which is crucial for our proof. 
-      While not stated exactly in this manner, our proof makes use of the characterization of second-countable topological spaces given in the book General Topology by Ryszard Engelking (Theorem 4.1.15).\<close>
+      While not stated exactly in this manner, our proof makes use of the characterization of second-countable topological spaces given in the book General Topology by Ryszard Engelking (Theorem 4.1.15) \<open>\cite{engelking_1989}\<close>.\<close>
 (* Engelking's book General Topology *)
 lemma balls_countable_basis:
   obtains D :: "'a :: {metric_space, second_countable_topology} set" 
