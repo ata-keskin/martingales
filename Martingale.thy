@@ -47,6 +47,24 @@ locale submartingale = sigma_finite_filtered_measure M F t\<^sub>0 + adapted_pro
 
 locale submartingale_linorder = submartingale M F t\<^sub>0 X for M F t\<^sub>0 and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology}"
 
+lemma (in sigma_finite_filtered_measure) submartingale_const_fun[intro]:  
+  assumes "integrable M f" "f \<in> borel_measurable (F t\<^sub>0)"
+  shows "submartingale M F t\<^sub>0 (\<lambda>_. f)"
+proof -
+  interpret martingale M F t\<^sub>0 "\<lambda>_. f" using assms by (rule martingale_const_fun)
+  show "submartingale M F t\<^sub>0 (\<lambda>_. f)" using martingale_property by (unfold_locales) (force simp add: integrable)+
+qed
+
+lemma (in sigma_finite_filtered_measure) submartingale_cond_exp[intro]:  
+  assumes "integrable M f"
+  shows "submartingale M F t\<^sub>0 (\<lambda>i. cond_exp M (F i) f)"
+proof -
+  interpret martingale M F t\<^sub>0 "\<lambda>i. cond_exp M (F i) f" using assms by (rule martingale_cond_exp)
+  show "submartingale M F t\<^sub>0 (\<lambda>i. cond_exp M (F i) f)" using martingale_property by (unfold_locales) (force simp add: integrable)+
+qed
+
+corollary (in finite_filtered_measure) submartingale_const[intro]: "submartingale M F t\<^sub>0 (\<lambda>_ _. c)" by fastforce
+
 sublocale martingale_order \<subseteq> submartingale using martingale_property by (unfold_locales) (force simp add: integrable)+
 sublocale martingale_linorder \<subseteq> submartingale_linorder ..
 
@@ -59,6 +77,24 @@ locale supermartingale = sigma_finite_filtered_measure M F t\<^sub>0 + adapted_p
       and supermartingale_property: "\<And>i j. t\<^sub>0 \<le> i \<Longrightarrow> i \<le> j \<Longrightarrow> AE \<xi> in M. X i \<xi> \<ge> cond_exp M (F i) (X j) \<xi>"
 
 locale supermartingale_linorder = supermartingale M F t\<^sub>0 X for M F t\<^sub>0 and X :: "_ \<Rightarrow> _ \<Rightarrow> _ :: {linorder_topology}"
+
+lemma (in sigma_finite_filtered_measure) supermartingale_const_fun[intro]:  
+  assumes "integrable M f" "f \<in> borel_measurable (F t\<^sub>0)"
+  shows "supermartingale M F t\<^sub>0 (\<lambda>_. f)"
+proof -
+  interpret martingale M F t\<^sub>0 "\<lambda>_. f" using assms by (rule martingale_const_fun)
+  show "supermartingale M F t\<^sub>0 (\<lambda>_. f)" using martingale_property by (unfold_locales) (force simp add: integrable)+
+qed
+
+lemma (in sigma_finite_filtered_measure) supermartingale_cond_exp[intro]:  
+  assumes "integrable M f"
+  shows "supermartingale M F t\<^sub>0 (\<lambda>i. cond_exp M (F i) f)"
+proof -
+  interpret martingale M F t\<^sub>0 "\<lambda>i. cond_exp M (F i) f" using assms by (rule martingale_cond_exp)
+  show "supermartingale M F t\<^sub>0 (\<lambda>i. cond_exp M (F i) f)" using martingale_property by (unfold_locales) (force simp add: integrable)+
+qed
+
+corollary (in finite_filtered_measure) supermartingale_const[intro]: "supermartingale M F t\<^sub>0 (\<lambda>_ _. c)" by fastforce
 
 sublocale martingale_order \<subseteq> supermartingale using martingale_property by (unfold_locales) (force simp add: integrable)+
 sublocale martingale_linorder \<subseteq> supermartingale_linorder ..
@@ -259,15 +295,15 @@ begin
 lemma set_integral_le:
   assumes "A \<in> F i" "t\<^sub>0 \<le> i" "i \<le> j"
   shows "set_lebesgue_integral M A (X i) \<le> set_lebesgue_integral M A (X j)"  
-  using submartingale_property[OF assms(2), of j] assms sets_F_subset[THEN subsetD]
+  using submartingale_property[OF assms(2), of j] assms subsetD[OF sets_F_subset]
   by (subst sigma_finite_subalgebra.cond_exp_set_integral[OF _ integrable assms(1), of j])
      (auto intro!: scaleR_left_mono integral_mono_AE_banach integrable_mult_indicator integrable simp add: set_lebesgue_integral_def)
 
 lemma max:
-  assumes "submartingale_linorder M F t\<^sub>0 Y"
-  shows "submartingale_linorder M F t\<^sub>0 (\<lambda>i \<xi>. max (X i \<xi>) (Y i \<xi>))"
+  assumes "submartingale M F t\<^sub>0 Y"
+  shows "submartingale M F t\<^sub>0 (\<lambda>i \<xi>. max (X i \<xi>) (Y i \<xi>))"
 proof (unfold_locales)
-  interpret Y: submartingale_linorder M F t\<^sub>0 Y by (rule assms)
+  interpret Y: submartingale_linorder M F t\<^sub>0 Y by (intro submartingale_linorder.intro assms)
   {
     fix i j :: 'b assume asm: "t\<^sub>0 \<le> i" "i \<le> j"
     have "AE \<xi> in M. max (X i \<xi>) (Y i \<xi>) \<le> max (cond_exp M (F i) (X j) \<xi>) (cond_exp M (F i) (Y j) \<xi>)" using submartingale_property Y.submartingale_property asm unfolding max_def by fastforce
@@ -277,7 +313,7 @@ proof (unfold_locales)
 qed
 
 lemma max_0:
-  shows "submartingale_linorder M F t\<^sub>0 (\<lambda>i \<xi>. max 0 (X i \<xi>))"
+  shows "submartingale M F t\<^sub>0 (\<lambda>i \<xi>. max 0 (X i \<xi>))"
 proof -
   interpret zero: martingale_linorder M F t\<^sub>0 "\<lambda>_ _. 0" by (force intro: martingale_linorder.intro martingale_order.intro)
   show ?thesis by (intro zero.max submartingale_linorder.intro submartingale_axioms)
@@ -400,15 +436,15 @@ begin
 lemma set_integral_ge:
   assumes "A \<in> F i" "t\<^sub>0 \<le> i" "i \<le> j"
   shows "set_lebesgue_integral M A (X i) \<ge> set_lebesgue_integral M A (X j)"
-  using supermartingale_property[OF assms(2), of j] assms sets_F_subset[THEN subsetD]
+  using supermartingale_property[OF assms(2), of j] assms subsetD[OF sets_F_subset]
   by (subst sigma_finite_subalgebra.cond_exp_set_integral[OF _ integrable assms(1), of j])
      (auto intro!: scaleR_left_mono integral_mono_AE_banach integrable_mult_indicator integrable simp add: set_lebesgue_integral_def)
 
 lemma min:
-  assumes "supermartingale_linorder M F t\<^sub>0 Y"
-  shows "supermartingale_linorder M F t\<^sub>0 (\<lambda>i \<xi>. min (X i \<xi>) (Y i \<xi>))"
+  assumes "supermartingale M F t\<^sub>0 Y"
+  shows "supermartingale M F t\<^sub>0 (\<lambda>i \<xi>. min (X i \<xi>) (Y i \<xi>))"
 proof (unfold_locales)
-  interpret Y: supermartingale_linorder M F t\<^sub>0 Y by (rule assms)
+  interpret Y: supermartingale_linorder M F t\<^sub>0 Y by (intro supermartingale_linorder.intro assms)
   {
     fix i j :: 'b assume asm: "t\<^sub>0 \<le> i" "i \<le> j"
     have "AE \<xi> in M. min (X i \<xi>) (Y i \<xi>) \<ge> min (cond_exp M (F i) (X j) \<xi>) (cond_exp M (F i) (Y j) \<xi>)" using supermartingale_property Y.supermartingale_property asm unfolding min_def by fastforce
@@ -418,7 +454,7 @@ proof (unfold_locales)
 qed
 
 lemma min_0:
-  shows "supermartingale_linorder M F t\<^sub>0 (\<lambda>i \<xi>. min 0 (X i \<xi>))"
+  shows "supermartingale M F t\<^sub>0 (\<lambda>i \<xi>. min 0 (X i \<xi>))"
 proof -
   interpret zero: martingale_linorder M F t\<^sub>0 "\<lambda>_ _. 0" by (force intro: martingale_linorder.intro)
   show ?thesis by (intro zero.min supermartingale_linorder.intro supermartingale_axioms)
