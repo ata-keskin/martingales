@@ -1,4 +1,5 @@
 *.thy~
-isabelle_docs
-!documents/root.tex
-!documents/root.bib
+isabelle_docs/
+document/
+!document/root.tex
+!document/root.bib
