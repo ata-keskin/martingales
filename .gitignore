@@ -1,5 +1,5 @@
 *.thy~
-isabelle_docs/
-document/
+isabelle_docs/*
+document/*
 !document/root.tex
 !document/root.bib
