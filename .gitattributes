@@ -1,2 +1,2 @@
-documents/* -linguist-detectable
+document/* -linguist-detectable
 isabelle_docs/* -linguist-detectable
