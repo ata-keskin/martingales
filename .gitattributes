@@ -1,2 +1,2 @@
-document/* linguist-vendored
-isabelle_docs/* linguist-vendored
+document/* linguist-language=text
+isabelle_docs/* linguist-language=text
