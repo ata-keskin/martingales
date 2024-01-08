@@ -4,7 +4,7 @@ In the scope of this project, we present a formalization of martingales in arbit
 The current formalization of conditional expectation in the Isabelle library is limited to real-valued functions. To overcome this limitation, we extend the construction of conditional expectation to general Banach spaces, employing an approach similar to the one described in "Analysis in Banach Spaces Volume I" by Hytönen et al. We use measure theoretic arguments to construct the conditional expectation using suitable limits of simple functions.
 
 Subsequently, we define stochastic processes and introduce the concepts of adapted, progressively measurable and predictable processes using suitable locale definitions. We show the relation
-$$ \text{adapted} \supseteq \text{progressive} \supseteq \text{predictable} $$
+$$\text{adapted} \supseteq \text{progressive} \supseteq \text{predictable}$$
 Furthermore, we show that progressive measurability and adaptedness are equivalent when the indexing set is discrete. We pay special attention to predictable processes in discrete-time, showing that $(X_n)_{n \in \mathbb{N}}$ is predictable if and only if $(X _{n + 1}) _{n \in \mathbb{N}}$ is adapted.
 
 Moving forward, we rigorously define martingales, submartingales, and supermartingales, presenting their first consequences and corollaries. Discrete-time martingales are given special attention in the formalization. In every step of our formalization, we make extensive use of the powerful locale system of Isabelle.
